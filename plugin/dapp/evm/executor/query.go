@@ -12,16 +12,16 @@ import (
 	"strings"
 	"sync/atomic"
 
-	log "github.com/33cn/chain33/common/log/log15"
+	log "github.com/assetcloud/chain/common/log/log15"
 
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/runtime"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/runtime"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/types"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmCommon "github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/model"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/types"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmCommon "github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/model"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 )
 
 // Query_CheckAddrExists 检查合约地址是否存在，此操作不会改变任何状态，所以可以直接从statedb查询

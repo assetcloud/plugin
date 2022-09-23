@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	gt "github.com/33cn/plugin/plugin/dapp/game/types"
+	gt "github.com/assetcloud/plugin/plugin/dapp/game/types"
+	"github.com/assetcloud/chain/types"
 )
 
 // roll back local db data

@@ -17,7 +17,7 @@ accountmanager合约
 账户资产|账户资产可在accountmanager合约下进行正常的流转
 
 合约接口,在线构造交易和查询接口分别复用了框架中的CreateTransaction和Query接口，详情请参考
-[CreateTransaction接口](https://github.com/33cn/chain33/blob/master/rpc/jrpchandler.go#L1101)和[Query接口](https://github.com/33cn/chain33/blob/master/rpc/jrpchandler.go#L838)
+[CreateTransaction接口](https://github.com/assetcloud/chain/blob/master/rpc/jrpchandler.go#L1101)和[Query接口](https://github.com/assetcloud/chain/blob/master/rpc/jrpchandler.go#L838)
 
 查询方法名称|功能
 -----|----

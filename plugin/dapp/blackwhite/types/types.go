@@ -7,7 +7,7 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 )
 
 // blackwhite action type

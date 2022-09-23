@@ -7,10 +7,10 @@
 package executor
 
 import (
-	log "github.com/33cn/chain33/common/log/log15"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	oty "github.com/33cn/plugin/plugin/dapp/oracle/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	oty "github.com/assetcloud/plugin/plugin/dapp/oracle/types"
 )
 
 var olog = log.New("module", "execs.oracle")

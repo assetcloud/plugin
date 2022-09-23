@@ -11,24 +11,24 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/33cn/chain33/common/pubsub"
+	"github.com/assetcloud/chain/common/pubsub"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/33cn/chain33/p2p"
+	"github.com/assetcloud/chain/p2p"
 
-	"github.com/33cn/chain33/p2p/utils"
+	"github.com/assetcloud/chain/p2p/utils"
 
 	"os"
 	"strings"
 	"testing"
 
-	"github.com/33cn/chain33/client"
+	"github.com/assetcloud/chain/client"
 
-	l "github.com/33cn/chain33/common/log"
+	l "github.com/assetcloud/chain/common/log"
 
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/wallet"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/wallet"
 
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"

@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/33cn/plugin/plugin/dapp/bridgevmxgo/boss4x/buildFlags"
-	"github.com/33cn/plugin/plugin/dapp/bridgevmxgo/boss4x/chain33"
+	"github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/boss4x/buildFlags"
+	"github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/boss4x/chain33"
 	"github.com/spf13/cobra"
 )
 

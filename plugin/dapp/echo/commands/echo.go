@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	echotypes "github.com/33cn/plugin/plugin/dapp/echo/types/echo"
+	echotypes "github.com/assetcloud/plugin/plugin/dapp/echo/types/echo"
+	"github.com/assetcloud/chain/rpc/jsonclient"
 	"github.com/spf13/cobra"
 )
 

@@ -26,12 +26,12 @@ import (
 	"sort"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/db"
-	log "github.com/33cn/chain33/common/log/log15"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/privacy/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/db"
+	log "github.com/assetcloud/chain/common/log/log15"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
 )
 
 var privacylog = log.New("module", "execs.privacy")

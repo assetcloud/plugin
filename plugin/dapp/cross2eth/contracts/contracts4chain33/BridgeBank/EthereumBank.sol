@@ -126,7 +126,7 @@ contract EthereumBank {
     * @dev: Creates a new EthereumDeposit with a unique ID
     *
     * @param _ethereumSender: The sender's Ethereum address in bytes.
-    * @param _chain33Recipient: The intended recipient's Chain33 address.
+    * @param _chain33Recipient: The intended recipient's Chain address.
     * @param _token: The currency type
     * @param _amount: The amount in the deposit.
     * @return: The newly created EthereumDeposit's unique id.
@@ -170,7 +170,7 @@ contract EthereumBank {
     * @dev: Creates a new EthereumBurn with a unique ID
         *
         * @param _ethereumSender: The sender's Ethereum address in bytes.
-        * @param _chain33Owner: The owner's Chain33 address.
+        * @param _chain33Owner: The owner's Chain address.
         * @param _token: The token Address
         * @param _amount: The amount to be burned.
         * @param _nonce: The nonce indicates the burn count for this token
@@ -248,7 +248,7 @@ contract EthereumBank {
      * @dev: Mints new ethereum tokens
      *
      * @param _ethereumSender: The sender's Ethereum address in bytes.
-     * @param _chain33Recipient: The intended recipient's Chain33 address.
+     * @param _chain33Recipient: The intended recipient's Chain address.
      * @param _ethereumTokenAddress: The currency type
      * @param _symbol: ethereum token symbol
      * @param _amount: number of ethereum tokens to be minted

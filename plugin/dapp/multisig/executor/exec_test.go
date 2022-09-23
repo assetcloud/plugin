@@ -7,21 +7,21 @@ package executor
 import (
 	"testing"
 
-	"github.com/33cn/chain33/system/address/btc"
+	"github.com/assetcloud/chain/system/address/btc"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/common"
-	commonlog "github.com/33cn/chain33/common/log"
-	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/common"
+	commonlog "github.com/assetcloud/chain/common/log"
+	drivers "github.com/assetcloud/chain/system/dapp"
 	"github.com/stretchr/testify/assert"
 
-	apimock "github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	dbm "github.com/33cn/chain33/common/db"
-	dbmock "github.com/33cn/chain33/common/db/mocks"
-	"github.com/33cn/chain33/types"
-	mty "github.com/33cn/plugin/plugin/dapp/multisig/types"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	dbm "github.com/assetcloud/chain/common/db"
+	dbmock "github.com/assetcloud/chain/common/db/mocks"
+	"github.com/assetcloud/chain/types"
+	mty "github.com/assetcloud/plugin/plugin/dapp/multisig/types"
 	"github.com/stretchr/testify/mock"
 )
 

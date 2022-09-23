@@ -21,16 +21,16 @@ init() {
     echo "ipara=$ispara"
 
     if [ "$ispara" == true ]; then
-        bwExecAddr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"user.p.para.blackwhite"}]}' ${MAIN_HTTP} | jq -r ".result")
+        bwExecAddr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"user.p.para.blackwhite"}]}' ${MAIN_HTTP} | jq -r ".result")
     else
-        bwExecAddr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"blackwhite"}]}' ${MAIN_HTTP} | jq -r ".result")
+        bwExecAddr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"blackwhite"}]}' ${MAIN_HTTP} | jq -r ".result")
     fi
     echo "bwExecAddr=$bwExecAddr"
 }
 
 chain33_NewAccount() {
     label=$1
-    req='{"method":"Chain33.NewAccount","params":[{"label":"'"$label"'"}]}'
+    req='{"method":"Chain.NewAccount","params":[{"label":"'"$label"'"}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.error|not) and (.result.acc.addr|length > 0)' "$FUNCNAME" ".result.acc.addr"
     glAddr=$RETURN_RESP
 }
@@ -39,11 +39,11 @@ chain33_SendTransaction() {
     rawTx=$1
     addr=$2
     #签名交易
-    req='{"method":"Chain33.SignRawTx","params":[{"addr":"'"$addr"'","txHex":"'"$rawTx"'","expire":"120s","fee":10000000,"index":0}]}'
-    chain33_Http "$req" ${MAIN_HTTP} '(.error|not)' "Chain33.SignRawTx" ".result"
+    req='{"method":"Chain.SignRawTx","params":[{"addr":"'"$addr"'","txHex":"'"$rawTx"'","expire":"120s","fee":10000000,"index":0}]}'
+    chain33_Http "$req" ${MAIN_HTTP} '(.error|not)' "Chain.SignRawTx" ".result"
     signTx=$RETURN_RESP
 
-    req='{"method":"Chain33.SendTransaction","params":[{"data":"'"$signTx"'"}]}'
+    req='{"method":"Chain.SendTransaction","params":[{"data":"'"$signTx"'"}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.error|not)' "$FUNCNAME" ".result"
 
     gResp=$RETURN_RESP
@@ -89,20 +89,20 @@ blackwhite_BlackwhiteTimeoutDoneTx() {
 
 blackwhite_GetBlackwhiteRoundInfo() {
     gameID=$1
-    req='{"method":"Chain33.Query","params":[{"execer":"blackwhite","funcName":"GetBlackwhiteRoundInfo","payload":{"gameID":"'"$gameID"'"}}]}'
+    req='{"method":"Chain.Query","params":[{"execer":"blackwhite","funcName":"GetBlackwhiteRoundInfo","payload":{"gameID":"'"$gameID"'"}}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.error|not) and (.result.round | [has("gameID", "status", "playAmount", "playerCount", "curPlayerCount", "loop", "curShowCount", "timeout"),true] | unique | length == 1)' "$FUNCNAME"
 }
 
 blackwhite_GetBlackwhiteByStatusAndAddr() {
     addr=$1
-    req='{"method":"Chain33.Query","params":[{"execer":"blackwhite","funcName":"GetBlackwhiteByStatusAndAddr","payload":{"status":5,"address":"'"$addr"'","count":1,"direction":0,"index":-1}}]}'
+    req='{"method":"Chain.Query","params":[{"execer":"blackwhite","funcName":"GetBlackwhiteByStatusAndAddr","payload":{"status":5,"address":"'"$addr"'","count":1,"direction":0,"index":-1}}]}'
     resok='(.error|not) and (.result.round[0].createAddr == "'"$addr"'") and (.result.round[0].status == 5) and (.result.round[0] | [has("gameID", "status", "playAmount", "playerCount", "curPlayerCount", "loop", "curShowCount", "timeout", "winner"),true] | unique | length == 1)'
     chain33_Http "$req" ${MAIN_HTTP} "$resok" "$FUNCNAME"
 }
 
 blackwhite_GetBlackwhiteloopResult() {
     gameID=$1
-    req='{"method":"Chain33.Query","params":[{"execer":"blackwhite","funcName":"GetBlackwhiteloopResult","payload":{"gameID":"'"$gameID"'","loopSeq":0}}]}'
+    req='{"method":"Chain.Query","params":[{"execer":"blackwhite","funcName":"GetBlackwhiteloopResult","payload":{"gameID":"'"$gameID"'","loopSeq":0}}]}'
     resok='(.error|not) and (.result.gameID == "'"$gameID"'") and (.result.results|length >= 1)'
     chain33_Http "$req" ${MAIN_HTTP} "$resok" "$FUNCNAME"
 }

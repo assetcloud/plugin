@@ -9,18 +9,18 @@ import (
 
 	"time"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/log"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/log"
 	"github.com/stretchr/testify/mock"
 
-	apimocks "github.com/33cn/chain33/client/mocks"
-	_ "github.com/33cn/chain33/system"
-	drivers "github.com/33cn/chain33/system/consensus"
-	"github.com/33cn/chain33/types"
-	typesmocks "github.com/33cn/chain33/types/mocks"
-	"github.com/33cn/plugin/plugin/dapp/paracross/testnode"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	apimocks "github.com/assetcloud/chain/client/mocks"
+	_ "github.com/assetcloud/chain/system"
+	drivers "github.com/assetcloud/chain/system/consensus"
+	"github.com/assetcloud/chain/types"
+	typesmocks "github.com/assetcloud/chain/types/mocks"
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/testnode"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/assert"
 )
 

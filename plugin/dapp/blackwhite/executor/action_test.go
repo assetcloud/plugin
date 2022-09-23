@@ -11,11 +11,11 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/types"
-	gt "github.com/33cn/plugin/plugin/dapp/blackwhite/types"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/types"
+	gt "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
 	"github.com/stretchr/testify/require"
 )
 

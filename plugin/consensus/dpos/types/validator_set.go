@@ -9,8 +9,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/merkle"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/merkle"
 )
 
 // Validator ...

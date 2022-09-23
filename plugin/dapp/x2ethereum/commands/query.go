@@ -5,11 +5,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
-	types2 "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
+	types2 "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 	"github.com/spf13/cobra"
 )
 
@@ -64,7 +64,7 @@ func queryEthProphecy(cmd *cobra.Command, args []string) {
 	}
 
 	channel := &types2.ReceiptEthProphecy{}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", query, channel)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", query, channel)
 	ctx.Run()
 }
 
@@ -100,7 +100,7 @@ func queryValidators(cmd *cobra.Command, args []string) {
 	}
 
 	channel := &types2.ReceiptQueryValidator{}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", query, channel)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", query, channel)
 	ctx.Run()
 }
 
@@ -122,7 +122,7 @@ func queryConsensus(cmd *cobra.Command, args []string) {
 	}
 
 	channel := &types2.ReceiptQueryConsensusThreshold{}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", query, channel)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", query, channel)
 	ctx.Run()
 }
 
@@ -144,7 +144,7 @@ func queryTotalPower(cmd *cobra.Command, args []string) {
 	}
 
 	channel := &types2.ReceiptQueryTotalPower{}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", query, channel)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", query, channel)
 	ctx.Run()
 }
 
@@ -212,6 +212,6 @@ func querySymbolTotalAmountByTxType(cmd *cobra.Command, args []string) {
 	}
 
 	channel := &types2.ReceiptQuerySymbolAssets{}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", query, channel)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", query, channel)
 	ctx.Run()
 }

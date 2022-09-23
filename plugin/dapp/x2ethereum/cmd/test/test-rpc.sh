@@ -191,27 +191,27 @@
 #    chain33_ImportPrivkey "${chain33ValidatorKey4}" "${chain33Validator4}" "tokenAddr" "${MAIN_HTTP}"
 #
 #    # SetConsensusThreshold
-#    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"SetConsensusThreshold","payload":{"consensusThreshold":"80"}}]}' ${MAIN_HTTP} | jq -r ".result")
+#    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"SetConsensusThreshold","payload":{"consensusThreshold":"80"}}]}' ${MAIN_HTTP} | jq -r ".result")
 #    chain33_SignAndSendTxWait "$tx" "$sendPriKey" ${MAIN_HTTP} "SetConsensusThreshold"
 #
 #    # add a validator
-#    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"AddValidator","payload":{"address":"'${chain33Validator1}'","power":"25"}}]}' ${MAIN_HTTP} | jq -r ".result")
+#    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"AddValidator","payload":{"address":"'${chain33Validator1}'","power":"25"}}]}' ${MAIN_HTTP} | jq -r ".result")
 #    chain33_SignAndSendTxWait "$tx" "$sendPriKey" ${MAIN_HTTP} "AddValidator"
-#    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"AddValidator","payload":{"address":"'${chain33Validator2}'","power":"25"}}]}' ${MAIN_HTTP} | jq -r ".result")
+#    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"AddValidator","payload":{"address":"'${chain33Validator2}'","power":"25"}}]}' ${MAIN_HTTP} | jq -r ".result")
 #    chain33_SignAndSendTxWait "$tx" "$sendPriKey" ${MAIN_HTTP} "AddValidator"
-#    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"AddValidator","payload":{"address":"'${chain33Validator3}'","power":"25"}}]}' ${MAIN_HTTP} | jq -r ".result")
+#    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"AddValidator","payload":{"address":"'${chain33Validator3}'","power":"25"}}]}' ${MAIN_HTTP} | jq -r ".result")
 #    chain33_SignAndSendTxWait "$tx" "$sendPriKey" ${MAIN_HTTP} "AddValidator"
-#    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"AddValidator","payload":{"address":"'${chain33Validator4}'","power":"25"}}]}' ${MAIN_HTTP} | jq -r ".result")
+#    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"AddValidator","payload":{"address":"'${chain33Validator4}'","power":"25"}}]}' ${MAIN_HTTP} | jq -r ".result")
 #    chain33_SignAndSendTxWait "$tx" "$sendPriKey" ${MAIN_HTTP} "AddValidator"
 #
 #    # query Validators
-#    chain33_Http '{"method":"Chain33.Query","params":[{"execer":"x2ethereum","funcName":"GetTotalPower","payload":{}}]}' ${MAIN_HTTP} '(.error|not) and (.result != null)' "GetTotalPower" ".result.totalPower"
+#    chain33_Http '{"method":"Chain.Query","params":[{"execer":"x2ethereum","funcName":"GetTotalPower","payload":{}}]}' ${MAIN_HTTP} '(.error|not) and (.result != null)' "GetTotalPower" ".result.totalPower"
 #    if [ "${RETURN_RESP}" != "100" ]; then
 #        echo -e "${RED}=========== GetTotalPower err: TotalPower = $RETURN_RESP ===========${NOC}"
 #    fi
 #
 #    # cions 转帐到 x2ethereum 合约地址
-#    x2eth_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"x2ethereum"}]}' ${MAIN_HTTP} | jq -r ".result")
+#    x2eth_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"x2ethereum"}]}' ${MAIN_HTTP} | jq -r ".result")
 #    chain33_SendToAddress "${sendAddress}" "${x2eth_addr}" 20000000000 "${MAIN_HTTP}"
 #    queryExecBalance "${sendAddress}" "20000000000"
 #
@@ -274,7 +274,7 @@
 #
 #    # chain33 lock bty
 #    #shellcheck disable=SC2086
-#    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"Chain33ToEthLock","payload":{"TokenContract":"'${tokenAddrBty}'","Chain33Sender":"'${sendPriKey}'","EthereumReceiver":"'${ethReceiverAddr1}'","Amount":"500000000","IssuerDotSymbol":"coins.bty","Decimals":"8"}}]}' ${MAIN_HTTP} | jq -r ".result")
+#    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"Chain33ToEthLock","payload":{"TokenContract":"'${tokenAddrBty}'","Chain33Sender":"'${sendPriKey}'","EthereumReceiver":"'${ethReceiverAddr1}'","Amount":"500000000","IssuerDotSymbol":"coins.bty","Decimals":"8"}}]}' ${MAIN_HTTP} | jq -r ".result")
 #    chain33_SignAndSendTxWait "$tx" "$sendPriKey" ${MAIN_HTTP} "Chain33ToEthLock"
 #
 #    queryExecBalance "${sendAddress}" "19500000000"
@@ -320,7 +320,7 @@
 #    # eth 等待 10 个区块
 #    eth_block_wait $((maturityDegree + 2)) "${ethUrl}"
 #
-#    req='{"method":"Chain33.Query","params":[{"execer":"x2ethereum","funcName":"GetRelayerBalance","payload":{"tokenSymbol":"eth","address":"'${sendAddress}'","tokenAddr":"0x0000000000000000000000000000000000000000"}}]}'
+#    req='{"method":"Chain.Query","params":[{"execer":"x2ethereum","funcName":"GetRelayerBalance","payload":{"tokenSymbol":"eth","address":"'${sendAddress}'","tokenAddr":"0x0000000000000000000000000000000000000000"}}]}'
 #    queryChain33X2ethBalance "${req}" "0.1"
 #
 #    req='{"method":"Manager.GetBalance","params":[{"owner":"'${ethReceiverAddr2}'","tokenAddr":""}]}'
@@ -328,10 +328,10 @@
 #    local balance=${RETURN_RESP}
 #
 #    #    burn 0.1
-#    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"Chain33ToEthBurn","payload":{"TokenContract":"0x0000000000000000000000000000000000000000","Chain33Sender":"'${sendPriKey}'","EthereumReceiver":"'${ethReceiverAddr2}'","Amount":"10000000","IssuerDotSymbol":"eth","Decimals":"18"}}]}' ${MAIN_HTTP} | jq -r ".result")
+#    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"Chain33ToEthBurn","payload":{"TokenContract":"0x0000000000000000000000000000000000000000","Chain33Sender":"'${sendPriKey}'","EthereumReceiver":"'${ethReceiverAddr2}'","Amount":"10000000","IssuerDotSymbol":"eth","Decimals":"18"}}]}' ${MAIN_HTTP} | jq -r ".result")
 #    chain33_SignAndSendTxWait "$tx" "$sendPriKey" ${MAIN_HTTP} "Chain33ToEthBurn"
 #
-#    req='{"method":"Chain33.Query","params":[{"execer":"x2ethereum","funcName":"GetRelayerBalance","payload":{"tokenSymbol":"eth","address":"'${sendAddress}'","tokenAddr":"0x0000000000000000000000000000000000000000"}}]}'
+#    req='{"method":"Chain.Query","params":[{"execer":"x2ethereum","funcName":"GetRelayerBalance","payload":{"tokenSymbol":"eth","address":"'${sendAddress}'","tokenAddr":"0x0000000000000000000000000000000000000000"}}]}'
 #    queryChain33X2ethBalance "${req}" "0"
 #
 #    eth_block_wait $((maturityDegree + 2)) "${ethUrl}"
@@ -380,15 +380,15 @@
 #    # eth 等待 10 个区块
 #    eth_block_wait $((maturityDegree + 2)) "${ethUrl}"
 #
-#    req='{"method":"Chain33.Query","params":[{"execer":"x2ethereum","funcName":"GetRelayerBalance","payload":{"tokenSymbol":"testc","address":"'${chain33Validator1}'","tokenAddr":"'${tokenAddr}'"}}]}'
+#    req='{"method":"Chain.Query","params":[{"execer":"x2ethereum","funcName":"GetRelayerBalance","payload":{"tokenSymbol":"testc","address":"'${chain33Validator1}'","tokenAddr":"'${tokenAddr}'"}}]}'
 #    queryChain33X2ethBalance "${req}" "100"
 #
 #    # chain33 burn 100
 #    #shellcheck disable=SC2086
-#    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"Chain33ToEthBurn","payload":{"TokenContract":"'${tokenAddr}'","Chain33Sender":"'${chain33ValidatorKey1}'","EthereumReceiver":"'${ethReceiverAddr2}'","Amount":"10000000000","IssuerDotSymbol":"testc","Decimals":"8"}}]}' ${MAIN_HTTP} | jq -r ".result")
+#    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"x2ethereum","actionName":"Chain33ToEthBurn","payload":{"TokenContract":"'${tokenAddr}'","Chain33Sender":"'${chain33ValidatorKey1}'","EthereumReceiver":"'${ethReceiverAddr2}'","Amount":"10000000000","IssuerDotSymbol":"testc","Decimals":"8"}}]}' ${MAIN_HTTP} | jq -r ".result")
 #    chain33_SignAndSendTxWait "$tx" "$chain33ValidatorKey1" ${MAIN_HTTP} "Chain33ToEthBurn"
 #
-#    req='{"method":"Chain33.Query","params":[{"execer":"x2ethereum","funcName":"GetRelayerBalance","payload":{"tokenSymbol":"testc","address":"'${chain33Validator1}'","tokenAddr":"'${tokenAddr}'"}}]}'
+#    req='{"method":"Chain.Query","params":[{"execer":"x2ethereum","funcName":"GetRelayerBalance","payload":{"tokenSymbol":"testc","address":"'${chain33Validator1}'","tokenAddr":"'${tokenAddr}'"}}]}'
 #    queryChain33X2ethBalance "${req}" "0"
 #
 #    eth_block_wait $((maturityDegree + 2)) "${ethUrl}"

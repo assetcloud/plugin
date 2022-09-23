@@ -7,13 +7,13 @@ package executor
 import (
 	"strings"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/client"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/system/dapp"
-	manager "github.com/33cn/chain33/system/dapp/manage/types"
-	"github.com/33cn/chain33/types"
-	coinTy "github.com/33cn/plugin/plugin/dapp/coinsx/types"
+	coinTy "github.com/assetcloud/plugin/plugin/dapp/coinsx/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/client"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/system/dapp"
+	manager "github.com/assetcloud/chain/system/dapp/manage/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 )

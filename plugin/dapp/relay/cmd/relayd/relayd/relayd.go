@@ -14,11 +14,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
-	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 )
 
@@ -83,7 +83,7 @@ func NewRelayd(config *Config) *Relayd {
 
 	log.Info("NewRelayd", "current btc hegiht: ", height)
 
-	client33 := NewClient33(&config.Chain33)
+	client33 := NewClient33(&config.Chain)
 	var btc BtcClient
 	if config.BtcdOrWeb == 0 {
 		btc, err = newBtcd(config.Btcd.BitConnConfig(), config.Btcd.ReconnectAttempts)

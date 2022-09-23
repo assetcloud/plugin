@@ -1,7 +1,7 @@
 package events
 
 import (
-	log "github.com/33cn/chain33/common/log/log15"
+	log "github.com/assetcloud/chain/common/log/log15"
 )
 
 // Event : enum containing supported contract events
@@ -10,11 +10,11 @@ type Event int
 var eventsLog = log.New("module", "ethereum_relayer")
 
 const (
-	// Unsupported : unsupported Chain33 or Ethereum event
+	// Unsupported : unsupported Chain or Ethereum event
 	Unsupported Event = iota
-	// MsgBurn : Chain33 event 'Chain33Msg' type MsgBurn
+	// MsgBurn : Chain event 'Chain33Msg' type MsgBurn
 	MsgBurn
-	// MsgLock :  Chain33 event 'Chain33Msg' type MsgLock
+	// MsgLock :  Chain event 'Chain33Msg' type MsgLock
 	MsgLock
 	// LogLock : Ethereum event 'LockEvent'
 	LogLock
@@ -41,7 +41,7 @@ type Chain33MsgAttributeKey int
 const (
 	// UnsupportedAttributeKey : unsupported attribute key
 	UnsupportedAttributeKey Chain33MsgAttributeKey = iota
-	// Chain33Sender : sender's address on Chain33 network
+	// Chain33Sender : sender's address on Chain network
 	Chain33Sender
 	// EthereumReceiver : receiver's address on Ethereum network
 	EthereumReceiver

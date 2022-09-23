@@ -7,9 +7,9 @@ package executor
 import (
 	"testing"
 
-	"github.com/33cn/chain33/common/db/mocks"
-	"github.com/33cn/chain33/types"
-	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
+	"github.com/assetcloud/chain/common/db/mocks"
+	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/mock"

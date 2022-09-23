@@ -5,14 +5,14 @@
 package ticket
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/ticket/commands"
-	"github.com/33cn/plugin/plugin/dapp/ticket/executor"
-	"github.com/33cn/plugin/plugin/dapp/ticket/rpc"
-	"github.com/33cn/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/plugin/plugin/dapp/ticket/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/ticket/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/ticket/rpc"
+	"github.com/assetcloud/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/chain/pluginmgr"
 
 	// init wallet
-	_ "github.com/33cn/plugin/plugin/dapp/ticket/wallet"
+	_ "github.com/assetcloud/plugin/plugin/dapp/ticket/wallet"
 )
 
 func init() {

@@ -26,5 +26,5 @@ before_test:
 
 test_script:
   - build.bat
-#  - for /f "" %%G in ('go list github.com/33cn/plugin/...') do ( go test %%G & IF ERRORLEVEL == 1 EXIT 1)
+#  - for /f "" %%G in ('go list github.com/assetcloud/plugin/...') do ( go test %%G & IF ERRORLEVEL == 1 EXIT 1)
 

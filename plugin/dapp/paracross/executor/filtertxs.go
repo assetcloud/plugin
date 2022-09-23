@@ -8,9 +8,9 @@ import (
 	"bytes"
 	"encoding/hex"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/types"
 )
 
 //1,如果全部是paracross的，主链成功会ExecOk，如果有一个不成功，全部回退回PACK，后面检查TyLogErr，OK意味着全部成功

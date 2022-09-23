@@ -7,19 +7,19 @@ import (
 	"strings"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	chain33Common "github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	chain33Crypto "github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/system/crypto/secp256k1"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/common"
+	chain33Common "github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	chain33Crypto "github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	btcec_secp256k1 "github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/golang/protobuf/proto"
@@ -125,7 +125,7 @@ func NewOracleClaim(cmd *cobra.Command, args []string) {
 		Data:  data,
 	}
 	var txhash string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.SendTransaction", params, &txhash)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.SendTransaction", params, &txhash)
 	_, err = ctx.RunResult()
 	fmt.Println(txhash)
 }

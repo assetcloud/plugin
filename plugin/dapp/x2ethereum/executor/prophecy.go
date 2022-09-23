@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/33cn/chain33/types"
-	x2eTy "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	x2eTy "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/assetcloud/chain/types"
 )
 
 //NewProphecy ...

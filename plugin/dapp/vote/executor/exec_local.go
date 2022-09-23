@@ -3,8 +3,8 @@ package executor
 import (
 	"encoding/hex"
 
-	"github.com/33cn/chain33/types"
-	vty "github.com/33cn/plugin/plugin/dapp/vote/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
+	"github.com/assetcloud/chain/types"
 )
 
 /*

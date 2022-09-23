@@ -17,9 +17,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/33cn/chain33/types"
-	ttypes "github.com/33cn/plugin/plugin/consensus/qbft/types"
-	tmtypes "github.com/33cn/plugin/plugin/dapp/qbftNode/types"
+	ttypes "github.com/assetcloud/plugin/plugin/consensus/qbft/types"
+	tmtypes "github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/snappy"
 	"github.com/pkg/errors"

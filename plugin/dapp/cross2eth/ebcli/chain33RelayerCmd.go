@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ import (
 func Chain33RelayerCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "chain33 ",
-		Short: "Chain33 relayer ",
+		Short: "Chain relayer ",
 		Args:  cobra.MinimumNArgs(1),
 	}
 

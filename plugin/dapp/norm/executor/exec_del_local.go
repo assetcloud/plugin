@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/norm/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/norm/types"
+	"github.com/assetcloud/chain/types"
 )
 
 // ExecDelLocal_Nput Action

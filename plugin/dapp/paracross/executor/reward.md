@@ -37,7 +37,7 @@
 
     ```
     {
-        "method" : "Chain33.CreateTransaction",
+        "method" : "Chain.CreateTransaction",
         "params" : [
             {
             "execer" : "{user.p.para}.paracross",
@@ -56,7 +56,7 @@
 
     |参数|类型|说明|
     |----|----|----|
-    |method|string|Chain33.CreateTransaction|
+    |method|string|Chain.CreateTransaction|
     |execer|string|必须是平行链的执行器user.p.para.paracross,title:user.p.para.按需调整|
     |actionName|string|ParaBindMiner|
     |bindAction|string|绑定:1，解绑定:2|
@@ -68,7 +68,7 @@
 >挖矿产生的奖励在平行链的paracross 执行器中
     ```
     {
-        "method": "Chain33.GetBalance",
+        "method": "Chain.GetBalance",
         "params": [{
             "addresses": ["{共识账户地址}"],
             "execer": "user.p.para.paracross"
@@ -91,7 +91,7 @@
     }
     
     2. rpc方法:
-    curl -ksd '{"method":"Chain33.GetBalance","params":[{"addresses":["1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"],"execer":"user.p.para.paracross"}]}' http://172.28.0.2:8901
+    curl -ksd '{"method":"Chain.GetBalance","params":[{"addresses":["1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"],"execer":"user.p.para.paracross"}]}' http://172.28.0.2:8901
     响应：
     {
         "result": [{
@@ -140,7 +140,7 @@
 rpc方法
 1.创建交易:
 {
-	"method": "Chain33.CreateRawTransaction",
+	"method": "Chain.CreateRawTransaction",
 	"params": [{
 		"to": "19WJJv96nKAU4sHFWqGmsqfjxd37jazqii",
 		"amount": 2000000000,
@@ -156,7 +156,7 @@ rpc方法
 
 2.签名
 {
-	"method": "Chain33.SignRawTx",
+	"method": "Chain.SignRawTx",
 	"params": [{
 		"privkey": "{私钥}",
 		"txHex": "{交易数据}",
@@ -165,7 +165,7 @@ rpc方法
 }
 3.发送交易
 {
-	"method": "Chain33.SendTransaction",
+	"method": "Chain.SendTransaction",
 	"params": [{
 		"data": "{签名数据}"
 	}]

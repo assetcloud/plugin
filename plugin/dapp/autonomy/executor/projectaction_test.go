@@ -7,14 +7,14 @@ package executor
 import (
 	"testing"
 
-	"github.com/33cn/chain33/account"
-	apimock "github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common"
-	dbm "github.com/33cn/chain33/common/db"
-	_ "github.com/33cn/chain33/system"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	auty "github.com/33cn/plugin/plugin/dapp/autonomy/types"
+	"github.com/assetcloud/chain/account"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common"
+	dbm "github.com/assetcloud/chain/common/db"
+	_ "github.com/assetcloud/chain/system"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	auty "github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

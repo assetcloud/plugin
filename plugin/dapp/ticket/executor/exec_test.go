@@ -7,17 +7,17 @@ package executor_test
 import (
 	"testing"
 
-	apimock "github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	executor "github.com/33cn/plugin/plugin/dapp/ticket/executor"
-	pty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	executor "github.com/assetcloud/plugin/plugin/dapp/ticket/executor"
+	pty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 )
 
 type execEnv struct {

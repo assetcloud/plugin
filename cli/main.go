@@ -2,16 +2,17 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build go1.8
 // +build go1.8
 
 package main
 
 import (
-	_ "github.com/33cn/chain33/system"
-	"github.com/33cn/plugin/cli/buildflags"
-	_ "github.com/33cn/plugin/plugin"
+	_ "github.com/assetcloud/chain/system"
+	"github.com/assetcloud/plugin/cli/buildflags"
+	_ "github.com/assetcloud/plugin/plugin"
 
-	"github.com/33cn/chain33/util/cli"
+	"github.com/assetcloud/chain/util/cli"
 )
 
 func main() {

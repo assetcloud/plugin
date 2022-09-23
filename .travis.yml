@@ -1,5 +1,5 @@
 language: go
-go_import_path: github.com/33cn/plugin
+go_import_path: github.com/assetcloud/plugin
 os: linux
 dist: xenial
 

@@ -11,13 +11,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/33cn/chain33/common/log"
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebcli/buildflags"
-	relayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version"
-	pluginVersion "github.com/33cn/plugin/version"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebcli/buildflags"
+	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version"
+	pluginVersion "github.com/assetcloud/plugin/version"
 	tml "github.com/BurntSushi/toml"
+	"github.com/assetcloud/chain/common/log"
+	"github.com/assetcloud/chain/pluginmgr"
 	"github.com/spf13/cobra"
 )
 

@@ -9,7 +9,7 @@ import "../Chain33Bridge.sol";
  * @title BridgeBank
  * @dev Bank contract which coordinates asset-related functionality.
  *      Chain33Bank manages the minting and burning of tokens which
- *      represent Chain33 based assets, while EthereumBank manages
+ *      represent Chain based assets, while EthereumBank manages
  *      the locking and unlocking of Ethereum and ERC20 token assets
  *      based on Ethereum.
  **/
@@ -97,7 +97,7 @@ contract BridgeBank is Chain33Bank, EthereumBank {
     /*
      * @dev: Mints new BankTokens
      *
-     * @param _chain33Sender: The sender's Chain33 address in bytes.
+     * @param _chain33Sender: The sender's Chain address in bytes.
      * @param _ethereumRecipient: The intended recipient's Ethereum address.
      * @param _chain33TokenAddress: The currency type
      * @param _symbol: chain33 token symbol
@@ -244,11 +244,11 @@ contract BridgeBank is Chain33Bank, EthereumBank {
     }
 
     /*
-    * @dev: Allows access to a Chain33 deposit's information via its unique identifier.
+    * @dev: Allows access to a Chain deposit's information via its unique identifier.
     *
     * @param _id: The deposit to be viewed.
     * @return: Original sender's Ethereum address.
-    * @return: Intended Chain33 recipient's address in bytes.
+    * @return: Intended Chain recipient's address in bytes.
     * @return: The lock deposit's currency, denoted by a token address.
     * @return: The amount locked in the deposit.
     * @return: The deposit's unique nonce.

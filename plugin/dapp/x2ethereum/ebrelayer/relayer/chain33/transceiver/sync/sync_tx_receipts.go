@@ -13,12 +13,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/33cn/chain33/blockchain"
-	dbm "github.com/33cn/chain33/common/db"
-	l "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	"github.com/33cn/chain33/types"
-	relayerTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/assetcloud/chain/blockchain"
+	dbm "github.com/assetcloud/chain/common/db"
+	l "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	"github.com/assetcloud/chain/types"
 	"github.com/rs/cors"
 )
 
@@ -136,7 +136,7 @@ func bindOrResumePush(cfg *relayerTypes.SyncTxReceiptConfig) {
 		Contract:      contract,
 	}
 	var res types.ReplySubscribePush
-	ctx := jsonclient.NewRPCCtx(cfg.Chain33Host, "Chain33.AddPushSubscribe", params, &res)
+	ctx := jsonclient.NewRPCCtx(cfg.Chain33Host, "Chain.AddPushSubscribe", params, &res)
 	_, err := ctx.RunResult()
 	if err != nil {
 		fmt.Println("Failed to AddSubscribeTxReceipt to  rpc addr:", cfg.Chain33Host, "ReplySubTxReceipt", res)

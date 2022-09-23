@@ -11,24 +11,24 @@ import (
 	"testing"
 	"time"
 
-	chain33Common "github.com/33cn/chain33/common"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/test/setup"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	relayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	tml "github.com/BurntSushi/toml"
+	chain33Common "github.com/assetcloud/chain/common"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/test/setup"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	_ "github.com/33cn/chain33/system"
+	_ "github.com/assetcloud/chain/system"
 
 	// 需要显示引用系统插件，以加载系统内置合约
-	"github.com/33cn/chain33/client/mocks"
+	"github.com/assetcloud/chain/client/mocks"
 	"github.com/stretchr/testify/mock"
 )
 

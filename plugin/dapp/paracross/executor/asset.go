@@ -7,13 +7,13 @@ package executor
 import (
 	"strings"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
-	token "github.com/33cn/plugin/plugin/dapp/token/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	token "github.com/assetcloud/plugin/plugin/dapp/token/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
 	"github.com/pkg/errors"
 )
 

@@ -18,7 +18,7 @@ eventId=""
 txhash=""
 
 guess_game_start() {
-    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"guess","actionName":"Start", "payload":{"topic":"WorldCup Final","options":"A:France;B:Claodia","category":"football","maxBetsOneTime":10000000000,"maxBetsNumber":100000000000,"devFeeFactor":5,"devFeeAddr":"1D6RFZNp2rh6QdbcZ1d7RWuBUz61We6SD7","platFeeFactor":5,"platFeeAddr":"1PHtChNt3UcfssR7v7trKSk3WJtAWjKjjX"}}]}' ${MAIN_HTTP} | jq -r ".result")
+    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"guess","actionName":"Start", "payload":{"topic":"WorldCup Final","options":"A:France;B:Claodia","category":"football","maxBetsOneTime":10000000000,"maxBetsNumber":100000000000,"devFeeFactor":5,"devFeeAddr":"1D6RFZNp2rh6QdbcZ1d7RWuBUz61We6SD7","platFeeFactor":5,"platFeeAddr":"1PHtChNt3UcfssR7v7trKSk3WJtAWjKjjX"}}]}' ${MAIN_HTTP} | jq -r ".result")
     chain33_SignAndSendTxWait "$tx" "4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01" ${MAIN_HTTP} "$FUNCNAME"
     eventId="${txhash}"
 }
@@ -26,29 +26,29 @@ guess_game_start() {
 guess_game_bet() {
     local priv=$1
     local opt=$2
-    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"guess","actionName":"Bet", "payload":{"gameID":"'"${eventId}"'","option":"'"${opt}"'", "betsNum":500000000}}]}' ${MAIN_HTTP} | jq -r ".result")
+    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"guess","actionName":"Bet", "payload":{"gameID":"'"${eventId}"'","option":"'"${opt}"'", "betsNum":500000000}}]}' ${MAIN_HTTP} | jq -r ".result")
     chain33_SignAndSendTxWait "$tx" "${priv}" ${MAIN_HTTP} "$FUNCNAME"
 }
 
 guess_game_stop() {
-    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"guess","actionName":"StopBet", "payload":{"gameID":"'"${eventId}"'"}}]}' ${MAIN_HTTP} | jq -r ".result")
+    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"guess","actionName":"StopBet", "payload":{"gameID":"'"${eventId}"'"}}]}' ${MAIN_HTTP} | jq -r ".result")
     chain33_SignAndSendTxWait "$tx" "4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01" ${MAIN_HTTP} "$FUNCNAME"
 }
 
 guess_game_publish() {
-    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"guess","actionName":"Publish", "payload":{"gameID":"'"${eventId}"'","result":"A"}}]}' ${MAIN_HTTP} | jq -r ".result")
+    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"guess","actionName":"Publish", "payload":{"gameID":"'"${eventId}"'","result":"A"}}]}' ${MAIN_HTTP} | jq -r ".result")
     chain33_SignAndSendTxWait "$tx" "4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01" ${MAIN_HTTP} "$FUNCNAME"
 }
 
 guess_game_abort() {
-    tx=$(curl -ksd '{"method":"Chain33.CreateTransaction","params":[{"execer":"guess","actionName":"Abort", "payload":{"gameID":"'"${eventId}"'"}}]}' ${MAIN_HTTP} | jq -r ".result")
+    tx=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"guess","actionName":"Abort", "payload":{"gameID":"'"${eventId}"'"}}]}' ${MAIN_HTTP} | jq -r ".result")
     chain33_SignAndSendTxWait "$tx" "4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01" ${MAIN_HTTP} "$FUNCNAME"
 }
 
 guess_QueryGameByID() {
     local event_id=$1
     local status=$2
-    local req='{"method":"Chain33.Query", "params":[{"execer":"guess","funcName":"QueryGameByID","payload":{"gameID":"'"$event_id"'"}}]}'
+    local req='{"method":"Chain.Query", "params":[{"execer":"guess","funcName":"QueryGameByID","payload":{"gameID":"'"$event_id"'"}}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.result|has("game")) and (.result.game.status == '"$status"')' "$FUNCNAME"
 }
 
@@ -56,10 +56,10 @@ init() {
     ispara=$(echo '"'"${MAIN_HTTP}"'"' | jq '.|contains("8901")')
     echo "ipara=$ispara"
     if [ "$ispara" == true ]; then
-        guess_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"user.p.para.guess"}]}' ${MAIN_HTTP} | jq -r ".result")
+        guess_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"user.p.para.guess"}]}' ${MAIN_HTTP} | jq -r ".result")
         guess_exec="user.p.para.guess"
     else
-        guess_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"guess"}]}' ${MAIN_HTTP} | jq -r ".result")
+        guess_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"guess"}]}' ${MAIN_HTTP} | jq -r ".result")
         guess_exec="guess"
     fi
     echo "guess_addr=$guess_addr"

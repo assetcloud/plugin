@@ -1,8 +1,8 @@
 package testnode
 
 import (
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
 )
 
 /*

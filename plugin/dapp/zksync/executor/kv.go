@@ -2,8 +2,9 @@ package executor
 
 import (
 	"fmt"
-	"github.com/33cn/chain33/common/address"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+
+	"github.com/assetcloud/chain/common/address"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 )
 
 func GetAccountIdPrimaryKey(accountId uint64) []byte {

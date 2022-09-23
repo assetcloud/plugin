@@ -17,12 +17,12 @@ trade执行器支持trade的创建和交易，
 */
 
 import (
-	log "github.com/33cn/chain33/common/log/log15"
+	log "github.com/assetcloud/chain/common/log/log15"
 
-	"github.com/33cn/chain33/common/db/table"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
+	"github.com/assetcloud/chain/common/db/table"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 )
 
 var (

@@ -7,17 +7,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
-	ptypes "github.com/33cn/plugin/plugin/dapp/js/types"
-	"github.com/33cn/plugin/plugin/dapp/js/types/jsproto"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
+	ptypes "github.com/assetcloud/plugin/plugin/dapp/js/types"
+	"github.com/assetcloud/plugin/plugin/dapp/js/types/jsproto"
 	"github.com/stretchr/testify/assert"
 
-	_ "github.com/33cn/chain33/system"
-	_ "github.com/33cn/plugin/plugin"
+	_ "github.com/assetcloud/chain/system"
+	_ "github.com/assetcloud/plugin/plugin"
 )
 
 func init() {
@@ -46,7 +46,7 @@ func TestJsVM(t *testing.T) {
 		Payload:    types.MustPBToJSON(create),
 	}
 	var txhex string
-	err := mocker.GetJSONC().Call("Chain33.CreateTransaction", req, &txhex)
+	err := mocker.GetJSONC().Call("Chain.CreateTransaction", req, &txhex)
 	assert.Nil(t, err)
 	hash, err := mocker.SendAndSign(mocker.GetHotKey(), txhex)
 	assert.Nil(t, err)
@@ -65,7 +65,7 @@ func TestJsVM(t *testing.T) {
 		ActionName: "Call",
 		Payload:    types.MustPBToJSON(call),
 	}
-	err = mocker.GetJSONC().Call("Chain33.CreateTransaction", req, &txhex)
+	err = mocker.GetJSONC().Call("Chain.CreateTransaction", req, &txhex)
 	assert.Nil(t, err)
 	hash, err = mocker.SendAndSign(mocker.GetHotKey(), txhex)
 	assert.Nil(t, err)
@@ -85,7 +85,7 @@ func TestJsVM(t *testing.T) {
 		Payload:  types.MustPBToJSON(call),
 	}
 	var queryresult jsproto.QueryResult
-	err = mocker.GetJSONC().Call("Chain33.Query", query, &queryresult)
+	err = mocker.GetJSONC().Call("Chain.Query", query, &queryresult)
 	assert.Nil(t, err)
 	t.Log(queryresult.Data)
 }
@@ -113,7 +113,7 @@ func TestJsGame(t *testing.T) {
 		Payload:    types.MustPBToJSON(create),
 	}
 	var txhex string
-	err = mocker.GetJSONC().Call("Chain33.CreateTransaction", req, &txhex)
+	err = mocker.GetJSONC().Call("Chain.CreateTransaction", req, &txhex)
 	assert.Nil(t, err)
 	hash, err := mocker.SendAndSign(mocker.GetHotKey(), txhex)
 	assert.Nil(t, err)
@@ -133,7 +133,7 @@ func TestJsGame(t *testing.T) {
 		TokenSymbol: "",
 		ExecName:    "user.jsvm." + contractName,
 	}
-	err = mocker.GetJSONC().Call("Chain33.CreateRawTransaction", reqtx, &txhex)
+	err = mocker.GetJSONC().Call("Chain.CreateRawTransaction", reqtx, &txhex)
 	assert.Nil(t, err)
 	hash, err = mocker.SendAndSign(mocker.GetHotKey(), txhex)
 	assert.Nil(t, err)
@@ -153,7 +153,7 @@ func TestJsGame(t *testing.T) {
 		TokenSymbol: "",
 		ExecName:    "user.jsvm." + contractName,
 	}
-	err = mocker.GetJSONC().Call("Chain33.CreateRawTransaction", reqtx, &txhex)
+	err = mocker.GetJSONC().Call("Chain.CreateRawTransaction", reqtx, &txhex)
 	assert.Nil(t, err)
 	hash, err = mocker.SendAndSign(mocker.GetGenesisKey(), txhex)
 	assert.Nil(t, err)
@@ -181,7 +181,7 @@ func TestJsGame(t *testing.T) {
 		ActionName: "Call",
 		Payload:    types.MustPBToJSON(call),
 	}
-	err = mocker.GetJSONC().Call("Chain33.CreateTransaction", req, &txhex)
+	err = mocker.GetJSONC().Call("Chain.CreateTransaction", req, &txhex)
 	assert.Nil(t, err)
 	hash, err = mocker.SendAndSignNonce(mocker.GetHotKey(), txhex, nonce)
 	assert.Nil(t, err)
@@ -200,7 +200,7 @@ func TestJsGame(t *testing.T) {
 		ActionName: "Call",
 		Payload:    types.MustPBToJSON(call),
 	}
-	err = mocker.GetJSONC().Call("Chain33.CreateTransaction", req, &txhex)
+	err = mocker.GetJSONC().Call("Chain.CreateTransaction", req, &txhex)
 	assert.Nil(t, err)
 	hash, err = mocker.SendAndSignNonce(mocker.GetGenesisKey(), txhex, nonce)
 	assert.Nil(t, err)
@@ -219,7 +219,7 @@ func TestJsGame(t *testing.T) {
 		ActionName: "Call",
 		Payload:    types.MustPBToJSON(call),
 	}
-	err = mocker.GetJSONC().Call("Chain33.CreateTransaction", req, &txhex)
+	err = mocker.GetJSONC().Call("Chain.CreateTransaction", req, &txhex)
 	assert.Nil(t, err)
 	t.Log(mocker.GetHotAddress())
 	hash, err = mocker.SendAndSignNonce(mocker.GetGenesisKey(), txhex, nonce)
@@ -239,7 +239,7 @@ func TestJsGame(t *testing.T) {
 		ActionName: "Call",
 		Payload:    types.MustPBToJSON(call),
 	}
-	err = mocker.GetJSONC().Call("Chain33.CreateTransaction", req, &txhex)
+	err = mocker.GetJSONC().Call("Chain.CreateTransaction", req, &txhex)
 	assert.Nil(t, err)
 	t.Log(mocker.GetHotAddress())
 	hash, err = mocker.SendAndSignNonce(mocker.GetHotKey(), txhex, nonce)
@@ -259,7 +259,7 @@ func TestJsGame(t *testing.T) {
 		Payload:  types.MustPBToJSON(call),
 	}
 	var queryresult jsproto.QueryResult
-	err = mocker.GetJSONC().Call("Chain33.Query", query, &queryresult)
+	err = mocker.GetJSONC().Call("Chain.Query", query, &queryresult)
 	assert.Nil(t, err)
 	t.Log(queryresult.Data)
 
@@ -274,7 +274,7 @@ func TestJsGame(t *testing.T) {
 		FuncName: "Query",
 		Payload:  types.MustPBToJSON(call),
 	}
-	err = mocker.GetJSONC().Call("Chain33.Query", query, &queryresult)
+	err = mocker.GetJSONC().Call("Chain.Query", query, &queryresult)
 	assert.Nil(t, err)
 	joinkey := queryresult.Data
 	reqjson := make(map[string]interface{})
@@ -290,7 +290,7 @@ func TestJsGame(t *testing.T) {
 		FuncName: "Query",
 		Payload:  types.MustPBToJSON(call),
 	}
-	err = mocker.GetJSONC().Call("Chain33.Query", query, &queryresult)
+	err = mocker.GetJSONC().Call("Chain.Query", query, &queryresult)
 	assert.Nil(t, err)
 	t.Log(queryresult.Data)
 }
@@ -310,7 +310,7 @@ func configCreator(mocker *testnode.Chain33Mock, t *testing.T) {
 		Payload:    types.MustPBToJSON(creator),
 	}
 	var cfgtxhex string
-	err := mocker.GetJSONC().Call("Chain33.CreateTransaction", cfgReq, &cfgtxhex)
+	err := mocker.GetJSONC().Call("Chain.CreateTransaction", cfgReq, &cfgtxhex)
 	assert.Nil(t, err)
 	hash1, err := mocker.SendAndSign(mocker.GetHotKey(), cfgtxhex)
 	assert.Nil(t, err)

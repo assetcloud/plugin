@@ -5,10 +5,10 @@
 package issuance
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/issuance/commands"
-	"github.com/33cn/plugin/plugin/dapp/issuance/executor"
-	"github.com/33cn/plugin/plugin/dapp/issuance/types"
+	"github.com/assetcloud/plugin/plugin/dapp/issuance/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/issuance/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/issuance/types"
+	"github.com/assetcloud/chain/pluginmgr"
 )
 
 func init() {

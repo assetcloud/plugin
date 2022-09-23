@@ -1,7 +1,7 @@
 proj := "build"
 .PHONY: default build remote winset
 
-SRC_CLI := 33cn/plugin/plugin/dapp/dex/boss
+SRC_CLI := assetcloud/plugin/plugin/dapp/dex/boss
 OUT := build
 
 default: build

@@ -9,13 +9,13 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	l "github.com/33cn/chain33/common/log/log15"
-	cty "github.com/33cn/chain33/system/dapp/coins/types"
-	"github.com/33cn/chain33/types"
-	tokenty "github.com/33cn/plugin/plugin/dapp/token/types"
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	l "github.com/assetcloud/chain/common/log/log15"
+	cty "github.com/assetcloud/chain/system/dapp/coins/types"
+	"github.com/assetcloud/chain/types"
 )
 
 var log = l.New("module", "signatory")

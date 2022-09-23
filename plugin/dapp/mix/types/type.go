@@ -7,10 +7,10 @@ package types
 import (
 	"reflect"
 
-	log "github.com/33cn/chain33/common/log/log15"
-	coins "github.com/33cn/chain33/system/dapp/coins/types"
-	"github.com/33cn/chain33/types"
-	token "github.com/33cn/plugin/plugin/dapp/token/types"
+	token "github.com/assetcloud/plugin/plugin/dapp/token/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	coins "github.com/assetcloud/chain/system/dapp/coins/types"
+	"github.com/assetcloud/chain/types"
 )
 
 var (

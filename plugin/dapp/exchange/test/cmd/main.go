@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/exchange/test"
-	et "github.com/33cn/plugin/plugin/dapp/exchange/types"
+	"github.com/assetcloud/plugin/plugin/dapp/exchange/test"
+	et "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
+	"github.com/assetcloud/chain/types"
 )
 
 //setting ...

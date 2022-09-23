@@ -3,7 +3,7 @@ package ethtxs
 import (
 	"strings"
 
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 

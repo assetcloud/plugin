@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 	ethTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/spf13/cobra"
 )

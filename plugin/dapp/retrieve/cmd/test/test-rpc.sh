@@ -13,7 +13,7 @@ source ../dapp-test-common.sh
 # 2. 或将资产类的合约先测试
 # 3. 或资产类的合约提供创建的函数 创建一个某某名字的token
 function updateConfig() {
-    unsignedTx=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain33.CreateTransaction","params":[{"execer": "manage","actionName":"Modify","payload":{ "key": "token-blacklist","value": "BTY","op": "add","addr": ""}}]}' -H 'content-type:text/plain;' ${MAIN_HTTP} | jq -r ".result")
+    unsignedTx=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain.CreateTransaction","params":[{"execer": "manage","actionName":"Modify","payload":{ "key": "token-blacklist","value": "BTY","op": "add","addr": ""}}]}' -H 'content-type:text/plain;' ${MAIN_HTTP} | jq -r ".result")
     if [ "${unsignedTx}" == "" ]; then
         echo_rst "update config create tx" 1
         return
@@ -43,7 +43,7 @@ function token_finish() {
 }
 
 function token_sendExec() {
-    unsignedTx=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain33.CreateTransaction","params":[{"execer": "'"${token_ame}"'","actionName":"TransferToExec","payload": {"cointoken":"'"$1"'", "amount": "10000000000", "note": "", "to": "'"${retrieve_addr}"'", "execName": "'"${retrieve_name}"'"}}]}' -H 'content-type:text/plain;' ${MAIN_HTTP} | jq -r ".result")
+    unsignedTx=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain.CreateTransaction","params":[{"execer": "'"${token_ame}"'","actionName":"TransferToExec","payload": {"cointoken":"'"$1"'", "amount": "10000000000", "note": "", "to": "'"${retrieve_addr}"'", "execName": "'"${retrieve_name}"'"}}]}' -H 'content-type:text/plain;' ${MAIN_HTTP} | jq -r ".result")
     if [ "${unsignedTx}" == "" ]; then
         echo_rst "token sendExec create tx" 1
         return
@@ -92,13 +92,13 @@ retrieve_Cancel() {
 
 retrieve_QueryResult() {
     local status=$1
-    local req='{"method":"Chain33.Query","params":[{"execer":"retrieve","funcName":"GetRetrieveInfo","payload":{"backupAddress":"'$retrieve1'", "defaultAddress":"'$retrieve2'"}}]}'
+    local req='{"method":"Chain.Query","params":[{"execer":"retrieve","funcName":"GetRetrieveInfo","payload":{"backupAddress":"'$retrieve1'", "defaultAddress":"'$retrieve2'"}}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.result.status == '"$status"')' "$FUNCNAME"
 }
 
 retrieve_QueryAssetResult() {
     local status=$1
-    local req='{"method":"Chain33.Query","params":[{"execer":"retrieve","funcName":"GetRetrieveInfo","payload":{"backupAddress":"'$retrieve1'", "defaultAddress":"'$retrieve2'","assetExec":"token", "assetSymbol":"'"$symbol"'"}}]}'
+    local req='{"method":"Chain.Query","params":[{"execer":"retrieve","funcName":"GetRetrieveInfo","payload":{"backupAddress":"'$retrieve1'", "defaultAddress":"'$retrieve2'","assetExec":"token", "assetSymbol":"'"$symbol"'"}}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.result.status == '"$status"')' "$FUNCNAME"
 }
 
@@ -108,11 +108,11 @@ init() {
     if [ "$ispara" == true ]; then
         token_ame="user.p.para.token"
         retrieve_name="user.p.para.retrieve"
-        retrieve_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"user.p.para.retrieve"}]}' ${MAIN_HTTP} | jq -r ".result")
+        retrieve_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"user.p.para.retrieve"}]}' ${MAIN_HTTP} | jq -r ".result")
     else
         token_ame="token"
         retrieve_name="retrieve"
-        retrieve_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"retrieve"}]}' ${MAIN_HTTP} | jq -r ".result")
+        retrieve_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"retrieve"}]}' ${MAIN_HTTP} | jq -r ".result")
     fi
 
     retrieve1_key=0xf54a8ffe50b308a2d37f44a9e595fd2d156c09732b712b8548eccf1dce4d0fde

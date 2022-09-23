@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeFactory"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeRouter"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeFactory"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeRouter"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"

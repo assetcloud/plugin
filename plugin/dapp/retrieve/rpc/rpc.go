@@ -7,8 +7,8 @@ package rpc
 import (
 	"context"
 
-	"github.com/33cn/chain33/types"
-	rt "github.com/33cn/plugin/plugin/dapp/retrieve/types"
+	"github.com/assetcloud/chain/types"
+	rt "github.com/assetcloud/plugin/plugin/dapp/retrieve/types"
 )
 
 func (c *channelClient) Backup(ctx context.Context, v *rt.BackupRetrieve) (*types.UnsignTx, error) {

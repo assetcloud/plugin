@@ -6,7 +6,7 @@ package ethereum
 //      Initializes the relayer service, which parses,
 //      encodes, and packages named events on an Ethereum
 //      Smart Contract for validator's to sign and send
-//      to the Chain33 bridge.
+//      to the Chain bridge.
 // -----------------------------------------------------
 
 import (
@@ -20,15 +20,15 @@ import (
 	"sync/atomic"
 	"time"
 
-	chain33Crypto "github.com/33cn/chain33/common/crypto"
-	dbm "github.com/33cn/chain33/common/db"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
-	x2ethTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	x2ethTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
+	chain33Crypto "github.com/assetcloud/chain/common/crypto"
+	dbm "github.com/assetcloud/chain/common/db"
+	log "github.com/assetcloud/chain/common/log/log15"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"

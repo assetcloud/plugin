@@ -5,10 +5,10 @@
 package hashlock
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/hashlock/commands"
-	"github.com/33cn/plugin/plugin/dapp/hashlock/executor"
-	"github.com/33cn/plugin/plugin/dapp/hashlock/types"
+	"github.com/assetcloud/plugin/plugin/dapp/hashlock/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/hashlock/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/hashlock/types"
+	"github.com/assetcloud/chain/pluginmgr"
 )
 
 func init() {

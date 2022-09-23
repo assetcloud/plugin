@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strconv"
 
-	jsonrpc "github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	pkt "github.com/33cn/plugin/plugin/dapp/issuance/types"
+	pkt "github.com/assetcloud/plugin/plugin/dapp/issuance/types"
+	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/spf13/cobra"
 )
 
@@ -69,7 +69,7 @@ func IssuanceCreate(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -106,7 +106,7 @@ func IssuanceDebt(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -143,7 +143,7 @@ func IssuanceRepay(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -180,7 +180,7 @@ func IssuancePriceFeed(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -214,7 +214,7 @@ func IssuanceClose(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -248,7 +248,7 @@ func IssuanceManage(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -271,7 +271,7 @@ func IssuanceQueryPrice(cmd *cobra.Command, args []string) {
 
 	params.FuncName = "IssuancePrice"
 	var res pkt.RepIssuancePrice
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -305,7 +305,7 @@ func IssuanceQueryUserBalance(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var res pkt.RepIssuanceUserBalance
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -367,7 +367,7 @@ func IssuanceQuery(cmd *cobra.Command, args []string) {
 			}
 			params.Payload = types.MustPBToJSON(req)
 			var res pkt.RepIssuanceRecords
-			ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+			ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 			ctx.Run()
 		} else if statusStr != "" {
 			params.FuncName = "IssuanceRecordsByStatus"
@@ -378,7 +378,7 @@ func IssuanceQuery(cmd *cobra.Command, args []string) {
 			}
 			params.Payload = types.MustPBToJSON(req)
 			var res pkt.RepIssuanceRecords
-			ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+			ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 			ctx.Run()
 		} else if debtID != "" {
 			params.FuncName = "IssuanceRecordByID"
@@ -389,7 +389,7 @@ func IssuanceQuery(cmd *cobra.Command, args []string) {
 			}
 			params.Payload = types.MustPBToJSON(req)
 			var res pkt.RepIssuanceDebtInfo
-			ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+			ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 			ctx.Run()
 		} else {
 			params.FuncName = "IssuanceInfoByID"
@@ -399,7 +399,7 @@ func IssuanceQuery(cmd *cobra.Command, args []string) {
 			}
 			params.Payload = types.MustPBToJSON(req)
 			var res pkt.RepIssuanceCurrentInfo
-			ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+			ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 			ctx.Run()
 		}
 	} else if statusStr != "" {
@@ -408,7 +408,7 @@ func IssuanceQuery(cmd *cobra.Command, args []string) {
 		req := &pkt.ReqIssuanceByStatus{Status: int32(status)}
 		params.Payload = types.MustPBToJSON(req)
 		var res pkt.RepIssuanceIDs
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 	} else if issuanceIDs != "" {
 		params.FuncName = "IssuanceInfoByIDs"
@@ -420,7 +420,7 @@ func IssuanceQuery(cmd *cobra.Command, args []string) {
 		params.Payload = types.MustPBToJSON(req)
 		fmt.Println(params.Payload)
 		var res pkt.RepIssuanceCurrentInfos
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 	} else {
 		cmd.Help()

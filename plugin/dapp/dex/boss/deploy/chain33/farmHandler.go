@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/cakeToken"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/cakeToken"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
 	"github.com/spf13/cobra"
 )
 

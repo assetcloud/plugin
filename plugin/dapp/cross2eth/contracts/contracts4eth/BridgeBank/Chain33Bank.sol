@@ -6,7 +6,7 @@ import "./BridgeToken.sol";
 /**
  * @title Chain33Bank
  * @dev Manages the deployment and minting of ERC20 compatible BridgeTokens
- *      which represent assets based on the Chain33 blockchain.
+ *      which represent assets based on the Chain blockchain.
  **/
 
 contract Chain33Bank {
@@ -112,7 +112,7 @@ contract Chain33Bank {
     /*
     * @dev: Creates a new Chain33Deposit with a unique ID
     *
-    * @param _chain33Sender: The sender's Chain33 address in bytes.
+    * @param _chain33Sender: The sender's Chain address in bytes.
     * @param _ethereumRecipient: The intended recipient's Ethereum address.
     * @param _token: The currency type
     * @param _amount: The amount in the deposit.
@@ -156,7 +156,7 @@ contract Chain33Bank {
     /*
     * @dev: Creates a new Chain33Burn with a unique ID
         *
-        * @param _chain33Sender: The sender's Chain33 address in bytes.
+        * @param _chain33Sender: The sender's Chain address in bytes.
         * @param _ethereumOwner: The owner's Ethereum address.
         * @param _token: The token Address
         * @param _amount: The amount to be burned.
@@ -233,7 +233,7 @@ contract Chain33Bank {
     /*
      * @dev: Mints new chain33 tokens
      *
-     * @param _chain33Sender: The sender's Chain33 address in bytes.
+     * @param _chain33Sender: The sender's Chain address in bytes.
      * @param _ethereumRecipient: The intended recipient's Ethereum address.
      * @param _chain33TokenAddress: The currency type
      * @param _symbol: chain33 token symbol
@@ -282,7 +282,7 @@ contract Chain33Bank {
      * @dev: Burn chain33 tokens
      *
      * @param _from: The address to be burned from
-     * @param _chain33Receiver: The receiver's Chain33 address in bytes.
+     * @param _chain33Receiver: The receiver's Chain address in bytes.
      * @param _chain33TokenAddress: The token address of chain33 asset issued on ethereum
      * @param _amount: number of chain33 tokens to be minted
      */

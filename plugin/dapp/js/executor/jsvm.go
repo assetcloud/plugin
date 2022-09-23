@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/33cn/chain33/types"
-	ptypes "github.com/33cn/plugin/plugin/dapp/js/types"
-	"github.com/33cn/plugin/plugin/dapp/js/types/jsproto"
+	"github.com/assetcloud/chain/types"
+	ptypes "github.com/assetcloud/plugin/plugin/dapp/js/types"
+	"github.com/assetcloud/plugin/plugin/dapp/js/types/jsproto"
 	"github.com/robertkrimen/otto"
 )
 

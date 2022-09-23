@@ -12,8 +12,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/33cn/plugin/plugin/dapp/cert/authority/tools/cryptogen/factory/csp"
-	"github.com/33cn/plugin/plugin/dapp/cert/authority/tools/cryptogen/factory/signer"
+	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/tools/cryptogen/factory/csp"
+	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/tools/cryptogen/factory/signer"
 	"github.com/tjfoc/gmsm/sm2"
 )
 

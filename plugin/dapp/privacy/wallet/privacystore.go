@@ -9,11 +9,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	wcom "github.com/33cn/chain33/wallet/common"
-	privacy "github.com/33cn/plugin/plugin/dapp/privacy/crypto"
-	privacytypes "github.com/33cn/plugin/plugin/dapp/privacy/types"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	wcom "github.com/assetcloud/chain/wallet/common"
+	privacy "github.com/assetcloud/plugin/plugin/dapp/privacy/crypto"
+	privacytypes "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
 
 	"github.com/golang/protobuf/proto"
 )

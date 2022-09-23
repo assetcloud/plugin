@@ -3,19 +3,19 @@ package commands
 import (
 	"testing"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
 	"github.com/stretchr/testify/assert"
 
 	// 因为测试程序在外层，而合约类型的初始化在里面，所以需要显示引用，否则不会加载合约插件
-	evm "github.com/33cn/plugin/plugin/dapp/evm/executor"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	evm "github.com/assetcloud/plugin/plugin/dapp/evm/executor"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 
 	// 需要显示引用系统插件，以加载系统内置合约
-	"github.com/33cn/chain33/client/mocks"
-	_ "github.com/33cn/chain33/system"
+	"github.com/assetcloud/chain/client/mocks"
+	_ "github.com/assetcloud/chain/system"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -52,7 +52,7 @@ func TestQueryDebug(t *testing.T) {
 	assert.NotNil(t, jsonClient)
 
 	var debugResp evmtypes.EvmDebugResp
-	err = jsonClient.Call("Chain33.Query", in, &debugResp)
+	err = jsonClient.Call("Chain.Query", in, &debugResp)
 	assert.Nil(t, err)
 	assert.Equal(t, "on", debugResp.DebugStatus)
 }

@@ -5,7 +5,7 @@
 package rpc
 
 import (
-	"github.com/33cn/chain33/rpc/types"
+	"github.com/assetcloud/chain/rpc/types"
 )
 
 // Jrpc 申明Jrpc结构体

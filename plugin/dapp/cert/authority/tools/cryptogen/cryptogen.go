@@ -9,12 +9,12 @@ import (
 	"os"
 	"path/filepath"
 
-	log "github.com/33cn/chain33/common/log/log15"
+	log "github.com/assetcloud/chain/common/log/log15"
 	"gopkg.in/yaml.v2"
 
-	"github.com/33cn/chain33/types"
-	_ "github.com/33cn/plugin/plugin/crypto/init"
-	"github.com/33cn/plugin/plugin/dapp/cert/authority/tools/cryptogen/generator"
+	_ "github.com/assetcloud/plugin/plugin/crypto/init"
+	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/tools/cryptogen/generator"
+	"github.com/assetcloud/chain/types"
 	"github.com/spf13/cobra"
 )
 

@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
 	"github.com/spf13/cobra"
 )
 

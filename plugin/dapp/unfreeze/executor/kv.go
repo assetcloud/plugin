@@ -8,7 +8,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	pty "github.com/33cn/plugin/plugin/dapp/unfreeze/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/unfreeze/types"
 )
 
 var (

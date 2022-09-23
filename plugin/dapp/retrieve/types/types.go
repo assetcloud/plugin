@@ -7,8 +7,8 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/types"
 )
 
 func init() {

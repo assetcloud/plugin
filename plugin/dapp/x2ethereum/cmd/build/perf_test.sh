@@ -65,7 +65,7 @@ loop_send_lock_eth() {
 }
 
 loop_send_burn_eth() {
-    echo -e "${GRE}=========== Chain33 Burn begin ===========${NOC}"
+    echo -e "${GRE}=========== Chain Burn begin ===========${NOC}"
 
     preChain33Balance=$(${Chain33Cli} x2ethereum balance -s 12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv -t eth | jq ".res" | jq ".[]" | jq ".balance" | sed 's/\"//g')
 
@@ -98,7 +98,7 @@ loop_send_burn_eth() {
 }
 
 loop_send_lock_bty() {
-    echo -e "${GRE}=========== Chain33 Lock begin ===========${NOC}"
+    echo -e "${GRE}=========== Chain Lock begin ===========${NOC}"
 
     preChain33Balance=$(${Chain33Cli} account balance -a 12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv -e x2ethereum | jq -r ".balance" | sed 's/\"//g')
 
@@ -185,7 +185,7 @@ loop_send_lock_erc20() {
 }
 
 loop_send_burn_erc20() {
-    echo -e "${GRE}=========== Chain33 Burn Erc20 begin ===========${NOC}"
+    echo -e "${GRE}=========== Chain Burn Erc20 begin ===========${NOC}"
     preChain33Balance=$(${Chain33Cli} x2ethereum balance -s 12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv -t testc | jq ".res" | jq ".[]" | jq ".balance" | sed 's/\"//g')
 
     i=0

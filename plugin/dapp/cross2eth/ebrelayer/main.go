@@ -15,19 +15,19 @@ import (
 	"path/filepath"
 	"syscall"
 
-	dbm "github.com/33cn/chain33/common/db"
-	logf "github.com/33cn/chain33/common/log"
-	"github.com/33cn/chain33/common/log/log15"
-	chain33Types "github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer"
-	chain33Relayer "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33"
-	ethRelayer "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	relayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version"
-	pluginVersion "github.com/33cn/plugin/version"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer"
+	chain33Relayer "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33"
+	ethRelayer "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version"
+	pluginVersion "github.com/assetcloud/plugin/version"
 	tml "github.com/BurntSushi/toml"
+	dbm "github.com/assetcloud/chain/common/db"
+	logf "github.com/assetcloud/chain/common/log"
+	"github.com/assetcloud/chain/common/log/log15"
+	chain33Types "github.com/assetcloud/chain/types"
 	"github.com/btcsuite/btcd/limits"
 )
 
@@ -75,7 +75,7 @@ func main() {
 		panic(err)
 	}
 	cfg := initCfg(*configPath)
-	mainlog.Info("Starting FUZAMEI Chain33-X-Ethereum relayer software:", "\n     Name: ", cfg.Title)
+	mainlog.Info("Starting FUZAMEI Chain-X-Ethereum relayer software:", "\n     Name: ", cfg.Title)
 	logf.SetFileLog(convertLogCfg(cfg.Log))
 
 	ctx, cancel := context.WithCancel(context.Background())

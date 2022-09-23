@@ -12,14 +12,14 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/33cn/chain33/system/address/btc"
+	"github.com/assetcloud/chain/system/address/btc"
 
 	"encoding/hex"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto/sha3"
-	"github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto/sha3"
+	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
 	"github.com/holiman/uint256"
 )
 

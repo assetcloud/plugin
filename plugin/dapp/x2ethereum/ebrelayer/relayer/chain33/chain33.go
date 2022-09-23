@@ -11,19 +11,19 @@ import (
 	"sync/atomic"
 	"time"
 
-	dbm "github.com/33cn/chain33/common/db"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	chain33Types "github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
-	relayerTx "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
-	syncTx "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain33/transceiver/sync"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
+	relayerTx "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+	syncTx "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain33/transceiver/sync"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
+	dbm "github.com/assetcloud/chain/common/db"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	chain33Types "github.com/assetcloud/chain/types"
 	ethCommon "github.com/ethereum/go-ethereum/common"
 )
 
@@ -90,9 +90,9 @@ func (chain33Relayer *Relayer4Chain33) QueryTxhashRelay2Eth() ebTypes.Txhashes {
 }
 
 func (chain33Relayer *Relayer4Chain33) syncProc(syncCfg *ebTypes.SyncTxReceiptConfig) {
-	_, _ = fmt.Fprintln(os.Stdout, "Pls unlock or import private key for Chain33 relayer")
+	_, _ = fmt.Fprintln(os.Stdout, "Pls unlock or import private key for Chain relayer")
 	<-chain33Relayer.unlock
-	_, _ = fmt.Fprintln(os.Stdout, "Chain33 relayer starts to run...")
+	_, _ = fmt.Fprintln(os.Stdout, "Chain relayer starts to run...")
 
 	chain33Relayer.syncTxReceipts = syncTx.StartSyncTxReceipt(syncCfg, chain33Relayer.db)
 	chain33Relayer.lastHeight4Tx = chain33Relayer.loadLastSyncHeight()
@@ -120,7 +120,7 @@ func (chain33Relayer *Relayer4Chain33) syncProc(syncCfg *ebTypes.SyncTxReceiptCo
 
 func (chain33Relayer *Relayer4Chain33) getCurrentHeight() int64 {
 	var res rpctypes.Header
-	ctx := jsonclient.NewRPCCtx(chain33Relayer.rpcLaddr, "Chain33.GetLastHeader", nil, &res)
+	ctx := jsonclient.NewRPCCtx(chain33Relayer.rpcLaddr, "Chain.GetLastHeader", nil, &res)
 	_, err := ctx.RunResult()
 	if nil != err {
 		relayerLog.Error("getCurrentHeight", "Failede due to:", err.Error())

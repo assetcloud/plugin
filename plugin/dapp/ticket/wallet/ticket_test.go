@@ -12,17 +12,17 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	wcom "github.com/33cn/chain33/wallet/common"
-	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	wcom "github.com/assetcloud/chain/wallet/common"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 	"github.com/stretchr/testify/assert"
 
-	_ "github.com/33cn/chain33/system"
-	"github.com/33cn/chain33/types"
+	_ "github.com/assetcloud/chain/system"
+	"github.com/assetcloud/chain/types"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/db"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/db"
 )
 
 const (

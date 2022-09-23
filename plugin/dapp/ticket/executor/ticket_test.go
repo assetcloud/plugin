@@ -7,19 +7,19 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	"github.com/33cn/chain33/util/testnode"
-	"github.com/33cn/plugin/plugin/dapp/ticket/executor"
-	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	"github.com/assetcloud/chain/util/testnode"
+	"github.com/assetcloud/plugin/plugin/dapp/ticket/executor"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
 
-	_ "github.com/33cn/chain33/system"
-	_ "github.com/33cn/plugin/plugin/consensus/init"
-	_ "github.com/33cn/plugin/plugin/dapp/ticket"
+	_ "github.com/assetcloud/chain/system"
+	_ "github.com/assetcloud/plugin/plugin/consensus/init"
+	_ "github.com/assetcloud/plugin/plugin/dapp/ticket"
 )
 
 var mock33 *testnode.Chain33Mock

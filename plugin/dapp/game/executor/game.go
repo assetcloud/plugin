@@ -7,10 +7,10 @@ package executor
 import (
 	"fmt"
 
-	log "github.com/33cn/chain33/common/log/log15"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	gt "github.com/33cn/plugin/plugin/dapp/game/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	gt "github.com/assetcloud/plugin/plugin/dapp/game/types"
 )
 
 var glog = log.New("module", "execs.game")

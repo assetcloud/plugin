@@ -5,12 +5,12 @@
 package paracross
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/mix/commands"
-	"github.com/33cn/plugin/plugin/dapp/mix/executor"
-	"github.com/33cn/plugin/plugin/dapp/mix/rpc"
-	"github.com/33cn/plugin/plugin/dapp/mix/types"
-	_ "github.com/33cn/plugin/plugin/dapp/mix/wallet" // register wallet package
+	"github.com/assetcloud/plugin/plugin/dapp/mix/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/mix/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/mix/rpc"
+	"github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	_ "github.com/assetcloud/plugin/plugin/dapp/mix/wallet" // register wallet package
+	"github.com/assetcloud/chain/pluginmgr"
 )
 
 func init() {

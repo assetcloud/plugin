@@ -8,14 +8,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	_ "github.com/33cn/chain33/system"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
-	_ "github.com/33cn/plugin/plugin"
-	mty "github.com/33cn/plugin/plugin/dapp/multisig/types"
+	_ "github.com/assetcloud/plugin/plugin"
+	mty "github.com/assetcloud/plugin/plugin/dapp/multisig/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	_ "github.com/assetcloud/chain/system"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -128,7 +128,7 @@ func testAccCreateTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jso
 	params.FuncName = "MultiSigAccCount"
 	params.Payload = types.MustPBToJSON(&types.ReqNil{})
 	rep := &types.Int64{}
-	err = jrpcClient.Call("Chain33.Query", &params, rep)
+	err = jrpcClient.Call("Chain.Query", &params, rep)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(1), rep.Data)
 
@@ -142,7 +142,7 @@ func testAccCreateTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jso
 	params.FuncName = "MultiSigAccounts"
 	params.Payload = types.MustPBToJSON(&req1)
 	rep1 := &mty.ReplyMultiSigAccs{}
-	err = jrpcClient.Call("Chain33.Query", params, rep1)
+	err = jrpcClient.Call("Chain.Query", params, rep1)
 	assert.Nil(t, err)
 	//t.Log(rep1)
 

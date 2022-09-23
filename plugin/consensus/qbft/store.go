@@ -7,9 +7,9 @@ package qbft
 import (
 	"fmt"
 
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	tmtypes "github.com/33cn/plugin/plugin/dapp/qbftNode/types"
+	tmtypes "github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
 	"github.com/golang/protobuf/proto"
 )
 

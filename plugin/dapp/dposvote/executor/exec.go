@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	dty "github.com/33cn/plugin/plugin/dapp/dposvote/types"
+	"github.com/assetcloud/chain/types"
+	dty "github.com/assetcloud/plugin/plugin/dapp/dposvote/types"
 )
 
 //Exec_Regist DPos执行器注册候选节点

@@ -6,11 +6,11 @@
 package blackwhite
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/blackwhite/commands"
-	"github.com/33cn/plugin/plugin/dapp/blackwhite/executor"
-	"github.com/33cn/plugin/plugin/dapp/blackwhite/rpc"
-	"github.com/33cn/plugin/plugin/dapp/blackwhite/types"
+	"github.com/assetcloud/plugin/plugin/dapp/blackwhite/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/blackwhite/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/blackwhite/rpc"
+	"github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
+	"github.com/assetcloud/chain/pluginmgr"
 )
 
 func init() {

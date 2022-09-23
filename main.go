@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build go1.9
 // +build go1.9
 
 /*
@@ -15,11 +16,11 @@ import (
 	"flag"
 	"fmt"
 
-	frameVersion "github.com/33cn/chain33/common/version"
-	_ "github.com/33cn/chain33/system"
-	"github.com/33cn/chain33/util/cli"
-	_ "github.com/33cn/plugin/plugin"
-	"github.com/33cn/plugin/version"
+	frameVersion "github.com/assetcloud/chain/common/version"
+	_ "github.com/assetcloud/chain/system"
+	"github.com/assetcloud/chain/util/cli"
+	_ "github.com/assetcloud/plugin/plugin"
+	"github.com/assetcloud/plugin/version"
 )
 
 var (

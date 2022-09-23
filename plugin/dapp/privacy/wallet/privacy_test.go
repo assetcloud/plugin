@@ -11,14 +11,14 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	_ "github.com/33cn/chain33/system"
-	"github.com/33cn/chain33/types"
-	wcom "github.com/33cn/chain33/wallet/common"
-	privacy "github.com/33cn/plugin/plugin/dapp/privacy/crypto"
-	ty "github.com/33cn/plugin/plugin/dapp/privacy/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	_ "github.com/assetcloud/chain/system"
+	"github.com/assetcloud/chain/types"
+	wcom "github.com/assetcloud/chain/wallet/common"
+	privacy "github.com/assetcloud/plugin/plugin/dapp/privacy/crypto"
+	ty "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
 )
 
 type PrivacyMock struct {

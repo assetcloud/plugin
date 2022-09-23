@@ -16,14 +16,14 @@ source ../dapp-test-common.sh
 
 function chain33_GetExecAddr() {
     #获取GAME合约地址
-    req='{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"'"$1"'"}]}'
+    req='{"method":"Chain.ConvertExectoAddr","params":[{"execname":"'"$1"'"}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.error|not) and (.result != null)' "$FUNCNAME"
 }
 
 function CreateGameTx() {
     local amount=$1
     local hash_value=$2
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"createGame", "payload":{"amount": '"${amount}"',"hashType":"sha256","hashValue":"'"${hash_value}"'"}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"createGame", "payload":{"amount": '"${amount}"',"hashType":"sha256","hashValue":"'"${hash_value}"'"}}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${PRIVA_A}" "${MAIN_HTTP}"
     GAME_ID=$RAW_TX_HASH
@@ -33,7 +33,7 @@ function CreateGameTx() {
 
 function MatchGameTx() {
     local gameId=$1
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"matchGame", "payload":{"gameId": "'"${gameId}"'","guess":2}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"matchGame", "payload":{"gameId": "'"${gameId}"'","guess":2}}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.error|not) and (.result != null)' "MatchGame createRawTx" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${PRIVA_B}" "${MAIN_HTTP}"
     echo_rst "MatchGame query_tx" "$?"
@@ -42,7 +42,7 @@ function MatchGameTx() {
 function CloseGameTx() {
     local gameId=$1
     local secret=$2
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"closeGame", "payload":{"gameId": "'"${gameId}"'","secret":"'"${secret}"'","result":1}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"closeGame", "payload":{"gameId": "'"${gameId}"'","secret":"'"${secret}"'","result":1}}]}'
 
     chain33_Http "$req" ${MAIN_HTTP} '(.error|not) and (.result != null)' "CloseGame createRawTx" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${PRIVA_A}" "${MAIN_HTTP}"
@@ -51,7 +51,7 @@ function CloseGameTx() {
 
 function CancleGameTx() {
     local gameId=$1
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"cancelGame", "payload":{"gameId": "'"${gameId}"'"}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"cancelGame", "payload":{"gameId": "'"${gameId}"'"}}]}'
 
     chain33_Http "$req" ${MAIN_HTTP} '(.error|not) and (.result != null)' "CancleGame createRawTx" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${PRIVA_A}" "${MAIN_HTTP}"
@@ -60,14 +60,14 @@ function CancleGameTx() {
 
 function QueryGameByStatus() {
     local status=$1
-    local req='{"method":"Chain33.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"QueryGameListByStatusAndAddr","payload":{"status":'"${status}"',"address":""}}]}'
+    local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"QueryGameListByStatusAndAddr","payload":{"status":'"${status}"',"address":""}}]}'
     chain33_Http "$req" ${MAIN_HTTP} '(.error|not)' "$FUNCNAME" ".result.games"
 }
 
 function QueryGameByGameId() {
     local gameId=$1
     local status=$2
-    local req='{"method":"Chain33.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"QueryGameById","payload":{"gameId":"'"${gameId}"'"}}]}'
+    local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"QueryGameById","payload":{"gameId":"'"${gameId}"'"}}]}'
     resok='(.error|not) and (.result.game.status = "'"${status}"'")'
     chain33_Http "$req" ${MAIN_HTTP} "$resok" "$FUNCNAME"
 }
@@ -79,10 +79,10 @@ function init() {
     local game_addr=""
     if [ "$ispara" == "true" ]; then
         EXECTOR="user.p.para.game"
-        game_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"user.p.para.game"}]}' ${MAIN_HTTP} | jq -r ".result")
+        game_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"user.p.para.game"}]}' ${MAIN_HTTP} | jq -r ".result")
     else
         EXECTOR="game"
-        game_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"game"}]}' ${MAIN_HTTP} | jq -r ".result")
+        game_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"game"}]}' ${MAIN_HTTP} | jq -r ".result")
     fi
     echo "gameAddr=${game_addr}"
 

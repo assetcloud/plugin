@@ -4,7 +4,7 @@ package types
 const Version4Relayer = "0.1.4"
 
 const (
-	Chain33BlockChainName    = "Chain33-mainchain"
+	Chain33BlockChainName    = "Chain-mainchain"
 	EthereumBlockChainName   = "Ethereum-mainchain"
 	BinanceChainName         = "Binance"
 	EthereumChainName        = "Ethereum"

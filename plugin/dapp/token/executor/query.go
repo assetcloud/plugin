@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	tokenty "github.com/33cn/plugin/plugin/dapp/token/types"
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
+	"github.com/assetcloud/chain/types"
 )
 
 // Query_GetTokens 获取token

@@ -6,13 +6,13 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	types2 "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/system/dapp/commands"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebcli/buildflags"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
-	types3 "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebcli/buildflags"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
+	types3 "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	types2 "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/system/dapp/commands"
+	"github.com/assetcloud/chain/types"
 	"github.com/spf13/cobra"
 )
 
@@ -392,7 +392,7 @@ func queryRelayerBalance(cmd *cobra.Command, args []string) {
 	}
 
 	channel := &types3.ReceiptQueryRelayerBalance{}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", query, channel)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", query, channel)
 	ctx.Run()
 }
 
@@ -407,6 +407,6 @@ func createTx(cmd *cobra.Command, payLoad []byte, action string) {
 	}
 
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", pm, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }

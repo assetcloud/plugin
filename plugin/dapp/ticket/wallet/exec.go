@@ -5,8 +5,8 @@
 package wallet
 
 import (
-	"github.com/33cn/chain33/types"
-	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 )
 
 // On_CloseTickets close ticket

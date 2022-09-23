@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	exchangetypes "github.com/33cn/plugin/plugin/dapp/exchange/types"
+	"github.com/assetcloud/chain/types"
+	exchangetypes "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 )
 
 /*

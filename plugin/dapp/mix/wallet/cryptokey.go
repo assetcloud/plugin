@@ -10,11 +10,11 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/types"
 
-	wcom "github.com/33cn/chain33/wallet/common"
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	wcom "github.com/assetcloud/chain/wallet/common"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 )
 

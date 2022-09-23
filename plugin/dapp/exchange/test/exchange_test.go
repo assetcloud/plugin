@@ -5,10 +5,10 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	"github.com/33cn/plugin/plugin/dapp/exchange/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/exchange/executor"
 
-	"github.com/33cn/chain33/types"
-	et "github.com/33cn/plugin/plugin/dapp/exchange/types"
+	et "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/stretchr/testify/assert"
 )
 

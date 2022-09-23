@@ -24,10 +24,10 @@ import (
 	"hash"
 	"sync"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto/sha3"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto/sha3"
 )
 
 type hasher struct {

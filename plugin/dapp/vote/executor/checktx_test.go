@@ -4,10 +4,10 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
 
-	vty "github.com/33cn/plugin/plugin/dapp/vote/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 )
 
 func TestVote_CheckTx_CreateGroup(t *testing.T) {

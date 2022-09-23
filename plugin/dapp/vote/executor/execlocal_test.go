@@ -3,11 +3,11 @@ package executor
 import (
 	"testing"
 
-	tab "github.com/33cn/chain33/common/db/table"
-	"github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	vty "github.com/33cn/plugin/plugin/dapp/vote/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
+	tab "github.com/assetcloud/chain/common/db/table"
+	"github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
 	"github.com/stretchr/testify/require"
 )
 

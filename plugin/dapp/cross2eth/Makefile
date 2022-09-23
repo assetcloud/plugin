@@ -5,8 +5,8 @@
 # 3. make build
 # ...
 
-SRC_EBCLI := github.com/33cn/plugin/plugin/dapp/cross2eth/ebcli
-SRC_EBRELAYER := github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer
+SRC_EBCLI := github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebcli
+SRC_EBRELAYER := github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer
 CLI_A := build/ebcli_A
 CLI_B := build/ebcli_B
 CLI_C := build/ebcli_C
@@ -16,23 +16,23 @@ LDFLAGS := ' -w -s'
 BUILDTIME:=$(shell date +"%Y-%m-%d %H:%M:%S %A")
 VERSION=$(shell git describe --tags || git rev-parse --short=8 HEAD)
 GitCommit=$(shell git rev-parse HEAD)
-BUILD_FLAGS := -ldflags '-X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
-                         -X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
-                         -X "github.com/33cn/plugin/version.Version=$(VERSION)" '
+BUILD_FLAGS := -ldflags '-X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
+                         -X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
+                         -X "github.com/assetcloud/plugin/version.Version=$(VERSION)" '
 
-BUILD_FLAGSB := -ldflags '-X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
-                         -X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
-                         -X "github.com/33cn/plugin/version.Version=$(VERSION)" \
+BUILD_FLAGSB := -ldflags '-X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
+                         -X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
+                         -X "github.com/assetcloud/plugin/version.Version=$(VERSION)" \
                          -X $(SRC_EBCLI)/buildflags.RPCAddr=http://localhost:9902" '
 
-BUILD_FLAGSC := -ldflags '-X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
-                         -X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
-                         -X "github.com/33cn/plugin/version.Version=$(VERSION)" \
+BUILD_FLAGSC := -ldflags '-X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
+                         -X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
+                         -X "github.com/assetcloud/plugin/version.Version=$(VERSION)" \
                          -X $(SRC_EBCLI)/buildflags.RPCAddr=http://localhost:9903" '
 
-BUILD_FLAGSD := -ldflags '-X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
-                         -X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
-                         -X "github.com/33cn/plugin/version.Version=$(VERSION)" \
+BUILD_FLAGSD := -ldflags '-X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
+                         -X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
+                         -X "github.com/assetcloud/plugin/version.Version=$(VERSION)" \
                          -X $(SRC_EBCLI)/buildflags.RPCAddr=http://localhost:9904" '
 
 proj := "build"

@@ -5,8 +5,8 @@
 package rpc
 
 import (
-	"github.com/33cn/chain33/rpc/types"
-	vt "github.com/33cn/plugin/plugin/dapp/valnode/types"
+	vt "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
+	"github.com/assetcloud/chain/rpc/types"
 )
 
 // Jrpc valnode jrpc interface

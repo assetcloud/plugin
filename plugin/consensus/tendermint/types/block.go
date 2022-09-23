@@ -12,10 +12,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/merkle"
-	"github.com/33cn/chain33/types"
-	tmtypes "github.com/33cn/plugin/plugin/dapp/valnode/types"
+	tmtypes "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/merkle"
+	"github.com/assetcloud/chain/types"
 )
 
 // BlockID struct

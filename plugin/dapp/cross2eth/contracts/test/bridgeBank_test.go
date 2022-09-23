@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/test/setup"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/test/setup"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -22,10 +22,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//"BridgeToken creation (Chain33 assets)"
+//"BridgeToken creation (Chain assets)"
 func TestBrigeTokenCreat(t *testing.T) {
 	ctx := context.Background()
-	println("TEST:BridgeToken creation (Chain33 assets)")
+	println("TEST:BridgeToken creation (Chain assets)")
 	//1st部署相关合约
 	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 	require.NoError(t, err)
@@ -116,7 +116,7 @@ func TestBrigeTokenCreat(t *testing.T) {
 //Bridge token minting (for locked chain33 assets)
 func TestBrigeTokenMint(t *testing.T) {
 	ctx := context.Background()
-	println("TEST:BridgeToken creation (Chain33 assets)")
+	println("TEST:BridgeToken creation (Chain assets)")
 	//1st部署相关合约
 	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 	require.NoError(t, err)

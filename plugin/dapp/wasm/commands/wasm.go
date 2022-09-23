@@ -5,10 +5,10 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	wasmtypes "github.com/33cn/plugin/plugin/dapp/wasm/types"
+	wasmtypes "github.com/assetcloud/plugin/plugin/dapp/wasm/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/spf13/cobra"
 )
 
@@ -145,7 +145,7 @@ func createContract(cmd *cobra.Command, args []string) {
 		ActionName: "Create",
 		Payload:    types.MustPBToJSON(&payload),
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -170,7 +170,7 @@ func updateContract(cmd *cobra.Command, args []string) {
 		ActionName: "Update",
 		Payload:    types.MustPBToJSON(&payload),
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -196,7 +196,7 @@ func callContract(cmd *cobra.Command, args []string) {
 		ActionName: "Call",
 		Payload:    types.MustPBToJSON(&payload),
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -213,7 +213,7 @@ func checkContract(cmd *cobra.Command, args []string) {
 	}
 
 	var resp types.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -232,7 +232,7 @@ func queryStateDB(cmd *cobra.Command, args []string) {
 	}
 
 	var resp types.ReplyString
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -251,6 +251,6 @@ func queryLocalDB(cmd *cobra.Command, args []string) {
 	}
 
 	var resp types.ReplyString
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }

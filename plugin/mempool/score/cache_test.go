@@ -5,18 +5,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	cty "github.com/33cn/chain33/system/dapp/coins/types"
-	drivers "github.com/33cn/chain33/system/mempool"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	"github.com/33cn/chain33/util/testnode"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	cty "github.com/assetcloud/chain/system/dapp/coins/types"
+	drivers "github.com/assetcloud/chain/system/mempool"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	"github.com/assetcloud/chain/util/testnode"
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
 
-	_ "github.com/33cn/chain33/system"
+	_ "github.com/assetcloud/chain/system"
 )
 
 var (

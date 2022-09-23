@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	"github.com/assetcloud/chain/types"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	"github.com/consensys/gnark-crypto/ecc"
 
 	"github.com/pkg/errors"

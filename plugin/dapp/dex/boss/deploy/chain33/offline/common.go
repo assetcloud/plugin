@@ -1,7 +1,7 @@
 package offline
 
 import (
-	"github.com/33cn/plugin/plugin/dapp/dex/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/utils"
 	"github.com/spf13/cobra"
 )
 

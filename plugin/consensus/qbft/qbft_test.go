@@ -8,24 +8,24 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	mty "github.com/33cn/chain33/system/dapp/manage/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	"github.com/33cn/chain33/util/testnode"
-	vty "github.com/33cn/plugin/plugin/dapp/qbftNode/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	mty "github.com/assetcloud/chain/system/dapp/manage/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	"github.com/assetcloud/chain/util/testnode"
+	vty "github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
 	"github.com/stretchr/testify/assert"
 
 	//加载系统内置store, 不要依赖plugin
-	_ "github.com/33cn/chain33/system"
-	_ "github.com/33cn/chain33/system/dapp/init"
-	_ "github.com/33cn/chain33/system/mempool/init"
-	_ "github.com/33cn/chain33/system/store/init"
-	_ "github.com/33cn/plugin/plugin/dapp/init"
-	_ "github.com/33cn/plugin/plugin/store/init"
+	_ "github.com/assetcloud/chain/system"
+	_ "github.com/assetcloud/chain/system/dapp/init"
+	_ "github.com/assetcloud/chain/system/mempool/init"
+	_ "github.com/assetcloud/chain/system/store/init"
+	_ "github.com/assetcloud/plugin/plugin/dapp/init"
+	_ "github.com/assetcloud/plugin/plugin/store/init"
 )
 
 var quitC chan struct{}
@@ -146,7 +146,7 @@ func testQuery(t *testing.T, mock *testnode.Chain33Mock) {
 		Execer:   vty.QbftNodeX,
 		FuncName: "GetCurrentState",
 	}
-	err = mock.GetJSONC().Call("Chain33.Query", query, &qstate)
+	err = mock.GetJSONC().Call("Chain.Query", query, &qstate)
 	assert.Nil(t, err)
 	assert.Len(t, qstate.Validators.Validators, 3)
 

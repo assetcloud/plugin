@@ -19,12 +19,13 @@ EventTransfer -> 转移资产
 import (
 	"bytes"
 	"fmt"
-	"github.com/33cn/chain33/common/address"
 
-	log "github.com/33cn/chain33/common/log/log15"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/chain/common/address"
+
+	log "github.com/assetcloud/chain/common/log/log15"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 )
 
 var clog = log.New("module", "execs.ticket")

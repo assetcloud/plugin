@@ -7,8 +7,8 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	chain33Common "github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/system/crypto/sm2"
+	chain33Common "github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/system/crypto/sm2"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 	gmsm2 "github.com/tjfoc/gmsm/sm2"

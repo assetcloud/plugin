@@ -8,10 +8,10 @@ package executor
 // 包含创建完成， 铸币， 以后可能包含燃烧等
 
 import (
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/common/db/table"
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/token/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/token/types"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/db/table"
+	"github.com/assetcloud/chain/types"
 )
 
 var opt_logs_table = &table.Option{

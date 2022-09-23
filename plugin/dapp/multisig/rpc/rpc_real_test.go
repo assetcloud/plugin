@@ -7,14 +7,14 @@ package rpc_test
 import (
 	"testing"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
-	mty "github.com/33cn/plugin/plugin/dapp/multisig/types"
+	mty "github.com/assetcloud/plugin/plugin/dapp/multisig/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -144,7 +144,7 @@ func testAccCreateTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jso
 	params.FuncName = "MultiSigAccCount"
 	params.Payload = types.MustPBToJSON(&types.ReqNil{})
 	rep := &types.Int64{}
-	err = jrpcClient.Call("Chain33.Query", &params, rep)
+	err = jrpcClient.Call("Chain.Query", &params, rep)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(1), rep.Data)
 
@@ -158,7 +158,7 @@ func testAccCreateTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jso
 	params.FuncName = "MultiSigAccounts"
 	params.Payload = types.MustPBToJSON(&req1)
 	rep1 := &mty.ReplyMultiSigAccs{}
-	err = jrpcClient.Call("Chain33.Query", params, rep1)
+	err = jrpcClient.Call("Chain.Query", params, rep1)
 	assert.Nil(t, err)
 	//t.Log(rep1)
 
@@ -172,7 +172,7 @@ func testAccCreateTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jso
 	params.FuncName = "MultiSigAccountInfo"
 	params.Payload = types.MustPBToJSON(&req2)
 	rep2 := &mty.MultiSig{}
-	err = jrpcClient.Call("Chain33.Query", params, rep2)
+	err = jrpcClient.Call("Chain.Query", params, rep2)
 	assert.Nil(t, err)
 	assert.Equal(t, AddrA, rep2.Owners[0].OwnerAddr)
 	assert.Equal(t, AddrB, rep2.Owners[1].OwnerAddr)
@@ -188,7 +188,7 @@ func testAccCreateTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jso
 	params.FuncName = "MultiSigAccAllAddress"
 	params.Payload = types.MustPBToJSON(&req3)
 	rep3 := &mty.AccAddress{}
-	err = jrpcClient.Call("Chain33.Query", params, rep3)
+	err = jrpcClient.Call("Chain.Query", params, rep3)
 	assert.Nil(t, err)
 	assert.Equal(t, rep3.Address[0], multiSigAccAddr)
 	//t.Log(rep3)
@@ -221,7 +221,7 @@ func testTransferInTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *js
 		ExecName:    mty.MultiSigX,
 	}
 	var res4 string
-	err := jrpcClient.Call("Chain33.CreateRawTransaction", req3, &res4)
+	err := jrpcClient.Call("Chain.CreateRawTransaction", req3, &res4)
 	assert.Nil(t, err)
 	tx := getTx(t, res4)
 	tx.Sign(types.SECP256K1, gen)
@@ -273,7 +273,7 @@ func testTransferInTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *js
 	params.FuncName = "MultiSigAccAssets"
 	params.Payload = types.MustPBToJSON(&req4)
 	rep4 := &mty.ReplyAccAssets{}
-	err = jrpcClient.Call("Chain33.Query", params, rep4)
+	err = jrpcClient.Call("Chain.Query", params, rep4)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(4000000000), rep4.AccAssets[0].Account.Frozen)
 	assert.Equal(t, int64(4000000000), rep4.AccAssets[0].RecvAmount)
@@ -319,7 +319,7 @@ func testTransferOutTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *j
 	params.FuncName = "MultiSigAccAssets"
 	params.Payload = types.MustPBToJSON(&req7)
 	rep7 := &mty.ReplyAccAssets{}
-	err = jrpcClient.Call("Chain33.Query", params, rep7)
+	err = jrpcClient.Call("Chain.Query", params, rep7)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(2000000000), rep7.AccAssets[0].Account.Frozen)
 	assert.Equal(t, int64(4000000000), rep7.AccAssets[0].RecvAmount)
@@ -340,7 +340,7 @@ func testTransferOutTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *j
 	params.FuncName = "MultiSigAccAssets"
 	params.Payload = types.MustPBToJSON(&req8)
 	rep8 := &mty.ReplyAccAssets{}
-	err = jrpcClient.Call("Chain33.Query", params, rep8)
+	err = jrpcClient.Call("Chain.Query", params, rep8)
 	assert.Nil(t, err)
 	assert.Equal(t, int64(2000000000), rep8.AccAssets[0].Account.Balance)
 	assert.Equal(t, int64(2000000000), rep8.AccAssets[0].RecvAmount)
@@ -377,7 +377,7 @@ func testAddOwner(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jsoncl
 	params.FuncName = "MultiSigAccountInfo"
 	params.Payload = types.MustPBToJSON(&req10)
 	rep10 := &mty.MultiSig{}
-	err = jrpcClient.Call("Chain33.Query", params, rep10)
+	err = jrpcClient.Call("Chain.Query", params, rep10)
 	assert.Nil(t, err)
 	find := false
 	for _, tempowner := range rep10.Owners {
@@ -420,7 +420,7 @@ func testDelOwner(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jsoncl
 	params.FuncName = "MultiSigAccountInfo"
 	params.Payload = types.MustPBToJSON(&req)
 	rep := &mty.MultiSig{}
-	err = jrpcClient.Call("Chain33.Query", params, rep)
+	err = jrpcClient.Call("Chain.Query", params, rep)
 	assert.Nil(t, err)
 	find := false
 	for _, tempowner := range rep.Owners {
@@ -464,7 +464,7 @@ func testModifyOwnerWeight(t *testing.T, mocker *testnode.Chain33Mock, jrpcClien
 	params.FuncName = "MultiSigAccountInfo"
 	params.Payload = types.MustPBToJSON(&req)
 	rep := &mty.MultiSig{}
-	err = jrpcClient.Call("Chain33.Query", params, rep)
+	err = jrpcClient.Call("Chain.Query", params, rep)
 	assert.Nil(t, err)
 	find := false
 	for _, tempowner := range rep.Owners {
@@ -508,7 +508,7 @@ func testReplaceOwner(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *js
 	params.FuncName = "MultiSigAccountInfo"
 	params.Payload = types.MustPBToJSON(&req)
 	rep := &mty.MultiSig{}
-	err = jrpcClient.Call("Chain33.Query", params, rep)
+	err = jrpcClient.Call("Chain.Query", params, rep)
 	assert.Nil(t, err)
 	find := false
 	for _, tempowner := range rep.Owners {
@@ -556,7 +556,7 @@ func testModifyDailyLimit(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient
 	params.FuncName = "MultiSigAccountInfo"
 	params.Payload = types.MustPBToJSON(&req)
 	rep := &mty.MultiSig{}
-	err = jrpcClient.Call("Chain33.Query", params, rep)
+	err = jrpcClient.Call("Chain.Query", params, rep)
 	assert.Nil(t, err)
 	find := false
 	for _, dailyLimit := range rep.DailyLimits {
@@ -604,7 +604,7 @@ func testAddDailyLimit(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *j
 	params.FuncName = "MultiSigAccountInfo"
 	params.Payload = types.MustPBToJSON(&req)
 	rep := &mty.MultiSig{}
-	err = jrpcClient.Call("Chain33.Query", params, rep)
+	err = jrpcClient.Call("Chain.Query", params, rep)
 	assert.Nil(t, err)
 	find := false
 	for _, dailyLimit := range rep.DailyLimits {
@@ -647,7 +647,7 @@ func testModifyRequestWeight(t *testing.T, mocker *testnode.Chain33Mock, jrpcCli
 	params.FuncName = "MultiSigAccountInfo"
 	params.Payload = types.MustPBToJSON(&req)
 	rep := &mty.MultiSig{}
-	err = jrpcClient.Call("Chain33.Query", params, rep)
+	err = jrpcClient.Call("Chain.Query", params, rep)
 	assert.Nil(t, err)
 	assert.Equal(t, uint64(16), rep.RequiredWeight)
 	//t.Log(rep)
@@ -668,7 +668,7 @@ func testConfirmTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jsonc
 		ExecName:    "",
 	}
 	var res string
-	err := jrpcClient.Call("Chain33.CreateRawTransaction", req, &res)
+	err := jrpcClient.Call("Chain.CreateRawTransaction", req, &res)
 	assert.Nil(t, err)
 	gen := mocker.GetGenesisKey()
 	tx := getTx(t, res)
@@ -722,7 +722,7 @@ func testConfirmTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jsonc
 	params.FuncName = "MultiSigAccountInfo"
 	params.Payload = types.MustPBToJSON(&req9)
 	rep9 := &mty.MultiSig{}
-	err = jrpcClient.Call("Chain33.Query", params, rep9)
+	err = jrpcClient.Call("Chain.Query", params, rep9)
 	assert.Nil(t, err)
 	find := false
 	for _, dailyLimit := range rep9.DailyLimits {
@@ -768,7 +768,7 @@ func testConfirmTx(t *testing.T, mocker *testnode.Chain33Mock, jrpcClient *jsonc
 	params.FuncName = "MultiSigAccTxCount"
 	params.Payload = types.MustPBToJSON(&req11)
 	rep11 := &mty.Uint64{}
-	err = jrpcClient.Call("Chain33.Query", params, rep11)
+	err = jrpcClient.Call("Chain.Query", params, rep11)
 	assert.Nil(t, err)
 	//t.Log(rep11)
 	txid := rep11.Data - 1
@@ -809,7 +809,7 @@ func checkTxInfo(t *testing.T, jrpcClient *jsonclient.JSONClient, multiSigAccAdd
 	params.FuncName = "MultiSigTxInfo"
 	params.Payload = types.MustPBToJSON(&req)
 	rep := &mty.MultiSigTx{}
-	err := jrpcClient.Call("Chain33.Query", params, rep)
+	err := jrpcClient.Call("Chain.Query", params, rep)
 	assert.Nil(t, err)
 	//t.Log(rep)
 
@@ -862,7 +862,7 @@ func checkMultiSigAccAssets(t *testing.T, jrpcClient *jsonclient.JSONClient, add
 	params.FuncName = "MultiSigAccAssets"
 	params.Payload = types.MustPBToJSON(&req)
 	rep := &mty.ReplyAccAssets{}
-	err := jrpcClient.Call("Chain33.Query", params, rep)
+	err := jrpcClient.Call("Chain.Query", params, rep)
 	assert.Nil(t, err)
 	if isMultiSigAddr {
 		assert.Equal(t, amount, rep.AccAssets[0].Account.Frozen)

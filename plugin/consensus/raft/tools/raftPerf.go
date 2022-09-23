@@ -17,12 +17,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	rlog "github.com/33cn/chain33/common/log"
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/norm/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/norm/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	rlog "github.com/assetcloud/chain/common/log"
+	"github.com/assetcloud/chain/types"
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
 )

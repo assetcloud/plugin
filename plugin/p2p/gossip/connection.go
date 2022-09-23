@@ -5,7 +5,7 @@
 package gossip
 
 import (
-	pb "github.com/33cn/chain33/types"
+	pb "github.com/assetcloud/chain/types"
 	"google.golang.org/grpc"
 )
 

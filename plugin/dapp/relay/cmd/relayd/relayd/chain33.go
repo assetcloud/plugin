@@ -10,15 +10,15 @@ import (
 	"io"
 	"time"
 
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
 
 // Client33 to connect with chain33
 type Client33 struct {
-	config     *Chain33
+	config     *Chain
 	isSyncing  bool
 	isClosed   bool
 	lastHeight int64
@@ -27,7 +27,7 @@ type Client33 struct {
 }
 
 // NewClient33 new client instance
-func NewClient33(cfg *Chain33) *Client33 {
+func NewClient33(cfg *Chain) *Client33 {
 	conn, err := grpc.Dial(cfg.Host, grpc.WithInsecure())
 	if err != nil {
 		panic(err)

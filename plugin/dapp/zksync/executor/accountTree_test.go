@@ -3,11 +3,12 @@ package executor
 import (
 	"bytes"
 	"encoding/hex"
-	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"testing"
 
-	"github.com/33cn/chain33/util"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
+
+	"github.com/assetcloud/chain/util"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
 	"github.com/stretchr/testify/assert"

@@ -26,7 +26,7 @@ evm_SignTxAndEstimate() {
     local from=$2
     local MAIN_HTTP=$3
 
-    req='{"method":"Chain33.Query","params":[{"execer":"evm","funcName":"EstimateGas","payload":{"tx":"'${txHex}'", "from":"'${from}'"}}]}'
+    req='{"method":"Chain.Query","params":[{"execer":"evm","funcName":"EstimateGas","payload":{"tx":"'${txHex}'", "from":"'${from}'"}}]}'
     chain33_Http "$req" "${MAIN_HTTP}" '(.result != null)' "EstimateGas" ".result.gas"
     gas=$((RETURN_RESP + 10000))
     echo "the estimate gas is = ${gas}"
@@ -56,15 +56,15 @@ function evm_callQuery() {
     local resok=$3
     local name=$4
 
-    req='{"method":"Chain33.Query","params":[{"execer":"evm","funcName":"GetPackData","payload":{"abi":"'${erc20_abi}'","parameter":"'${parameter}'"}}]}'
+    req='{"method":"Chain.Query","params":[{"execer":"evm","funcName":"GetPackData","payload":{"abi":"'${erc20_abi}'","parameter":"'${parameter}'"}}]}'
     chain33_Http "$req" "${MAIN_HTTP}" '(.result != null)' "GetPackData" ".result.packData"
     echo "$RETURN_RESP"
 
-    req='{"method":"Chain33.Query","params":[{"execer":"evm","funcName":"Query","payload":{"address":"'${evm_contractAddr}'","input":"'${RETURN_RESP}'","caller":"'${callerAddr}'"}}]}'
+    req='{"method":"Chain.Query","params":[{"execer":"evm","funcName":"Query","payload":{"address":"'${evm_contractAddr}'","input":"'${RETURN_RESP}'","caller":"'${callerAddr}'"}}]}'
     chain33_Http "$req" "${MAIN_HTTP}" '(.result != null)' "Query" ".result.rawData"
     echo "$RETURN_RESP"
 
-    req='{"method":"Chain33.Query","params":[{"execer":"evm","funcName":"GetUnpackData","payload":{"abi":"'${erc20_abi}'","name":"'${name}'","data":"'${RETURN_RESP}'"}}]}'
+    req='{"method":"Chain.Query","params":[{"execer":"evm","funcName":"GetUnpackData","payload":{"abi":"'${erc20_abi}'","name":"'${name}'","data":"'${RETURN_RESP}'"}}]}'
     chain33_Http "$req" "${MAIN_HTTP}" '(.result != null)' "GetUnpackData" ".result.unpackData[0]"
     echo "$RETURN_RESP"
 
@@ -74,7 +74,7 @@ function evm_callQuery() {
 }
 
 function evm_addressCheck() {
-    req='{"method":"Chain33.Query","params":[{"execer":"evm","funcName":"CheckAddrExists","payload":{"addr":"'${evm_contractAddr}'"}}]}'
+    req='{"method":"Chain.Query","params":[{"execer":"evm","funcName":"CheckAddrExists","payload":{"addr":"'${evm_contractAddr}'"}}]}'
     resok='(.result.contract == true) and (.result.contractAddr == "'"$evm_contractAddr"'")'
     chain33_Http "$req" "${MAIN_HTTP}" "${resok}" "CheckAddrExists"
 
@@ -102,7 +102,7 @@ function queryTransaction() {
     expectRes=$2
     echo "txHash=${txHash}"
 
-    res=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain33.QueryTransaction","params":[{"hash":"'"${txHash}"'"}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}")
+    res=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain.QueryTransaction","params":[{"hash":"'"${txHash}"'"}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}")
 
     times=$(echo "${validators}" | awk -F '|' '{print NF}')
     for ((i = 1; i <= times; i++)); do
@@ -113,7 +113,7 @@ function queryTransaction() {
     if [ "${res}" != "${expectRes}" ]; then
         return 1
     else
-        res=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain33.QueryTransaction","params":[{"hash":"'"${txHash}"'"}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}")
+        res=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain.QueryTransaction","params":[{"hash":"'"${txHash}"'"}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}")
         if [ "${evm_addr}" == "" ]; then
             if [ "$ispara" == false ]; then
                 evm_addr="user.evm.${txHash}"
@@ -145,7 +145,7 @@ function init() {
         chain33_applyCoins "$from" 12000000000 "${main_ip}"
         chain33_QueryBalance "${from}" "$main_ip"
 
-        evm_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"evm"}]}' "${MAIN_HTTP}" | jq -r ".result")
+        evm_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"evm"}]}' "${MAIN_HTTP}" | jq -r ".result")
     else
         paraName="user.p.para."
 
@@ -158,7 +158,7 @@ function init() {
         chain33_applyCoins "$from" 12000000000 "${para_ip}"
         chain33_QueryBalance "${from}" "$para_ip"
 
-        evm_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"user.p.para.evm"}]}' "${MAIN_HTTP}" | jq -r ".result")
+        evm_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"user.p.para.evm"}]}' "${MAIN_HTTP}" | jq -r ".result")
         chain33_SendToAddress "$from" "$evm_addr" 10000000000 "$MAIN_HTTP"
     fi
 

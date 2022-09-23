@@ -1,11 +1,11 @@
 package types
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/vote/commands"
-	"github.com/33cn/plugin/plugin/dapp/vote/executor"
-	"github.com/33cn/plugin/plugin/dapp/vote/rpc"
-	votetypes "github.com/33cn/plugin/plugin/dapp/vote/types"
+	"github.com/assetcloud/plugin/plugin/dapp/vote/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/vote/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/vote/rpc"
+	votetypes "github.com/assetcloud/plugin/plugin/dapp/vote/types"
+	"github.com/assetcloud/chain/pluginmgr"
 )
 
 /*

@@ -5,13 +5,13 @@ import (
 	crand "crypto/rand"
 	"fmt"
 
-	chain33Address "github.com/33cn/chain33/common/address"
+	chain33Address "github.com/assetcloud/chain/common/address"
 
 	"github.com/ethereum/go-ethereum/common/math"
 
 	"github.com/ethereum/go-ethereum/crypto"
 
-	chain33Common "github.com/33cn/chain33/common"
+	chain33Common "github.com/assetcloud/chain/common"
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
@@ -91,7 +91,7 @@ func showChain33Key(cmd *cobra.Command, _ []string) {
 	compressedKey := pubKey.SerializeCompressed()
 	fmt.Println("The uncompressed pub key = "+common.Bytes2Hex(uncompressedKey), "with length=", len(uncompressedKey))
 	fmt.Println("The compressed pub key = "+common.Bytes2Hex(compressedKey), "with length=", len(compressedKey))
-	fmt.Println("Chain33 address = " + chain33Address.PubKeyToAddr(chain33Address.DefaultID, compressedKey))
+	fmt.Println("Chain address = " + chain33Address.PubKeyToAddr(chain33Address.DefaultID, compressedKey))
 }
 
 ////////////////////////////////////////////////////////

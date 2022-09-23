@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	pty "github.com/33cn/plugin/plugin/dapp/unfreeze/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/unfreeze/types"
 )
 
 func TestCalcFrozen(t *testing.T) {

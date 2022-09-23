@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"sync/atomic"
 
-	"github.com/33cn/chain33/types"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
+	"github.com/assetcloud/chain/types"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
 	"github.com/ethereum/go-ethereum/common"
 )
 

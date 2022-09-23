@@ -9,14 +9,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common/version"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
-	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common/version"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"golang.org/x/net/context"
@@ -160,20 +160,20 @@ func TestRPC_CallTestNode(t *testing.T) {
 		Msg:  []byte("123"),
 	}
 	api.On("IsSync").Return(ret, nil)
-	api.On("Version").Return(&types.VersionInfo{Chain33: version.GetVersion()}, nil)
+	api.On("Version").Return(&types.VersionInfo{Chain: version.GetVersion()}, nil)
 	api.On("Close").Return()
 	rpcCfg := mock33.GetCfg().RPC
 	jsonClient, err := jsonclient.NewJSONClient("http://" + rpcCfg.JrpcBindAddr + "/")
 	assert.Nil(t, err)
 	assert.NotNil(t, jsonClient)
 	var result types.VersionInfo
-	err = jsonClient.Call("Chain33.Version", nil, &result)
+	err = jsonClient.Call("Chain.Version", nil, &result)
 	fmt.Println(err)
 	assert.Nil(t, err)
-	assert.Equal(t, version.GetVersion(), result.Chain33)
+	assert.Equal(t, version.GetVersion(), result.Chain)
 
 	var isSnyc bool
-	err = jsonClient.Call("Chain33.IsSync", &types.ReqNil{}, &isSnyc)
+	err = jsonClient.Call("Chain.IsSync", &types.ReqNil{}, &isSnyc)
 	assert.Nil(t, err)
 	assert.Equal(t, ret.GetIsOk(), isSnyc)
 

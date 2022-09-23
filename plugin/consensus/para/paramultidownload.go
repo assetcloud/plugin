@@ -12,8 +12,8 @@ import (
 
 	"strings"
 
-	"github.com/33cn/chain33/rpc/grpcclient"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/rpc/grpcclient"
+	"github.com/assetcloud/chain/types"
 )
 
 const (

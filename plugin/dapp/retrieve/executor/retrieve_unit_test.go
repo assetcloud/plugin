@@ -12,14 +12,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/queue"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	rt "github.com/33cn/plugin/plugin/dapp/retrieve/types"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/queue"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	rt "github.com/assetcloud/plugin/plugin/dapp/retrieve/types"
 )
 
 var (

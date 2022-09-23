@@ -11,16 +11,16 @@ import (
 
 	"testing"
 
-	apimocks "github.com/33cn/chain33/client/mocks"
+	apimocks "github.com/assetcloud/chain/client/mocks"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/queue"
-	qmocks "github.com/33cn/chain33/queue/mocks"
-	drivers "github.com/33cn/chain33/system/consensus"
-	"github.com/33cn/chain33/types"
-	typesmocks "github.com/33cn/chain33/types/mocks"
-	paraexec "github.com/33cn/plugin/plugin/dapp/paracross/executor"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/queue"
+	qmocks "github.com/assetcloud/chain/queue/mocks"
+	drivers "github.com/assetcloud/chain/system/consensus"
+	"github.com/assetcloud/chain/types"
+	typesmocks "github.com/assetcloud/chain/types/mocks"
+	paraexec "github.com/assetcloud/plugin/plugin/dapp/paracross/executor"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/mock"
 )
 

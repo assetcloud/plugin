@@ -7,7 +7,7 @@ package executor
 import (
 	"testing"
 
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	"github.com/stretchr/testify/assert"
 )
 

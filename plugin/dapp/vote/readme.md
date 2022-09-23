@@ -51,11 +51,11 @@ message GroupInfo {
 ```
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain33.CreateTransaction
+- 创建交易通用json rpc接口，Chain.CreateTransaction
 - actionName: CreateGroup
 
 ```bash
-curl -kd  '{"method":"Chain33.CreateTransaction","params":[{"execer":"vote","actionName":"CreateGroup","payload":{"name":"group30","admins":[],"members":[{"addr":"1BQXS6TxaYYG5mADaWij4AxhZZUTpw95a5","voteWeight":0}],"description":""}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actionName":"CreateGroup","payload":{"name":"group30","admins":[],"members":[{"addr":"1BQXS6TxaYYG5mADaWij4AxhZZUTpw95a5","voteWeight":0}],"description":""}}],"id":0}' http://localhost:8801
 ```
 
 #### 更新投票组(UpdateGroup)
@@ -97,11 +97,11 @@ message GroupInfo {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain33.CreateTransaction
+- 创建交易通用json rpc接口，Chain.CreateTransaction
 - actionName: UpdateGroup
 
 ```bash
-curl -kd  '{"method":"Chain33.CreateTransaction","params":[{"execer":"vote","actionName":"UpdateGroup","payload":{"groupID":"g000000000000700000","addMembers":[{"addr":"member1","voteWeight":0},{"addr":"member2","voteWeight":0}],"removeMembers":["member3"],"addAdmins":["admin1"],"removeAdmins":["admin2"]}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actionName":"UpdateGroup","payload":{"groupID":"g000000000000700000","addMembers":[{"addr":"member1","voteWeight":0},{"addr":"member2","voteWeight":0}],"removeMembers":["member3"],"addAdmins":["admin1"],"removeAdmins":["admin2"]}}],"id":0}' http://localhost:8801
 ```
 
 #### 创建投票(CreateVote)
@@ -152,11 +152,11 @@ message VoteOption {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain33.CreateTransaction
+- 创建交易通用json rpc接口，Chain.CreateTransaction
 - actionName: CreateVote
 
 ```bash
-curl -kd  '{"method":"Chain33.CreateTransaction","params":[{"execer":"vote","actionName":"CreateVote","payload":{"name":"vote1","groupID":"g000000000000600000","voteOptions":["A","B","C"],"beginTimestamp":"1611562096","endTimestamp":"1611648496","description":""}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actionName":"CreateVote","payload":{"name":"vote1","groupID":"g000000000000600000","voteOptions":["A","B","C"],"beginTimestamp":"1611562096","endTimestamp":"1611648496","description":""}}],"id":0}' http://localhost:8801
 ```
 
 #### 提交投票(CommitVote)
@@ -188,11 +188,11 @@ message CommitInfo {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain33.CreateTransaction
+- 创建交易通用json rpc接口，Chain.CreateTransaction
 - actionName: CommitVote
 
 ```bash
-curl -kd  '{"method":"Chain33.CreateTransaction","params":[{"execer":"vote","actionName":"CommitVote","payload":{"voteID":"v000000000001300000","optionIndex":0}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actionName":"CommitVote","payload":{"voteID":"v000000000001300000","optionIndex":0}}],"id":0}' http://localhost:8801
 
 ```
 
@@ -229,11 +229,11 @@ message VoteInfo {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain33.CreateTransaction
+- 创建交易通用json rpc接口，Chain.CreateTransaction
 - actionName: CloseVote
 
 ```bash
-curl -kd  '{"method":"Chain33.CreateTransaction","params":[{"execer":"vote","actionName":"CloseVote","payload":{"voteID":"v000000000001300000"}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actionName":"CloseVote","payload":{"voteID":"v000000000001300000"}}],"id":0}' http://localhost:8801
 ```
 
 #### 更新用户信息(UpdateMember)
@@ -260,11 +260,11 @@ message MemberInfo {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain33.CreateTransaction
+- 创建交易通用json rpc接口，Chain.CreateTransaction
 - actionName: UpdateMember
 
 ```bash
- curl -kd  '{"method":"Chain33.CreateTransaction","params":[{"execer":"vote","actionName":"UpdateMember","payload":{"name":"name1"}}],"id":0}' http://localhost:8801
+ curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actionName":"UpdateMember","payload":{"name":"name1"}}],"id":0}' http://localhost:8801
 ```
 
 
@@ -290,11 +290,11 @@ message GroupInfos {
 ```
 ##### 示例
 
-- 通用查询json rpc接口，Chain33.Query
+- 通用查询json rpc接口，Chain.Query
 - funcName: GetGroups
 
 ```bash
-curl -ksd '{"method":"Chain33.Query","params":[{"execer":"vote","funcName":"GetGroups","payload":{"items":["g000000000001700000","g000000000001800000"]}}],"id":0}' http://localhost:8801
+curl -ksd '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"GetGroups","payload":{"items":["g000000000001700000","g000000000001800000"]}}],"id":0}' http://localhost:8801
 ```
 
 #### 获取投票信息(GetVotes)
@@ -317,11 +317,11 @@ message ReplyVoteList {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain33.Query
+- 通用查询json rpc接口，Chain.Query
 - funcName: GetVotes
 
 ```bash
-curl -kd  '{"method":"Chain33.Query","params":[{"execer":"vote","funcName":"GetVotes","payload":{"items":["v000000000001300000","v000000000001400000"]}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"GetVotes","payload":{"items":["v000000000001300000","v000000000001400000"]}}],"id":0}' http://localhost:8801
 ```
 
 #### 获取成员信息(GetMembers)
@@ -350,11 +350,11 @@ message MemberInfo {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain33.Query
+- 通用查询json rpc接口，Chain.Query
 - funcName: GetMembers
 -
 ```bash
-curl -kd  '{"method":"Chain33.Query","params":[{"execer":"vote","funcName":"GetMembers","payload":{"items":["1BQXS6TxaYYG5mADaWij4AxhZZUTpw95a5"]}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"GetMembers","payload":{"items":["1BQXS6TxaYYG5mADaWij4AxhZZUTpw95a5"]}}],"id":0}' http://localhost:8801
 ```
 
 #### 获取投票组列表(ListGroup)
@@ -379,11 +379,11 @@ message GroupInfos {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain33.Query
+- 通用查询json rpc接口，Chain.Query
 - funcName: ListGroup
 
 ```bash
-curl -kd  '{"method":"Chain33.Query","params":[{"execer":"vote","funcName":"ListGroup","payload":{"startItemID":"","count":2,"direction":0}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"ListGroup","payload":{"startItemID":"","count":2,"direction":0}}],"id":0}' http://localhost:8801
 ```
 
 #### 获取投票列表(ListVote)
@@ -418,11 +418,11 @@ message ReplyVoteList {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain33.Query
+- 通用查询json rpc接口，Chain.Query
 - funcName: ListVote
 
 ```bash
-curl -kd  '{"method":"Chain33.Query","params":[{"execer":"vote","funcName":"ListVote","payload":{"groupID":"","listReq":{"startItemID":"","count":2,"direction":0}}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"ListVote","payload":{"groupID":"","listReq":{"startItemID":"","count":2,"direction":0}}}],"id":0}' http://localhost:8801
 ```
 
 #### 获取用户列表(ListMember)
@@ -448,11 +448,11 @@ message MemberInfos {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain33.Query
+- 通用查询json rpc接口，Chain.Query
 - funcName: ListMember
 
 ```bash
-curl -kd  '{"method":"Chain33.Query","params":[{"execer":"vote","funcName":"ListMember","payload":{"startItemID":"","count":1,"direction":1}}],"id":0}' http://localhost:8801
+curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"ListMember","payload":{"startItemID":"","count":1,"direction":1}}],"id":0}' http://localhost:8801
 ```
 
 #### 错误码表

@@ -10,10 +10,10 @@ package test
 //
 //	"github.com/stretchr/testify/assert"
 //
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/test/setup"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/test/setup"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
 //	"github.com/ethereum/go-ethereum"
 //	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 //	"github.com/ethereum/go-ethereum/common"
@@ -22,10 +22,10 @@ package test
 //	"github.com/stretchr/testify/require"
 //)
 //
-////"BridgeToken creation (Chain33 assets)"
+////"BridgeToken creation (Chain assets)"
 //func TestBrigeTokenCreat(t *testing.T) {
 //	ctx := context.Background()
-//	println("TEST:BridgeToken creation (Chain33 assets)")
+//	println("TEST:BridgeToken creation (Chain assets)")
 //	//1st部署相关合约
 //	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 //	require.NoError(t, err)
@@ -111,7 +111,7 @@ package test
 ////Bridge token minting (for locked chain33 assets)
 //func TestBrigeTokenMint(t *testing.T) {
 //	ctx := context.Background()
-//	println("TEST:BridgeToken creation (Chain33 assets)")
+//	println("TEST:BridgeToken creation (Chain assets)")
 //	//1st部署相关合约
 //	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 //	require.NoError(t, err)

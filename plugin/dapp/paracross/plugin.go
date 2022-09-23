@@ -5,14 +5,14 @@
 package paracross
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	_ "github.com/33cn/plugin/plugin/crypto/bls"              // register bls package for ut usage
-	_ "github.com/33cn/plugin/plugin/dapp/paracross/autotest" // register autotest package
-	"github.com/33cn/plugin/plugin/dapp/paracross/commands"
-	"github.com/33cn/plugin/plugin/dapp/paracross/executor"
-	"github.com/33cn/plugin/plugin/dapp/paracross/rpc"
-	"github.com/33cn/plugin/plugin/dapp/paracross/types"
-	_ "github.com/33cn/plugin/plugin/dapp/paracross/wallet" // register wallet package
+	_ "github.com/assetcloud/plugin/plugin/crypto/bls"              // register bls package for ut usage
+	_ "github.com/assetcloud/plugin/plugin/dapp/paracross/autotest" // register autotest package
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/rpc"
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	_ "github.com/assetcloud/plugin/plugin/dapp/paracross/wallet" // register wallet package
+	"github.com/assetcloud/chain/pluginmgr"
 )
 
 func init() {

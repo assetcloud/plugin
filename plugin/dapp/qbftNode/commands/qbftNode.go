@@ -14,14 +14,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/33cn/chain33/common/address"
+	"github.com/assetcloud/chain/common/address"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	ttypes "github.com/33cn/plugin/plugin/consensus/qbft/types"
-	vt "github.com/33cn/plugin/plugin/dapp/qbftNode/types"
+	ttypes "github.com/assetcloud/plugin/plugin/consensus/qbft/types"
+	vt "github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/spf13/cobra"
 )
 
@@ -115,7 +115,7 @@ func getBlockInfo(cmd *cobra.Command, args []string) {
 	}
 
 	var res vt.QbftBlockInfo
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.SetResultCb(jsonOutput)
 	result, err := ctx.RunResult()
 	if err != nil {
@@ -157,7 +157,7 @@ func getCurrentState(cmd *cobra.Command, args []string) {
 	}
 
 	var res vt.QbftState
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.SetResultCb(jsonOutput)
 	result, err := ctx.RunResult()
 	if err != nil {
@@ -198,7 +198,7 @@ func getPerfStat(cmd *cobra.Command, args []string) {
 	}
 
 	var res vt.QbftPerfStat
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 

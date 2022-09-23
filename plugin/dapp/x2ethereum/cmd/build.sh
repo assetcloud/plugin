@@ -5,8 +5,8 @@ strpwd=$(pwd)
 strcmd=${strpwd##*dapp/}
 strapp=${strcmd%/cmd*}
 
-#SRC_EBCLI=github.com/33cn/plugin/plugin/dapp/x2ethereum/ebcli
-#SRC_EBRELAYER=github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer
+#SRC_EBCLI=github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebcli
+#SRC_EBRELAYER=github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer
 #OUT_DIR="${1}/$strapp"
 #FLAG=$2
 #

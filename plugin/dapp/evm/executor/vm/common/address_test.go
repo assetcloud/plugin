@@ -8,12 +8,12 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/system/address/eth"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/system/address/eth"
 
-	"github.com/33cn/chain33/common"
+	"github.com/assetcloud/chain/common"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 
 	"github.com/holiman/uint256"
 

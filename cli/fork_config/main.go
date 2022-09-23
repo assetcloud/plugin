@@ -6,9 +6,9 @@ import (
 	"sort"
 	"strings"
 
-	_ "github.com/33cn/chain33/system"
-	"github.com/33cn/chain33/types"
-	_ "github.com/33cn/plugin/plugin"
+	_ "github.com/assetcloud/chain/system"
+	"github.com/assetcloud/chain/types"
+	_ "github.com/assetcloud/plugin/plugin"
 )
 
 func main() {

@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	ptypes "github.com/33cn/plugin/plugin/dapp/js/types"
+	"github.com/assetcloud/chain/types"
+	ptypes "github.com/assetcloud/plugin/plugin/dapp/js/types"
 )
 
 func calcAllPrefix(cfg *types.Chain33Config, name string) ([]byte, []byte) {

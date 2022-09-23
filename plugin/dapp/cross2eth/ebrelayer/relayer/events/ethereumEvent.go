@@ -8,9 +8,9 @@ package events
 import (
 	"math/big"
 
-	chain33Address "github.com/33cn/chain33/common/address"
+	chain33Address "github.com/assetcloud/chain/common/address"
 
-	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 )

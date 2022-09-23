@@ -114,7 +114,7 @@ contract GoAssetBank {
     * @dev: Creates a new GoAssetDeposit with a unique ID
     *
     * @param _goAssetSender: The _goAssetSender sender's address.
-    * @param _chain33Recipient: The intended recipient's Chain33 address.
+    * @param _chain33Recipient: The intended recipient's Chain address.
     * @param _token: The currency type
     * @param _amount: The amount in the deposit.
     * @return: The newly created GoAssetSenderDeposit's unique id.
@@ -158,7 +158,7 @@ contract GoAssetBank {
     * @dev: Creates a new GoAssetBurn with a unique ID
         *
         * @param _goAssetSender: The go Asset Sender address
-        * @param _chain33Owner: The owner's Chain33 address.
+        * @param _chain33Owner: The owner's Chain address.
         * @param _token: The token Address
         * @param _amount: The amount to be burned.
         * @param _nonce: The nonce indicates the burn count for this token
@@ -235,7 +235,7 @@ contract GoAssetBank {
      * @dev: Mints new goAsset tokens
      *
      * @param _goAssetSender:  The _goAssetSender sender's address.
-     * @param _chain33Recipient: The intended recipient's Chain33 address.
+     * @param _chain33Recipient: The intended recipient's Chain address.
      * @param _goAssetTokenAddress: The currency type
      * @param _symbol: goAsset token symbol
      * @param _amount: number of goAsset tokens to be minted

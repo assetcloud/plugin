@@ -7,11 +7,11 @@ package executor
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/common/address"
-	log "github.com/33cn/chain33/common/log/log15"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	gt "github.com/33cn/plugin/plugin/dapp/blackwhite/types"
+	gt "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
+	"github.com/assetcloud/chain/common/address"
+	log "github.com/assetcloud/chain/common/log/log15"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
 )
 
 var (

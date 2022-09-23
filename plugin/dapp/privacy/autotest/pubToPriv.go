@@ -7,7 +7,7 @@ package autotest
 import (
 	"strconv"
 
-	"github.com/33cn/chain33/cmd/autotest/types"
+	"github.com/assetcloud/chain/cmd/autotest/types"
 )
 
 //PubToPrivCase pub2priv case

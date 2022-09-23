@@ -3,11 +3,11 @@ package executor
 import (
 	"encoding/hex"
 
-	"github.com/33cn/chain33/system/dapp"
+	"github.com/assetcloud/chain/system/dapp"
 
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	vty "github.com/33cn/plugin/plugin/dapp/vote/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
 )
 
 type action struct {

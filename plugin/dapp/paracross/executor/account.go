@@ -5,10 +5,10 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
 )
 
 // 注： 在计算帐号地址时， 平行链paracross合约地址需要带上title前缀，才能表现出和主链一致, 但是现在不带，

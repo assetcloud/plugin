@@ -7,13 +7,13 @@ import (
 	"os"
 	"time"
 
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeFactory"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeFactory"
 
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	"github.com/assetcloud/chain/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/cobra"
 )
@@ -202,9 +202,9 @@ func createEvmTx(chainID int32, action proto.Message, execer, caller, addr, expi
 		return "", err
 	}
 
-	err = client.Call("Chain33.SignRawTx", unsignedTx, &res)
+	err = client.Call("Chain.SignRawTx", unsignedTx, &res)
 	if err != nil {
-		fmt.Println("createEvmTx::", "Chain33.SignRawTx failed due to:", err)
+		fmt.Println("createEvmTx::", "Chain.SignRawTx failed due to:", err)
 		return "", err
 	}
 

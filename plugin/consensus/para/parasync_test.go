@@ -7,17 +7,17 @@ package para
 import (
 	"testing"
 
-	"github.com/33cn/chain33/common/crypto"
-	drivers "github.com/33cn/chain33/system/consensus"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/crypto"
+	drivers "github.com/assetcloud/chain/system/consensus"
+	"github.com/assetcloud/chain/types"
 
 	"encoding/hex"
 	"sync/atomic"
 
-	"github.com/33cn/chain33/queue"
-	typesmocks "github.com/33cn/chain33/types/mocks"
-	"github.com/33cn/plugin/plugin/dapp/paracross/testnode"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/queue"
+	typesmocks "github.com/assetcloud/chain/types/mocks"
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/testnode"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )

@@ -8,10 +8,10 @@ import (
 	"encoding/hex"
 	"unsafe"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/types"
-	privacy "github.com/33cn/plugin/plugin/dapp/privacy/crypto"
-	privacytypes "github.com/33cn/plugin/plugin/dapp/privacy/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/types"
+	privacy "github.com/assetcloud/plugin/plugin/dapp/privacy/crypto"
+	privacytypes "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
 )
 
 func checkAmountValid(amount, coinPrecision int64) bool {

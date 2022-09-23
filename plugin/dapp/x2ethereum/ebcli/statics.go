@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/33cn/chain33/rpc/jsonclient"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	"github.com/spf13/cobra"
 )
 

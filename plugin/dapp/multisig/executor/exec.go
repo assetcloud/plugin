@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	mty "github.com/33cn/plugin/plugin/dapp/multisig/types"
+	"github.com/assetcloud/chain/types"
+	mty "github.com/assetcloud/plugin/plugin/dapp/multisig/types"
 )
 
 //Exec_MultiSigAccCreate 创建多重签名账户

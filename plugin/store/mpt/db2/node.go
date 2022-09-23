@@ -25,8 +25,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/plugin/plugin/store/mpt/db2/rlp"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/plugin/plugin/store/mpt/db2/rlp"
 )
 
 var indices = []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "T"}

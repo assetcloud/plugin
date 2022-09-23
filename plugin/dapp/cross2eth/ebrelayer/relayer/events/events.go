@@ -1,7 +1,7 @@
 package events
 
 import (
-	log "github.com/33cn/chain33/common/log/log15"
+	log "github.com/assetcloud/chain/common/log/log15"
 )
 
 type ClaimType int32
@@ -17,7 +17,7 @@ const (
 )
 
 const (
-	// Unsupported : unsupported Chain33 or Ethereum event
+	// Unsupported : unsupported Chain or Ethereum event
 	Unsupported Event = iota
 	// LogLockFromETH : Ethereum event 'LogLock'
 	LogLockFromETH

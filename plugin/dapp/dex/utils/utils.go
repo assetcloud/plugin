@@ -9,17 +9,17 @@ import (
 	"os"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/system/crypto/secp256k1"
-	"github.com/33cn/chain33/types"
-	chain33Types "github.com/33cn/chain33/types"
-	ebrelayerChain33 "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	ebrelayerChain33 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/assetcloud/chain/types"
+	chain33Types "github.com/assetcloud/chain/types"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -216,7 +216,7 @@ func sendTransactionRpc(data, rpcLaddr string) (string, error) {
 	params := rpctypes.RawParm{
 		Data: data,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.SendTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.SendTransaction", params, nil)
 	var txhex string
 	rpc, err := jsonclient.NewJSONClient(ctx.Addr)
 	if err != nil {

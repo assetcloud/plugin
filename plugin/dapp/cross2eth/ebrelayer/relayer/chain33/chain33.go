@@ -12,21 +12,21 @@ import (
 	"sync/atomic"
 	"time"
 
-	chain33EvmCommon "github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	chain33EvmCommon "github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 
-	"github.com/33cn/chain33/common"
-	chain33Crypto "github.com/33cn/chain33/common/crypto"
-	dbm "github.com/33cn/chain33/common/db"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	chain33Types "github.com/33cn/chain33/types"
-	syncTx "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33/transceiver/sync"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	syncTx "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33/transceiver/sync"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/assetcloud/chain/common"
+	chain33Crypto "github.com/assetcloud/chain/common/crypto"
+	dbm "github.com/assetcloud/chain/common/db"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	chain33Types "github.com/assetcloud/chain/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/crypto"
 )
@@ -151,9 +151,9 @@ func StartChain33Relayer(startPara *Chain33StartPara) *Relayer4Chain33 {
 }
 
 func (chain33Relayer *Relayer4Chain33) syncProc(syncCfg *ebTypes.SyncTxReceiptConfig) {
-	_, _ = fmt.Fprintln(os.Stdout, "Pls unlock or import private key for Chain33 relayer")
+	_, _ = fmt.Fprintln(os.Stdout, "Pls unlock or import private key for Chain relayer")
 	<-chain33Relayer.unlockChan
-	_, _ = fmt.Fprintln(os.Stdout, "Chain33 relayer starts to run...")
+	_, _ = fmt.Fprintln(os.Stdout, "Chain relayer starts to run...")
 	if err := chain33Relayer.RestoreTokenAddress(); nil != err {
 		relayerLog.Info("Failed to RestoreTokenAddress")
 		return
@@ -205,7 +205,7 @@ func (chain33Relayer *Relayer4Chain33) syncProc(syncCfg *ebTypes.SyncTxReceiptCo
 
 func (chain33Relayer *Relayer4Chain33) getCurrentHeight() int64 {
 	var res rpctypes.Header
-	ctx := jsonclient.NewRPCCtx(chain33Relayer.rpcLaddr, "Chain33.GetLastHeader", nil, &res)
+	ctx := jsonclient.NewRPCCtx(chain33Relayer.rpcLaddr, "Chain.GetLastHeader", nil, &res)
 	_, err := ctx.RunResult()
 	if nil != err {
 		relayerLog.Error("getCurrentHeight", "Failede due to:", err.Error())

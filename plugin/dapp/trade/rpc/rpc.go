@@ -7,8 +7,8 @@ package rpc
 import (
 	"context"
 
-	"github.com/33cn/chain33/types"
-	ptypes "github.com/33cn/plugin/plugin/dapp/trade/types"
+	ptypes "github.com/assetcloud/plugin/plugin/dapp/trade/types"
+	"github.com/assetcloud/chain/types"
 )
 
 //CreateRawTradeSellTx :

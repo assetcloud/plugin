@@ -7,11 +7,11 @@ package para
 import (
 	"testing"
 
-	"github.com/33cn/chain33/queue"
-	_ "github.com/33cn/chain33/system"
-	drivers "github.com/33cn/chain33/system/consensus"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/paracross/testnode"
+	"github.com/assetcloud/chain/queue"
+	_ "github.com/assetcloud/chain/system"
+	drivers "github.com/assetcloud/chain/system/consensus"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/testnode"
 	"github.com/stretchr/testify/assert"
 )
 

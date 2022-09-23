@@ -10,10 +10,10 @@ import (
 
 	"google.golang.org/grpc/credentials"
 
-	"github.com/33cn/chain33/p2p/utils"
+	"github.com/assetcloud/chain/p2p/utils"
 
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/types"
 )
 
 // NodeInfo is interface object of the node

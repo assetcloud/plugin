@@ -5,11 +5,11 @@
 package relay
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/relay/commands"
-	"github.com/33cn/plugin/plugin/dapp/relay/executor"
-	"github.com/33cn/plugin/plugin/dapp/relay/rpc"
-	"github.com/33cn/plugin/plugin/dapp/relay/types"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/relay/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/relay/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/relay/rpc"
+	"github.com/assetcloud/plugin/plugin/dapp/relay/types"
 )
 
 func init() {

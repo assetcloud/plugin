@@ -7,15 +7,15 @@ package testnode
 import (
 	"testing"
 
-	"github.com/33cn/chain33/util/testnode"
-	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
-	ticketwallet "github.com/33cn/plugin/plugin/dapp/ticket/wallet"
+	"github.com/assetcloud/chain/util/testnode"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
+	ticketwallet "github.com/assetcloud/plugin/plugin/dapp/ticket/wallet"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	_ "github.com/33cn/chain33/system"
-	"github.com/33cn/chain33/types"
-	_ "github.com/33cn/plugin/plugin"
+	_ "github.com/assetcloud/chain/system"
+	"github.com/assetcloud/chain/types"
+	_ "github.com/assetcloud/plugin/plugin"
 )
 
 func TestWalletTicket(t *testing.T) {

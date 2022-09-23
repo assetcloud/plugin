@@ -4,9 +4,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/types"
-	x2eTy "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/types"
+	x2eTy "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 )
 
 func (x *x2ethereum) Query_GetEthProphecy(in *x2eTy.QueryEthProphecyParams) (types.Message, error) {

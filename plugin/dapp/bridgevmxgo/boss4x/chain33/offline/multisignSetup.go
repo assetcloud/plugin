@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	gnosis "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	gnosis "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
 	"github.com/spf13/cobra"
 )
 

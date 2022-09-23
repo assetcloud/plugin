@@ -3,12 +3,12 @@ package executor
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/system/dapp"
+	"github.com/assetcloud/chain/system/dapp"
 
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/common/db/table"
-	"github.com/33cn/chain33/types"
-	mix "github.com/33cn/plugin/plugin/dapp/mix/types"
+	mix "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/db/table"
+	"github.com/assetcloud/chain/types"
 )
 
 /*

@@ -7,9 +7,9 @@ package types
 import (
 	"reflect"
 
-	log "github.com/33cn/chain33/common/log/log15"
-	cty "github.com/33cn/chain33/system/dapp/coins/types"
-	"github.com/33cn/chain33/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	cty "github.com/assetcloud/chain/system/dapp/coins/types"
+	"github.com/assetcloud/chain/types"
 )
 
 const (

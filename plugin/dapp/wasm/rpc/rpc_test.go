@@ -5,10 +5,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/33cn/chain33/client/mocks"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	types2 "github.com/33cn/plugin/plugin/dapp/wasm/types"
+	"github.com/assetcloud/chain/client/mocks"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	types2 "github.com/assetcloud/plugin/plugin/dapp/wasm/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

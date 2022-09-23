@@ -4,9 +4,9 @@
 package main
 
 import (
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	relayerTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ import (
 func RelayerCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "relayer",
-		Short: "relayer of Chain33 and Ethereum ",
+		Short: "relayer of Chain and Ethereum ",
 		Args:  cobra.MinimumNArgs(1),
 	}
 

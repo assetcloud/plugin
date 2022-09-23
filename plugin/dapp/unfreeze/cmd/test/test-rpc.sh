@@ -11,7 +11,7 @@ function query_unfreezeID() {
 
     local times=10
     while true; do
-        req='{"method":"Chain33.QueryTransaction","params":[{"hash":"'"$txhash"'"}]}'
+        req='{"method":"Chain.QueryTransaction","params":[{"hash":"'"$txhash"'"}]}'
         ret=$(curl -ksd "$req" ${MAIN_HTTP})
         tx=$(jq -r ".result.tx.hash" <<<"$ret")
         #   echo "====query tx= ${txhash}, return=$ret "
@@ -59,7 +59,7 @@ function init() {
         chain33_applyCoins "${owner}" 10000000000 "${main_ip}"
     fi
 
-    exec_addr=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"'${exec_name}'"}]}' ${MAIN_HTTP} | jq -r ".result")
+    exec_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"'${exec_name}'"}]}' ${MAIN_HTTP} | jq -r ".result")
     echo "exec_addr=${exec_addr}"
     chain33_SendToAddress "$owner" "$exec_addr" 5000000000 "${MAIN_HTTP}"
     chain33_SendToAddress "$beneficiary" "$exec_addr" 5000000000 "${MAIN_HTTP}"

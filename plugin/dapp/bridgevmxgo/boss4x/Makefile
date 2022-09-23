@@ -3,7 +3,7 @@
 proj := "build"
 .PHONY: default build remote winset
 
-SRC_CLI := 33cn/plugin/plugin/dapp/bridgevmxgo/boss4x
+SRC_CLI := assetcloud/plugin/plugin/dapp/bridgevmxgo/boss4x
 OUT := build
 
 default: build

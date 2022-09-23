@@ -5,19 +5,20 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"github.com/33cn/plugin/plugin/dapp/mix/executor/merkletree"
-	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"os"
 	"strings"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/merkletree"
+	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
-	"github.com/33cn/plugin/plugin/dapp/zksync/wallet"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/types"
+
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/assetcloud/plugin/plugin/dapp/zksync/wallet"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
 	"github.com/pkg/errors"
@@ -104,7 +105,7 @@ func deposit(cmd *cobra.Command, args []string) {
 		ActionName: "Deposit",
 		Payload:    payload,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -144,7 +145,7 @@ func withdraw(cmd *cobra.Command, args []string) {
 		ActionName: "Withdraw",
 		Payload:    payload,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -184,7 +185,7 @@ func treeToContract(cmd *cobra.Command, args []string) {
 		ActionName: "TreeToContract",
 		Payload:    payload,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -224,7 +225,7 @@ func contractToTree(cmd *cobra.Command, args []string) {
 		ActionName: "ContractToTree",
 		Payload:    payload,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -267,7 +268,7 @@ func transfer(cmd *cobra.Command, args []string) {
 		ActionName: "Transfer",
 		Payload:    payload,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -312,7 +313,7 @@ func transferToNew(cmd *cobra.Command, args []string) {
 		ActionName: "TransferToNew",
 		Payload:    payload,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -349,7 +350,7 @@ func forceExit(cmd *cobra.Command, args []string) {
 		ActionName: "ForceExit",
 		Payload:    payload,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -383,7 +384,7 @@ func setPubKey(cmd *cobra.Command, args []string) {
 		ActionName: "SetPubKey",
 		Payload:    payload,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -420,7 +421,7 @@ func fullExit(cmd *cobra.Command, args []string) {
 		ActionName: "FullExit",
 		Payload:    payload,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -457,7 +458,7 @@ func verifyKey(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -494,7 +495,7 @@ func setOperator(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -557,7 +558,7 @@ func commitProof(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -620,7 +621,7 @@ func getAccountTree(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.AccountTree
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -658,7 +659,7 @@ func getTxProof(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.OperationInfo
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -692,7 +693,7 @@ func getTxProofByHeight(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -717,7 +718,7 @@ func getLastCommitProof(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&types.ReqNil{})
 
 	var resp zt.CommitProofState
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -751,7 +752,7 @@ func getAccountById(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.Leaf
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -785,7 +786,7 @@ func getAccountByEth(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -819,7 +820,7 @@ func getAccountByChain33(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -857,7 +858,7 @@ func getContractAccount(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp types.Account
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -895,7 +896,7 @@ func getTokenBalance(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -929,7 +930,7 @@ func getZkCommitProof(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkCommitProof
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -970,7 +971,7 @@ func setTokenFee(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 

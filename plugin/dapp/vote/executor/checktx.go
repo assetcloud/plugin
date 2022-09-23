@@ -3,10 +3,10 @@ package executor
 import (
 	"encoding/hex"
 
-	"github.com/33cn/chain33/system/dapp"
+	"github.com/assetcloud/chain/system/dapp"
 
-	"github.com/33cn/chain33/types"
-	vty "github.com/33cn/plugin/plugin/dapp/vote/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
+	"github.com/assetcloud/chain/types"
 )
 
 // CheckTx 实现自定义检验交易接口，供框架调用

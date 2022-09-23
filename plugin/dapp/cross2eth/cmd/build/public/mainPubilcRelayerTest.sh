@@ -275,7 +275,7 @@ function TestETH2Chain33Assets() {
     # 原来的数额
     result=$(${CLIA} ethereum balance -o "${ethTestAddr2}")
 
-    echo '#5.burn ETH from Chain33 ETH(Chain33)-----> Ethereum'
+    echo '#5.burn ETH from Chain ETH(Chain)-----> Ethereum'
     result=$(${CLIA} chain33 burn -m 0.0003 -k "${chain33ReceiverAddrKey}" -r "${ethTestAddr2}" -t "${chain33MainBridgeTokenAddr}")
     cli_ret "${result}" "burn"
 
@@ -292,7 +292,7 @@ function TestETH2Chain33Assets() {
     result=$(${CLIA} ethereum balance -o "${ethereumBridgeBank}")
     cli_ret "${result}" "balance" ".balance" "0.0017"
 
-    echo '#5.burn ETH from Chain33 ETH(Chain33)-----> Ethereum 6'
+    echo '#5.burn ETH from Chain ETH(Chain)-----> Ethereum 6'
     result=$(${CLIA} chain33 burn -m 0.0017 -k "${chain33ReceiverAddrKey}" -r "${ethTestAddr2}" -t "${chain33MainBridgeTokenAddr}")
     cli_ret "${result}" "burn"
 
@@ -340,7 +340,7 @@ function TestETH2Chain33USDT() {
     result=$(${CLIA} ethereum balance -o "${ethReceiverAddr1}" -t "${ethereumUSDTERC20TokenAddr}")
     cli_ret "${result}" "balance" ".balance" "0"
 
-    echo '#5.burn YCC from Chain33 YCC(Chain33)-----> Ethereum'
+    echo '#5.burn YCC from Chain YCC(Chain)-----> Ethereum'
     result=$(${CLIA} chain33 burn -m 5 -k "${chain33ReceiverAddrKey}" -r "${ethReceiverAddr1}" -t "${chain33USDTBridgeTokenAddr}")
     cli_ret "${result}" "burn"
 
@@ -359,7 +359,7 @@ function TestETH2Chain33USDT() {
     result=$(${CLIA} ethereum balance -o "${ethReceiverAddr1}" -t "${ethereumUSDTERC20TokenAddr}")
     cli_ret "${result}" "balance" ".balance" "5"
 
-    echo '#5.burn USDT from Chain33 USDT(Chain33)-----> Ethereum'
+    echo '#5.burn USDT from Chain USDT(Chain)-----> Ethereum'
     result=$(${CLIA} chain33 burn -m 7 -k "${chain33ReceiverAddrKey}" -r "${ethReceiverAddr1}" -t "${chain33USDTBridgeTokenAddr}")
     cli_ret "${result}" "burn"
 

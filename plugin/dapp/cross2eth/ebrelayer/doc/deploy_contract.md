@@ -15,7 +15,7 @@
 
 #### 编译代码
 ```shell
-git clone git@github.com:33cn/plugin.git
+git clone git@github.com:assetcloud/plugin.git
 make
 scp plugin/build/ci/bridgevmxgo 目标服务器
 ```
@@ -483,7 +483,7 @@ tx is written to file:  create_add_lock_list.txt
 ```shell
 # 创建交易
 # XgoChain33BridgeBank 部署的 xgo BridgeBank 合约地址
-curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain33.CreateTransaction","params":[{"execer":"manage","actionName":"Modify","payload":{"key":"bridgevmxgo-contract-addr","value":"{\"address\":\"'"${XgoChain33BridgeBank}"'\"}","op":"add","addr":""}}]}' -H 'content-type:text/plain;' "http://${docker_chain33_ip}:8901"
+curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain.CreateTransaction","params":[{"execer":"manage","actionName":"Modify","payload":{"key":"bridgevmxgo-contract-addr","value":"{\"address\":\"'"${XgoChain33BridgeBank}"'\"}","op":"add","addr":""}}]}' -H 'content-type:text/plain;' "http://${docker_chain33_ip}:8901"
 
 # 用平行链管理者地址签名
 ./chain33_cli wallet sign -k "$paraMainAddrKey" -d "${tx}"
@@ -494,7 +494,7 @@ curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain33.CreateTransacti
 # 创建交易
 # symbol 需要增加的 symbol
 # bridgeTokenAddr chain33 对应的 BridgeToken 地址, 例如:chain33EthBridgeTokenAddr
-curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain33.CreateTransaction","params":[{"execer":"manage","actionName":"Modify","payload":{"key":"evmxgo-mint-'"${symbol}"'","value":"{\"address\":\"'"${bridgeTokenAddr}"'\",\"precision\":8,\"introduction\":\"symbol:'"${symbol}"', bridgeTokenAddr:'"${bridgeTokenAddr}"'\"}","op":"add","addr":""}}]}' -H 'content-type:text/plain;' "http://${docker_chain33_ip}:8901"
+curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain.CreateTransaction","params":[{"execer":"manage","actionName":"Modify","payload":{"key":"evmxgo-mint-'"${symbol}"'","value":"{\"address\":\"'"${bridgeTokenAddr}"'\",\"precision\":8,\"introduction\":\"symbol:'"${symbol}"', bridgeTokenAddr:'"${bridgeTokenAddr}"'\"}","op":"add","addr":""}}]}' -H 'content-type:text/plain;' "http://${docker_chain33_ip}:8901"
 
 # 用平行链管理者地址签名
 ./chain33_cli wallet sign -k "$paraMainAddrKey" -d "${tx}"

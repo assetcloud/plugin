@@ -13,7 +13,7 @@ import (
 
 	"google.golang.org/grpc/credentials"
 
-	"github.com/33cn/chain33/p2p"
+	"github.com/assetcloud/chain/p2p"
 
 	//"strings"
 	"sync/atomic"
@@ -21,10 +21,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/33cn/chain33/common/pubsub"
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/p2p/gossip/nat"
+	"github.com/assetcloud/chain/common/pubsub"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/p2p/gossip/nat"
 )
 
 // 启动Node节点

@@ -8,8 +8,8 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"github.com/33cn/chain33/types"
 	"github.com/BurntSushi/toml"
+	"github.com/assetcloud/chain/types"
 	"github.com/btcsuite/btcd/rpcclient"
 )
 
@@ -22,7 +22,7 @@ type Config struct {
 	BtcdOrWeb      int
 	SyncSetup      uint64
 	SyncSetupCount uint64
-	Chain33        Chain33
+	Chain          Chain
 	FirstBtcHeight uint64
 	Btcd           Btcd
 	Log            types.Log
@@ -79,8 +79,8 @@ func (b *Btcd) BitConnConfig() *rpcclient.ConnConfig {
 	return conn
 }
 
-// Chain33 define adapt to chain33 relay exec
-type Chain33 struct {
+// Chain define adapt to chain33 relay exec
+type Chain struct {
 	ID                   string
 	Host                 string
 	User                 string

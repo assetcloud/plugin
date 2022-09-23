@@ -10,8 +10,8 @@ import "../EthereumBridge.sol";
  * @dev Bank contract which coordinates asset-related functionality.
  *      EthereumBank manages the minting and burning of tokens which
  *      represent Ethereum based assets, while Chain33Bank manages
- *      the locking and unlocking of Chain33 and ERC20 token assets
- *      based on Chain33.
+ *      the locking and unlocking of Chain and ERC20 token assets
+ *      based on Chain.
  **/
 
 contract BridgeBank is EthereumBank, Chain33Bank {
@@ -120,7 +120,7 @@ contract BridgeBank is EthereumBank, Chain33Bank {
      * @dev: Mints new BankTokens
      *
      * @param _ethereumSender: The sender's Ethereum address in bytes.
-     * @param _chain33Recipient: The intended recipient's Chain33 address.
+     * @param _chain33Recipient: The intended recipient's Chain address.
      * @param _ethereumTokenAddress: The currency type
      * @param _symbol: ethereum token symbol
      * @param _amount: number of ethereum tokens to be minted
@@ -244,7 +244,7 @@ contract BridgeBank is EthereumBank, Chain33Bank {
     }
 
     /*
-    * @dev: Locks received Chain33 funds.
+    * @dev: Locks received Chain funds.
     *
     * @param _recipient: bytes representation of destination address.
     * @param _token: token address in origin chain (0x0 if chain33)
@@ -261,7 +261,7 @@ contract BridgeBank is EthereumBank, Chain33Bank {
     {
         string memory symbol;
 
-        // Chain33 deposit
+        // Chain deposit
         if (msg.value > 0) {
           require(
               _token == address(0),
@@ -284,7 +284,7 @@ contract BridgeBank is EthereumBank, Chain33Bank {
           symbol = BridgeToken(_token).symbol();
           require(
               tokenAllow2Lock[keccak256(abi.encodePacked(symbol))] == _token,
-              'The token is not allowed to be locked from Chain33.'
+              'The token is not allowed to be locked from Chain.'
           );
         }
 
@@ -298,9 +298,9 @@ contract BridgeBank is EthereumBank, Chain33Bank {
     }
 
    /*
-    * @dev: Unlocks Chain33 and ERC20 tokens held on the contract.
+    * @dev: Unlocks Chain and ERC20 tokens held on the contract.
     *
-    * @param _recipient: recipient's Chain33 address
+    * @param _recipient: recipient's Chain address
     * @param _token: token contract address
     * @param _symbol: token symbol
     * @param _amount: wei amount or ERC20 token count
@@ -350,7 +350,7 @@ contract BridgeBank is EthereumBank, Chain33Bank {
     * @dev: Allows access to a Ethereum deposit's information via its unique identifier.
     *
     * @param _id: The deposit to be viewed.
-    * @return: Original sender's Chain33 address.
+    * @return: Original sender's Chain address.
     * @return: Intended Ethereum recipient's address in bytes.
     * @return: The lock deposit's currency, denoted by a token address.
     * @return: The amount locked in the deposit.

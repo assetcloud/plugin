@@ -91,7 +91,7 @@ function run_single_app() {
 function main() {
     if [ "${OP}" == "run" ]; then
         #copy chain33 system-test-rpc.sh
-        cp "$(go list -f "{{.Dir}}" github.com/33cn/chain33)"/build/system-test-rpc.sh ./
+        cp "$(go list -f "{{.Dir}}" github.com/assetcloud/chain)"/build/system-test-rpc.sh ./
         if [ "${DAPP}" == "all" ] || [ "${DAPP}" == "ALL" ]; then
             echo "============ run main start ================="
             if ! ./${DOCKER_COMPOSE_SH} "$PROJ"; then

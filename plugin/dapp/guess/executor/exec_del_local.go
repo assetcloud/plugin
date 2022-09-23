@@ -7,9 +7,9 @@ package executor
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/common/db/table"
-	"github.com/33cn/chain33/types"
-	gty "github.com/33cn/plugin/plugin/dapp/guess/types"
+	gty "github.com/assetcloud/plugin/plugin/dapp/guess/types"
+	"github.com/assetcloud/chain/common/db/table"
+	"github.com/assetcloud/chain/types"
 )
 
 func (g *Guess) rollbackGame(game *gty.GuessGame, log *gty.ReceiptGuessGame) {

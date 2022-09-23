@@ -3,7 +3,7 @@ package types
 import (
 	"reflect"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 )
 
 /*
@@ -71,7 +71,7 @@ const (
 	TyCommitProofLog        = 203 //提交zk proof
 	TySetVerifierLog        = 204 //设置验证者
 	TySetEthPriorityQueueId = 205 //设置 eth上 priority queue id;
-	TySetFeeLog       = 206
+	TySetFeeLog             = 206
 )
 
 const (

@@ -5,16 +5,16 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/client"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/system/dapp"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/client"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/system/dapp"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 
 	"github.com/golang/protobuf/proto"
 
-	token "github.com/33cn/plugin/plugin/dapp/token/types"
+	token "github.com/assetcloud/plugin/plugin/dapp/token/types"
 )
 
 type action struct {

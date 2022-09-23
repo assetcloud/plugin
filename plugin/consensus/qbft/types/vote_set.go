@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/33cn/chain33/common/crypto"
-	tmtypes "github.com/33cn/plugin/plugin/dapp/qbftNode/types"
+	tmtypes "github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
+	"github.com/assetcloud/chain/common/crypto"
 	"github.com/pkg/errors"
 )
 

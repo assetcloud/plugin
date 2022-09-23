@@ -15,8 +15,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/33cn/chain33/common/crypto"
-	ttypes "github.com/33cn/plugin/plugin/consensus/dpos/types"
+	ttypes "github.com/assetcloud/plugin/plugin/consensus/dpos/types"
+	"github.com/assetcloud/chain/common/crypto"
 )
 
 const (

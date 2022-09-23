@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 )
 
 // 目前设计trade 的query， 有两个部分的大分类

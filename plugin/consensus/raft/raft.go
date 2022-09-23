@@ -17,7 +17,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/coreos/etcd/etcdserver/stats"
 	"github.com/coreos/etcd/pkg/fileutil"
 	typec "github.com/coreos/etcd/pkg/types"

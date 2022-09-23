@@ -3,10 +3,10 @@ package executor
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/common/db/table"
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/db/table"
+	"github.com/assetcloud/chain/types"
 )
 
 /*

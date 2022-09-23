@@ -3,7 +3,7 @@ package ethtxs
 import (
 	"math/big"
 
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
 	"github.com/ethereum/go-ethereum/common"
 )
 

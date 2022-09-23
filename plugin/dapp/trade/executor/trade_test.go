@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 )
 
 //----------------------------- data for testing ---------------------------------

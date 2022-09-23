@@ -12,11 +12,11 @@ import (
 	"io"
 	"unsafe"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/crypto/sha3"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/system/crypto/ed25519/ed25519/edwards25519"
 	sccrypto "github.com/NebulousLabs/Sia/crypto"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/crypto/sha3"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/system/crypto/ed25519/ed25519/edwards25519"
 )
 
 const (

@@ -8,9 +8,9 @@ import (
 	"context"
 	"encoding/hex"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 
-	ptypes "github.com/33cn/plugin/plugin/dapp/trade/types"
+	ptypes "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 )
 
 //CreateRawTradeSellTx : 创建出售token的未签名交易

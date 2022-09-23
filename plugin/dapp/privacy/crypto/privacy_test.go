@@ -7,8 +7,8 @@ package privacy
 import (
 	"testing"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/log"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/log"
 
 	"github.com/stretchr/testify/assert"
 )

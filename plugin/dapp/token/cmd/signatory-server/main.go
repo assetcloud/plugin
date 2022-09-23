@@ -16,11 +16,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	l "github.com/33cn/chain33/common/log/log15"
 	tml "github.com/BurntSushi/toml"
+	l "github.com/assetcloud/chain/common/log/log15"
 	"github.com/rs/cors"
 
-	"github.com/33cn/plugin/plugin/dapp/token/cmd/signatory-server/signatory"
+	"github.com/assetcloud/plugin/plugin/dapp/token/cmd/signatory-server/signatory"
 )
 
 var (

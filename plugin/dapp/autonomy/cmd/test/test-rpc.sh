@@ -136,9 +136,9 @@ handleBoards() {
 }
 
 txQuery() {
-    ty=$(curl -ksd '{"method":"Chain33.QueryTransaction","params":[{"hash":"'"$RAW_TX_HASH"'"}]}' "${HTTP}" | jq -r ".result.receipt.ty")
+    ty=$(curl -ksd '{"method":"Chain.QueryTransaction","params":[{"hash":"'"$RAW_TX_HASH"'"}]}' "${HTTP}" | jq -r ".result.receipt.ty")
     if [[ ${ty} != 2 ]]; then
-        txQueryShow=$(curl -ksd '{"method":"Chain33.QueryTransaction","params":[{"hash":"'"$RAW_TX_HASH"'"}]}' "${HTTP}" | jq -r ".result")
+        txQueryShow=$(curl -ksd '{"method":"Chain.QueryTransaction","params":[{"hash":"'"$RAW_TX_HASH"'"}]}' "${HTTP}" | jq -r ".result")
         echo "$txQueryShow"
         echo_rst "$1 query_tx" 1
     fi
@@ -147,7 +147,7 @@ txQuery() {
 proposalBoardTx() {
     local start=$1
     local end=$2
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropBoard", "payload":{"boardUpdate": 3,"boards": ['"${boards}"'],"startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropBoard", "payload":{"boardUpdate": 3,"boards": ['"${boards}"'],"startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
@@ -159,7 +159,7 @@ proposalBoardTx() {
 voteBoardTx() {
     local ID=$1
     local privk=$2
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropBoard", "payload":{"proposalID": "'"${ID}"'","voteOption":1}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropBoard", "payload":{"proposalID": "'"${ID}"'","voteOption":1}}]}'
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
@@ -171,7 +171,7 @@ revokeProposalTx() {
     local ID=$1
     local funcName=$2
     local key=$3
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"'"${funcName}"'", "payload":{"proposalID": "'"${ID}"'"}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"'"${funcName}"'", "payload":{"proposalID": "'"${ID}"'"}}]}'
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${key}" "${HTTP}"
@@ -182,7 +182,7 @@ revokeProposalTx() {
 terminateProposalTx() {
     local ID=$1
     local funcName=$2
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"'"${funcName}"'", "payload":{"proposalID": "'"${ID}"'"}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"'"${funcName}"'", "payload":{"proposalID": "'"${ID}"'"}}]}'
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
@@ -193,7 +193,7 @@ terminateProposalTx() {
 queryProposal() {
     local ID=$1
     local funcName=$2
-    local req='{"method":"Chain33.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"'"${funcName}"'","payload":{"data":"'"${ID}"'"}}]}'
+    local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"'"${funcName}"'","payload":{"data":"'"${ID}"'"}}]}'
     resok='(.error|not)'
     chain33_Http "$req" "${HTTP}" "$resok" "$FUNCNAME"
 }
@@ -203,13 +203,13 @@ listProposal() {
     local funcName=$2
     local addr=""
     local direct=0
-    local req='{"method":"Chain33.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"'"${funcName}"'","payload":{"status":"'"${status}"'", "addr":"'"${addr}"'", "count":1, "direction":"'"${direct}"'"}}]}'
+    local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"'"${funcName}"'","payload":{"status":"'"${status}"'", "addr":"'"${addr}"'", "count":1, "direction":"'"${direct}"'"}}]}'
     resok='(.error|not)'
     chain33_Http "$req" "${HTTP}" "$resok" "$FUNCNAME ${funcName}"
 }
 
 queryActivePropBoard() {
-    local req='{"method":"Chain33.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"GetActiveBoard","payload":{"data":"1"}}]}'
+    local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"GetActiveBoard","payload":{"data":"1"}}]}'
     resok='(.error|not)'
     chain33_Http "$req" "${HTTP}" "$resok" "$FUNCNAME"
 }
@@ -245,7 +245,7 @@ proposalRuleTx() {
     local start=$1
     local end=$2
     local propAmount=$3
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropRule", "payload":{"ruleCfg": {"proposalAmount" : '"${propAmount}"',"boardApproveRatio":50,"pubOpposeRatio":33,"largeProjectAmount":100000000000000,"publicPeriod":172800,"pubAttendRatio":60,"pubApproveRatio":60},"startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropRule", "payload":{"ruleCfg": {"proposalAmount" : '"${propAmount}"',"boardApproveRatio":50,"pubOpposeRatio":33,"largeProjectAmount":100000000000000,"publicPeriod":172800,"pubAttendRatio":60,"pubApproveRatio":60},"startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
@@ -257,7 +257,7 @@ proposalRuleTx() {
 voteRuleTx() {
     local ID=$1
     local privk=$2
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropRule", "payload":{"proposalID": "'"${ID}"'", "vote":1}}]}' # "approve": true,
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropRule", "payload":{"proposalID": "'"${ID}"'", "vote":1}}]}' # "approve": true,
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
@@ -266,7 +266,7 @@ voteRuleTx() {
 }
 
 queryActivePropRule() {
-    local req='{"method":"Chain33.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"GetActiveRule","payload":{"data":"1"}}]}'
+    local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"GetActiveRule","payload":{"data":"1"}}]}'
     resok='(.error|not)'
     chain33_Http "$req" "${HTTP}" "$resok" "$FUNCNAME"
 }
@@ -305,7 +305,7 @@ proposalProjectTx() {
     local end=$2
     local amount=$3
     local toAddr=$4
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropProject", "payload":{"amount" : '"${amount}"', "toAddr" : "'"${toAddr}"'","startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropProject", "payload":{"amount" : '"${amount}"', "toAddr" : "'"${toAddr}"'","startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
@@ -317,7 +317,7 @@ proposalProjectTx() {
 voteProjectTx() {
     local ID=$1
     local privk=$2
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropProject", "payload":{"proposalID": "'"${ID}"'","vote":1}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropProject", "payload":{"proposalID": "'"${ID}"'","vote":1}}]}'
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
@@ -357,7 +357,7 @@ proposalChangeTx() {
     local addr=$3
     local cancel=$4
     local key=$5
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropChange", "payload":{"changes" : [{"cancel": '"${cancel}"', "addr":"'"${addr}"'"}],"startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropChange", "payload":{"changes" : [{"cancel": '"${cancel}"', "addr":"'"${addr}"'"}],"startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${key}" "${HTTP}"
@@ -369,7 +369,7 @@ proposalChangeTx() {
 voteChangeTx() {
     local ID=$1
     local privk=$2
-    local req='{"method":"Chain33.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropChange", "payload":{"proposalID": "'"${ID}"'","vote":1}}]}'
+    local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropChange", "payload":{"proposalID": "'"${ID}"'","vote":1}}]}'
     echo "${req}"
     chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
     chain33_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
@@ -462,10 +462,10 @@ init() {
     echo "ipara=$ispara"
 
     if [ "$ispara" == true ]; then
-        EXECTOR_ADDR=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"user.p.para.autonomy"}]}' "${HTTP}" | jq -r ".result")
+        EXECTOR_ADDR=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"user.p.para.autonomy"}]}' "${HTTP}" | jq -r ".result")
         EXECTOR="user.p.para.autonomy"
     else
-        EXECTOR_ADDR=$(curl -ksd '{"method":"Chain33.ConvertExectoAddr","params":[{"execname":"autonomy"}]}' "${HTTP}" | jq -r ".result")
+        EXECTOR_ADDR=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"autonomy"}]}' "${HTTP}" | jq -r ".result")
         EXECTOR="autonomy"
     fi
     echo "EXECTOR_ADDR=$EXECTOR_ADDR"

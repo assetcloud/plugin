@@ -6,15 +6,15 @@
 # ...
 export GO111MODULE=on
 CLI := build/chain33-cli
-SRC_CLI := github.com/33cn/plugin/cli
+SRC_CLI := github.com/assetcloud/plugin/cli
 APP := build/chain33
 LDFLAGS := ' -w -s'
 BUILDTIME:=$(shell date +"%Y-%m-%d %H:%M:%S %A")
 VERSION=$(shell git describe --tags || git rev-parse --short=8 HEAD)
 GitCommit=$(shell git rev-parse --short=8 HEAD)
-BUILD_FLAGS := -ldflags '-X "github.com/33cn/plugin/version.GitCommit=$(GitCommit)" \
-                         -X "github.com/33cn/plugin/version.Version=$(VERSION)" \
-                         -X "github.com/33cn/plugin/version.BuildTime=$(BUILDTIME)"'
+BUILD_FLAGS := -ldflags '-X "github.com/assetcloud/plugin/version.GitCommit=$(GitCommit)" \
+                         -X "github.com/assetcloud/plugin/version.Version=$(VERSION)" \
+                         -X "github.com/assetcloud/plugin/version.BuildTime=$(BUILDTIME)"'
 
 MKPATH=$(abspath $(lastword $(MAKEFILE_LIST)))
 MKDIR=$(dir $(MKPATH))
@@ -26,7 +26,7 @@ default: depends build
 build: depends
 	go build $(BUILD_FLAGS) -v -o $(APP)
 	go build $(BUILD_FLAGS) -v -o $(CLI) $(SRC_CLI)
-	go build $(BUILD_FLAGS) -v -o build/fork-config github.com/33cn/plugin/cli/fork_config/
+	go build $(BUILD_FLAGS) -v -o build/fork-config github.com/assetcloud/plugin/cli/fork_config/
 	@cp chain33.toml build/
 	@cp chain33.para.toml build/ci/paracross/
 
@@ -97,9 +97,9 @@ autotest_tick: autotest ## run with ticket mining
 
 update: ## version 可以是git tag打的具体版本号,也可以是commit hash, 什么都不填的情况下默认从master分支拉取最新版本
 	@if [ -n "$(version)" ]; then   \
-	go get -v github.com/33cn/chain33@${version}  ; \
+	go get -v github.com/assetcloud/chain@${version}  ; \
 	else \
-	go get -v github.com/33cn/chain33@master ;fi
+	go get -v github.com/assetcloud/chain@master ;fi
 	@go mod tidy
 dep:
 	@go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.18.0
@@ -274,7 +274,7 @@ auto_ci: clean fmt_proto fmt_shell protobuf
 
 
 addupstream:
-	git remote add upstream https://github.com/33cn/plugin.git
+	git remote add upstream https://github.com/assetcloud/plugin.git
 	git remote -v
 
 sync:

@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"

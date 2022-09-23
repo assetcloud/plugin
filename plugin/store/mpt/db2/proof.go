@@ -24,9 +24,9 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/33cn/chain33/common"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/plugin/plugin/store/mpt/db2/rlp"
+	"github.com/assetcloud/chain/common"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/plugin/plugin/store/mpt/db2/rlp"
 )
 
 // Prove constructs a merkle proof for key. The result contains all encoded nodes

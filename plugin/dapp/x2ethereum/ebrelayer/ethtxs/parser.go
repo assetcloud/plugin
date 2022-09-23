@@ -13,10 +13,10 @@ import (
 	"math/big"
 	"strings"
 
-	chain33Types "github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
-	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	chain33Types "github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 	"github.com/ethereum/go-ethereum/common"
 )
 

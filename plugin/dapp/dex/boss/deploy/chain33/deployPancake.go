@@ -7,17 +7,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	chain33Types "github.com/33cn/chain33/types"
-	erc20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/multicall/multicall"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeFactory"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeRouter"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	chain33Types "github.com/assetcloud/chain/types"
+	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/multicall/multicall"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeFactory"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeRouter"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	ethereumcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 )
@@ -250,7 +250,7 @@ func getTxByHashesRpc(txhex, rpcLaddr string) (string, error) {
 	}
 
 	var res rpctypes.TransactionDetails
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.GetTxByHashes", params2, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.GetTxByHashes", params2, &res)
 	ctx.SetResultCb(queryTxsByHashesRes)
 	result, err := ctx.RunResult()
 	if err != nil || result == nil {
@@ -281,7 +281,7 @@ func sendTransactionRpc(data, rpcLaddr string) (string, error) {
 	params := rpctypes.RawParm{
 		Data: data,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.SendTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.SendTransaction", params, nil)
 	var txhex string
 	rpc, err := jsonclient.NewJSONClient(ctx.Addr)
 	if err != nil {

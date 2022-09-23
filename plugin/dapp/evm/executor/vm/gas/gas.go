@@ -5,7 +5,7 @@
 package gas
 
 import (
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/model"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/model"
 	"github.com/holiman/uint256"
 )
 

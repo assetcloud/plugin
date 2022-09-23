@@ -11,17 +11,17 @@ import (
 	"os"
 	"strings"
 
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 
-	cmdtypes "github.com/33cn/chain33/system/dapp/commands/types"
+	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
 	"github.com/spf13/cobra"
 
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/unfreeze/types"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/unfreeze/types"
 )
 
 // Cmd unfreeze 客户端主程序
@@ -165,7 +165,7 @@ func fixAmount(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(create),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -221,7 +221,7 @@ func left(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(create),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -285,7 +285,7 @@ func withdraw(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -301,7 +301,7 @@ func terminate(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -322,7 +322,7 @@ func queryWithdraw(cmd *cobra.Command, args []string) {
 		Payload:  types.MustPBToJSON(&types.ReqString{Data: id}),
 	}
 	var resp pty.ReplyQueryUnfreezeWithdraw
-	err = cli.Call("Chain33.Query", param, &resp)
+	err = cli.Call("Chain.Query", param, &resp)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -348,7 +348,7 @@ func show(cmd *cobra.Command, args []string) {
 		Payload:  types.MustPBToJSON(&types.ReqString{Data: id}),
 	}
 	var resp pty.Unfreeze
-	err = cli.Call("Chain33.Query", param, &resp)
+	err = cli.Call("Chain.Query", param, &resp)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -434,7 +434,7 @@ func listUnfreeze(cmd *cobra.Command, args []string) {
 	}
 
 	var resp pty.ReplyUnfreezes
-	err = cli.Call("Chain33.Query", param, &resp)
+	err = cli.Call("Chain.Query", param, &resp)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return

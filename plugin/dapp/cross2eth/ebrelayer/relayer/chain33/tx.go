@@ -11,29 +11,29 @@ import (
 	"strings"
 	"time"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
 
-	erc20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
 	btcec_secp256k1 "github.com/btcsuite/btcd/btcec"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 
 	ethcommon "github.com/ethereum/go-ethereum/common"
 
-	"github.com/33cn/chain33/common"
-	chain33Common "github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	chain33Crypto "github.com/33cn/chain33/common/crypto"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/system/crypto/secp256k1"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4chain33/generated"
-	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/math"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4chain33/generated"
+	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/math"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/common"
+	chain33Common "github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	chain33Crypto "github.com/assetcloud/chain/common/crypto"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/assetcloud/chain/types"
 	ethSecp256k1 "github.com/ethereum/go-ethereum/crypto/secp256k1"
 	"github.com/golang/protobuf/proto"
 )
@@ -105,7 +105,7 @@ func relayEvmTx2Chain33(privateKey chain33Crypto.PrivKey, claim *ebrelayerTypes.
 	bExecuted := false
 	for _, rpcURL := range rpcURLs {
 		var txhash string
-		ctx := jsonclient.NewRPCCtx(rpcURL, "Chain33.SendTransaction", params, &txhash)
+		ctx := jsonclient.NewRPCCtx(rpcURL, "Chain.SendTransaction", params, &txhash)
 		_, err = ctx.RunResult()
 
 		// 如果成功 记录这笔哈希
@@ -153,7 +153,7 @@ func GetTxStatusByHashesRpc(txhex, rpcLaddr string) int32 {
 	}
 
 	var res rpctypes.TransactionDetails
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.GetTxByHashes", params2, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.GetTxByHashes", params2, &res)
 	ctx.SetResultCb(queryTxsByHashesRes)
 	result, err := ctx.RunResult()
 	if err != nil || result == nil {
@@ -169,7 +169,7 @@ func getTxByHashesRpc(txhex, rpcLaddr string) (string, error) {
 	}
 
 	var res rpctypes.TransactionDetails
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.GetTxByHashes", params2, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.GetTxByHashes", params2, &res)
 	ctx.SetResultCb(queryTxsByHashesRes)
 	result, err := ctx.RunResult()
 	if err != nil || result == nil {
@@ -236,9 +236,9 @@ func createSignedEvmTx(action proto.Message, execer, caller, rpcLaddr, to string
 		chain33txLog.Error("createSignedEvmTx", "jsonclient.NewJSONClient", err.Error())
 		return "", err
 	}
-	err = client.Call("Chain33.SignRawTx", unsignedTx, &res)
+	err = client.Call("Chain.SignRawTx", unsignedTx, &res)
 	if err != nil {
-		chain33txLog.Error("createSignedEvmTx", "Chain33.SignRawTx", err.Error())
+		chain33txLog.Error("createSignedEvmTx", "Chain.SignRawTx", err.Error())
 		return "", err
 	}
 
@@ -249,7 +249,7 @@ func sendTransactionRpc(data, rpcLaddr string) (string, error) {
 	params := rpctypes.RawParm{
 		Data: data,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.SendTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.SendTransaction", params, nil)
 	var txhex string
 	rpc, err := jsonclient.NewJSONClient(ctx.Addr)
 	if err != nil {
@@ -342,7 +342,7 @@ func sendEvmTx(privateKey chain33Crypto.PrivKey, contractAddr, chainName, rpcURL
 	}
 	var txhash string
 
-	ctx := jsonclient.NewRPCCtx(rpcURL, "Chain33.SendTransaction", params, &txhash)
+	ctx := jsonclient.NewRPCCtx(rpcURL, "Chain.SendTransaction", params, &txhash)
 	_, err := ctx.RunResult()
 	return txhash, err
 }
@@ -654,7 +654,7 @@ func sendQuery(rpcAddr, funcName string, request types.Message, result proto.Mes
 		return false
 	}
 
-	err = jsonrpc.Call("Chain33.Query", params, result)
+	err = jsonrpc.Call("Chain.Query", params, result)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return false

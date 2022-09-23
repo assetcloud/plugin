@@ -10,23 +10,23 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/chain33/system/p2p/dht/protocol"
+	"github.com/assetcloud/chain/system/p2p/dht/protocol"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/executor"
-	"github.com/33cn/chain33/p2p"
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/rpc"
-	"github.com/33cn/chain33/types"
-	ttypes "github.com/33cn/plugin/plugin/consensus/dpos/types"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/executor"
+	"github.com/assetcloud/chain/p2p"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/rpc"
+	"github.com/assetcloud/chain/types"
+	ttypes "github.com/assetcloud/plugin/plugin/consensus/dpos/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/33cn/chain33/blockchain"
-	"github.com/33cn/chain33/mempool"
-	"github.com/33cn/chain33/store"
-	_ "github.com/33cn/chain33/system"
-	_ "github.com/33cn/plugin/plugin/store/init"
+	"github.com/assetcloud/chain/blockchain"
+	"github.com/assetcloud/chain/mempool"
+	"github.com/assetcloud/chain/store"
+	_ "github.com/assetcloud/chain/system"
+	_ "github.com/assetcloud/plugin/plugin/store/init"
 )
 
 var (

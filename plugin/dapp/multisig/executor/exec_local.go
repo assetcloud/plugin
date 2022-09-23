@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	mty "github.com/33cn/plugin/plugin/dapp/multisig/types"
+	"github.com/assetcloud/chain/types"
+	mty "github.com/assetcloud/plugin/plugin/dapp/multisig/types"
 )
 
 //ExecLocal_MultiSigAccCreate 创建多重签名账户,根据payload和receiptData信息获取相关信息并保存到db中

@@ -25,7 +25,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 
 	proto "github.com/golang/protobuf/proto"
 )

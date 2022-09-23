@@ -5,9 +5,9 @@
 package norm
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/norm/executor"
-	"github.com/33cn/plugin/plugin/dapp/norm/types"
+	"github.com/assetcloud/plugin/plugin/dapp/norm/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/norm/types"
+	"github.com/assetcloud/chain/pluginmgr"
 )
 
 func init() {

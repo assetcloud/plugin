@@ -5,7 +5,7 @@ pipeline {
     environment {
         GOPATH = "${WORKSPACE}"
         GO111MODULE = "on"
-        PROJ_DIR = "${WORKSPACE}/src/github.com/33cn/plugin"
+        PROJ_DIR = "${WORKSPACE}/src/github.com/assetcloud/plugin"
     }
 
     options {
@@ -14,7 +14,7 @@ pipeline {
         timestamps()
         gitLabConnection('gitlab33')
         gitlabBuilds(builds: ['check'])
-        checkoutToSubdirectory "src/github.com/33cn/plugin"
+        checkoutToSubdirectory "src/github.com/assetcloud/plugin"
     }
 
     stages {

@@ -1,9 +1,9 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/common/db/table"
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
+	"github.com/assetcloud/chain/common/db/table"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 )
 
 // 文档 1.8 根据token 分页显示未完成成交卖单

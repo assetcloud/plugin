@@ -1,14 +1,14 @@
 [![API Reference](
 https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f676f6c616e672f6764646f3f7374617475732e737667
-)](https://godoc.org/github.com/33cn/plugin)
-[![pipeline status](https://api.travis-ci.org/33cn/plugin.svg?branch=master)](https://travis-ci.org/33cn/plugin/)
-[![Go Report Card](https://goreportcard.com/badge/github.com/33cn/plugin?branch=master)](https://goreportcard.com/report/github.com/33cn/plugin)
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/33cn/plugin?svg=true&branch=master&passingText=Windows%20-%20OK&failingText=Windows%20-%20failed&pendingText=Windows%20-%20pending)](https://ci.appveyor.com/project/33cn/plugin)
-[![codecov](https://codecov.io/gh/33cn/plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/33cn/plugin)
+)](https://godoc.org/github.com/assetcloud/plugin)
+[![pipeline status](https://api.travis-ci.org/assetcloud/plugin.svg?branch=master)](https://travis-ci.org/assetcloud/plugin/)
+[![Go Report Card](https://goreportcard.com/badge/github.com/assetcloud/plugin?branch=master)](https://goreportcard.com/report/github.com/assetcloud/plugin)
+[![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/assetcloud/plugin?svg=true&branch=master&passingText=Windows%20-%20OK&failingText=Windows%20-%20failed&pendingText=Windows%20-%20pending)](https://ci.appveyor.com/project/assetcloud/plugin)
+[![codecov](https://codecov.io/gh/assetcloud/plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/assetcloud/plugin)
 
 # chain33 官方插件系统（v1.67.3）
 
-* chain33地址: https://github.com/33cn/chain33
+* chain33地址: https://github.com/assetcloud/chain
 * chain33官网: https://chain.33.cn
 
 ### 环境
@@ -51,16 +51,16 @@ make
 
 ## 贡献代码：
 
-详细的细节步骤可以见 https://github.com/33cn/chain33
+详细的细节步骤可以见 https://github.com/assetcloud/chain
 这里只是简单的步骤：
 
 #### 准备阶段:
 
 * 首先点击 右上角的 fork 图标， 把chain33 fork 到自己的分支 比如我的是 vipwzw/plugin
-* `git clone https://github.com/vipwzw/plugin.git $GOPATH/src/github.com/33cn/plugin`
+* `git clone https://github.com/vipwzw/plugin.git $GOPATH/src/github.com/assetcloud/plugin`
 
 ```
-注意：这里要 clone 到 $GOPATH/src/github.com/33cn/plugin, 否则go 包路径会找不到
+注意：这里要 clone 到 $GOPATH/src/github.com/assetcloud/plugin, 否则go 包路径会找不到
 ```
 
 clone 完成后，执行

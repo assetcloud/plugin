@@ -38,7 +38,7 @@ chain33_Http() {
 
 chain33_SignAndSendTxWait() {
     # txHex="$1" priKey="$2" MAIN_HTTP="$3" FUNCNAME="$4"
-    req='{"method":"Chain33.DecodeRawTransaction","params":[{"txHex":"'"$1"'"}]}'
+    req='{"method":"Chain.DecodeRawTransaction","params":[{"txHex":"'"$1"'"}]}'
     chain33_Http "$req" "$3" '(.result.txs[0].execer != "") and (.result.txs[0].execer != null)' "$4"
     chain33_SignAndSendTx "$1" "$2" "$3"
     chain33_BlockWait 1 "$3"
@@ -46,7 +46,7 @@ chain33_SignAndSendTxWait() {
 
 chain33_BlockWait() {
     local MAIN_HTTP=$2
-    local req='"method":"Chain33.GetLastHeader","params":[]'
+    local req='"method":"Chain.GetLastHeader","params":[]'
 
     cur_height=$(curl -ksd "{$req}" "${MAIN_HTTP}" | jq ".result.height")
     expect=$((cur_height + ${1}))
@@ -67,7 +67,7 @@ chain33_QueryTx() {
     local MAIN_HTTP=$2
     chain33_BlockWait 1 "$MAIN_HTTP"
     local txhash="$1"
-    local req='"method":"Chain33.QueryTransaction","params":[{"hash":"'"$txhash"'"}]'
+    local req='"method":"Chain.QueryTransaction","params":[{"hash":"'"$txhash"'"}]'
 
     local times=10
     while true; do
@@ -92,7 +92,7 @@ chain33_SendTx() {
     local signedTx=$1
     local MAIN_HTTP=$2
 
-    req='"method":"Chain33.SendTransaction","params":[{"token":"BTY","data":"'"$signedTx"'"}]'
+    req='"method":"Chain.SendTransaction","params":[{"token":"BTY","data":"'"$signedTx"'"}]'
     resp=$(curl -ksd "{$req}" "${MAIN_HTTP}")
     err=$(jq '(.error)' <<<"$resp")
     txhash=$(jq -r ".result" <<<"$resp")
@@ -110,7 +110,7 @@ chain33_SendToAddress() {
     local amount=$3
     local MAIN_HTTP=$4
 
-    local req='"method":"Chain33.SendToAddress", "params":[{"from":"'"$from"'","to":"'"$to"'", "amount":'"$amount"', "note":"test\n"}]'
+    local req='"method":"Chain.SendToAddress", "params":[{"from":"'"$from"'","to":"'"$to"'", "amount":'"$amount"', "note":"test\n"}]'
     resp=$(curl -ksd "{$req}" "${MAIN_HTTP}")
     ok=$(jq '(.error|not) and (.result.hash|length==66)' <<<"$resp")
 
@@ -127,7 +127,7 @@ chain33_ImportPrivkey() {
     local label="$3"
     local MAIN_HTTP=$4
 
-    local req='"method":"Chain33.ImportPrivkey", "params":[{"privkey":"'"$pri"'", "label":"'"$label"'"}]'
+    local req='"method":"Chain.ImportPrivkey", "params":[{"privkey":"'"$pri"'", "label":"'"$label"'"}]'
     resp=$(curl -ksd "{$req}" "$MAIN_HTTP")
     #ok=$(jq '(((.error|not) and (.result.label=="'"$label"'") and (.result.acc.addr == "'"$acc"'")) or (.error=="ErrPrivkeyExist"))' <<<"$resp")
     ok=$(jq '(((.error|not) and (.result.label=="'"$label"'") and (.result.acc.addr == "'"$acc"'")) or (.error=="ErrPrivkeyExist") or (.error=="ErrLabelHasUsed"))' <<<"$resp")
@@ -144,12 +144,12 @@ chain33_SignAndSendTx() {
         expire=$4
     fi
 
-    local req='"method":"Chain33.SignRawTx","params":[{"privkey":"'"$priKey"'","txHex":"'"$txHex"'","expire":"'"$expire"'"}]'
+    local req='"method":"Chain.SignRawTx","params":[{"privkey":"'"$priKey"'","txHex":"'"$txHex"'","expire":"'"$expire"'"}]'
     if [ -n "$5" ]; then
         fee=$5
-        req='"method":"Chain33.SignRawTx","params":[{"privkey":"'"$priKey"'","txHex":"'"$txHex"'","expire":"'"$expire"'","fee":'$fee'}]'
+        req='"method":"Chain.SignRawTx","params":[{"privkey":"'"$priKey"'","txHex":"'"$txHex"'","expire":"'"$expire"'","fee":'$fee'}]'
     else
-        req='"method":"Chain33.SignRawTx","params":[{"privkey":"'"$priKey"'","txHex":"'"$txHex"'","expire":"'"$expire"'"}]'
+        req='"method":"Chain.SignRawTx","params":[{"privkey":"'"$priKey"'","txHex":"'"$txHex"'","expire":"'"$expire"'"}]'
     fi
 
     signedTx=$(curl -ksd "{$req}" "${MAIN_HTTP}" | jq -r ".result")
@@ -164,7 +164,7 @@ chain33_SignAndSendTx() {
 chain33_QueryBalance() {
     local addr=$1
     local MAIN_HTTP=$2
-    req='"method":"Chain33.GetAllExecBalance","params":[{"addr":"'"${addr}"'"}]'
+    req='"method":"Chain.GetAllExecBalance","params":[{"addr":"'"${addr}"'"}]'
     #echo "#request: $req"
     resp=$(curl -ksd "{$req}" "${MAIN_HTTP}")
     echo "#response: $resp"
@@ -179,7 +179,7 @@ chain33_QueryExecBalance() {
     local exec=$2
     local MAIN_HTTP=$3
 
-    req='{"method":"Chain33.GetBalance", "params":[{"addresses" : ["'"${addr}"'"], "execer" : "'"${exec}"'"}]}'
+    req='{"method":"Chain.GetBalance", "params":[{"addresses" : ["'"${addr}"'"], "execer" : "'"${exec}"'"}]}'
     resp=$(curl -ksd "$req" "${MAIN_HTTP}")
     echo "#response: $resp"
     ok=$(jq '(.error|not) and (.result[0] | [has("balance", "frozen"), true] | unique | length == 1)' <<<"$resp")
@@ -188,20 +188,20 @@ chain33_QueryExecBalance() {
 
 chain33_GetAccounts() {
     local MAIN_HTTP=$1
-    resp=$(curl -ksd '{"jsonrpc":"2.0","id":2,"method":"Chain33.GetAccounts","params":[{}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}")
+    resp=$(curl -ksd '{"jsonrpc":"2.0","id":2,"method":"Chain.GetAccounts","params":[{}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}")
     echo "$resp"
 }
 
 chain33_LastBlockhash() {
     local MAIN_HTTP=$1
-    result=$(curl -ksd '{"method":"Chain33.GetLastHeader","params":[{}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}" | jq -r ".result.hash")
+    result=$(curl -ksd '{"method":"Chain.GetLastHeader","params":[{}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}" | jq -r ".result.hash")
     LAST_BLOCK_HASH=$result
     echo -e "######\\n  last blockhash is $LAST_BLOCK_HASH  \\n######"
 }
 
 chain33_LastBlockHeight() {
     local MAIN_HTTP=$1
-    result=$(curl -ksd '{"method":"Chain33.GetLastHeader","params":[{}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}" | jq -r ".result.height")
+    result=$(curl -ksd '{"method":"Chain.GetLastHeader","params":[{}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}" | jq -r ".result.height")
     LAST_BLOCK_HEIGHT=$result
     echo -e "######\\n  last blockheight is $LAST_BLOCK_HEIGHT \\n######"
 }

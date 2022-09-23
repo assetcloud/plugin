@@ -11,7 +11,7 @@ import (
 
 	"os"
 
-	"github.com/33cn/plugin/plugin/dapp/cert/authority/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/utils"
 )
 
 func getPemMaterialFromDir(dir string) ([][]byte, error) {

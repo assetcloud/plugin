@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/33cn/chain33/common/address"
-	chain33Types "github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/address"
+	chain33Types "github.com/assetcloud/chain/types"
 
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	"github.com/spf13/cobra"
 )
 

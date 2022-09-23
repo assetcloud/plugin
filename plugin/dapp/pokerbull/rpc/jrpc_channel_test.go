@@ -8,16 +8,16 @@ import (
 	"fmt"
 	"testing"
 
-	commonlog "github.com/33cn/chain33/common/log"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
-	pty "github.com/33cn/plugin/plugin/dapp/pokerbull/types"
+	commonlog "github.com/assetcloud/chain/common/log"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
+	pty "github.com/assetcloud/plugin/plugin/dapp/pokerbull/types"
 	"github.com/stretchr/testify/assert"
 
-	_ "github.com/33cn/chain33/system"
-	_ "github.com/33cn/plugin/plugin"
+	_ "github.com/assetcloud/chain/system"
+	_ "github.com/assetcloud/plugin/plugin"
 )
 
 func init() {
@@ -82,7 +82,7 @@ func testStartRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.
 		Payload:    types.MustPBToJSON(payload),
 	}
 	var res string
-	return jrpc.Call("Chain33.CreateTransaction", params, &res)
+	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
 func testContinueRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
@@ -93,7 +93,7 @@ func testContinueRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclie
 		Payload:    types.MustPBToJSON(payload),
 	}
 	var res string
-	return jrpc.Call("Chain33.CreateTransaction", params, &res)
+	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
 func testPlayRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
@@ -104,7 +104,7 @@ func testPlayRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.J
 		Payload:    types.MustPBToJSON(payload),
 	}
 	var res string
-	return jrpc.Call("Chain33.CreateTransaction", params, &res)
+	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
 func testQuitRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
@@ -115,7 +115,7 @@ func testQuitRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.J
 		Payload:    types.MustPBToJSON(payload),
 	}
 	var res string
-	return jrpc.Call("Chain33.CreateTransaction", params, &res)
+	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
 func testQueryGameByID(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -126,7 +126,7 @@ func testQueryGameByID(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params.FuncName = pty.FuncNameQueryGameByID
 	params.Payload = types.MustPBToJSON(req)
 	rep = &pty.ReplyPBGame{}
-	return jrpc.Call("Chain33.Query", params, rep)
+	return jrpc.Call("Chain.Query", params, rep)
 }
 
 func testQueryGameByAddr(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -137,7 +137,7 @@ func testQueryGameByAddr(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params.FuncName = pty.FuncNameQueryGameByAddr
 	params.Payload = types.MustPBToJSON(req)
 	rep = &pty.PBGameRecords{}
-	return jrpc.Call("Chain33.Query", params, rep)
+	return jrpc.Call("Chain.Query", params, rep)
 }
 
 func testQueryGameByIDs(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -148,7 +148,7 @@ func testQueryGameByIDs(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params.FuncName = pty.FuncNameQueryGameListByIDs
 	params.Payload = types.MustPBToJSON(req)
 	rep = &pty.ReplyPBGameList{}
-	return jrpc.Call("Chain33.Query", params, rep)
+	return jrpc.Call("Chain.Query", params, rep)
 }
 
 func testQueryGameByStatus(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -159,7 +159,7 @@ func testQueryGameByStatus(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params.FuncName = pty.FuncNameQueryGameByStatus
 	params.Payload = types.MustPBToJSON(req)
 	rep = &pty.PBGameRecords{}
-	return jrpc.Call("Chain33.Query", params, rep)
+	return jrpc.Call("Chain.Query", params, rep)
 }
 
 func testQueryGameByRound(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -170,5 +170,5 @@ func testQueryGameByRound(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params.FuncName = pty.FuncNameQueryGameByRound
 	params.Payload = types.MustPBToJSON(req)
 	rep = &pty.PBGameRecords{}
-	return jrpc.Call("Chain33.Query", params, rep)
+	return jrpc.Call("Chain.Query", params, rep)
 }

@@ -3,8 +3,8 @@ package offline
 import (
 	"fmt"
 
-	"github.com/33cn/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
 	"github.com/spf13/cobra"
 )
 

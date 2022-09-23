@@ -12,12 +12,12 @@ import (
 	"strings"
 	"testing"
 
-	apimock "github.com/33cn/chain33/client/mocks"
-	dbm "github.com/33cn/chain33/common/db"
-	dbmock "github.com/33cn/chain33/common/db/mocks"
-	"github.com/33cn/chain33/types"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	dbm "github.com/assetcloud/chain/common/db"
+	dbmock "github.com/assetcloud/chain/common/db/mocks"
+	"github.com/assetcloud/chain/types"
 
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/mock"
 )
 

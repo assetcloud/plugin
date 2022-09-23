@@ -1,13 +1,13 @@
 package chain33
 
 import (
-	chain33Common "github.com/33cn/chain33/common"
+	chain33Common "github.com/assetcloud/chain/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	//dbm "github.com/33cn/chain33/common/db"
-	chain33Types "github.com/33cn/chain33/types"
-	wcom "github.com/33cn/chain33/wallet/common"
-	x2ethTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	//dbm "github.com/assetcloud/chain/common/db"
+	chain33Types "github.com/assetcloud/chain/types"
+	wcom "github.com/assetcloud/chain/wallet/common"
+	x2ethTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 )
 
 var (

@@ -35,7 +35,7 @@ const (
 //如果发生重名，可以通过配置文件修改这些名字
 var (
 	PackageName    = "chain33.unfreeze"
-	RPCName        = "Chain33.Unfreeze"
+	RPCName        = "Chain.Unfreeze"
 	UnfreezeX      = "unfreeze"
 	ExecerUnfreeze = []byte(UnfreezeX)
 

@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"time"
 
-	//log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
+	//log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
 )
 
 // 0 -> 未成熟 1 -> 可挖矿 2 -> 已挖成功 3-> 已关闭

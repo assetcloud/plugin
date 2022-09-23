@@ -8,9 +8,9 @@ import (
 	"bytes"
 	"unsafe"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/crypto/sha3"
-	"github.com/33cn/chain33/system/crypto/ed25519/ed25519/edwards25519"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/crypto/sha3"
+	"github.com/assetcloud/chain/system/crypto/ed25519/ed25519/edwards25519"
 )
 
 // PrivKeyPrivacy struct data type
