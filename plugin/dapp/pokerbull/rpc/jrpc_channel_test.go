@@ -37,7 +37,7 @@ func TestJRPCChannel(t *testing.T) {
 	assert.NotNil(t, jrpcClient)
 
 	testCases := []struct {
-		fn func(*testing.T, *types.Chain33Config, *jsonclient.JSONClient) error
+		fn func(*testing.T, *types.ChainConfig, *jsonclient.JSONClient) error
 	}{
 		{fn: testStartRawTxCmd},
 		{fn: testContinueRawTxCmd},
@@ -74,7 +74,7 @@ func TestJRPCChannel(t *testing.T) {
 	}
 }
 
-func testStartRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
+func testStartRawTxCmd(t *testing.T, cfg *types.ChainConfig, jrpc *jsonclient.JSONClient) error {
 	payload := &pty.PBGameStart{Value: 123}
 	params := &rpctypes.CreateTxIn{
 		Execer:     cfg.ExecName(pty.PokerBullX),
@@ -85,7 +85,7 @@ func testStartRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.
 	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
-func testContinueRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
+func testContinueRawTxCmd(t *testing.T, cfg *types.ChainConfig, jrpc *jsonclient.JSONClient) error {
 	payload := &pty.PBGameContinue{GameId: "123"}
 	params := &rpctypes.CreateTxIn{
 		Execer:     cfg.ExecName(pty.PokerBullX),
@@ -96,7 +96,7 @@ func testContinueRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclie
 	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
-func testPlayRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
+func testPlayRawTxCmd(t *testing.T, cfg *types.ChainConfig, jrpc *jsonclient.JSONClient) error {
 	payload := &pty.PBGamePlay{GameId: "123", Round: 1, Value: 5, Address: []string{"a", "b"}}
 	params := &rpctypes.CreateTxIn{
 		Execer:     cfg.ExecName(pty.PokerBullX),
@@ -107,7 +107,7 @@ func testPlayRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.J
 	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
-func testQuitRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
+func testQuitRawTxCmd(t *testing.T, cfg *types.ChainConfig, jrpc *jsonclient.JSONClient) error {
 	payload := &pty.PBGameQuit{GameId: "123"}
 	params := &rpctypes.CreateTxIn{
 		Execer:     cfg.ExecName(pty.PokerBullX),

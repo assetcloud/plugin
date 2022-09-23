@@ -17,7 +17,7 @@ import (
 	auty "github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
 )
 
-var chainTestCfg = types.NewChain33Config(types.GetDefaultCfgstring())
+var chainTestCfg = types.NewChainConfig(types.GetDefaultCfgstring())
 
 func testPropBoardTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params := &auty.ProposalBoard{}

@@ -36,7 +36,7 @@ func init() {
 
 // 执行： go test -cover
 func TestQbft(t *testing.T) {
-	mock33 := testnode.New("chain33.qbft.toml", nil)
+	mock33 := testnode.New("chain.qbft.toml", nil)
 	cfg := mock33.GetClient().GetConfig()
 	mock33.Listen()
 	t.Log(mock33.GetGenesisAddress())
@@ -67,7 +67,7 @@ func TestQbft(t *testing.T) {
 }
 
 func startNode(t *testing.T) {
-	cfg2 := types.NewChain33Config(types.ReadFile("chain33.qbft.toml"))
+	cfg2 := types.NewChainConfig(types.ReadFile("chain.qbft.toml"))
 	sub := cfg2.GetSubConfig()
 	qcfg, err := types.ModifySubConfig(sub.Consensus["qbft"], "privFile", "priv_validator_1.json")
 	assert.Nil(t, err)
@@ -135,7 +135,7 @@ func getprivkey(key string) crypto.PrivKey {
 	return priv
 }
 
-func testQuery(t *testing.T, mock *testnode.Chain33Mock) {
+func testQuery(t *testing.T, mock *testnode.ChainMock) {
 	var flag bool
 	err := mock.GetJSONC().Call("qbftNode.IsSync", &types.ReqNil{}, &flag)
 	assert.Nil(t, err)

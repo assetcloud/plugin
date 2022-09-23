@@ -8,18 +8,18 @@ import (
 	"sync"
 	"sync/atomic"
 
-	chain33Address "github.com/assetcloud/chain/common/address"
+	chainAddress "github.com/assetcloud/chain/common/address"
 	ethCommon "github.com/ethereum/go-ethereum/common"
 
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/log/log15"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	chainTypes "github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
 	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/common/log/log15"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	chain33Types "github.com/assetcloud/chain/types"
 	lru "github.com/hashicorp/golang-lru"
 )
 
@@ -36,30 +36,30 @@ const (
 
 //Manager ...
 type Manager struct {
-	chain33Relayer *chain33.Relayer4Chain33
-	ethRelayer     map[string]*ethereum.Relayer4Ethereum
-	store          *Store
-	isLocked       int32
-	mtx            sync.Mutex
-	encryptFlag    int64
-	passphase      string
-	decimalLru     *lru.Cache
+	chainRelayer *chain.Relayer4Chain
+	ethRelayer   map[string]*ethereum.Relayer4Ethereum
+	store        *Store
+	isLocked     int32
+	mtx          sync.Mutex
+	encryptFlag  int64
+	passphase    string
+	decimalLru   *lru.Cache
 }
 
 //NewRelayerManager ...
-//1.验证人的私钥需要通过cli命令行进行导入，且chain33和ethereum两种不同的验证人需要分别导入
+//1.验证人的私钥需要通过cli命令行进行导入，且chain和ethereum两种不同的验证人需要分别导入
 //2.显示或者重新替换原有的私钥首先需要通过passpin进行unlock的操作
-func NewRelayerManager(chain33Relayer *chain33.Relayer4Chain33, ethRelayers map[string]*ethereum.Relayer4Ethereum, db dbm.DB) *Manager {
+func NewRelayerManager(chainRelayer *chain.Relayer4Chain, ethRelayers map[string]*ethereum.Relayer4Ethereum, db dbm.DB) *Manager {
 	l, _ := lru.New(4096)
 	manager := &Manager{
-		chain33Relayer: chain33Relayer,
-		ethRelayer:     ethRelayers,
-		store:          NewStore(db),
-		isLocked:       Locked,
-		mtx:            sync.Mutex{},
-		encryptFlag:    0,
-		passphase:      "",
-		decimalLru:     l,
+		chainRelayer: chainRelayer,
+		ethRelayer:   ethRelayers,
+		store:        NewStore(db),
+		isLocked:     Locked,
+		mtx:          sync.Mutex{},
+		encryptFlag:  0,
+		passphase:    "",
+		decimalLru:   l,
 	}
 	manager.encryptFlag = manager.store.GetEncryptionFlag()
 	return manager
@@ -77,7 +77,7 @@ func (manager *Manager) SetPassphase(setPasswdReq *relayerTypes.ReqSetPasswd, re
 
 	// 密码合法性校验
 	if !utils.IsValidPassWord(setPasswdReq.Passphase) {
-		return chain33Types.ErrInvalidPassWord
+		return chainTypes.ErrInvalidPassWord
 	}
 
 	//使用密码生成passwdhash用于下次密码的验证
@@ -118,7 +118,7 @@ func (manager *Manager) ChangePassphase(setPasswdReq *relayerTypes.ReqChangePass
 	}
 	// 新密码合法性校验
 	if !utils.IsValidPassWord(setPasswdReq.NewPassphase) {
-		return chain33Types.ErrInvalidPassWord
+		return chainTypes.ErrInvalidPassWord
 	}
 	//保存钱包的锁状态，需要暂时的解锁，函数退出时再恢复回去
 	tempislock := atomic.LoadInt32(&manager.isLocked)
@@ -134,13 +134,13 @@ func (manager *Manager) ChangePassphase(setPasswdReq *relayerTypes.ReqChangePass
 		isok := manager.store.VerifyPasswordHash(setPasswdReq.OldPassphase)
 		if !isok {
 			mlog.Error("ChangePassphase Verify Oldpasswd fail!")
-			return chain33Types.ErrVerifyOldpasswdFail
+			return chainTypes.ErrVerifyOldpasswdFail
 		}
 	}
 
 	if len(manager.passphase) != 0 && setPasswdReq.OldPassphase != manager.passphase {
 		mlog.Error("ChangePassphase Oldpass err!")
-		return chain33Types.ErrVerifyOldpasswdFail
+		return chainTypes.ErrVerifyOldpasswdFail
 	}
 
 	//使用新的密码生成passwdhash用于下次密码的验证
@@ -166,7 +166,7 @@ func (manager *Manager) ChangePassphase(setPasswdReq *relayerTypes.ReqChangePass
 		break
 	}
 
-	err = manager.chain33Relayer.StoreAccountWithNewPassphase(setPasswdReq.NewPassphase, setPasswdReq.OldPassphase)
+	err = manager.chainRelayer.StoreAccountWithNewPassphase(setPasswdReq.NewPassphase, setPasswdReq.OldPassphase)
 	if err != nil {
 		mlog.Error("ChangePassphase", "StoreAccountWithNewPassphase err", err)
 		return err
@@ -202,8 +202,8 @@ func (manager *Manager) Unlock(passphase string, result *interface{}) error {
 		return errors.New("wrong passphase")
 	}
 
-	if err := manager.chain33Relayer.RestorePrivateKeys(passphase); nil != err {
-		info := fmt.Sprintf("Failed to RestorePrivateKeys for chain33Relayer due to:%s", err.Error())
+	if err := manager.chainRelayer.RestorePrivateKeys(passphase); nil != err {
+		info := fmt.Sprintf("Failed to RestorePrivateKeys for chainRelayer due to:%s", err.Error())
 		return errors.New(info)
 	}
 
@@ -240,23 +240,23 @@ func (manager *Manager) Lock(param interface{}, result *interface{}) error {
 	return nil
 }
 
-//ImportChain33RelayerPrivateKey 导入chain33relayer验证人的私钥,该私钥实际用于向ethereum提交验证交易时签名使用
-func (manager *Manager) ImportChain33RelayerPrivateKey(importKeyReq *relayerTypes.ImportKeyReq, result *interface{}) error {
+//ImportChainRelayerPrivateKey 导入chainrelayer验证人的私钥,该私钥实际用于向ethereum提交验证交易时签名使用
+func (manager *Manager) ImportChainRelayerPrivateKey(importKeyReq *relayerTypes.ImportKeyReq, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	privateKey := importKeyReq.PrivateKey
 	if err := manager.checkPermission(); nil != err {
 		return err
 	}
-	err := manager.chain33Relayer.ImportPrivateKey(manager.passphase, privateKey)
+	err := manager.chainRelayer.ImportPrivateKey(manager.passphase, privateKey)
 	if err != nil {
-		mlog.Error("ImportChain33ValidatorPrivateKey", "Failed due to cause:", err.Error())
+		mlog.Error("ImportChainValidatorPrivateKey", "Failed due to cause:", err.Error())
 		return err
 	}
 
 	*result = rpctypes.Reply{
 		IsOk: true,
-		Msg:  "Succeed to import private key for chain33 relayer",
+		Msg:  "Succeed to import private key for chain relayer",
 	}
 	return nil
 }
@@ -304,12 +304,12 @@ func (manager *Manager) ImportEthereumPrivateKey4EthRelayer(privateKey string, r
 	return nil
 }
 
-//ShowChain33RelayerValidator 显示在chain33中以验证人validator身份进行登录的地址
-func (manager *Manager) ShowChain33RelayerValidator(param interface{}, result *interface{}) error {
+//ShowChainRelayerValidator 显示在chain中以验证人validator身份进行登录的地址
+func (manager *Manager) ShowChainRelayerValidator(param interface{}, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	var err error
-	*result, err = manager.chain33Relayer.GetAccountAddr()
+	*result, err = manager.chainRelayer.GetAccountAddr()
 	if nil != err {
 		return err
 	}
@@ -317,19 +317,19 @@ func (manager *Manager) ShowChain33RelayerValidator(param interface{}, result *i
 	return nil
 }
 
-func (manager *Manager) ResendChain33Event(param *relayerTypes.ResendChain33EventReq, result *interface{}) error {
+func (manager *Manager) ResendChainEvent(param *relayerTypes.ResendChainEventReq, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	if err := manager.checkPermission(); nil != err {
 		return err
 	}
-	err := manager.chain33Relayer.ResendChain33Event(param.Height)
+	err := manager.chainRelayer.ResendChainEvent(param.Height)
 	if nil != err {
 		return err
 	}
 	*result = rpctypes.Reply{
 		IsOk: true,
-		Msg:  "Successful to ResendChain33Event",
+		Msg:  "Successful to ResendChainEvent",
 	}
 	return nil
 }
@@ -380,13 +380,13 @@ func (manager *Manager) ReGetEthereumEvent(param *relayerTypes.RegetEthereumEven
 	return nil
 }
 
-func (manager *Manager) SetupOwner4Chain33(setupMulSign *relayerTypes.SetupMulSign, result *interface{}) error {
+func (manager *Manager) SetupOwner4Chain(setupMulSign *relayerTypes.SetupMulSign, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	if err := manager.checkPermission(); nil != err {
 		return err
 	}
-	mulSign, err := manager.chain33Relayer.SetupMulSign(setupMulSign)
+	mulSign, err := manager.chainRelayer.SetupMulSign(setupMulSign)
 	if nil != err {
 		return err
 	}
@@ -397,13 +397,13 @@ func (manager *Manager) SetupOwner4Chain33(setupMulSign *relayerTypes.SetupMulSi
 	return nil
 }
 
-func (manager *Manager) SafeTransfer4Chain33(para *relayerTypes.SafeTransfer, result *interface{}) error {
+func (manager *Manager) SafeTransfer4Chain(para *relayerTypes.SafeTransfer, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	if err := manager.checkPermission(); nil != err {
 		return err
 	}
-	mulSign, err := manager.chain33Relayer.SafeTransfer(para)
+	mulSign, err := manager.chainRelayer.SafeTransfer(para)
 	if nil != err {
 		return err
 	}
@@ -425,7 +425,7 @@ func (manager *Manager) Burn(burn *relayerTypes.Burn, result *interface{}) error
 	if !ok {
 		return errors.New("no Ethereum chain named as you configured")
 	}
-	txhash, err := ethInt.Burn(burn.OwnerKey, burn.TokenAddr, burn.Chain33Receiver, burn.Amount)
+	txhash, err := ethInt.Burn(burn.OwnerKey, burn.TokenAddr, burn.ChainReceiver, burn.Amount)
 	if nil != err {
 		return err
 	}
@@ -447,7 +447,7 @@ func (manager *Manager) BurnAsync(burn *relayerTypes.Burn, result *interface{}) 
 	if !ok {
 		return errors.New("no Ethereum chain named as you configured")
 	}
-	txhash, err := ethInt.BurnAsync(burn.OwnerKey, burn.TokenAddr, burn.Chain33Receiver, burn.Amount)
+	txhash, err := ethInt.BurnAsync(burn.OwnerKey, burn.TokenAddr, burn.ChainReceiver, burn.Amount)
 	if nil != err {
 		return err
 	}
@@ -458,7 +458,7 @@ func (manager *Manager) BurnAsync(burn *relayerTypes.Burn, result *interface{}) 
 	return nil
 }
 
-// SimBurnFromEth : 模拟从eth销毁资产，提币回到chain33,使用LockBTY仅为测试使用
+// SimBurnFromEth : 模拟从eth销毁资产，提币回到chain,使用LockBTY仅为测试使用
 func (manager *Manager) SimBurnFromEth(burn *relayerTypes.Burn, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
@@ -479,7 +479,7 @@ func (manager *Manager) SimBurnFromEth(burn *relayerTypes.Burn, result *interfac
 	return nil
 }
 
-// SimLockFromEth : 模拟从eth锁住eth/erc20，转移到chain33
+// SimLockFromEth : 模拟从eth锁住eth/erc20，转移到chain
 func (manager *Manager) SimLockFromEth(lock *relayerTypes.LockEthErc20, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
@@ -500,13 +500,13 @@ func (manager *Manager) SimLockFromEth(lock *relayerTypes.LockEthErc20, result *
 	return nil
 }
 
-func (manager *Manager) BurnAsyncFromChain33(burn *relayerTypes.BurnFromChain33, result *interface{}) error {
+func (manager *Manager) BurnAsyncFromChain(burn *relayerTypes.BurnFromChain, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	if err := manager.checkPermission(); nil != err {
 		return err
 	}
-	txhash, err := manager.chain33Relayer.BurnAsyncFromChain33(burn.OwnerKey, burn.TokenAddr, burn.EthereumReceiver, burn.Amount)
+	txhash, err := manager.chainRelayer.BurnAsyncFromChain(burn.OwnerKey, burn.TokenAddr, burn.EthereumReceiver, burn.Amount)
 	if nil != err {
 		return err
 	}
@@ -523,7 +523,7 @@ func (manager *Manager) LockBTYAssetAsync(lockEthErc20Asset *relayerTypes.LockBT
 	if err := manager.checkPermission(); nil != err {
 		return err
 	}
-	txhash, err := manager.chain33Relayer.LockBTYAssetAsync(lockEthErc20Asset.OwnerKey, lockEthErc20Asset.Amount, lockEthErc20Asset.EtherumReceiver)
+	txhash, err := manager.chainRelayer.LockBTYAssetAsync(lockEthErc20Asset.OwnerKey, lockEthErc20Asset.Amount, lockEthErc20Asset.EtherumReceiver)
 	if nil != err {
 		return err
 	}
@@ -545,7 +545,7 @@ func (manager *Manager) LockEthErc20AssetAsync(lockEthErc20Asset *relayerTypes.L
 	if !ok {
 		return errors.New("no Ethereum chain named as you configured")
 	}
-	txhash, err := ethInt.LockEthErc20AssetAsync(lockEthErc20Asset.OwnerKey, lockEthErc20Asset.TokenAddr, lockEthErc20Asset.Amount, lockEthErc20Asset.Chain33Receiver)
+	txhash, err := ethInt.LockEthErc20AssetAsync(lockEthErc20Asset.OwnerKey, lockEthErc20Asset.TokenAddr, lockEthErc20Asset.Amount, lockEthErc20Asset.ChainReceiver)
 	if nil != err {
 		return err
 	}
@@ -567,7 +567,7 @@ func (manager *Manager) LockEthErc20Asset(lockEthErc20Asset *relayerTypes.LockEt
 	if !ok {
 		return errors.New("no Ethereum chain named as you configured")
 	}
-	txhash, err := ethInt.LockEthErc20Asset(lockEthErc20Asset.OwnerKey, lockEthErc20Asset.TokenAddr, lockEthErc20Asset.Amount, lockEthErc20Asset.Chain33Receiver)
+	txhash, err := ethInt.LockEthErc20Asset(lockEthErc20Asset.OwnerKey, lockEthErc20Asset.TokenAddr, lockEthErc20Asset.Amount, lockEthErc20Asset.ChainReceiver)
 	if nil != err {
 		return err
 	}
@@ -692,11 +692,11 @@ func (manager *Manager) ShowBridgeRegistryAddr(para interface{}, result *interfa
 	return nil
 }
 
-//ShowBridgeRegistryAddr4chain33 ...
-func (manager *Manager) ShowBridgeRegistryAddr4chain33(para interface{}, result *interface{}) error {
+//ShowBridgeRegistryAddr4chain ...
+func (manager *Manager) ShowBridgeRegistryAddr4chain(para interface{}, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
-	addr, err := manager.chain33Relayer.ShowBridgeRegistryAddr()
+	addr, err := manager.chainRelayer.ShowBridgeRegistryAddr()
 	if nil != err {
 		return err
 	}
@@ -724,7 +724,7 @@ func (manager *Manager) ShowTokenAddress(token2show *relayerTypes.TokenAddress, 
 			return err
 		}
 	} else {
-		res, err = manager.chain33Relayer.ShowTokenAddress(token2show)
+		res, err = manager.chainRelayer.ShowTokenAddress(token2show)
 		if nil != err {
 			return err
 		}
@@ -783,7 +783,7 @@ func (manager *Manager) checkPermission() error {
 	return nil
 }
 
-// ShowTokenStatics ShowEthRelayer2Chain33Txs ...
+// ShowTokenStatics ShowEthRelayer2ChainTxs ...
 func (manager *Manager) ShowTokenStatics(request *relayerTypes.TokenStaticsRequest, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
@@ -803,7 +803,7 @@ func (manager *Manager) ShowTokenStatics(request *relayerTypes.TokenStaticsReque
 		return errors.New("wrong Status flag")
 	}
 
-	if relayerTypes.Source_Chain_Chain33 == request.From {
+	if relayerTypes.Source_Chain_Chain == request.From {
 		resFinal := &relayerTypes.TokenStaticsResponse{}
 		for _, ethInt := range manager.ethRelayer {
 			res, err := ethInt.ShowStatics(request)
@@ -815,7 +815,7 @@ func (manager *Manager) ShowTokenStatics(request *relayerTypes.TokenStaticsReque
 
 		*result = resFinal
 	} else {
-		res, err := manager.chain33Relayer.ShowStatics(request)
+		res, err := manager.chainRelayer.ShowStatics(request)
 		if nil != err {
 			return err
 		}
@@ -926,7 +926,7 @@ func (manager *Manager) CreateLockEventManually(createLockEventReq *relayerTypes
 		return errors.New("no Ethereum chain named as you configured")
 	}
 
-	chain33AddressTo, err := chain33Address.NewBtcAddress(createLockEventReq.To)
+	chainAddressTo, err := chainAddress.NewBtcAddress(createLockEventReq.To)
 	if nil != err {
 		return err
 	}
@@ -936,7 +936,7 @@ func (manager *Manager) CreateLockEventManually(createLockEventReq *relayerTypes
 
 	event := &events.LockEvent{
 		From:   ethCommon.HexToAddress(createLockEventReq.From),
-		To:     chain33AddressTo.Hash160[:],
+		To:     chainAddressTo.Hash160[:],
 		Token:  ethCommon.HexToAddress(createLockEventReq.Token),
 		Symbol: createLockEventReq.Symbol,
 		Value:  value,
@@ -953,13 +953,13 @@ func (manager *Manager) CreateLockEventManually(createLockEventReq *relayerTypes
 	return nil
 }
 
-func (manager *Manager) SetChain33MultiSignAddr(multiSignAddr string, result *interface{}) error {
+func (manager *Manager) SetChainMultiSignAddr(multiSignAddr string, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	if err := manager.checkPermission(); nil != err {
 		return err
 	}
-	manager.chain33Relayer.SetMultiSignAddr(multiSignAddr)
+	manager.chainRelayer.SetMultiSignAddr(multiSignAddr)
 	*result = rpctypes.Reply{
 		IsOk: true,
 	}
@@ -1001,7 +1001,7 @@ func (manager *Manager) GetEthMultiSignAddr(chainName string, result *interface{
 	return nil
 }
 
-func (manager *Manager) GetChain33MultiSignAddr(chainName string, result *interface{}) error {
+func (manager *Manager) GetChainMultiSignAddr(chainName string, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	if err := manager.checkPermission(); nil != err {
@@ -1010,7 +1010,7 @@ func (manager *Manager) GetChain33MultiSignAddr(chainName string, result *interf
 
 	*result = rpctypes.Reply{
 		IsOk: true,
-		Msg:  manager.chain33Relayer.GetMultiSignAddr(),
+		Msg:  manager.chainRelayer.GetMultiSignAddr(),
 	}
 	return nil
 }
@@ -1051,13 +1051,13 @@ func (manager *Manager) GetCfgWithdraw(cfgWithdrawReq *relayerTypes.CfgWithdrawR
 	return nil
 }
 
-func (manager *Manager) WithdrawFromChain33(burn *relayerTypes.BurnFromChain33, result *interface{}) error {
+func (manager *Manager) WithdrawFromChain(burn *relayerTypes.BurnFromChain, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	if err := manager.checkPermission(); nil != err {
 		return err
 	}
-	txhash, err := manager.chain33Relayer.WithdrawFromChain33(burn.OwnerKey, burn.TokenAddr, burn.EthereumReceiver, burn.Amount)
+	txhash, err := manager.chainRelayer.WithdrawFromChain(burn.OwnerKey, burn.TokenAddr, burn.EthereumReceiver, burn.Amount)
 	if nil != err {
 		return err
 	}
@@ -1068,13 +1068,13 @@ func (manager *Manager) WithdrawFromChain33(burn *relayerTypes.BurnFromChain33, 
 	return nil
 }
 
-func (manager *Manager) BurnWithIncreaseAsyncFromChain33(burn *relayerTypes.BurnFromChain33, result *interface{}) error {
+func (manager *Manager) BurnWithIncreaseAsyncFromChain(burn *relayerTypes.BurnFromChain, result *interface{}) error {
 	manager.mtx.Lock()
 	defer manager.mtx.Unlock()
 	if err := manager.checkPermission(); nil != err {
 		return err
 	}
-	txhash, err := manager.chain33Relayer.BurnWithIncreaseAsyncFromChain33(burn.OwnerKey, burn.TokenAddr, burn.EthereumReceiver, burn.Amount)
+	txhash, err := manager.chainRelayer.BurnWithIncreaseAsyncFromChain(burn.OwnerKey, burn.TokenAddr, burn.EthereumReceiver, burn.Amount)
 	if nil != err {
 		return err
 	}

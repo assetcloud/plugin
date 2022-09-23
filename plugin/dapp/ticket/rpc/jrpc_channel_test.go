@@ -18,7 +18,7 @@ import (
 )
 
 func TestJRPCChannel(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	cfg.GetModuleConfig().Consensus.Name = "ticket"
 	mocker := testnode.NewWithConfig(cfg, nil)
 	mocker.Listen()

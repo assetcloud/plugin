@@ -21,12 +21,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(QbftNodeX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(QbftNodeX, NewType(cfg))
 }
 
@@ -36,7 +36,7 @@ type QbftNodeType struct {
 }
 
 // NewType method
-func NewType(cfg *types.Chain33Config) *QbftNodeType {
+func NewType(cfg *types.ChainConfig) *QbftNodeType {
 	c := &QbftNodeType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)
@@ -83,7 +83,7 @@ func (t *QbftNodeType) CreateTx(action string, message json.RawMessage) (*types.
 }
 
 // CreateNodeUpdateTx ...
-func CreateNodeUpdateTx(cfg *types.Chain33Config, parm *NodeUpdateTx) (*types.Transaction, error) {
+func CreateNodeUpdateTx(cfg *types.ChainConfig, parm *NodeUpdateTx) (*types.Transaction, error) {
 	if parm == nil {
 		tlog.Error("CreateNodeUpdateTx", "parm", parm)
 		return nil, types.ErrInvalidParam

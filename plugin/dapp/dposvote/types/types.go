@@ -18,12 +18,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(DPosX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(DPosX, NewType(cfg))
 }
 
@@ -33,7 +33,7 @@ type DPosType struct {
 }
 
 // NewType method
-func NewType(cfg *types.Chain33Config) *DPosType {
+func NewType(cfg *types.ChainConfig) *DPosType {
 	c := &DPosType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

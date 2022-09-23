@@ -40,7 +40,7 @@ make
 ```
 ./chain -f chain.toml
 ```
-注意，默认配置会连接chain33 测试网络
+注意，默认配置会连接chain 测试网络
 
 ## 注意:
 

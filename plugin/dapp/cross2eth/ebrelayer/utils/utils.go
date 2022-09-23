@@ -22,14 +22,14 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	chain33Abi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
 	"github.com/assetcloud/chain/common/address"
 	dbm "github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/common/log/log15"
 	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	chainAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -180,19 +180,19 @@ func GetDecimalsFromNode(addr, rpcLaddr string) (int64, error) {
 func QueryResult(param, abiData, contract, owner string, client ethinterface.EthClientSpec) (string, error) {
 	log.Info("QueryResult", "param", param, "contract", contract, "owner", owner)
 	// 首先解析参数字符串，分析出方法名以及个参数取值
-	methodName, params, err := chain33Abi.ProcFuncCall(param)
+	methodName, params, err := chainAbi.ProcFuncCall(param)
 	if err != nil {
 		return methodName + " ProcFuncCall fail", err
 	}
 
 	// 解析ABI数据结构，获取本次调用的方法对象
-	abi_, err := chain33Abi.JSON(strings.NewReader(abiData))
+	abi_, err := chainAbi.JSON(strings.NewReader(abiData))
 	if err != nil {
 		log.Error("QueryResult", "JSON fail", err)
 		return methodName + " JSON fail", err
 	}
 
-	var method chain33Abi.Method
+	var method chainAbi.Method
 	var ok bool
 	if method, ok = abi_.Methods[methodName]; !ok {
 		err = fmt.Errorf("function %v not exists", methodName)
@@ -217,7 +217,7 @@ func QueryResult(param, abiData, contract, owner string, client ethinterface.Eth
 		}
 
 		for i, v := range method.Inputs.NonIndexed() {
-			paramVal, err := chain33Abi.Str2GoValue(v.Type, params[i])
+			paramVal, err := chainAbi.Str2GoValue(v.Type, params[i])
 			if err != nil {
 				log.Error("QueryResult", "Str2GoValue fail", err)
 				return methodName + " Str2GoValue fail", err

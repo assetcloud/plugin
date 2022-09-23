@@ -89,7 +89,7 @@ function queryTransaction() {
 }
 
 function signRawTxAndQuery() {
-    chain33_SignAndSendTx "$3" "$2" "${MAIN_HTTP}"
+    chain_SignAndSendTx "$3" "$2" "${MAIN_HTTP}"
     queryTransaction ".error | not" "true"
     echo_rst "$1 queryExecRes" "$?"
 }
@@ -109,7 +109,7 @@ function run_test() {
 }
 
 function main() {
-    chain33_RpcTestBegin evmxgo
+    chain_RpcTestBegin evmxgo
     local ip=$1
     MAIN_HTTP=$ip
     echo "main_ip=$MAIN_HTTP"
@@ -117,7 +117,7 @@ function main() {
     init
     run_test "$MAIN_HTTP"
 
-    chain33_RpcTestRst evmxgo "$CASE_ERR"
+    chain_RpcTestRst evmxgo "$CASE_ERR"
 }
 
-chain33_debug_function main "http://ip:port/"
+chain_debug_function main "http://ip:port/"

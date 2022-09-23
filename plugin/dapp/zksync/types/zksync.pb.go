@@ -414,7 +414,7 @@ type Leaf struct {
 	AccountId   uint64    `protobuf:"varint,2,opt,name=accountId,proto3" json:"accountId,omitempty"`      //accountId其实就是叶子的totalIndex
 	EthAddress  string    `protobuf:"bytes,5,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`     //账户对应的以太坊地址
 	PubKey      *ZkPubKey `protobuf:"bytes,6,opt,name=pubKey,proto3" json:"pubKey,omitempty"`             //eddsa公钥，用于验证身份
-	Chain33Addr string    `protobuf:"bytes,7,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"`   //chain33地址
+	ChainAddr string    `protobuf:"bytes,7,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"`   //chain地址
 	TokenHash   string    `protobuf:"bytes,8,opt,name=tokenHash,proto3" json:"tokenHash,omitempty"`       //叶子下token的hash
 	TokenIds    []uint64  `protobuf:"varint,9,rep,packed,name=tokenIds,proto3" json:"tokenIds,omitempty"` //叶子下拥有的tokenId
 }
@@ -472,9 +472,9 @@ func (x *Leaf) GetPubKey() *ZkPubKey {
 	return nil
 }
 
-func (x *Leaf) GetChain33Addr() string {
+func (x *Leaf) GetChainAddr() string {
 	if x != nil {
-		return x.Chain33Addr
+		return x.ChainAddr
 	}
 	return ""
 }
@@ -501,7 +501,7 @@ type HistoryLeaf struct {
 	AccountId   uint64          `protobuf:"varint,2,opt,name=accountId,proto3" json:"accountId,omitempty"`    //accountId其实就是叶子的totalIndex
 	EthAddress  string          `protobuf:"bytes,5,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`   //账户对应的以太坊地址
 	PubKey      *ZkPubKey       `protobuf:"bytes,6,opt,name=pubKey,proto3" json:"pubKey,omitempty"`           //eddsa公钥，用于验证身份
-	Chain33Addr string          `protobuf:"bytes,7,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"` //chain33地址
+	ChainAddr string          `protobuf:"bytes,7,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"` //chain地址
 	TokenHash   string          `protobuf:"bytes,8,opt,name=tokenHash,proto3" json:"tokenHash,omitempty"`     //叶子下token的hash
 	Tokens      []*TokenBalance `protobuf:"bytes,9,rep,name=tokens,proto3" json:"tokens,omitempty"`           //叶子下拥有的token
 	ProofId     uint64          `protobuf:"varint,10,opt,name=proofId,proto3" json:"proofId,omitempty"`       //账户状态所在的proofId
@@ -560,9 +560,9 @@ func (x *HistoryLeaf) GetPubKey() *ZkPubKey {
 	return nil
 }
 
-func (x *HistoryLeaf) GetChain33Addr() string {
+func (x *HistoryLeaf) GetChainAddr() string {
 	if x != nil {
-		return x.Chain33Addr
+		return x.ChainAddr
 	}
 	return ""
 }
@@ -777,7 +777,7 @@ type ZkDeposit struct {
 	TokenId            uint64       `protobuf:"varint,1,opt,name=tokenId,proto3" json:"tokenId,omitempty"`
 	Amount             string       `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"`
 	EthAddress         string       `protobuf:"bytes,3,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`
-	Chain33Addr        string       `protobuf:"bytes,4,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"`
+	ChainAddr        string       `protobuf:"bytes,4,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"`
 	EthPriorityQueueId int64        `protobuf:"varint,5,opt,name=ethPriorityQueueId,proto3" json:"ethPriorityQueueId,omitempty"` //需要在合约保证id连续
 	Signature          *ZkSignature `protobuf:"bytes,6,opt,name=signature,proto3" json:"signature,omitempty"`
 }
@@ -835,9 +835,9 @@ func (x *ZkDeposit) GetEthAddress() string {
 	return ""
 }
 
-func (x *ZkDeposit) GetChain33Addr() string {
+func (x *ZkDeposit) GetChainAddr() string {
 	if x != nil {
-		return x.Chain33Addr
+		return x.ChainAddr
 	}
 	return ""
 }
@@ -1157,7 +1157,7 @@ type ZkTransferToNew struct {
 	Amount           string       `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"`
 	FromAccountId    uint64       `protobuf:"varint,3,opt,name=fromAccountId,proto3" json:"fromAccountId,omitempty"`
 	ToEthAddress     string       `protobuf:"bytes,4,opt,name=toEthAddress,proto3" json:"toEthAddress,omitempty"`
-	ToChain33Address string       `protobuf:"bytes,5,opt,name=toChain33Address,proto3" json:"toChain33Address,omitempty"`
+	ToChainAddress string       `protobuf:"bytes,5,opt,name=toChainAddress,proto3" json:"toChainAddress,omitempty"`
 	Signature        *ZkSignature `protobuf:"bytes,6,opt,name=signature,proto3" json:"signature,omitempty"`
 }
 
@@ -1221,9 +1221,9 @@ func (x *ZkTransferToNew) GetToEthAddress() string {
 	return ""
 }
 
-func (x *ZkTransferToNew) GetToChain33Address() string {
+func (x *ZkTransferToNew) GetToChainAddress() string {
 	if x != nil {
-		return x.ToChain33Address
+		return x.ToChainAddress
 	}
 	return ""
 }
@@ -2262,9 +2262,9 @@ type ZkQueryReq struct {
 	BlockHeight       uint64 `protobuf:"varint,2,opt,name=blockHeight,proto3" json:"blockHeight,omitempty"`
 	TxIndex           uint32 `protobuf:"varint,3,opt,name=txIndex,proto3" json:"txIndex,omitempty"`
 	EthAddress        string `protobuf:"bytes,4,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`
-	Chain33Addr       string `protobuf:"bytes,5,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"`
+	ChainAddr       string `protobuf:"bytes,5,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"`
 	TokenSymbol       string `protobuf:"bytes,6,opt,name=tokenSymbol,proto3" json:"tokenSymbol,omitempty"`
-	Chain33WalletAddr string `protobuf:"bytes,7,opt,name=chain33WalletAddr,proto3" json:"chain33WalletAddr,omitempty"`
+	ChainWalletAddr string `protobuf:"bytes,7,opt,name=chainWalletAddr,proto3" json:"chainWalletAddr,omitempty"`
 	TokenId           uint64 `protobuf:"varint,8,opt,name=tokenId,proto3" json:"tokenId,omitempty"`
 	TxHash            string `protobuf:"bytes,9,opt,name=txHash,proto3" json:"txHash,omitempty"`
 	ProofId           uint64 `protobuf:"varint,10,opt,name=proofId,proto3" json:"proofId,omitempty"`
@@ -2330,9 +2330,9 @@ func (x *ZkQueryReq) GetEthAddress() string {
 	return ""
 }
 
-func (x *ZkQueryReq) GetChain33Addr() string {
+func (x *ZkQueryReq) GetChainAddr() string {
 	if x != nil {
-		return x.Chain33Addr
+		return x.ChainAddr
 	}
 	return ""
 }
@@ -2344,9 +2344,9 @@ func (x *ZkQueryReq) GetTokenSymbol() string {
 	return ""
 }
 
-func (x *ZkQueryReq) GetChain33WalletAddr() string {
+func (x *ZkQueryReq) GetChainWalletAddr() string {
 	if x != nil {
-		return x.Chain33WalletAddr
+		return x.ChainWalletAddr
 	}
 	return ""
 }
@@ -2626,7 +2626,7 @@ type ZkOperation struct {
 	Amount      string    `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
 	EthAddress  string    `protobuf:"bytes,5,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`   //账户对应的以太坊地址
 	PubKey      *ZkPubKey `protobuf:"bytes,6,opt,name=pubKey,proto3" json:"pubKey,omitempty"`           //eddsa公钥，用于验证身份
-	Chain33Addr string    `protobuf:"bytes,7,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"` //chain33地址
+	ChainAddr string    `protobuf:"bytes,7,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"` //chain地址
 	ToAccountId uint64    `protobuf:"varint,4,opt,name=toAccountId,proto3" json:"toAccountId,omitempty"`
 	Ty          int32     `protobuf:"varint,8,opt,name=ty,proto3" json:"ty,omitempty"`
 }
@@ -2698,9 +2698,9 @@ func (x *ZkOperation) GetPubKey() *ZkPubKey {
 	return nil
 }
 
-func (x *ZkOperation) GetChain33Addr() string {
+func (x *ZkOperation) GetChainAddr() string {
 	if x != nil {
-		return x.Chain33Addr
+		return x.ChainAddr
 	}
 	return ""
 }

@@ -124,7 +124,7 @@ func getObject(data *otto.Object, key string) (*otto.Object, error) {
 		return nil, err
 	}
 	if !v.IsObject() {
-		return nil, errors.New("chain33.js object get key " + key + " is not object")
+		return nil, errors.New("chain.js object get key " + key + " is not object")
 	}
 	return v.Object(), nil
 }

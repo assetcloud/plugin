@@ -7,8 +7,8 @@ datadir*
 *.log.last
 .idea
 .vscode
-build/chain33*
-chain33_raft-1
+build/chain*
+chain_raft-1
 build/datadir
 build/fork-config
 build/bityuan*

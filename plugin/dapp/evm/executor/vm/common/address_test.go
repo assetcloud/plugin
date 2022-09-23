@@ -59,7 +59,7 @@ func TestNewContractAddress(t *testing.T) {
 	assert.Equal(t, hexHash, hex.EncodeToString(hash))
 	assert.Equal(t, "1DgSnASfaE2J4xcD9ghDs6zptXPq68SwAf", addr1.String())
 
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 
 	addr2 := NewAddress(cfg, hash)
 	assert.Equal(t, hexHash, hex.EncodeToString(hash))

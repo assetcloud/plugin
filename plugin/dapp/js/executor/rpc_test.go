@@ -25,7 +25,7 @@ func init() {
 }
 
 func TestJsVM(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	cfg.GetModuleConfig().Consensus.Name = "ticket"
 
 	mocker := testnode.NewWithConfig(cfg, nil)
@@ -295,7 +295,7 @@ func TestJsGame(t *testing.T) {
 	t.Log(queryresult.Data)
 }
 
-func configCreator(mocker *testnode.Chain33Mock, t *testing.T) {
+func configCreator(mocker *testnode.ChainMock, t *testing.T) {
 	// 需要配置
 	addr := address.PubKeyToAddr(address.DefaultID, mocker.GetHotKey().PubKey().Bytes())
 	creator := &types.ModifyConfig{

@@ -30,7 +30,7 @@ var (
 var driverName = "retrieve"
 
 //Init retrieve
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newRetrieve, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

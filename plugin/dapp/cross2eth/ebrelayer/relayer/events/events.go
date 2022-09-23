@@ -21,7 +21,7 @@ const (
 	Unsupported Event = iota
 	// LogLockFromETH : Ethereum event 'LogLock'
 	LogLockFromETH
-	// LogBurnFromETH : Ethereum event 'LogChain33TokenBurn'
+	// LogBurnFromETH : Ethereum event 'LogChainTokenBurn'
 	LogBurnFromETH
 	// LogProphecyProcessed : Ethereum event LogProphecyProcessed
 	LogProphecyProcessed
@@ -29,7 +29,7 @@ const (
 
 // 此处的名字命令不能随意改动，需要与合约event中的命名完全一致
 func (d Event) String() string {
-	return [...]string{"unknown-LOG", "LogLock", "LogChain33TokenBurn", "LogProphecyProcessed"}[d]
+	return [...]string{"unknown-LOG", "LogLock", "LogChainTokenBurn", "LogProphecyProcessed"}[d]
 }
 
 func (d ClaimType) String() string {

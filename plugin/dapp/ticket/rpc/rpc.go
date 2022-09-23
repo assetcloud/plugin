@@ -5,15 +5,15 @@
 package rpc
 
 import (
-	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/common/address"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
 	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 	"golang.org/x/net/context"
 )
 
-func bindMiner(cfg *types.Chain33Config, param *ty.ReqBindMiner) (*ty.ReplyBindMiner, error) {
+func bindMiner(cfg *types.ChainConfig, param *ty.ReqBindMiner) (*ty.ReplyBindMiner, error) {
 	tBind := &ty.TicketBind{
 		MinerAddress:  param.BindAddr,
 		ReturnAddress: param.OriginAddr,

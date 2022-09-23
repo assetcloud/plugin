@@ -76,7 +76,7 @@
     }
 
     1. cli命令方法
-    ./chain33-cli --rpc_laddr http://localhost:8901 account balance -a 1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4
+    ./chain-cli --rpc_laddr http://localhost:8901 account balance -a 1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4
     {
         "addr": "1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4",
         "execAccount": [
@@ -109,13 +109,13 @@
 >需要从平行链执行器paracross下把奖励 withdraw出到平行链coins合约的签名地址下
 ```
 1. cli命令方式:
-./chain33-cli --rpc_laddr http://localhost:8801 --paraName {平行链title} send coins withdraw -a {数量} -e user.p.para.paracross -k ${私钥}
+./chain-cli --rpc_laddr http://localhost:8801 --paraName {平行链title} send coins withdraw -a {数量} -e user.p.para.paracross -k ${私钥}
 
 例:
-./chain33-cli --rpc_laddr http://localhost:8801 --paraName user.p.para. send coins withdraw -a 2000000000 -e user.p.para.paracross -k ${私钥}
+./chain-cli --rpc_laddr http://localhost:8801 --paraName user.p.para. send coins withdraw -a 2000000000 -e user.p.para.paracross -k ${私钥}
 
 响应：
-./chain33-cli --rpc_laddr http://localhost:8901 account balance -a 1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4
+./chain-cli --rpc_laddr http://localhost:8901 account balance -a 1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4
 {
     "addr": "1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4",
     "execAccount": [

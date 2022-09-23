@@ -35,7 +35,7 @@ type subConfig struct {
 var subCfg subConfig
 
 // Init register dapp
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	if sub != nil {
 		types.MustDecode(sub, &subCfg)
 	}

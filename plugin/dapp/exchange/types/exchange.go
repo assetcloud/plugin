@@ -117,7 +117,7 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(ExchangeX, "Enable", 0)
 	cfg.RegisterDappFork(ExchangeX, ForkFix1, 0)
 	cfg.RegisterDappFork(ExchangeX, ForkParamV1, 0)
@@ -132,7 +132,7 @@ func InitFork(cfg *types.Chain33Config) {
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(ExchangeX, NewType(cfg))
 }
 
@@ -142,7 +142,7 @@ type ExchangeType struct {
 }
 
 //NewType ...
-func NewType(cfg *types.Chain33Config) *ExchangeType {
+func NewType(cfg *types.ChainConfig) *ExchangeType {
 	c := &ExchangeType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

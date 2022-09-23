@@ -12,7 +12,7 @@ import (
 var driverName = types2.WasmX
 var log = log15.New("module", "execs."+types2.WasmX)
 
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	if name != driverName {
 		panic("system dapp can not be rename")
 	}

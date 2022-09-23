@@ -22,7 +22,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	ty "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/common/address"
 	"github.com/assetcloud/chain/common/crypto"
@@ -30,6 +29,7 @@ import (
 	rpctypes "github.com/assetcloud/chain/rpc/types"
 	"github.com/assetcloud/chain/system/crypto/none"
 	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
 	"google.golang.org/grpc"
 	_ "google.golang.org/grpc/encoding/gzip"
 )
@@ -142,14 +142,14 @@ func Perf(host, txsize, num, sleepinterval, totalduration string) {
 		ch <- struct{}{}
 		conn := newGrpcConn(host)
 		defer conn.Close()
-		gcli := types.NewChain33Client(conn)
+		gcli := types.NewChainClient(conn)
 		for {
 			height, err := getHeight(gcli)
 			if err != nil {
 				//conn.Close()
 				log.Error("getHeight", "err", err)
 				//conn = newGrpcConn(ip)
-				//gcli = types.NewChain33Client(conn)
+				//gcli = types.NewChainClient(conn)
 				time.Sleep(time.Second)
 			} else {
 				atomic.StoreInt64(&blockHeight, height)
@@ -188,7 +188,7 @@ func Perf(host, txsize, num, sleepinterval, totalduration string) {
 		go func() {
 			conn := newGrpcConn(host)
 			defer conn.Close()
-			gcli := types.NewChain33Client(conn)
+			gcli := types.NewChainClient(conn)
 
 			for tx := range txChan {
 				//发送交易
@@ -209,7 +209,7 @@ func Perf(host, txsize, num, sleepinterval, totalduration string) {
 					time.Sleep(time.Second)
 					//conn.Close()
 					//conn = newGrpcConn(ip)
-					//gcli = types.NewChain33Client(conn)
+					//gcli = types.NewChainClient(conn)
 				} else {
 					atomic.AddInt64(&success, 1)
 				}
@@ -253,7 +253,7 @@ func PerfV2(host, txsize, sleepinterval, duration string) {
 		ch <- struct{}{}
 		conn := newGrpcConn(host)
 		defer conn.Close()
-		gcli := types.NewChain33Client(conn)
+		gcli := types.NewChainClient(conn)
 		for {
 			height, err := getHeight(gcli)
 			if err != nil {
@@ -306,7 +306,7 @@ func PerfV2(host, txsize, sleepinterval, duration string) {
 		go func() {
 			conn := newGrpcConn(host)
 			defer conn.Close()
-			gcli := types.NewChain33Client(conn)
+			gcli := types.NewChainClient(conn)
 			txs := &types.Transactions{Txs: make([]*types.Transaction, 0, batchNum)}
 			retryTxs := make([]*types.Transaction, 0, batchNum*2)
 
@@ -368,7 +368,7 @@ var (
 	execAddr = address.ExecAddress("user.write")
 )
 
-func getHeight(gcli types.Chain33Client) (int64, error) {
+func getHeight(gcli types.ChainClient) (int64, error) {
 	header, err := gcli.GetLastHeader(context.Background(), &types.ReqNil{})
 	if err != nil {
 		log.Error("getHeight", "err", err)

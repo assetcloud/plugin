@@ -33,7 +33,7 @@ var (
 )
 
 // Init : 注册当前trade合约
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newTrade, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

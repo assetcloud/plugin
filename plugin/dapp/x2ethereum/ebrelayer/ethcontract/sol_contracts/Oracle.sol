@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Valset.sol";
-import "./Chain33Bridge.sol";
+import "./ChainBridge.sol";
 
 contract Oracle {
 
@@ -11,7 +11,7 @@ contract Oracle {
     /*
     * @dev: Public variable declarations
     */
-    Chain33Bridge public chain33Bridge;
+    ChainBridge public chainBridge;
     Valset public valset;
     address public operator;
 
@@ -73,7 +73,7 @@ contract Oracle {
     )
     {
         require(
-            chain33Bridge.isProphecyClaimActive(
+            chainBridge.isProphecyClaimActive(
                 _claimID
             ) == true,
             "The prophecy must be pending for this operation"
@@ -89,7 +89,7 @@ contract Oracle {
     )
     {
         require(
-           chain33Bridge.isValidClaimType(
+           chainBridge.isValidClaimType(
                uint8(_claimType)
            ) == true,
            "The claim type must be burn or lock"
@@ -103,21 +103,21 @@ contract Oracle {
     constructor(
         address _operator,
         address _valset,
-        address _chain33Bridge
+        address _chainBridge
     )
         public
     {
         operator = _operator;
-        chain33Bridge = Chain33Bridge(_chain33Bridge);
+        chainBridge = ChainBridge(_chainBridge);
         valset = Valset(_valset);
     }
 
     /*
     * @dev: newOracleClaim
-    *       Allows validators to make new OracleClaims on chain33 lock/burn prophecy,
+    *       Allows validators to make new OracleClaims on chain lock/burn prophecy,
     *       if the required vote power reached,just make it processed
     * @param _claimType: burn or lock,
-    * @param _chain33Sender: chain33 sender,
+    * @param _chainSender: chain sender,
     * @param _ethereumReceiver: receiver on ethereum
     * @param _tokenAddress: token address
     * @param _symbol: token symbol
@@ -128,7 +128,7 @@ contract Oracle {
     */
     function newOracleClaim(
         ClaimType _claimType,
-        bytes memory _chain33Sender,
+        bytes memory _chainSender,
         address payable _ethereumReceiver,
         address _tokenAddress,
         string memory _symbol,
@@ -158,10 +158,10 @@ contract Oracle {
         );
 
         if (oracleClaimValidators[_claimID].length == 0) {
-             chain33Bridge.setNewProphecyClaim(
+             chainBridge.setNewProphecyClaim(
                             _claimID,
                             uint8(_claimType),
-                            _chain33Sender,
+                            _chainSender,
                             _ethereumReceiver,
                             validatorAddress,
                             _tokenAddress,
@@ -181,7 +181,7 @@ contract Oracle {
         (bool valid, uint256 weightedSignedPower, uint256 weightedTotalPower ) = getClaimThreshold(_claimID);
         if (true == valid)  {
             //if processed already,just emit an event
-            if (chain33Bridge.isProphecyClaimActive(_claimID) == true) {
+            if (chainBridge.isProphecyClaimActive(_claimID) == true) {
                 completeClaim(_claimID);
             }
             emit LogProphecyProcessed(
@@ -208,7 +208,7 @@ contract Oracle {
         returns(bool, uint256, uint256)
     {
         require(
-            chain33Bridge.isProphecyClaimActive(
+            chainBridge.isProphecyClaimActive(
                 _claimID
             ) == true,
             "Can only check active prophecies"
@@ -263,14 +263,14 @@ contract Oracle {
     /*
     * @dev: completeClaim
     *       Completes a claim by completing the corresponding BridgeClaim
-    *       on the Chain33Bridge.
+    *       on the ChainBridge.
     */
     function completeClaim(
         bytes32 _claimID
     )
         internal
     {
-        chain33Bridge.completeClaim(
+        chainBridge.completeClaim(
             _claimID
         );
     }

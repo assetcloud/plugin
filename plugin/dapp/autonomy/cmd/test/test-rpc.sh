@@ -108,10 +108,10 @@ boards='
 "'${boardsAddr[20]}'"
 '
 
-chain33_applyCoinsNOLimit() {
-    echo "chain33_getMainChainCoins"
+chain_applyCoinsNOLimit() {
+    echo "chain_getMainChainCoins"
     if [ "$#" -lt 3 ]; then
-        echo "chain33_getMainCoins wrong params"
+        echo "chain_getMainCoins wrong params"
         exit 1
     fi
     local targetAddr=$1
@@ -119,8 +119,8 @@ chain33_applyCoinsNOLimit() {
     local ip=$3
 
     local poolAddr="1PcGKYYoLn1PLLJJodc1UpgWGeFAQasAkx"
-    chain33_SendToAddress "${poolAddr}" "${targetAddr}" "$count" "${ip}"
-    chain33_QueryBalance "${targetAddr}" "${ip}"
+    chain_SendToAddress "${poolAddr}" "${targetAddr}" "$count" "${ip}"
+    chain_QueryBalance "${targetAddr}" "${ip}"
 }
 
 handleBoards() {
@@ -128,9 +128,9 @@ handleBoards() {
     for ((i = 0; i < ${#boardsPrKey[*]}; i++)); do
         echo "${boardsPrKey[$i]}"
         lab="board_"${i}
-        chain33_ImportPrivkey "${boardsPrKey[$i]}" "${boardsAddr[$i]}" "${lab}" "${ip}"
-        chain33_applyCoins "${boardsAddr[$i]}" 5000000000 "${ip}"
-        chain33_SendToAddress "${boardsAddr[$i]}" "$EXECTOR_ADDR" 4000000000 "$HTTP"
+        chain_ImportPrivkey "${boardsPrKey[$i]}" "${boardsAddr[$i]}" "${lab}" "${ip}"
+        chain_applyCoins "${boardsAddr[$i]}" 5000000000 "${ip}"
+        chain_SendToAddress "${boardsAddr[$i]}" "$EXECTOR_ADDR" 4000000000 "$HTTP"
     done
     # 金额要转入合约中
 }
@@ -149,8 +149,8 @@ proposalBoardTx() {
     local end=$2
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropBoard", "payload":{"boardUpdate": 3,"boards": ['"${boards}"'],"startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
     proposalBoardID=$RAW_TX_HASH
     echo "proposalBoardID = $proposalBoardID"
     txQuery "$FUNCNAME"
@@ -161,8 +161,8 @@ voteBoardTx() {
     local privk=$2
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropBoard", "payload":{"proposalID": "'"${ID}"'","voteOption":1}}]}'
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
     echo "$RAW_TX_HASH"
     txQuery "$FUNCNAME"
 }
@@ -173,8 +173,8 @@ revokeProposalTx() {
     local key=$3
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"'"${funcName}"'", "payload":{"proposalID": "'"${ID}"'"}}]}'
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${key}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${key}" "${HTTP}"
     echo "$RAW_TX_HASH"
     txQuery "$FUNCNAME"
 }
@@ -184,8 +184,8 @@ terminateProposalTx() {
     local funcName=$2
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"'"${funcName}"'", "payload":{"proposalID": "'"${ID}"'"}}]}'
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
     echo "$RAW_TX_HASH"
     txQuery "$FUNCNAME"
 }
@@ -195,7 +195,7 @@ queryProposal() {
     local funcName=$2
     local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"'"${funcName}"'","payload":{"data":"'"${ID}"'"}}]}'
     resok='(.error|not)'
-    chain33_Http "$req" "${HTTP}" "$resok" "$FUNCNAME"
+    chain_Http "$req" "${HTTP}" "$resok" "$FUNCNAME"
 }
 
 listProposal() {
@@ -205,24 +205,24 @@ listProposal() {
     local direct=0
     local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"'"${funcName}"'","payload":{"status":"'"${status}"'", "addr":"'"${addr}"'", "count":1, "direction":"'"${direct}"'"}}]}'
     resok='(.error|not)'
-    chain33_Http "$req" "${HTTP}" "$resok" "$FUNCNAME ${funcName}"
+    chain_Http "$req" "${HTTP}" "$resok" "$FUNCNAME ${funcName}"
 }
 
 queryActivePropBoard() {
     local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"GetActiveBoard","payload":{"data":"1"}}]}'
     resok='(.error|not)'
-    chain33_Http "$req" "${HTTP}" "$resok" "$FUNCNAME"
+    chain_Http "$req" "${HTTP}" "$resok" "$FUNCNAME"
 }
 
 testProposalBoard() {
     #proposal
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 20 + 720))
     proposalBoardTx ${start} ${end}
     #vote
-    chain33_BlockWait 100 "$HTTP"
+    chain_BlockWait 100 "$HTTP"
     voteBoardTx "${proposalBoardID}" "${votePrKey}"
     voteBoardTx "${proposalBoardID}" "${votePrKey2}"
     #query
@@ -231,7 +231,7 @@ testProposalBoard() {
     queryActivePropBoard
 
     #test revoke
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 120 + 720))
     proposalBoardTx ${start} ${end}
@@ -247,8 +247,8 @@ proposalRuleTx() {
     local propAmount=$3
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropRule", "payload":{"ruleCfg": {"proposalAmount" : '"${propAmount}"',"boardApproveRatio":50,"pubOpposeRatio":33,"largeProjectAmount":100000000000000,"publicPeriod":172800,"pubAttendRatio":60,"pubApproveRatio":60},"startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
     proposalRuleID=$RAW_TX_HASH
     echo "proposalRuleID = $proposalRuleID"
     txQuery "$FUNCNAME"
@@ -259,8 +259,8 @@ voteRuleTx() {
     local privk=$2
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropRule", "payload":{"proposalID": "'"${ID}"'", "vote":1}}]}' # "approve": true,
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
     echo "$RAW_TX_HASH"
     txQuery "$FUNCNAME"
 }
@@ -268,18 +268,18 @@ voteRuleTx() {
 queryActivePropRule() {
     local req='{"method":"Chain.Query","params":[{"execer":"'"${EXECTOR}"'","funcName":"GetActiveRule","payload":{"data":"1"}}]}'
     resok='(.error|not)'
-    chain33_Http "$req" "${HTTP}" "$resok" "$FUNCNAME"
+    chain_Http "$req" "${HTTP}" "$resok" "$FUNCNAME"
 }
 
 testProposalRule() {
     # proposal
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 20 + 720))
     proposalRuleTx ${start} ${end} 2000000000
     #vote
-    chain33_BlockWait 100 "$HTTP"
+    chain_BlockWait 100 "$HTTP"
     voteRuleTx "${proposalRuleID}" ${votePrKey}
     voteRuleTx "${proposalRuleID}" "${votePrKey2}"
     voteRuleTx "${proposalRuleID}" "${votePrKey3}"
@@ -289,7 +289,7 @@ testProposalRule() {
     queryActivePropRule
 
     #test revoke
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 120 + 720))
     proposalRuleTx ${start} ${end} 2000000000
@@ -307,8 +307,8 @@ proposalProjectTx() {
     local toAddr=$4
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropProject", "payload":{"amount" : '"${amount}"', "toAddr" : "'"${toAddr}"'","startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${propKey}" "${HTTP}"
     proposalProjectID=$RAW_TX_HASH
     echo "proposalProjectID = $proposalProjectID"
     txQuery "$FUNCNAME"
@@ -319,8 +319,8 @@ voteProjectTx() {
     local privk=$2
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropProject", "payload":{"proposalID": "'"${ID}"'","vote":1}}]}'
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
     echo "$RAW_TX_HASH"
     txQuery "$FUNCNAME"
 }
@@ -328,11 +328,11 @@ voteProjectTx() {
 testProposalProject() {
     # proposal
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 20 + 720))
     proposalProjectTx ${start} ${end} 100000000 ${propAddr}
-    chain33_BlockWait 100 "$HTTP"
+    chain_BlockWait 100 "$HTTP"
     #vote
     for ((i = 0; i < 11; i++)); do
         voteProjectTx "${proposalProjectID}" "${boardsPrKey[$i]}"
@@ -341,7 +341,7 @@ testProposalProject() {
     queryProposal "${proposalProjectID}" "GetProposalProject"
     listProposal 5 "ListProposalProject"
     #test revoke
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 120 + 720))
     proposalProjectTx ${start} ${end} 100000000 ${propAddr}
@@ -359,8 +359,8 @@ proposalChangeTx() {
     local key=$5
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"PropChange", "payload":{"changes" : [{"cancel": '"${cancel}"', "addr":"'"${addr}"'"}],"startBlockHeight":'"${start}"',"endBlockHeight":'"${end}"'}}]}'
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${key}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${key}" "${HTTP}"
     proposalChangeID=$RAW_TX_HASH
     echo "proposalChangeID = $proposalChangeID"
     txQuery "$FUNCNAME"
@@ -371,8 +371,8 @@ voteChangeTx() {
     local privk=$2
     local req='{"method":"Chain.CreateTransaction","params":[{"execer":"'"${EXECTOR}"'", "actionName":"VotePropChange", "payload":{"proposalID": "'"${ID}"'","vote":1}}]}'
     echo "${req}"
-    chain33_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
-    chain33_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
+    chain_Http "$req" "${HTTP}" '(.error|not) and (.result != null)' "$FUNCNAME" ".result"
+    chain_SignAndSendTx "${RETURN_RESP}" "${privk}" "${HTTP}"
     echo "$RAW_TX_HASH"
     txQuery "$FUNCNAME"
 }
@@ -380,11 +380,11 @@ voteChangeTx() {
 testProposalChange() {
     # proposal
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 20 + 720))
     proposalChangeTx ${start} ${end} "${boardsAddr[21]}" true "${boardsPrKey[0]}"
-    chain33_BlockWait 100 "$HTTP"
+    chain_BlockWait 100 "$HTTP"
     #vote
     for ((i = 0; i < 11; i++)); do
         voteChangeTx "${proposalChangeID}" "${boardsPrKey[$i]}"
@@ -394,7 +394,7 @@ testProposalChange() {
     listProposal 4 "ListProposalChange"
 
     #test revoke
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 120 + 720))
     proposalChangeTx ${start} ${end} "${boardsAddr[22]}" true "${boardsPrKey[1]}"
@@ -407,27 +407,27 @@ testProposalChange() {
 testProposalTerminate() {
     #test terminate
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 120 + 720))
     proposalRuleTx ${start} ${end} 2000000000
 
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 120 + 720))
     proposalBoardTx ${start} ${end}
 
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 120 + 720))
     proposalProjectTx ${start} ${end} 100000000 ${propAddr}
 
-    chain33_LastBlockHeight "${HTTP}"
+    chain_LastBlockHeight "${HTTP}"
     start=$((LAST_BLOCK_HEIGHT + 100))
     end=$((start + 120 + 720))
     proposalChangeTx ${start} ${end} "${boardsAddr[23]}" true "${boardsPrKey[2]}"
 
-    chain33_BlockWait 940 "$HTTP"
+    chain_BlockWait 940 "$HTTP"
 
     terminateProposalTx "${proposalRuleID}" "TmintPropRule"
     queryProposal "${proposalRuleID}" "GetProposalRule"
@@ -471,42 +471,42 @@ init() {
     echo "EXECTOR_ADDR=$EXECTOR_ADDR"
 
     local main_ip=${HTTP//8901/8801}
-    chain33_ImportPrivkey "${propKey}" "${propAddr}" "prop" "${main_ip}"
-    chain33_ImportPrivkey "${votePrKey2}" "${voteAddr2}" "voteAddr2" "${main_ip}"
-    chain33_ImportPrivkey "${votePrKey3}" "${voteAddr3}" "voteAddr3" "${main_ip}"
+    chain_ImportPrivkey "${propKey}" "${propAddr}" "prop" "${main_ip}"
+    chain_ImportPrivkey "${votePrKey2}" "${voteAddr2}" "voteAddr2" "${main_ip}"
+    chain_ImportPrivkey "${votePrKey3}" "${voteAddr3}" "voteAddr3" "${main_ip}"
 
     if [ "$ispara" == false ]; then
-        chain33_applyCoinsNOLimit "$propAddr" 100000000000 "${main_ip}"
-        chain33_applyCoinsNOLimit "${voteAddr}" 10000000000 "${main_ip}"
-        chain33_applyCoinsNOLimit "${voteAddr2}" 10000000000 "${main_ip}"
-        chain33_applyCoinsNOLimit "${voteAddr3}" 10000000000 "${main_ip}"
+        chain_applyCoinsNOLimit "$propAddr" 100000000000 "${main_ip}"
+        chain_applyCoinsNOLimit "${voteAddr}" 10000000000 "${main_ip}"
+        chain_applyCoinsNOLimit "${voteAddr2}" 10000000000 "${main_ip}"
+        chain_applyCoinsNOLimit "${voteAddr3}" 10000000000 "${main_ip}"
     else
-        chain33_applyCoinsNOLimit "$propAddr" 1000000000 "${main_ip}"
+        chain_applyCoinsNOLimit "$propAddr" 1000000000 "${main_ip}"
         #主链投票账户转帐
         handleBoards "$main_ip"
 
         local para_ip="${HTTP}"
-        chain33_ImportPrivkey "${propKey}" "${propAddr}" "prop" "$para_ip"
-        chain33_ImportPrivkey "${votePrKey2}" "${voteAddr2}" "voteAddr2" "${para_ip}"
-        chain33_ImportPrivkey "${votePrKey3}" "${voteAddr3}" "voteAddr3" "${para_ip}"
+        chain_ImportPrivkey "${propKey}" "${propAddr}" "prop" "$para_ip"
+        chain_ImportPrivkey "${votePrKey2}" "${voteAddr2}" "voteAddr2" "${para_ip}"
+        chain_ImportPrivkey "${votePrKey3}" "${voteAddr3}" "voteAddr3" "${para_ip}"
 
         #平行链中账户转帐
-        chain33_applyCoinsNOLimit "$propAddr" 100000000000 "$para_ip"
-        chain33_applyCoinsNOLimit "${voteAddr}" 10000000000 "${para_ip}"
-        chain33_applyCoinsNOLimit "${voteAddr2}" 10000000000 "${para_ip}"
-        chain33_applyCoinsNOLimit "${voteAddr3}" 10000000000 "${para_ip}"
+        chain_applyCoinsNOLimit "$propAddr" 100000000000 "$para_ip"
+        chain_applyCoinsNOLimit "${voteAddr}" 10000000000 "${para_ip}"
+        chain_applyCoinsNOLimit "${voteAddr2}" 10000000000 "${para_ip}"
+        chain_applyCoinsNOLimit "${voteAddr3}" 10000000000 "${para_ip}"
     fi
 
     # 往合约中转
-    chain33_SendToAddress "$propAddr" "$EXECTOR_ADDR" 90000000000 "$HTTP"
-    chain33_QueryExecBalance "$propAddr" "$EXECTOR" "$HTTP"
+    chain_SendToAddress "$propAddr" "$EXECTOR_ADDR" 90000000000 "$HTTP"
+    chain_QueryExecBalance "$propAddr" "$EXECTOR" "$HTTP"
 
     # 往投票账户中转帐
     handleBoards "$HTTP"
 }
 
 function rpc_test() {
-    chain33_RpcTestBegin autonomy
+    chain_RpcTestBegin autonomy
 
     HTTP="$1"
     echo "main_ip=$HTTP"
@@ -521,7 +521,7 @@ function rpc_test() {
         run_testcases
     fi
 
-    chain33_RpcTestRst autonomy "$CASE_ERR"
+    chain_RpcTestRst autonomy "$CASE_ERR"
 }
 
-chain33_debug_function rpc_test "$1"
+chain_debug_function rpc_test "$1"

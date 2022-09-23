@@ -53,7 +53,7 @@ func init() {
 	r = rand.New(rand.NewSource(types.Now().UnixNano()))
 }
 
-func getRPCClient(t *testing.T, mocker *testnode.Chain33Mock) *jsonclient.JSONClient {
+func getRPCClient(t *testing.T, mocker *testnode.ChainMock) *jsonclient.JSONClient {
 	jrpcClient := mocker.GetJSONC()
 	assert.NotNil(t, jrpcClient)
 	return jrpcClient
@@ -309,7 +309,7 @@ func TestPublishResult(t *testing.T) {
 	queryEventByeventID(eventID, t, jrpcClient, oty.ResultPublished)
 }
 
-func createAllStatusEvent(t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.Chain33Mock) {
+func createAllStatusEvent(t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.ChainMock) {
 	//total loop*5
 	loop := int(oty.DefaultCount + 10)
 	for i := 0; i < loop; i++ {
@@ -372,7 +372,7 @@ func TestQueryEventIDByTypeAndStatus(t *testing.T) {
 	queryEventByStatusAndType(t, jrpcClient)
 }
 
-func sendAddPublisher(t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.Chain33Mock) {
+func sendAddPublisher(t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.ChainMock) {
 	//1. 调用createrawtransaction 创建交易
 	req := &rpctypes.CreateTxIn{
 		Execer:     "manage",
@@ -391,7 +391,7 @@ func sendAddPublisher(t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *t
 	assert.Nil(t, err)
 }
 
-func sendPublishEvent(t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.Chain33Mock) (eventID string) {
+func sendPublishEvent(t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.ChainMock) (eventID string) {
 	ti := time.Now().AddDate(0, 0, 1)
 	//1. 调用createrawtransaction 创建交易
 	req := &rpctypes.CreateTxIn{
@@ -425,7 +425,7 @@ func sendPublishEvent(t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *t
 	return eventID
 }
 
-func sendAbortPublishEvent(eventID string, t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.Chain33Mock, expectErr error) {
+func sendAbortPublishEvent(eventID string, t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.ChainMock, expectErr error) {
 	req := &rpctypes.CreateTxIn{
 		Execer:     oty.OracleX,
 		ActionName: "EventAbort",
@@ -454,7 +454,7 @@ func sendAbortPublishEvent(eventID string, t *testing.T, jrpcClient *jsonclient.
 	}
 }
 
-func sendPrePublishResult(eventID string, t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.Chain33Mock, expectErr error) {
+func sendPrePublishResult(eventID string, t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.ChainMock, expectErr error) {
 	req := &rpctypes.CreateTxIn{
 		Execer:     oty.OracleX,
 		ActionName: "ResultPrePublish",
@@ -482,7 +482,7 @@ func sendPrePublishResult(eventID string, t *testing.T, jrpcClient *jsonclient.J
 	}
 }
 
-func sendAbortPublishResult(eventID string, t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.Chain33Mock, expectErr error) {
+func sendAbortPublishResult(eventID string, t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.ChainMock, expectErr error) {
 	req := &rpctypes.CreateTxIn{
 		Execer:     oty.OracleX,
 		ActionName: "ResultAbort",
@@ -510,7 +510,7 @@ func sendAbortPublishResult(eventID string, t *testing.T, jrpcClient *jsonclient
 	}
 }
 
-func sendPublishResult(eventID string, t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.Chain33Mock, expectErr error) {
+func sendPublishResult(eventID string, t *testing.T, jrpcClient *jsonclient.JSONClient, mocker *testnode.ChainMock, expectErr error) {
 	req := &rpctypes.CreateTxIn{
 		Execer:     oty.OracleX,
 		ActionName: "ResultPublish",

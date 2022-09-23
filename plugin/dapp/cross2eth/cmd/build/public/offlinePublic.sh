@@ -10,46 +10,46 @@ set +e
 source "./publicTest.sh"
 
 # $1 Key $2 addr $3 label $4 amount $5 evm amount
-function Chain33ImportKey() {
+function ChainImportKey() {
     local key="${1}"
     local addr="${2}"
     local label="${3}"
     local amount="${4}"
     local evm_amount="${5}"
     # 转帐到 DeployAddr 需要手续费
-    result=$(${Chain33Cli} account import_key -k "${key}" -l "${label}")
+    result=$(${ChainCli} account import_key -k "${key}" -l "${label}")
     check_addr "${result}" "${addr}"
-    hash=$(${Chain33Cli} send coins transfer -a "${amount}" -n test -t "${addr}" -k 4257d8692ef7fe13c68b65d6a52f03933db2fa5ce8faf210b5b8b80c721ced01)
-    check_tx "${Chain33Cli}" "${hash}"
+    hash=$(${ChainCli} send coins transfer -a "${amount}" -n test -t "${addr}" -k 4257d8692ef7fe13c68b65d6a52f03933db2fa5ce8faf210b5b8b80c721ced01)
+    check_tx "${ChainCli}" "${hash}"
 
     # 转账到 EVM  合约中
-    hash=$(${Chain33Cli} send coins send_exec -e evm -a "${evm_amount}" -k "${addr}")
-    check_tx "${Chain33Cli}" "${hash}"
-    result=$(${Chain33Cli} account balance -a "${addr}" -e evm)
+    hash=$(${ChainCli} send coins send_exec -e evm -a "${evm_amount}" -k "${addr}")
+    check_tx "${ChainCli}" "${hash}"
+    result=$(${ChainCli} account balance -a "${addr}" -e evm)
     #    balance_ret "${result}" "${evm_amount}.0000" # 平行链查询方式不一样 直接去掉金额匹配
 }
 
 # chian33 初始化准备
-function InitChain33Validator() {
+function InitChainValidator() {
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
 
     # 转帐到 DeployAddr 需要手续费
-    Chain33ImportKey "${chain33DeployKey}" "${chain33DeployAddr}" "DeployAddr" 2200 1000
+    ChainImportKey "${chainDeployKey}" "${chainDeployAddr}" "DeployAddr" 2200 1000
 
-    Chain33ImportKey "${chain33TestAddrKey1}" "${chain33TestAddr1}" "cross2ethAddr1" 2200 1000
-    Chain33ImportKey "${chain33TestAddrKey2}" "${chain33TestAddr2}" "cross2ethAddr2" 2200 1000
+    ChainImportKey "${chainTestAddrKey1}" "${chainTestAddr1}" "cross2ethAddr1" 2200 1000
+    ChainImportKey "${chainTestAddrKey2}" "${chainTestAddr2}" "cross2ethAddr2" 2200 1000
 
-    # 导入 chain33Validators 私钥生成地址
+    # 导入 chainValidators 私钥生成地址
     for name in a b c d p sp; do
-        eval chain33ValidatorKey=\$chain33ValidatorKey${name}
-        eval chain33Validator=\$chain33Validator${name}
-        result=$(${Chain33Cli} account import_key -k "${chain33ValidatorKey}" -l validator$name)
-        check_addr "${result}" "${chain33Validator}"
+        eval chainValidatorKey=\$chainValidatorKey${name}
+        eval chainValidator=\$chainValidator${name}
+        result=$(${ChainCli} account import_key -k "${chainValidatorKey}" -l validator$name)
+        check_addr "${result}" "${chainValidator}"
 
-        # chain33Validator 要有手续费
-        hash=$(${Chain33Cli} send coins transfer -a 100 -t "${chain33Validator}" -k 4257d8692ef7fe13c68b65d6a52f03933db2fa5ce8faf210b5b8b80c721ced01)
-        check_tx "${Chain33Cli}" "${hash}"
-        result=$(${Chain33Cli} account balance -a "${chain33Validator}" -e coins)
+        # chainValidator 要有手续费
+        hash=$(${ChainCli} send coins transfer -a 100 -t "${chainValidator}" -k 4257d8692ef7fe13c68b65d6a52f03933db2fa5ce8faf210b5b8b80c721ced01)
+        check_tx "${ChainCli}" "${hash}"
+        result=$(${ChainCli} account balance -a "${chainValidator}" -e coins)
         #        balance_ret "${result}" "100.0000" # 平行链查询方式不一样 直接去掉金额匹配
     done
 
@@ -82,49 +82,49 @@ function coins_cross_transfer() {
 
 function initPara() {
     # para add
-    hash=$(${Para8901Cli} send coins transfer -a 10000 -n test -t "${chain33ReceiverAddr}" -k CC38546E9E659D15E6B4893F0AB32A06D103931A8230B0BDE71459D2B27D6944)
+    hash=$(${Para8901Cli} send coins transfer -a 10000 -n test -t "${chainReceiverAddr}" -k CC38546E9E659D15E6B4893F0AB32A06D103931A8230B0BDE71459D2B27D6944)
     check_tx "${Para8901Cli}" "${hash}"
 
-    Chain33Cli=${Para8901Cli}
-    InitChain33Validator
+    ChainCli=${Para8901Cli}
+    InitChainValidator
 
-    coins_cross_transfer "${chain33DeployKey}" "${chain33DeployAddr}" 1000 800 500
-    coins_cross_transfer "${chain33TestAddrKey1}" "${chain33TestAddr1}" 1000 800 500
-    coins_cross_transfer "${chain33TestAddrKey2}" "${chain33TestAddr2}" 1000 800 500
+    coins_cross_transfer "${chainDeployKey}" "${chainDeployAddr}" 1000 800 500
+    coins_cross_transfer "${chainTestAddrKey1}" "${chainTestAddr1}" 1000 800 500
+    coins_cross_transfer "${chainTestAddrKey2}" "${chainTestAddr2}" 1000 800 500
 
     # 平行链共识节点增加测试币
-    ${MainCli} send coins transfer -a 1000 -n test -t "1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4" -k "${chain33ReceiverAddrKey}"
-    ${MainCli} send coins transfer -a 1000 -n test -t "1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR" -k "${chain33ReceiverAddrKey}"
-    ${MainCli} send coins transfer -a 1000 -n test -t "1NLHPEcbTWWxxU3dGUZBhayjrCHD3psX7k" -k "${chain33ReceiverAddrKey}"
-    ${MainCli} send coins transfer -a 1000 -n test -t "1MCftFynyvG2F4ED5mdHYgziDxx6vDrScs" -k "${chain33ReceiverAddrKey}"
+    ${MainCli} send coins transfer -a 1000 -n test -t "1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4" -k "${chainReceiverAddrKey}"
+    ${MainCli} send coins transfer -a 1000 -n test -t "1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR" -k "${chainReceiverAddrKey}"
+    ${MainCli} send coins transfer -a 1000 -n test -t "1NLHPEcbTWWxxU3dGUZBhayjrCHD3psX7k" -k "${chainReceiverAddrKey}"
+    ${MainCli} send coins transfer -a 1000 -n test -t "1MCftFynyvG2F4ED5mdHYgziDxx6vDrScs" -k "${chainReceiverAddrKey}"
 }
 
-function initMultisignChain33Addr() {
+function initMultisignChainAddr() {
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
 
     for name in A B C D; do
-        eval chain33MultisignKey=\$chain33MultisignKey${name}
-        eval chain33Multisign=\$chain33Multisign${name}
-        result=$(${Chain33Cli} account import_key -k "${chain33MultisignKey}" -l multisignAddr$name)
-        check_addr "${result}" "${chain33Multisign}"
+        eval chainMultisignKey=\$chainMultisignKey${name}
+        eval chainMultisign=\$chainMultisign${name}
+        result=$(${ChainCli} account import_key -k "${chainMultisignKey}" -l multisignAddr$name)
+        check_addr "${result}" "${chainMultisign}"
 
-        # chain33Multisign 要有手续费
-        hash=$(${Chain33Cli} send coins transfer -a 10 -t "${chain33Multisign}" -k "${chain33DeployAddr}")
-        check_tx "${Chain33Cli}" "${hash}"
-        result=$(${Chain33Cli} account balance -a "${chain33Multisign}" -e coins)
+        # chainMultisign 要有手续费
+        hash=$(${ChainCli} send coins transfer -a 10 -t "${chainMultisign}" -k "${chainDeployAddr}")
+        check_tx "${ChainCli}" "${hash}"
+        result=$(${ChainCli} account balance -a "${chainMultisign}" -e coins)
         balance_ret "${result}" "10.0000"
     done
 
     echo -e "${GRE}=========== $FUNCNAME end ===========${NOC}"
 }
 
-function transferChain33MultisignFee() {
+function transferChainMultisignFee() {
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
 
-    # chain33MultisignAddr 要有手续费
-    hash=$(${Chain33Cli} send coins transfer -a 10 -t "${chain33MultisignAddr}" -k "${chain33DeployAddr}")
-    check_tx "${Chain33Cli}" "${hash}"
-    result=$(${Chain33Cli} account balance -a "${chain33MultisignAddr}" -e coins)
+    # chainMultisignAddr 要有手续费
+    hash=$(${ChainCli} send coins transfer -a 10 -t "${chainMultisignAddr}" -k "${chainDeployAddr}")
+    check_tx "${ChainCli}" "${hash}"
+    result=$(${ChainCli} account balance -a "${chainMultisignAddr}" -e coins)
     balance_ret "${result}" "10.0000"
 
     echo -e "${GRE}=========== $FUNCNAME end ===========${NOC}"
@@ -133,7 +133,7 @@ function transferChain33MultisignFee() {
 # lock eth 判断是否转入多签地址金额是否正确
 function lock_eth_multisign() {
     local lockAmount=$1
-    result=$(${CLIA} ethereum lock -m "${lockAmount}" -k "${ethTestAddrKey1}" -r "${chain33ReceiverAddr}")
+    result=$(${CLIA} ethereum lock -m "${lockAmount}" -k "${ethTestAddrKey1}" -r "${chainReceiverAddr}")
     cli_ret "${result}" "lock"
 
     if [[ $# -eq 3 ]]; then
@@ -152,7 +152,7 @@ function lock_eth_multisign() {
 
 function lock_ethereum_usdt_multisign() {
     local lockAmount=$1
-    result=$(${CLIA} ethereum lock -m "${lockAmount}" -k "${ethTestAddrKey1}" -r "${chain33ReceiverAddr}" -t "${ethereumUSDTERC20TokenAddr}")
+    result=$(${CLIA} ethereum lock -m "${lockAmount}" -k "${ethTestAddrKey1}" -r "${chainReceiverAddr}" -t "${ethereumUSDTERC20TokenAddr}")
     cli_ret "${result}" "lock"
 
     if [[ $# -eq 3 ]]; then
@@ -180,10 +180,10 @@ function check_eth_tx() {
 }
 
 # $1 send file
-function chain33_offline_send() {
-    result=$(${Boss4xCLI} chain33 offline send -f "${1}")
+function chain_offline_send() {
+    result=$(${Boss4xCLI} chain offline send -f "${1}")
     hash=$(echo "${result}" | jq -r ".[0].TxHash")
-    check_tx "${Chain33Cli}" "${hash}"
+    check_tx "${ChainCli}" "${hash}"
 }
 
 # $1 send file $2 key
@@ -198,21 +198,21 @@ function ethereum_offline_sign_send() {
     check_eth_tx "${hash}"
 }
 
-function OfflineDeploy_chain33() {
+function OfflineDeploy_chain() {
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
 
-    # 在 chain33 上部署合约
-    #    ${Boss4xCLI} chain33 offline create -f 1 -k "${chain33DeployKey}" -n "deploy crossx to chain33" -r "${chain33DeployAddr}, [${chain33Validatora}, ${chain33Validatorb}, ${chain33Validatorc}, ${chain33Validatord}], [25, 25, 25, 25]" -m "${chain33MultisignA},${chain33MultisignB},${chain33MultisignC},${chain33MultisignD}"
-    ${Boss4xCLI} chain33 offline create_file -f 1 -k "${chain33DeployKey}" -n "deploy crossx to chain33" -c "./deploy_chain33.toml"
-    result=$(${Boss4xCLI} chain33 offline send -f "deployCrossX2Chain33.txt")
+    # 在 chain 上部署合约
+    #    ${Boss4xCLI} chain offline create -f 1 -k "${chainDeployKey}" -n "deploy crossx to chain" -r "${chainDeployAddr}, [${chainValidatora}, ${chainValidatorb}, ${chainValidatorc}, ${chainValidatord}], [25, 25, 25, 25]" -m "${chainMultisignA},${chainMultisignB},${chainMultisignC},${chainMultisignD}"
+    ${Boss4xCLI} chain offline create_file -f 1 -k "${chainDeployKey}" -n "deploy crossx to chain" -c "./deploy_chain.toml"
+    result=$(${Boss4xCLI} chain offline send -f "deployCrossX2Chain.txt")
 
     for i in {0..9}; do
         hash=$(echo "${result}" | jq -r ".[$i].TxHash")
-        check_tx "${Chain33Cli}" "${hash}"
+        check_tx "${ChainCli}" "${hash}"
     done
-    chain33BridgeRegistry=$(echo "${result}" | jq -r ".[6].ContractAddr")
+    chainBridgeRegistry=$(echo "${result}" | jq -r ".[6].ContractAddr")
     # shellcheck disable=SC2034
-    chain33MultisignAddr=$(echo "${result}" | jq -r ".[7].ContractAddr")
+    chainMultisignAddr=$(echo "${result}" | jq -r ".[7].ContractAddr")
 
     echo -e "${GRE}=========== $FUNCNAME end ===========${NOC}"
 }
@@ -238,9 +238,9 @@ function OfflineDeploy_ethereum() {
 
 function OfflineDeploy() {
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
-    OfflineDeploy_chain33
+    OfflineDeploy_chain
     # 修改 relayer.toml 字段
-    sed -i 's/^BridgeRegistryOnChain33=.*/BridgeRegistryOnChain33="'"${chain33BridgeRegistry}"'"/g' "./relayer.toml"
+    sed -i 's/^BridgeRegistryOnChain=.*/BridgeRegistryOnChain="'"${chainBridgeRegistry}"'"/g' "./relayer.toml"
 
     {
         Boss4xCLI=${Boss4xCLIeth}
@@ -268,11 +268,11 @@ function OfflineDeploy() {
     echo -e "${GRE}=========== $FUNCNAME end ===========${NOC}"
 }
 
-# init $1 CLI $2 pwd $3 chain33ValidatorKey $4 ethValidatorAddrKey
+# init $1 CLI $2 pwd $3 chainValidatorKey $4 ethValidatorAddrKey
 function init_validator_relayer() {
     local CLI=$1
     local pwd=$2
-    local chain33ValidatorKey=$3
+    local chainValidatorKey=$3
     local ethValidatorAddrKey=$4
     result=$(${CLI} set_pwd -p "${pwd}")
     cli_ret "${result}" "set_pwd"
@@ -282,8 +282,8 @@ function init_validator_relayer() {
 
     sleep 20
 
-    result=$(${CLI} chain33 import_privatekey -k "${chain33ValidatorKey}")
-    cli_ret "${result}" "chain33 import_privatekey"
+    result=$(${CLI} chain import_privatekey -k "${chainValidatorKey}")
+    cli_ret "${result}" "chain import_privatekey"
 
     result=$(${CLI} ethereum import_privatekey -k "${ethValidatorAddrKey}")
     cli_ret "${result}" "ethereum import_privatekey"
@@ -292,14 +292,14 @@ function init_validator_relayer() {
 # shellcheck disable=SC2120
 function InitRelayerA() {
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
-    init_validator_relayer "${CLIA}" "${validatorPwd}" "${chain33ValidatorKeya}" "${ethValidatorAddrKeya}"
+    init_validator_relayer "${CLIA}" "${validatorPwd}" "${chainValidatorKeya}" "${ethValidatorAddrKeya}"
 
-    ${CLIA} chain33 multisign set_multiSign -a "${chain33MultisignAddr}"
+    ${CLIA} chain multisign set_multiSign -a "${chainMultisignAddr}"
 
     # 拷贝 BridgeRegistry.abi 和 BridgeBank.abi
-    cp BridgeRegistry.abi "${chain33BridgeRegistry}.abi"
-    chain33BridgeBank=$(${Chain33Cli} evm query -c "${chain33DeployAddr}" -b "bridgeBank()" -a "${chain33BridgeRegistry}")
-    cp Chain33BridgeBank.abi "${chain33BridgeBank}.abi"
+    cp BridgeRegistry.abi "${chainBridgeRegistry}.abi"
+    chainBridgeBank=$(${ChainCli} evm query -c "${chainDeployAddr}" -b "bridgeBank()" -a "${chainBridgeRegistry}")
+    cp ChainBridgeBank.abi "${chainBridgeBank}.abi"
 
     ${CLIAeth} ethereum multisign set_multiSign -a "${ethereumMultisignAddrOnETH}"
     ${CLIAbsc} ethereum multisign set_multiSign -a "${ethereumMultisignAddrOnBSC}"
@@ -337,18 +337,18 @@ function offline_create_bridge_token_eth_BTY() {
     ethereumBtyBridgeTokenAddr=$(${CLIA} ethereum receipt -s "${hash}" | jq -r .logs[0].address)
 }
 
-function offline_create_bridge_token_chain33_symbol() {
-    # 在 chain33 上创建 bridgeToken ETH
-    echo -e "${GRE}======= 在 chain33 上创建 bridgeToken $1 ======${NOC}"
+function offline_create_bridge_token_chain_symbol() {
+    # 在 chain 上创建 bridgeToken ETH
+    echo -e "${GRE}======= 在 chain 上创建 bridgeToken $1 ======${NOC}"
     local symbolName="$1"
-    ${Boss4xCLI} chain33 offline create_bridge_token -c "${chain33BridgeBank}" -s "${symbolName}" -k "${chain33DeployKey}" -n "create_bridge_token:${symbolName}"
-    chain33_offline_send "create_bridge_token.txt"
+    ${Boss4xCLI} chain offline create_bridge_token -c "${chainBridgeBank}" -s "${symbolName}" -k "${chainDeployKey}" -n "create_bridge_token:${symbolName}"
+    chain_offline_send "create_bridge_token.txt"
 
-    chain33MainBridgeTokenAddr=$(${Chain33Cli} evm query -a "${chain33BridgeBank}" -c "${chain33DeployAddr}" -b "getToken2address(${symbolName})")
-    echo "${symbolName} Token Addr= ${chain33MainBridgeTokenAddr}"
-    cp BridgeToken.abi "${chain33MainBridgeTokenAddr}.abi"
+    chainMainBridgeTokenAddr=$(${ChainCli} evm query -a "${chainBridgeBank}" -c "${chainDeployAddr}" -b "getToken2address(${symbolName})")
+    echo "${symbolName} Token Addr= ${chainMainBridgeTokenAddr}"
+    cp BridgeToken.abi "${chainMainBridgeTokenAddr}.abi"
 
-    result=$(${Chain33Cli} evm query -a "${chain33MainBridgeTokenAddr}" -c "${chain33MainBridgeTokenAddr}" -b "symbol()")
+    result=$(${ChainCli} evm query -a "${chainMainBridgeTokenAddr}" -c "${chainMainBridgeTokenAddr}" -b "symbol()")
     is_equal "${result}" "${symbolName}"
 }
 

@@ -6,7 +6,7 @@ changelog
 
 ### Bug Fixes
 
-* update chain33 patch version 1.67.3 ([303be37](https://github.com/assetcloud/plugin/commit/303be37))
+* update chain patch version 1.67.3 ([303be37](https://github.com/assetcloud/plugin/commit/303be37))
 
 <a name="1.67.2"></a>
 ## [1.67.2](https://github.com/assetcloud/plugin/compare/v1.67.1...v1.67.2) (2022-04-18)
@@ -14,7 +14,7 @@ changelog
 
 ### Bug Fixes
 
-* sync chain33 patch version 1.67.2 ([0a0d7ec](https://github.com/assetcloud/plugin/commit/0a0d7ec))
+* sync chain patch version 1.67.2 ([0a0d7ec](https://github.com/assetcloud/plugin/commit/0a0d7ec))
 
 <a name="1.67.1"></a>
 ## [1.67.1](https://github.com/assetcloud/plugin/compare/v1.67.0...v1.67.1) (2022-03-29)
@@ -22,7 +22,7 @@ changelog
 
 ### Bug Fixes
 
-* update chain33 version to 1.67.1 ([f4394f8](https://github.com/assetcloud/plugin/commit/f4394f8))
+* update chain version to 1.67.1 ([f4394f8](https://github.com/assetcloud/plugin/commit/f4394f8))
 
 <a name="1.67.0"></a>
 # [1.67.0](https://github.com/assetcloud/plugin/compare/v1.66.3...v1.67.0) (2022-03-21)
@@ -30,7 +30,7 @@ changelog
 
 ### Features
 
-* sync chain33 v1.67.0 ([c869934](https://github.com/assetcloud/plugin/commit/c869934))
+* sync chain v1.67.0 ([c869934](https://github.com/assetcloud/plugin/commit/c869934))
 
 <a name="1.66.3"></a>
 ## [1.66.3](https://github.com/assetcloud/plugin/compare/v1.66.2...v1.66.3) (2022-02-18)
@@ -38,7 +38,7 @@ changelog
 
 ### Bug Fixes
 
-* update chain33 ([d0526e5](https://github.com/assetcloud/plugin/commit/d0526e5))
+* update chain ([d0526e5](https://github.com/assetcloud/plugin/commit/d0526e5))
 
 <a name="1.66.2"></a>
 ## [1.66.2](https://github.com/assetcloud/plugin/compare/v1.66.1...v1.66.2) (2022-01-20)
@@ -46,7 +46,7 @@ changelog
 
 ### Bug Fixes
 
-* sync chain33 patch version v1.66.3 ([691168d](https://github.com/assetcloud/plugin/commit/691168d))
+* sync chain patch version v1.66.3 ([691168d](https://github.com/assetcloud/plugin/commit/691168d))
 
 <a name="1.66.1"></a>
 ## [1.66.1](https://github.com/assetcloud/plugin/compare/v1.66.0...v1.66.1) (2022-01-10)
@@ -54,7 +54,7 @@ changelog
 
 ### Bug Fixes
 
-* chain33 update to 1.66.2 ([3cdb80c](https://github.com/assetcloud/plugin/commit/3cdb80c))
+* chain update to 1.66.2 ([3cdb80c](https://github.com/assetcloud/plugin/commit/3cdb80c))
 
 <a name="1.66.0"></a>
 # [1.66.0](https://github.com/assetcloud/plugin/compare/v1.65.4...v1.66.0) (2021-12-30)

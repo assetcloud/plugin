@@ -40,11 +40,11 @@ func init() {
 	NameReg, _ = regexp.Compile(NameRegExp)
 }
 
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(WasmX, "Enable", 0)
 }
 
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(WasmX, NewType(cfg))
 }
 
@@ -52,7 +52,7 @@ type WasmType struct {
 	types.ExecTypeBase
 }
 
-func NewType(cfg *types.Chain33Config) *WasmType {
+func NewType(cfg *types.ChainConfig) *WasmType {
 	c := &WasmType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

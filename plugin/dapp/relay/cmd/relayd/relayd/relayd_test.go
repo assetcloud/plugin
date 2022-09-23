@@ -33,10 +33,10 @@ func TestGeneratePrivateKey(t *testing.T) {
 }
 
 func TestDealOrder(t *testing.T) {
-	grpcClient := &typesmocks.Chain33Client{}
+	grpcClient := &typesmocks.ChainClient{}
 	relayd := &Relayd{}
 	relayd.client33 = &Client33{}
-	relayd.client33.Chain33Client = grpcClient
+	relayd.client33.ChainClient = grpcClient
 	relayd.btcClient = &btcdClient{
 		connConfig:          nil,
 		chainParams:         mainNetParams.Params,

@@ -17,7 +17,7 @@ import (
 )
 
 func newTestChannelClient() *Grpc {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	api := new(mocks.QueueProtocolAPI)
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	cli := &channelClient{

@@ -24,7 +24,7 @@ import (
 
 // 执行： go test -cover
 func TestRaft(t *testing.T) {
-	mock33 := testnode.New("chain33.test.toml", nil)
+	mock33 := testnode.New("chain.test.toml", nil)
 	cfg := mock33.GetClient().GetConfig()
 	defer mock33.Close()
 	mock33.Listen()
@@ -44,9 +44,9 @@ func TestRaft(t *testing.T) {
 }
 
 func clearTestData() {
-	err := os.RemoveAll("chain33_raft-1")
+	err := os.RemoveAll("chain_raft-1")
 	if err != nil {
-		fmt.Println("delete chain33_raft dir have a err:", err.Error())
+		fmt.Println("delete chain_raft dir have a err:", err.Error())
 	}
 	fmt.Println("test data clear successfully!")
 }

@@ -1,7 +1,7 @@
 # accountmanager合约
 
 ## 前言
-为适配央行发布的[金融分布式账户技术安全规范](http://www.cfstc.org/bzgk/gk/view/yulan.jsp?i_id=1855)，满足联盟链中的金融监管，账户公钥重置，黑白名单等要求，特意在chain33上面开发了
+为适配央行发布的[金融分布式账户技术安全规范](http://www.cfstc.org/bzgk/gk/view/yulan.jsp?i_id=1855)，满足联盟链中的金融监管，账户公钥重置，黑白名单等要求，特意在chain上面开发了
 accountmanager合约
 
 ## 使用

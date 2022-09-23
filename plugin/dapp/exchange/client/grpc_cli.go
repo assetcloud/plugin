@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	et "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/common/crypto"
 	"github.com/assetcloud/chain/types"
+	et "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
 )
@@ -18,7 +18,7 @@ import (
 var conns sync.Map
 
 type GRPCCli struct {
-	client types.Chain33Client
+	client types.ChainClient
 }
 
 func NewGRPCCli(grpcAddr string) *GRPCCli {
@@ -29,18 +29,18 @@ func NewGRPCCli(grpcAddr string) *GRPCCli {
 	return &GRPCCli{client: client}
 }
 
-func getClient(target string) (types.Chain33Client, error) {
+func getClient(target string) (types.ChainClient, error) {
 	val, ok := conns.Load(target)
 	if !ok {
 		conn, err := grpc.Dial(target, grpc.WithInsecure())
 		if err != nil {
 			return nil, err
 		}
-		client := types.NewChain33Client(conn)
+		client := types.NewChainClient(conn)
 		conns.Store(target, client)
 		return client, nil
 	} else {
-		return val.(types.Chain33Client), nil
+		return val.(types.ChainClient), nil
 	}
 }
 
@@ -98,8 +98,8 @@ func (c *GRPCCli) sendAndWaitReceipt(tx *types.Transaction, hexKey string) (logs
 
 //SendTx ...s
 func (c *GRPCCli) sendTx(tx *types.Transaction, hexKey string) (reply *types.Reply, err error) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	tx, err = types.FormatTx(cfg, et.ExchangeX, tx)
 	if err != nil {
 		return nil, err

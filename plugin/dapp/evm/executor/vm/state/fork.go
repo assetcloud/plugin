@@ -75,7 +75,7 @@ func InitForkData() {
 }
 
 // ProcessFork 处理硬分叉逻辑
-func ProcessFork(cfg *types.Chain33Config, blockHeight int64, txHash []byte, receipt *types.Receipt) {
+func ProcessFork(cfg *types.ChainConfig, blockHeight int64, txHash []byte, receipt *types.Receipt) {
 	if cfg.IsLocal() {
 		return
 	}

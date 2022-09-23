@@ -34,7 +34,7 @@ var (
 	r            *rand.Rand
 	mydb         db.KV
 	lotteryID    string
-	chainTestCfg *types.Chain33Config
+	chainTestCfg *types.ChainConfig
 )
 
 func init() {
@@ -195,7 +195,7 @@ func ConstructDrawTx() *types.Transaction {
 }
 
 func constructLotteryInstance() drivers.Driver {
-	chainTestCfg = types.NewChain33Config(types.GetDefaultCfgstring())
+	chainTestCfg = types.NewChainConfig(types.GetDefaultCfgstring())
 	Init(rt.LotteryX, chainTestCfg, nil)
 	lottery := newLottery()
 	//lottery.SetStateDB(NewTestDB())

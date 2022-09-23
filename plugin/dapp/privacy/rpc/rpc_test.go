@@ -26,13 +26,13 @@ func newJrpc(api client.QueueProtocolAPI) *Jrpc {
 	return &Jrpc{cli: newGrpc(api)}
 }
 
-func TestChain33_PrivacyTxList(t *testing.T) {
+func TestChain_PrivacyTxList(t *testing.T) {
 	api := new(mocks.QueueProtocolAPI)
-	testChain33 := newJrpc(api)
+	testChain := newJrpc(api)
 	actual := &pty.ReqPrivacyTransactionList{}
 	api.On("ExecWalletFunc", "privacy", "PrivacyTransactionList", actual).Return(nil, errors.New("error value"))
 	var testResult interface{}
-	err := testChain33.GetPrivacyTxByAddr(actual, &testResult)
+	err := testChain.GetPrivacyTxByAddr(actual, &testResult)
 	t.Log(err)
 	assert.Equal(t, nil, testResult)
 	assert.NotNil(t, err)

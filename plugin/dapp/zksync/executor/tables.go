@@ -22,7 +22,7 @@ var opt_account_tree = &table.Option{
 	Prefix:  KeyPrefixLocalDB,
 	Name:    "tree",
 	Primary: "address",
-	Index:   []string{"chain33_address", "eth_address"},
+	Index:   []string{"chain_address", "eth_address"},
 }
 
 // NewAccountTreeTable ...
@@ -61,9 +61,9 @@ func (r *AccountTreeRow) SetPayload(data types.Message) error {
 //Get 按照indexName 查询 indexValue
 func (r *AccountTreeRow) Get(key string) ([]byte, error) {
 	if key == "address" {
-		return GetLocalChain33EthPrimaryKey(r.GetChain33Addr(), r.GetEthAddress()), nil
-	} else if key == "chain33_address" {
-		return []byte(fmt.Sprintf("%s", address.FormatAddrKey(r.GetChain33Addr()))), nil
+		return GetLocalChainEthPrimaryKey(r.GetChainAddr(), r.GetEthAddress()), nil
+	} else if key == "chain_address" {
+		return []byte(fmt.Sprintf("%s", address.FormatAddrKey(r.GetChainAddr()))), nil
 	} else if key == "eth_address" {
 		return []byte(fmt.Sprintf("%s", address.FormatAddrKey(r.GetEthAddress()))), nil
 	}
@@ -122,8 +122,6 @@ func (r *ZksyncInfoRow) Get(key string) ([]byte, error) {
 	return nil, types.ErrNotFound
 }
 
-
-
 var opt_commit_proof = &table.Option{
 	Prefix:  KeyPrefixLocalDB,
 	Name:    "proof",
@@ -176,7 +174,6 @@ func (r *CommitProofRow) Get(key string) ([]byte, error) {
 	return nil, types.ErrNotFound
 }
 
-
 var opt_history_account_tree = &table.Option{
 	Prefix:  KeyPrefixLocalDB,
 	Name:    "historyTree",
@@ -226,5 +223,3 @@ func (r *HistoryAccountTreeRow) Get(key string) ([]byte, error) {
 	}
 	return nil, types.ErrNotFound
 }
-
-

@@ -158,7 +158,7 @@ func querySymbolTotalAmountByTxTypeCmd() *cobra.Command {
 	cmd.Flags().StringP("symbol", "s", "", "token symbol")
 	_ = cmd.MarkFlagRequired("symbol")
 
-	cmd.Flags().Int64P("direction", "d", 0, "eth2chain33 = 1,chain33toeth = 2")
+	cmd.Flags().Int64P("direction", "d", 0, "eth2chain = 1,chaintoeth = 2")
 	_ = cmd.MarkFlagRequired("direction")
 
 	cmd.Flags().Int64P("txtype", "t", 0, "lock = 1,burn = 2")

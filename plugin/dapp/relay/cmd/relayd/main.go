@@ -21,9 +21,9 @@ import (
 )
 
 var (
-	cpuNum            = runtime.NumCPU()
-	configPath        = flag.String("f", "relayd.toml", "configfile")
-	chain33ConfigPath = flag.String("chain33flie", "", "chain33configfile")
+	cpuNum          = runtime.NumCPU()
+	configPath      = flag.String("f", "relayd.toml", "configfile")
+	chainConfigPath = flag.String("chainflie", "", "chainconfigfile")
 )
 
 func main() {
@@ -42,8 +42,8 @@ func main() {
 	flag.Parse()
 	cfg := relayd.NewConfig(*configPath)
 	clog.SetFileLog(&cfg.Log)
-	if *chain33ConfigPath != "" {
-		cfg.Chain33Cfg = types.NewChain33Config(types.ReadFile(*chain33ConfigPath))
+	if *chainConfigPath != "" {
+		cfg.ChainCfg = types.NewChainConfig(types.ReadFile(*chainConfigPath))
 	}
 
 	if cfg.Watch {

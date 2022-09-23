@@ -9,6 +9,12 @@ import (
 	"testing"
 	"time"
 
+	tml "github.com/BurntSushi/toml"
+	"github.com/assetcloud/chain/client/mocks"
+	dbm "github.com/assetcloud/chain/common/db"
+	_ "github.com/assetcloud/chain/system"
+	chainTypes "github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/test/setup"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
@@ -17,12 +23,6 @@ import (
 	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
-	tml "github.com/BurntSushi/toml"
-	"github.com/assetcloud/chain/client/mocks"
-	dbm "github.com/assetcloud/chain/common/db"
-	_ "github.com/assetcloud/chain/system"
-	chain33Types "github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util/testnode"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -34,19 +34,19 @@ import (
 )
 
 var (
-	configPath          = flag.String("f", "./../../relayer.toml", "configfile")
-	ethPrivateKeyStr    = "0x3fa21584ae2e4fd74db9b58e2386f5481607dfa4d7ba0617aaa7858e5025dc1e"
-	ethAccountAddr      = "0x92c8b16afd6d423652559c6e266cbe1c29bfd84f"
-	chain33ReceiverAddr = "1BCGLhdcdthNutQowV2YShuuN9fJRRGLxu"
-	passphrase          = "123456hzj"
-	chainTestCfg        = chain33Types.NewChain33Config(chain33Types.GetDefaultCfgstring())
-	ethRelayer          *Relayer4Ethereum
+	configPath        = flag.String("f", "./../../relayer.toml", "configfile")
+	ethPrivateKeyStr  = "0x3fa21584ae2e4fd74db9b58e2386f5481607dfa4d7ba0617aaa7858e5025dc1e"
+	ethAccountAddr    = "0x92c8b16afd6d423652559c6e266cbe1c29bfd84f"
+	chainReceiverAddr = "1BCGLhdcdthNutQowV2YShuuN9fJRRGLxu"
+	passphrase        = "123456hzj"
+	chainTestCfg      = chainTypes.NewChainConfig(chainTypes.GetDefaultCfgstring())
+	ethRelayer        *Relayer4Ethereum
 )
 
 func init() {
 	fmt.Println("======================= init =======================")
-	var tx chain33Types.Transaction
-	var ret chain33Types.Reply
+	var tx chainTypes.Transaction
+	var ret chainTypes.Reply
 	ret.IsOk = true
 
 	mockapi := &mocks.QueueProtocolAPI{}
@@ -190,10 +190,10 @@ func test_SetBridgeRegistryAddr(t *testing.T) {
 //	require.Nil(t, err)
 //
 //	//lock 50 eth
-//	chain33Sender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
+//	chainSender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
 //	ethAmount := big.NewInt(50)
 //	userOneAuth.Value = ethAmount
-//	_, err = ethRelayer.x2EthContracts.BridgeBank.Lock(userOneAuth, chain33Sender, common.Address{}, ethAmount)
+//	_, err = ethRelayer.x2EthContracts.BridgeBank.Lock(userOneAuth, chainSender, common.Address{}, ethAmount)
 //	require.Nil(t, err)
 //	simCommit()
 //
@@ -294,11 +294,11 @@ func test_CreateBridgeToken(t *testing.T) {
 	require.Nil(t, err)
 	assert.Equal(t, decimals, uint8(8))
 
-	_, err = ethRelayer.Burn(ethRelayer.deployPara.InitValidators[0].String(), tokenAddrbty, chain33ReceiverAddr, "10")
+	_, err = ethRelayer.Burn(ethRelayer.deployPara.InitValidators[0].String(), tokenAddrbty, chainReceiverAddr, "10")
 	require.Error(t, err)
 	simCommit()
 
-	_, err = ethRelayer.BurnAsync(ethRelayer.deployPara.InitValidators[0].String(), tokenAddrbty, chain33ReceiverAddr, "10")
+	_, err = ethRelayer.BurnAsync(ethRelayer.deployPara.InitValidators[0].String(), tokenAddrbty, chainReceiverAddr, "10")
 	require.Error(t, err)
 	simCommit()
 }
@@ -314,10 +314,10 @@ func test_BurnBty(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, token.TokenAddress[0].Address, tokenAddrbty)
 
-	chain33Sender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
+	chainSender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
 	amount := int64(100)
 	ethReceiver := ethRelayer.deployPara.InitValidators[2]
-	claimID := crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), big.NewInt(amount).Bytes())
+	claimID := crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), big.NewInt(amount).Bytes())
 	authOracle, err := ethtxs.PrepareAuth4MultiEthereum(ethRelayer.clientSpec, ethRelayer.deployPara.ValidatorPriKey[0], ethRelayer.deployPara.InitValidators[0], ethRelayer.Addr2TxNonce)
 	require.Nil(t, err)
 	signature, err := utils.SignClaim4Evm(claimID, ethRelayer.deployPara.ValidatorPriKey[0])
@@ -326,7 +326,7 @@ func test_BurnBty(t *testing.T) {
 	_, err = ethRelayer.x2EthContracts.Oracle.NewOracleClaim(
 		authOracle,
 		uint8(events.ClaimTypeLock),
-		chain33Sender,
+		chainSender,
 		ethReceiver,
 		common.HexToAddress(tokenAddrbty),
 		"bty",
@@ -340,7 +340,7 @@ func test_BurnBty(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, balanceNew, "100")
 
-	_, err = ethRelayer.Burn(hexutil.Encode(crypto.FromECDSA(ethRelayer.deployPara.ValidatorPriKey[2])), tokenAddrbty, chain33ReceiverAddr, "10")
+	_, err = ethRelayer.Burn(hexutil.Encode(crypto.FromECDSA(ethRelayer.deployPara.ValidatorPriKey[2])), tokenAddrbty, chainReceiverAddr, "10")
 	require.NoError(t, err)
 	simCommit()
 
@@ -367,7 +367,7 @@ func test_BurnBty(t *testing.T) {
 		simCommit()
 	}
 
-	_, err = ethRelayer.BurnAsync(hexutil.Encode(crypto.FromECDSA(ethRelayer.deployPara.ValidatorPriKey[2])), tokenAddrbty, chain33ReceiverAddr, "10")
+	_, err = ethRelayer.BurnAsync(hexutil.Encode(crypto.FromECDSA(ethRelayer.deployPara.ValidatorPriKey[2])), tokenAddrbty, chainReceiverAddr, "10")
 	require.NoError(t, err)
 	simCommit()
 
@@ -442,32 +442,32 @@ func test_setWithdrawFee(t *testing.T) {
 
 func newEthRelayer(para *ethtxs.DeployPara, sim *ethinterface.SimExtend, x2EthContracts *ethtxs.X2EthContracts, x2EthDeployInfo *ethtxs.X2EthDeployInfo) *Relayer4Ethereum {
 	cfg := initCfg(*configPath)
-	cfg.Chain33RelayerCfg.SyncTxConfig.Chain33Host = "http://127.0.0.1:8801"
+	cfg.ChainRelayerCfg.SyncTxConfig.ChainHost = "http://127.0.0.1:8801"
 	cfg.EthRelayerCfg[0].BridgeRegistry = x2EthDeployInfo.BridgeRegistry.Address.String()
-	cfg.Chain33RelayerCfg.SyncTxConfig.PushBind = "127.0.0.1:60000"
-	cfg.Chain33RelayerCfg.SyncTxConfig.FetchHeightPeriodMs = 50
+	cfg.ChainRelayerCfg.SyncTxConfig.PushBind = "127.0.0.1:60000"
+	cfg.ChainRelayerCfg.SyncTxConfig.FetchHeightPeriodMs = 50
 	cfg.Dbdriver = "memdb"
 	cfg.DbPath = "datadirEth"
 
 	db := dbm.NewDB("relayer_db_service", cfg.Dbdriver, cfg.DbPath, cfg.DbCache)
 	ethBridgeClaimchan := make(chan *relayerTypes.EthBridgeClaim, 100)
-	chain33Msgchan := make(chan *events.Chain33Msg, 100)
+	chainMsgchan := make(chan *events.ChainMsg, 100)
 
 	relayer := &Relayer4Ethereum{
-		name:                    cfg.EthRelayerCfg[0].EthChainName,
-		provider:                cfg.EthRelayerCfg[0].EthProvider,
-		providerHttp:            cfg.EthRelayerCfg[0].EthProviderCli,
-		db:                      db,
-		unlockchan:              make(chan int, 2),
-		bridgeRegistryAddr:      x2EthDeployInfo.BridgeRegistry.Address,
-		maturityDegree:          1,
-		fetchHeightPeriodMs:     1,
-		totalTxRelayFromChain33: 0,
-		symbol2Addr:             make(map[string]common.Address),
-		symbol2LockAddr:         make(map[string]*ebTypes.TokenAddress),
-		ethBridgeClaimChan:      ethBridgeClaimchan,
-		chain33MsgChan:          chain33Msgchan,
-		Addr2TxNonce:            make(map[common.Address]*ethtxs.NonceMutex),
+		name:                  cfg.EthRelayerCfg[0].EthChainName,
+		provider:              cfg.EthRelayerCfg[0].EthProvider,
+		providerHttp:          cfg.EthRelayerCfg[0].EthProviderCli,
+		db:                    db,
+		unlockchan:            make(chan int, 2),
+		bridgeRegistryAddr:    x2EthDeployInfo.BridgeRegistry.Address,
+		maturityDegree:        1,
+		fetchHeightPeriodMs:   1,
+		totalTxRelayFromChain: 0,
+		symbol2Addr:           make(map[string]common.Address),
+		symbol2LockAddr:       make(map[string]*ebTypes.TokenAddress),
+		ethBridgeClaimChan:    ethBridgeClaimchan,
+		chainMsgChan:          chainMsgchan,
+		Addr2TxNonce:          make(map[common.Address]*ethtxs.NonceMutex),
 		//remindUrl:               cfg.RemindUrl,
 	}
 
@@ -487,7 +487,7 @@ func newEthRelayer(para *ethtxs.DeployPara, sim *ethinterface.SimExtend, x2EthCo
 	relayer.x2EthDeployInfo = x2EthDeployInfo
 	relayer.rwLock.Unlock()
 
-	relayer.totalTxRelayFromChain33 = relayer.getTotalTxAmount2Eth()
+	relayer.totalTxRelayFromChain = relayer.getTotalTxAmount2Eth()
 
 	relayer.rwLock.Lock()
 	_, err := relayer.ImportPrivateKey(passphrase, ethPrivateKeyStr)
@@ -551,8 +551,8 @@ func proc(ethRelayer *Relayer4Ethereum) {
 			ethRelayer.filterLogEvents()
 		case vLog := <-ethRelayer.bridgeBankLog:
 			ethRelayer.storeBridgeBankLogs(vLog, true)
-		case chain33Msg := <-ethRelayer.chain33MsgChan:
-			ethRelayer.handleChain33Msg(chain33Msg)
+		case chainMsg := <-ethRelayer.chainMsgChan:
+			ethRelayer.handleChainMsg(chainMsg)
 		case txRelayAck := <-ethRelayer.txRelayAckRecvChan:
 			ethRelayer.procTxRelayAck(txRelayAck)
 		}

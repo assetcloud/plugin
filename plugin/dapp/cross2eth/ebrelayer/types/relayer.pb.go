@@ -343,7 +343,7 @@ type EthBridgeClaim struct {
 	TokenAddr       string `protobuf:"bytes,4,opt,name=tokenAddr,proto3" json:"tokenAddr,omitempty"`
 	Symbol          string `protobuf:"bytes,5,opt,name=symbol,proto3" json:"symbol,omitempty"`
 	EthereumSender  string `protobuf:"bytes,6,opt,name=ethereumSender,proto3" json:"ethereumSender,omitempty"`
-	Chain33Receiver string `protobuf:"bytes,7,opt,name=chain33Receiver,proto3" json:"chain33Receiver,omitempty"`
+	ChainReceiver string `protobuf:"bytes,7,opt,name=chainReceiver,proto3" json:"chainReceiver,omitempty"`
 	//因为考虑到eth是以wei单位的，需要更大的计数范围，所以使用string类型
 	Amount               string   `protobuf:"bytes,9,opt,name=amount,proto3" json:"amount,omitempty"`
 	ClaimType            int32    `protobuf:"varint,10,opt,name=claimType,proto3" json:"claimType,omitempty"`
@@ -424,9 +424,9 @@ func (m *EthBridgeClaim) GetEthereumSender() string {
 	return ""
 }
 
-func (m *EthBridgeClaim) GetChain33Receiver() string {
+func (m *EthBridgeClaim) GetChainReceiver() string {
 	if m != nil {
-		return m.Chain33Receiver
+		return m.ChainReceiver
 	}
 	return ""
 }
@@ -568,7 +568,7 @@ func (m *RelayerRunStatus) GetDetails() string {
 
 type NewProphecyClaim struct {
 	ClaimType            uint32   `protobuf:"varint,1,opt,name=claimType,proto3" json:"claimType,omitempty"`
-	Chain33Sender        string   `protobuf:"bytes,2,opt,name=chain33Sender,proto3" json:"chain33Sender,omitempty"`
+	ChainSender        string   `protobuf:"bytes,2,opt,name=chainSender,proto3" json:"chainSender,omitempty"`
 	TokenAddr            string   `protobuf:"bytes,3,opt,name=tokenAddr,proto3" json:"tokenAddr,omitempty"`
 	Symbol               string   `protobuf:"bytes,4,opt,name=symbol,proto3" json:"symbol,omitempty"`
 	EthReceiver          string   `protobuf:"bytes,5,opt,name=ethReceiver,proto3" json:"ethReceiver,omitempty"`
@@ -611,9 +611,9 @@ func (m *NewProphecyClaim) GetClaimType() uint32 {
 	return 0
 }
 
-func (m *NewProphecyClaim) GetChain33Sender() string {
+func (m *NewProphecyClaim) GetChainSender() string {
 	if m != nil {
-		return m.Chain33Sender
+		return m.ChainSender
 	}
 	return ""
 }
@@ -830,8 +830,8 @@ type LockEthErc20 struct {
 	OwnerKey  string `protobuf:"bytes,1,opt,name=ownerKey,proto3" json:"ownerKey,omitempty"`
 	TokenAddr string `protobuf:"bytes,2,opt,name=tokenAddr,proto3" json:"tokenAddr,omitempty"`
 	Amount    string `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
-	//将lock住的资产跨链转移到chain33的该账户名下
-	Chain33Receiver      string   `protobuf:"bytes,4,opt,name=chain33Receiver,proto3" json:"chain33Receiver,omitempty"`
+	//将lock住的资产跨链转移到chain的该账户名下
+	ChainReceiver      string   `protobuf:"bytes,4,opt,name=chainReceiver,proto3" json:"chainReceiver,omitempty"`
 	ChainName            string   `protobuf:"bytes,5,opt,name=chainName,proto3" json:"chainName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -884,9 +884,9 @@ func (m *LockEthErc20) GetAmount() string {
 	return ""
 }
 
-func (m *LockEthErc20) GetChain33Receiver() string {
+func (m *LockEthErc20) GetChainReceiver() string {
 	if m != nil {
-		return m.Chain33Receiver
+		return m.ChainReceiver
 	}
 	return ""
 }
@@ -1052,7 +1052,7 @@ type Burn struct {
 	OwnerKey             string   `protobuf:"bytes,1,opt,name=ownerKey,proto3" json:"ownerKey,omitempty"`
 	TokenAddr            string   `protobuf:"bytes,2,opt,name=tokenAddr,proto3" json:"tokenAddr,omitempty"`
 	Amount               string   `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
-	Chain33Receiver      string   `protobuf:"bytes,4,opt,name=chain33Receiver,proto3" json:"chain33Receiver,omitempty"`
+	ChainReceiver      string   `protobuf:"bytes,4,opt,name=chainReceiver,proto3" json:"chainReceiver,omitempty"`
 	ChainName            string   `protobuf:"bytes,5,opt,name=chainName,proto3" json:"chainName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1105,9 +1105,9 @@ func (m *Burn) GetAmount() string {
 	return ""
 }
 
-func (m *Burn) GetChain33Receiver() string {
+func (m *Burn) GetChainReceiver() string {
 	if m != nil {
-		return m.Chain33Receiver
+		return m.ChainReceiver
 	}
 	return ""
 }
@@ -1119,7 +1119,7 @@ func (m *Burn) GetChainName() string {
 	return ""
 }
 
-type BurnFromChain33 struct {
+type BurnFromChain struct {
 	OwnerKey             string   `protobuf:"bytes,1,opt,name=ownerKey,proto3" json:"ownerKey,omitempty"`
 	TokenAddr            string   `protobuf:"bytes,2,opt,name=tokenAddr,proto3" json:"tokenAddr,omitempty"`
 	Amount               string   `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -1129,53 +1129,53 @@ type BurnFromChain33 struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *BurnFromChain33) Reset()         { *m = BurnFromChain33{} }
-func (m *BurnFromChain33) String() string { return proto.CompactTextString(m) }
-func (*BurnFromChain33) ProtoMessage()    {}
-func (*BurnFromChain33) Descriptor() ([]byte, []int) {
+func (m *BurnFromChain) Reset()         { *m = BurnFromChain{} }
+func (m *BurnFromChain) String() string { return proto.CompactTextString(m) }
+func (*BurnFromChain) ProtoMessage()    {}
+func (*BurnFromChain) Descriptor() ([]byte, []int) {
 	return fileDescriptor_202a89775a80bd4c, []int{19}
 }
 
-func (m *BurnFromChain33) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_BurnFromChain33.Unmarshal(m, b)
+func (m *BurnFromChain) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_BurnFromChain.Unmarshal(m, b)
 }
-func (m *BurnFromChain33) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_BurnFromChain33.Marshal(b, m, deterministic)
+func (m *BurnFromChain) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_BurnFromChain.Marshal(b, m, deterministic)
 }
-func (m *BurnFromChain33) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BurnFromChain33.Merge(m, src)
+func (m *BurnFromChain) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BurnFromChain.Merge(m, src)
 }
-func (m *BurnFromChain33) XXX_Size() int {
-	return xxx_messageInfo_BurnFromChain33.Size(m)
+func (m *BurnFromChain) XXX_Size() int {
+	return xxx_messageInfo_BurnFromChain.Size(m)
 }
-func (m *BurnFromChain33) XXX_DiscardUnknown() {
-	xxx_messageInfo_BurnFromChain33.DiscardUnknown(m)
+func (m *BurnFromChain) XXX_DiscardUnknown() {
+	xxx_messageInfo_BurnFromChain.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_BurnFromChain33 proto.InternalMessageInfo
+var xxx_messageInfo_BurnFromChain proto.InternalMessageInfo
 
-func (m *BurnFromChain33) GetOwnerKey() string {
+func (m *BurnFromChain) GetOwnerKey() string {
 	if m != nil {
 		return m.OwnerKey
 	}
 	return ""
 }
 
-func (m *BurnFromChain33) GetTokenAddr() string {
+func (m *BurnFromChain) GetTokenAddr() string {
 	if m != nil {
 		return m.TokenAddr
 	}
 	return ""
 }
 
-func (m *BurnFromChain33) GetAmount() string {
+func (m *BurnFromChain) GetAmount() string {
 	if m != nil {
 		return m.Amount
 	}
 	return ""
 }
 
-func (m *BurnFromChain33) GetEthereumReceiver() string {
+func (m *BurnFromChain) GetEthereumReceiver() string {
 	if m != nil {
 		return m.EthereumReceiver
 	}
@@ -1339,13 +1339,13 @@ func (m *EventLogIndex) GetIndex() uint32 {
 	return 0
 }
 
-type Chain33ToEthereumStatics struct {
+type ChainToEthereumStatics struct {
 	EthTxstatus      string `protobuf:"bytes,1,opt,name=ethTxstatus,proto3" json:"ethTxstatus,omitempty"`
-	Chain33Txhash    string `protobuf:"bytes,2,opt,name=chain33Txhash,proto3" json:"chain33Txhash,omitempty"`
+	ChainTxhash    string `protobuf:"bytes,2,opt,name=chainTxhash,proto3" json:"chainTxhash,omitempty"`
 	EthereumTxhash   string `protobuf:"bytes,3,opt,name=EthereumTxhash,proto3" json:"EthereumTxhash,omitempty"`
 	BurnLockWithdraw int32  `protobuf:"varint,4,opt,name=burnLockWithdraw,proto3" json:"burnLockWithdraw,omitempty"`
-	//该笔lock或者burn交易的chain33发起人
-	Chain33Sender    string `protobuf:"bytes,5,opt,name=chain33Sender,proto3" json:"chain33Sender,omitempty"`
+	//该笔lock或者burn交易的chain发起人
+	ChainSender    string `protobuf:"bytes,5,opt,name=chainSender,proto3" json:"chainSender,omitempty"`
 	EthereumReceiver string `protobuf:"bytes,6,opt,name=ethereumReceiver,proto3" json:"ethereumReceiver,omitempty"`
 	Symbol           string `protobuf:"bytes,7,opt,name=symbol,proto3" json:"symbol,omitempty"`
 	//因为考虑到,eth的单位是以wei计算的，所以使用string类型
@@ -1358,116 +1358,116 @@ type Chain33ToEthereumStatics struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Chain33ToEthereumStatics) Reset()         { *m = Chain33ToEthereumStatics{} }
-func (m *Chain33ToEthereumStatics) String() string { return proto.CompactTextString(m) }
-func (*Chain33ToEthereumStatics) ProtoMessage()    {}
-func (*Chain33ToEthereumStatics) Descriptor() ([]byte, []int) {
+func (m *ChainToEthereumStatics) Reset()         { *m = ChainToEthereumStatics{} }
+func (m *ChainToEthereumStatics) String() string { return proto.CompactTextString(m) }
+func (*ChainToEthereumStatics) ProtoMessage()    {}
+func (*ChainToEthereumStatics) Descriptor() ([]byte, []int) {
 	return fileDescriptor_202a89775a80bd4c, []int{23}
 }
 
-func (m *Chain33ToEthereumStatics) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Chain33ToEthereumStatics.Unmarshal(m, b)
+func (m *ChainToEthereumStatics) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ChainToEthereumStatics.Unmarshal(m, b)
 }
-func (m *Chain33ToEthereumStatics) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Chain33ToEthereumStatics.Marshal(b, m, deterministic)
+func (m *ChainToEthereumStatics) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ChainToEthereumStatics.Marshal(b, m, deterministic)
 }
-func (m *Chain33ToEthereumStatics) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Chain33ToEthereumStatics.Merge(m, src)
+func (m *ChainToEthereumStatics) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ChainToEthereumStatics.Merge(m, src)
 }
-func (m *Chain33ToEthereumStatics) XXX_Size() int {
-	return xxx_messageInfo_Chain33ToEthereumStatics.Size(m)
+func (m *ChainToEthereumStatics) XXX_Size() int {
+	return xxx_messageInfo_ChainToEthereumStatics.Size(m)
 }
-func (m *Chain33ToEthereumStatics) XXX_DiscardUnknown() {
-	xxx_messageInfo_Chain33ToEthereumStatics.DiscardUnknown(m)
+func (m *ChainToEthereumStatics) XXX_DiscardUnknown() {
+	xxx_messageInfo_ChainToEthereumStatics.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Chain33ToEthereumStatics proto.InternalMessageInfo
+var xxx_messageInfo_ChainToEthereumStatics proto.InternalMessageInfo
 
-func (m *Chain33ToEthereumStatics) GetEthTxstatus() string {
+func (m *ChainToEthereumStatics) GetEthTxstatus() string {
 	if m != nil {
 		return m.EthTxstatus
 	}
 	return ""
 }
 
-func (m *Chain33ToEthereumStatics) GetChain33Txhash() string {
+func (m *ChainToEthereumStatics) GetChainTxhash() string {
 	if m != nil {
-		return m.Chain33Txhash
+		return m.ChainTxhash
 	}
 	return ""
 }
 
-func (m *Chain33ToEthereumStatics) GetEthereumTxhash() string {
+func (m *ChainToEthereumStatics) GetEthereumTxhash() string {
 	if m != nil {
 		return m.EthereumTxhash
 	}
 	return ""
 }
 
-func (m *Chain33ToEthereumStatics) GetBurnLockWithdraw() int32 {
+func (m *ChainToEthereumStatics) GetBurnLockWithdraw() int32 {
 	if m != nil {
 		return m.BurnLockWithdraw
 	}
 	return 0
 }
 
-func (m *Chain33ToEthereumStatics) GetChain33Sender() string {
+func (m *ChainToEthereumStatics) GetChainSender() string {
 	if m != nil {
-		return m.Chain33Sender
+		return m.ChainSender
 	}
 	return ""
 }
 
-func (m *Chain33ToEthereumStatics) GetEthereumReceiver() string {
+func (m *ChainToEthereumStatics) GetEthereumReceiver() string {
 	if m != nil {
 		return m.EthereumReceiver
 	}
 	return ""
 }
 
-func (m *Chain33ToEthereumStatics) GetSymbol() string {
+func (m *ChainToEthereumStatics) GetSymbol() string {
 	if m != nil {
 		return m.Symbol
 	}
 	return ""
 }
 
-func (m *Chain33ToEthereumStatics) GetAmount() string {
+func (m *ChainToEthereumStatics) GetAmount() string {
 	if m != nil {
 		return m.Amount
 	}
 	return ""
 }
 
-func (m *Chain33ToEthereumStatics) GetNonce() int64 {
+func (m *ChainToEthereumStatics) GetNonce() int64 {
 	if m != nil {
 		return m.Nonce
 	}
 	return 0
 }
 
-func (m *Chain33ToEthereumStatics) GetTxIndex() int64 {
+func (m *ChainToEthereumStatics) GetTxIndex() int64 {
 	if m != nil {
 		return m.TxIndex
 	}
 	return 0
 }
 
-func (m *Chain33ToEthereumStatics) GetOperationType() string {
+func (m *ChainToEthereumStatics) GetOperationType() string {
 	if m != nil {
 		return m.OperationType
 	}
 	return ""
 }
 
-type Ethereum2Chain33Statics struct {
-	Chain33Txstatus string `protobuf:"bytes,1,opt,name=chain33Txstatus,proto3" json:"chain33Txstatus,omitempty"`
-	Chain33Txhash   string `protobuf:"bytes,2,opt,name=chain33Txhash,proto3" json:"chain33Txhash,omitempty"`
+type Ethereum2ChainStatics struct {
+	ChainTxstatus string `protobuf:"bytes,1,opt,name=chainTxstatus,proto3" json:"chainTxstatus,omitempty"`
+	ChainTxhash   string `protobuf:"bytes,2,opt,name=chainTxhash,proto3" json:"chainTxhash,omitempty"`
 	EthereumTxhash  string `protobuf:"bytes,3,opt,name=EthereumTxhash,proto3" json:"EthereumTxhash,omitempty"`
 	BurnLock        int32  `protobuf:"varint,4,opt,name=burnLock,proto3" json:"burnLock,omitempty"`
-	//该笔lock或者burn交易的chain33发起人
+	//该笔lock或者burn交易的chain发起人
 	EthereumSender  string `protobuf:"bytes,5,opt,name=ethereumSender,proto3" json:"ethereumSender,omitempty"`
-	Chain33Receiver string `protobuf:"bytes,6,opt,name=chain33Receiver,proto3" json:"chain33Receiver,omitempty"`
+	ChainReceiver string `protobuf:"bytes,6,opt,name=chainReceiver,proto3" json:"chainReceiver,omitempty"`
 	Symbol          string `protobuf:"bytes,7,opt,name=symbol,proto3" json:"symbol,omitempty"`
 	//因为考虑到,eth的单位是以wei计算的，所以使用string类型
 	Amount               string   `protobuf:"bytes,8,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -1479,102 +1479,102 @@ type Ethereum2Chain33Statics struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Ethereum2Chain33Statics) Reset()         { *m = Ethereum2Chain33Statics{} }
-func (m *Ethereum2Chain33Statics) String() string { return proto.CompactTextString(m) }
-func (*Ethereum2Chain33Statics) ProtoMessage()    {}
-func (*Ethereum2Chain33Statics) Descriptor() ([]byte, []int) {
+func (m *Ethereum2ChainStatics) Reset()         { *m = Ethereum2ChainStatics{} }
+func (m *Ethereum2ChainStatics) String() string { return proto.CompactTextString(m) }
+func (*Ethereum2ChainStatics) ProtoMessage()    {}
+func (*Ethereum2ChainStatics) Descriptor() ([]byte, []int) {
 	return fileDescriptor_202a89775a80bd4c, []int{24}
 }
 
-func (m *Ethereum2Chain33Statics) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Ethereum2Chain33Statics.Unmarshal(m, b)
+func (m *Ethereum2ChainStatics) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Ethereum2ChainStatics.Unmarshal(m, b)
 }
-func (m *Ethereum2Chain33Statics) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Ethereum2Chain33Statics.Marshal(b, m, deterministic)
+func (m *Ethereum2ChainStatics) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Ethereum2ChainStatics.Marshal(b, m, deterministic)
 }
-func (m *Ethereum2Chain33Statics) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Ethereum2Chain33Statics.Merge(m, src)
+func (m *Ethereum2ChainStatics) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Ethereum2ChainStatics.Merge(m, src)
 }
-func (m *Ethereum2Chain33Statics) XXX_Size() int {
-	return xxx_messageInfo_Ethereum2Chain33Statics.Size(m)
+func (m *Ethereum2ChainStatics) XXX_Size() int {
+	return xxx_messageInfo_Ethereum2ChainStatics.Size(m)
 }
-func (m *Ethereum2Chain33Statics) XXX_DiscardUnknown() {
-	xxx_messageInfo_Ethereum2Chain33Statics.DiscardUnknown(m)
+func (m *Ethereum2ChainStatics) XXX_DiscardUnknown() {
+	xxx_messageInfo_Ethereum2ChainStatics.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Ethereum2Chain33Statics proto.InternalMessageInfo
+var xxx_messageInfo_Ethereum2ChainStatics proto.InternalMessageInfo
 
-func (m *Ethereum2Chain33Statics) GetChain33Txstatus() string {
+func (m *Ethereum2ChainStatics) GetChainTxstatus() string {
 	if m != nil {
-		return m.Chain33Txstatus
+		return m.ChainTxstatus
 	}
 	return ""
 }
 
-func (m *Ethereum2Chain33Statics) GetChain33Txhash() string {
+func (m *Ethereum2ChainStatics) GetChainTxhash() string {
 	if m != nil {
-		return m.Chain33Txhash
+		return m.ChainTxhash
 	}
 	return ""
 }
 
-func (m *Ethereum2Chain33Statics) GetEthereumTxhash() string {
+func (m *Ethereum2ChainStatics) GetEthereumTxhash() string {
 	if m != nil {
 		return m.EthereumTxhash
 	}
 	return ""
 }
 
-func (m *Ethereum2Chain33Statics) GetBurnLock() int32 {
+func (m *Ethereum2ChainStatics) GetBurnLock() int32 {
 	if m != nil {
 		return m.BurnLock
 	}
 	return 0
 }
 
-func (m *Ethereum2Chain33Statics) GetEthereumSender() string {
+func (m *Ethereum2ChainStatics) GetEthereumSender() string {
 	if m != nil {
 		return m.EthereumSender
 	}
 	return ""
 }
 
-func (m *Ethereum2Chain33Statics) GetChain33Receiver() string {
+func (m *Ethereum2ChainStatics) GetChainReceiver() string {
 	if m != nil {
-		return m.Chain33Receiver
+		return m.ChainReceiver
 	}
 	return ""
 }
 
-func (m *Ethereum2Chain33Statics) GetSymbol() string {
+func (m *Ethereum2ChainStatics) GetSymbol() string {
 	if m != nil {
 		return m.Symbol
 	}
 	return ""
 }
 
-func (m *Ethereum2Chain33Statics) GetAmount() string {
+func (m *Ethereum2ChainStatics) GetAmount() string {
 	if m != nil {
 		return m.Amount
 	}
 	return ""
 }
 
-func (m *Ethereum2Chain33Statics) GetNonce() int64 {
+func (m *Ethereum2ChainStatics) GetNonce() int64 {
 	if m != nil {
 		return m.Nonce
 	}
 	return 0
 }
 
-func (m *Ethereum2Chain33Statics) GetTxIndex() int64 {
+func (m *Ethereum2ChainStatics) GetTxIndex() int64 {
 	if m != nil {
 		return m.TxIndex
 	}
 	return 0
 }
 
-func (m *Ethereum2Chain33Statics) GetOperationType() string {
+func (m *Ethereum2ChainStatics) GetOperationType() string {
 	if m != nil {
 		return m.OperationType
 	}
@@ -1763,8 +1763,8 @@ func (m *TokenStaticsRequest) GetCount() int32 {
 }
 
 type TokenStaticsResponse struct {
-	E2Cstatics           []*Ethereum2Chain33Statics  `protobuf:"bytes,1,rep,name=e2Cstatics,proto3" json:"e2Cstatics,omitempty"`
-	C2Estatics           []*Chain33ToEthereumStatics `protobuf:"bytes,2,rep,name=c2Estatics,proto3" json:"c2Estatics,omitempty"`
+	E2Cstatics           []*Ethereum2ChainStatics  `protobuf:"bytes,1,rep,name=e2Cstatics,proto3" json:"e2Cstatics,omitempty"`
+	C2Estatics           []*ChainToEthereumStatics `protobuf:"bytes,2,rep,name=c2Estatics,proto3" json:"c2Estatics,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
 	XXX_unrecognized     []byte                      `json:"-"`
 	XXX_sizecache        int32                       `json:"-"`
@@ -1795,14 +1795,14 @@ func (m *TokenStaticsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_TokenStaticsResponse proto.InternalMessageInfo
 
-func (m *TokenStaticsResponse) GetE2Cstatics() []*Ethereum2Chain33Statics {
+func (m *TokenStaticsResponse) GetE2Cstatics() []*Ethereum2ChainStatics {
 	if m != nil {
 		return m.E2Cstatics
 	}
 	return nil
 }
 
-func (m *TokenStaticsResponse) GetC2Estatics() []*Chain33ToEthereumStatics {
+func (m *TokenStaticsResponse) GetC2Estatics() []*ChainToEthereumStatics {
 	if m != nil {
 		return m.C2Estatics
 	}
@@ -2187,39 +2187,39 @@ func (m *BalanceLockedReq) GetChainName() string {
 	return ""
 }
 
-type ResendChain33EventReq struct {
+type ResendChainEventReq struct {
 	Height               int64    `protobuf:"varint,1,opt,name=height,proto3" json:"height,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ResendChain33EventReq) Reset()         { *m = ResendChain33EventReq{} }
-func (m *ResendChain33EventReq) String() string { return proto.CompactTextString(m) }
-func (*ResendChain33EventReq) ProtoMessage()    {}
-func (*ResendChain33EventReq) Descriptor() ([]byte, []int) {
+func (m *ResendChainEventReq) Reset()         { *m = ResendChainEventReq{} }
+func (m *ResendChainEventReq) String() string { return proto.CompactTextString(m) }
+func (*ResendChainEventReq) ProtoMessage()    {}
+func (*ResendChainEventReq) Descriptor() ([]byte, []int) {
 	return fileDescriptor_202a89775a80bd4c, []int{35}
 }
 
-func (m *ResendChain33EventReq) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ResendChain33EventReq.Unmarshal(m, b)
+func (m *ResendChainEventReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ResendChainEventReq.Unmarshal(m, b)
 }
-func (m *ResendChain33EventReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ResendChain33EventReq.Marshal(b, m, deterministic)
+func (m *ResendChainEventReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ResendChainEventReq.Marshal(b, m, deterministic)
 }
-func (m *ResendChain33EventReq) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ResendChain33EventReq.Merge(m, src)
+func (m *ResendChainEventReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ResendChainEventReq.Merge(m, src)
 }
-func (m *ResendChain33EventReq) XXX_Size() int {
-	return xxx_messageInfo_ResendChain33EventReq.Size(m)
+func (m *ResendChainEventReq) XXX_Size() int {
+	return xxx_messageInfo_ResendChainEventReq.Size(m)
 }
-func (m *ResendChain33EventReq) XXX_DiscardUnknown() {
-	xxx_messageInfo_ResendChain33EventReq.DiscardUnknown(m)
+func (m *ResendChainEventReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_ResendChainEventReq.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ResendChain33EventReq proto.InternalMessageInfo
+var xxx_messageInfo_ResendChainEventReq proto.InternalMessageInfo
 
-func (m *ResendChain33EventReq) GetHeight() int64 {
+func (m *ResendChainEventReq) GetHeight() int64 {
 	if m != nil {
 		return m.Height
 	}
@@ -2486,12 +2486,12 @@ func (m *WithdrawSymbol2Para) GetSymbol2Para() map[string]*WithdrawPara {
 }
 
 type WithdrawTx struct {
-	Chain33Sender        string   `protobuf:"bytes,1,opt,name=chain33Sender,proto3" json:"chain33Sender,omitempty"`
+	ChainSender        string   `protobuf:"bytes,1,opt,name=chainSender,proto3" json:"chainSender,omitempty"`
 	EthereumReceiver     string   `protobuf:"bytes,2,opt,name=ethereumReceiver,proto3" json:"ethereumReceiver,omitempty"`
 	Symbol               string   `protobuf:"bytes,4,opt,name=symbol,proto3" json:"symbol,omitempty"`
 	Amount               string   `protobuf:"bytes,5,opt,name=amount,proto3" json:"amount,omitempty"`
 	Nonce                int64    `protobuf:"varint,6,opt,name=nonce,proto3" json:"nonce,omitempty"`
-	TxHashOnChain33      string   `protobuf:"bytes,7,opt,name=txHashOnChain33,proto3" json:"txHashOnChain33,omitempty"`
+	TxHashOnChain      string   `protobuf:"bytes,7,opt,name=txHashOnChain,proto3" json:"txHashOnChain,omitempty"`
 	TxHashOnEthereum     string   `protobuf:"bytes,8,opt,name=txHashOnEthereum,proto3" json:"txHashOnEthereum,omitempty"`
 	Year                 int32    `protobuf:"varint,9,opt,name=year,proto3" json:"year,omitempty"`
 	Month                int32    `protobuf:"varint,10,opt,name=month,proto3" json:"month,omitempty"`
@@ -2529,9 +2529,9 @@ func (m *WithdrawTx) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_WithdrawTx proto.InternalMessageInfo
 
-func (m *WithdrawTx) GetChain33Sender() string {
+func (m *WithdrawTx) GetChainSender() string {
 	if m != nil {
-		return m.Chain33Sender
+		return m.ChainSender
 	}
 	return ""
 }
@@ -2564,9 +2564,9 @@ func (m *WithdrawTx) GetNonce() int64 {
 	return 0
 }
 
-func (m *WithdrawTx) GetTxHashOnChain33() string {
+func (m *WithdrawTx) GetTxHashOnChain() string {
 	if m != nil {
-		return m.TxHashOnChain33
+		return m.TxHashOnChain
 	}
 	return ""
 }
@@ -2620,7 +2620,7 @@ func (m *WithdrawTx) GetErrorDescription() string {
 	return ""
 }
 
-type WithdrawFromChain33 struct {
+type WithdrawFromChain struct {
 	OwnerKey             string   `protobuf:"bytes,1,opt,name=ownerKey,proto3" json:"ownerKey,omitempty"`
 	TokenAddr            string   `protobuf:"bytes,2,opt,name=tokenAddr,proto3" json:"tokenAddr,omitempty"`
 	Amount               string   `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -2630,53 +2630,53 @@ type WithdrawFromChain33 struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *WithdrawFromChain33) Reset()         { *m = WithdrawFromChain33{} }
-func (m *WithdrawFromChain33) String() string { return proto.CompactTextString(m) }
-func (*WithdrawFromChain33) ProtoMessage()    {}
-func (*WithdrawFromChain33) Descriptor() ([]byte, []int) {
+func (m *WithdrawFromChain) Reset()         { *m = WithdrawFromChain{} }
+func (m *WithdrawFromChain) String() string { return proto.CompactTextString(m) }
+func (*WithdrawFromChain) ProtoMessage()    {}
+func (*WithdrawFromChain) Descriptor() ([]byte, []int) {
 	return fileDescriptor_202a89775a80bd4c, []int{42}
 }
 
-func (m *WithdrawFromChain33) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_WithdrawFromChain33.Unmarshal(m, b)
+func (m *WithdrawFromChain) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_WithdrawFromChain.Unmarshal(m, b)
 }
-func (m *WithdrawFromChain33) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_WithdrawFromChain33.Marshal(b, m, deterministic)
+func (m *WithdrawFromChain) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_WithdrawFromChain.Marshal(b, m, deterministic)
 }
-func (m *WithdrawFromChain33) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_WithdrawFromChain33.Merge(m, src)
+func (m *WithdrawFromChain) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_WithdrawFromChain.Merge(m, src)
 }
-func (m *WithdrawFromChain33) XXX_Size() int {
-	return xxx_messageInfo_WithdrawFromChain33.Size(m)
+func (m *WithdrawFromChain) XXX_Size() int {
+	return xxx_messageInfo_WithdrawFromChain.Size(m)
 }
-func (m *WithdrawFromChain33) XXX_DiscardUnknown() {
-	xxx_messageInfo_WithdrawFromChain33.DiscardUnknown(m)
+func (m *WithdrawFromChain) XXX_DiscardUnknown() {
+	xxx_messageInfo_WithdrawFromChain.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_WithdrawFromChain33 proto.InternalMessageInfo
+var xxx_messageInfo_WithdrawFromChain proto.InternalMessageInfo
 
-func (m *WithdrawFromChain33) GetOwnerKey() string {
+func (m *WithdrawFromChain) GetOwnerKey() string {
 	if m != nil {
 		return m.OwnerKey
 	}
 	return ""
 }
 
-func (m *WithdrawFromChain33) GetTokenAddr() string {
+func (m *WithdrawFromChain) GetTokenAddr() string {
 	if m != nil {
 		return m.TokenAddr
 	}
 	return ""
 }
 
-func (m *WithdrawFromChain33) GetAmount() string {
+func (m *WithdrawFromChain) GetAmount() string {
 	if m != nil {
 		return m.Amount
 	}
 	return ""
 }
 
-func (m *WithdrawFromChain33) GetEthereumReceiver() string {
+func (m *WithdrawFromChain) GetEthereumReceiver() string {
 	if m != nil {
 		return m.EthereumReceiver
 	}
@@ -2997,7 +2997,7 @@ func (m *CreateLockEventReq) GetChainName() string {
 	return ""
 }
 
-type TxRelayConfirm4Chain33 struct {
+type TxRelayConfirm4Chain struct {
 	EventType            int32    `protobuf:"varint,1,opt,name=eventType,proto3" json:"eventType,omitempty"`
 	Data                 []byte   `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	FdTimes              int32    `protobuf:"varint,3,opt,name=fdTimes,proto3" json:"fdTimes,omitempty"`
@@ -3010,74 +3010,74 @@ type TxRelayConfirm4Chain33 struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *TxRelayConfirm4Chain33) Reset()         { *m = TxRelayConfirm4Chain33{} }
-func (m *TxRelayConfirm4Chain33) String() string { return proto.CompactTextString(m) }
-func (*TxRelayConfirm4Chain33) ProtoMessage()    {}
-func (*TxRelayConfirm4Chain33) Descriptor() ([]byte, []int) {
+func (m *TxRelayConfirm4Chain) Reset()         { *m = TxRelayConfirm4Chain{} }
+func (m *TxRelayConfirm4Chain) String() string { return proto.CompactTextString(m) }
+func (*TxRelayConfirm4Chain) ProtoMessage()    {}
+func (*TxRelayConfirm4Chain) Descriptor() ([]byte, []int) {
 	return fileDescriptor_202a89775a80bd4c, []int{49}
 }
 
-func (m *TxRelayConfirm4Chain33) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_TxRelayConfirm4Chain33.Unmarshal(m, b)
+func (m *TxRelayConfirm4Chain) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TxRelayConfirm4Chain.Unmarshal(m, b)
 }
-func (m *TxRelayConfirm4Chain33) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_TxRelayConfirm4Chain33.Marshal(b, m, deterministic)
+func (m *TxRelayConfirm4Chain) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TxRelayConfirm4Chain.Marshal(b, m, deterministic)
 }
-func (m *TxRelayConfirm4Chain33) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TxRelayConfirm4Chain33.Merge(m, src)
+func (m *TxRelayConfirm4Chain) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TxRelayConfirm4Chain.Merge(m, src)
 }
-func (m *TxRelayConfirm4Chain33) XXX_Size() int {
-	return xxx_messageInfo_TxRelayConfirm4Chain33.Size(m)
+func (m *TxRelayConfirm4Chain) XXX_Size() int {
+	return xxx_messageInfo_TxRelayConfirm4Chain.Size(m)
 }
-func (m *TxRelayConfirm4Chain33) XXX_DiscardUnknown() {
-	xxx_messageInfo_TxRelayConfirm4Chain33.DiscardUnknown(m)
+func (m *TxRelayConfirm4Chain) XXX_DiscardUnknown() {
+	xxx_messageInfo_TxRelayConfirm4Chain.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_TxRelayConfirm4Chain33 proto.InternalMessageInfo
+var xxx_messageInfo_TxRelayConfirm4Chain proto.InternalMessageInfo
 
-func (m *TxRelayConfirm4Chain33) GetEventType() int32 {
+func (m *TxRelayConfirm4Chain) GetEventType() int32 {
 	if m != nil {
 		return m.EventType
 	}
 	return 0
 }
 
-func (m *TxRelayConfirm4Chain33) GetData() []byte {
+func (m *TxRelayConfirm4Chain) GetData() []byte {
 	if m != nil {
 		return m.Data
 	}
 	return nil
 }
 
-func (m *TxRelayConfirm4Chain33) GetFdTimes() int32 {
+func (m *TxRelayConfirm4Chain) GetFdTimes() int32 {
 	if m != nil {
 		return m.FdTimes
 	}
 	return 0
 }
 
-func (m *TxRelayConfirm4Chain33) GetFdIndex() int64 {
+func (m *TxRelayConfirm4Chain) GetFdIndex() int64 {
 	if m != nil {
 		return m.FdIndex
 	}
 	return 0
 }
 
-func (m *TxRelayConfirm4Chain33) GetToChainName() string {
+func (m *TxRelayConfirm4Chain) GetToChainName() string {
 	if m != nil {
 		return m.ToChainName
 	}
 	return ""
 }
 
-func (m *TxRelayConfirm4Chain33) GetTxHash() []byte {
+func (m *TxRelayConfirm4Chain) GetTxHash() []byte {
 	if m != nil {
 		return m.TxHash
 	}
 	return nil
 }
 
-func (m *TxRelayConfirm4Chain33) GetResend() bool {
+func (m *TxRelayConfirm4Chain) GetResend() bool {
 	if m != nil {
 		return m.Resend
 	}
@@ -3412,12 +3412,12 @@ func init() {
 	proto.RegisterType((*ReplyAddr)(nil), "types.ReplyAddr")
 	proto.RegisterType((*ReplyBalance)(nil), "types.ReplyBalance")
 	proto.RegisterType((*Burn)(nil), "types.Burn")
-	proto.RegisterType((*BurnFromChain33)(nil), "types.BurnFromChain33")
+	proto.RegisterType((*BurnFromChain)(nil), "types.BurnFromChain")
 	proto.RegisterType((*TransferToken)(nil), "types.TransferToken")
 	proto.RegisterType((*Uint64)(nil), "types.Uint64")
 	proto.RegisterType((*EventLogIndex)(nil), "types.EventLogIndex")
-	proto.RegisterType((*Chain33ToEthereumStatics)(nil), "types.Chain33ToEthereumStatics")
-	proto.RegisterType((*Ethereum2Chain33Statics)(nil), "types.Ethereum2Chain33Statics")
+	proto.RegisterType((*ChainToEthereumStatics)(nil), "types.ChainToEthereumStatics")
+	proto.RegisterType((*Ethereum2ChainStatics)(nil), "types.Ethereum2ChainStatics")
 	proto.RegisterType((*TokenAddress)(nil), "types.TokenAddress")
 	proto.RegisterType((*TokenAddressArray)(nil), "types.TokenAddressArray")
 	proto.RegisterType((*TokenStaticsRequest)(nil), "types.TokenStaticsRequest")
@@ -3428,7 +3428,7 @@ func init() {
 	proto.RegisterType((*ETHTokenLockAddress)(nil), "types.ETHTokenLockAddress")
 	proto.RegisterType((*ETHConfigLockedTokenOffline)(nil), "types.ETHConfigLockedTokenOffline")
 	proto.RegisterType((*BalanceLockedReq)(nil), "types.BalanceLockedReq")
-	proto.RegisterType((*ResendChain33EventReq)(nil), "types.ResendChain33EventReq")
+	proto.RegisterType((*ResendChainEventReq)(nil), "types.ResendChainEventReq")
 	proto.RegisterType((*ResendEthereumEventReq)(nil), "types.ResendEthereumEventReq")
 	proto.RegisterType((*RegetEthereumEventReq)(nil), "types.RegetEthereumEventReq")
 	proto.RegisterType((*CfgWithdrawReq)(nil), "types.CfgWithdrawReq")
@@ -3436,7 +3436,7 @@ func init() {
 	proto.RegisterType((*WithdrawSymbol2Para)(nil), "types.WithdrawSymbol2Para")
 	proto.RegisterMapType((map[string]*WithdrawPara)(nil), "types.WithdrawSymbol2Para.Symbol2ParaEntry")
 	proto.RegisterType((*WithdrawTx)(nil), "types.WithdrawTx")
-	proto.RegisterType((*WithdrawFromChain33)(nil), "types.WithdrawFromChain33")
+	proto.RegisterType((*WithdrawFromChain)(nil), "types.WithdrawFromChain")
 	proto.RegisterType((*TxReceiptReq)(nil), "types.TxReceiptReq")
 	proto.RegisterType((*CfgOfflineSaveAccountReq)(nil), "types.CfgOfflineSaveAccountReq")
 	proto.RegisterType((*CfgPlatformTokenSymbolReq)(nil), "types.CfgPlatformTokenSymbolReq")
@@ -3444,7 +3444,7 @@ func init() {
 	proto.RegisterType((*Symbol2EthChain)(nil), "types.Symbol2EthChain")
 	proto.RegisterMapType((map[string]string)(nil), "types.Symbol2EthChain.Symbol2nameEntry")
 	proto.RegisterType((*CreateLockEventReq)(nil), "types.CreateLockEventReq")
-	proto.RegisterType((*TxRelayConfirm4Chain33)(nil), "types.TxRelayConfirm4Chain33")
+	proto.RegisterType((*TxRelayConfirm4Chain)(nil), "types.TxRelayConfirm4Chain")
 	proto.RegisterType((*TxRelayConfirm4Ethereum)(nil), "types.TxRelayConfirm4Ethereum")
 	proto.RegisterType((*TxRelayAck)(nil), "types.TxRelayAck")
 	proto.RegisterType((*RelayTxDetail)(nil), "types.relayTxDetail")

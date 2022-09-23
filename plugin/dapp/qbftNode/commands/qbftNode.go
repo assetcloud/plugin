@@ -304,7 +304,7 @@ func createFiles(cmd *cobra.Command, args []string) {
 
 	// genesis file
 	genDoc := ttypes.GenesisDoc{
-		ChainID:     fmt.Sprintf("chain33-%v", RandStr(6)),
+		ChainID:     fmt.Sprintf("chain-%v", RandStr(6)),
 		GenesisTime: time.Now(),
 	}
 

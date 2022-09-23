@@ -5,10 +5,10 @@
 package executor
 
 import (
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/account"
 	"github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 // 注： 在计算帐号地址时， 平行链paracross合约地址需要带上title前缀，才能表现出和主链一致, 但是现在不带，
@@ -20,7 +20,7 @@ import (
 // symbol: coins.bty, token.{TEST}
 // 完整的帐号地址 mavl-{paracross}-coins.bty-{user-address} 不带title{paracross}
 // 对应主链上paracross 子帐号 malv-coins-bty-exec-{Address(paracross)}:{Address(user.p.{guodun}.paracross)}
-func NewParaAccount(cfg *types.Chain33Config, paraTitle, mainExecName, mainSymbol string, db db.KV) (*account.DB, error) {
+func NewParaAccount(cfg *types.ChainConfig, paraTitle, mainExecName, mainSymbol string, db db.KV) (*account.DB, error) {
 	// 按照现在的配置， title 是 带 "." 做结尾
 	// paraExec := paraTitle + types.ParaX
 	paraExec := pt.ParaX // 现在平行链是执行器注册和算地址是不带前缀的，
@@ -35,7 +35,7 @@ func NewParaAccount(cfg *types.Chain33Config, paraTitle, mainExecName, mainSymbo
 // symbol: user.p.{guodun}.coins.{guodun}  user.p.{guodun}.token.{TEST}
 // 完整的帐号地址 mavl-paracross-user.p.{guodun}.coins.guodun-{user-address}
 // 对应平行链上子地址  mavl-coins-{guodun}-exec-{Address(paracross)}:{Address(paracross)}
-func NewMainAccount(cfg *types.Chain33Config, paraTitle, paraExecName, paraSymbol string, db db.KV) (*account.DB, error) {
+func NewMainAccount(cfg *types.ChainConfig, paraTitle, paraExecName, paraSymbol string, db db.KV) (*account.DB, error) {
 	mainSymbol := paraTitle + paraExecName + "." + paraSymbol
 	return account.NewAccountDB(cfg, pt.ParaX, mainSymbol, db)
 }

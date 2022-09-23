@@ -33,7 +33,7 @@ func (suite *NodeManageTestSuite) testSupervisionExec() {
 func (suite *NodeManageTestSuite) testSupervisionNodeConfigCancel(addr, privKey string) {
 	// Apply
 	config := &pt.ParaNodeGroupConfig{
-		Title: chain33TestCfg.GetTitle(),
+		Title: chainTestCfg.GetTitle(),
 		Op:    pt.ParacrossSupervisionNodeApply,
 		Addrs: addr,
 	}
@@ -47,7 +47,7 @@ func (suite *NodeManageTestSuite) testSupervisionNodeConfigCancel(addr, privKey 
 
 	// cancel
 	config = &pt.ParaNodeGroupConfig{
-		Title: chain33TestCfg.GetTitle(),
+		Title: chainTestCfg.GetTitle(),
 		Op:    pt.ParacrossSupervisionNodeCancel,
 		Id:    getParaNodeIDSuffix(g.Current.Id),
 	}
@@ -58,7 +58,7 @@ func (suite *NodeManageTestSuite) testSupervisionNodeConfigCancel(addr, privKey 
 
 func (suite *NodeManageTestSuite) testSupervisionNodeConfigApprove(addr, privKey string) {
 	config := &pt.ParaNodeGroupConfig{
-		Title: chain33TestCfg.GetTitle(),
+		Title: chainTestCfg.GetTitle(),
 		Op:    pt.ParacrossSupervisionNodeApply,
 		Addrs: addr,
 	}
@@ -71,7 +71,7 @@ func (suite *NodeManageTestSuite) testSupervisionNodeConfigApprove(addr, privKey
 	suite.Nil(err)
 
 	config = &pt.ParaNodeGroupConfig{
-		Title: chain33TestCfg.GetTitle(),
+		Title: chainTestCfg.GetTitle(),
 		Id:    getParaNodeIDSuffix(g.Current.Id),
 		Op:    pt.ParacrossSupervisionNodeApprove,
 	}
@@ -82,7 +82,7 @@ func (suite *NodeManageTestSuite) testSupervisionNodeConfigApprove(addr, privKey
 
 func (suite *NodeManageTestSuite) testSupervisionNodeError() {
 	config := &pt.ParaNodeGroupConfig{
-		Title: chain33TestCfg.GetTitle(),
+		Title: chainTestCfg.GetTitle(),
 		Op:    pt.ParacrossSupervisionNodeApply,
 		Addrs: Account1M3,
 	}
@@ -92,7 +92,7 @@ func (suite *NodeManageTestSuite) testSupervisionNodeError() {
 	suite.NotNil(err)
 
 	config = &pt.ParaNodeGroupConfig{
-		Title: chain33TestCfg.GetTitle(),
+		Title: chainTestCfg.GetTitle(),
 		Op:    pt.ParacrossSupervisionNodeApply,
 		Addrs: "1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4",
 	}
@@ -104,7 +104,7 @@ func (suite *NodeManageTestSuite) testSupervisionNodeError() {
 
 func (suite *NodeManageTestSuite) testSupervisionNodeQuit() {
 	config := &pt.ParaNodeGroupConfig{
-		Title: chain33TestCfg.GetTitle(),
+		Title: chainTestCfg.GetTitle(),
 		Op:    pt.ParacrossSupervisionNodeQuit,
 		Addrs: Account1Ku,
 	}
@@ -115,7 +115,7 @@ func (suite *NodeManageTestSuite) testSupervisionNodeQuit() {
 	assert.Len(suite.T(), receipt.Logs, 3)
 	assert.Equal(suite.T(), int32(pt.TyLogParaSupervisionNodeGroupAddrsUpdate), receipt.Logs[0].Ty)
 
-	ret, err := suite.exec.Query_GetSupervisionNodeGroupAddrs(&pt.ReqParacrossNodeInfo{Title: chain33TestCfg.GetTitle()})
+	ret, err := suite.exec.Query_GetSupervisionNodeGroupAddrs(&pt.ReqParacrossNodeInfo{Title: chainTestCfg.GetTitle()})
 	suite.Nil(err)
 	resp, ok := ret.(*types.ReplyConfig)
 	assert.Equal(suite.T(), ok, true)
@@ -124,7 +124,7 @@ func (suite *NodeManageTestSuite) testSupervisionNodeQuit() {
 
 func (suite *NodeManageTestSuite) testSupervisionNodeModify() {
 	config := &pt.ParaNodeGroupConfig{
-		Title:      chain33TestCfg.GetTitle(),
+		Title:      chainTestCfg.GetTitle(),
 		Op:         pt.ParacrossSupervisionNodeModify,
 		Addrs:      Account14K,
 		BlsPubKeys: Bls14K,
@@ -136,7 +136,7 @@ func (suite *NodeManageTestSuite) testSupervisionNodeModify() {
 	assert.Len(suite.T(), receipt.Logs, 1)
 	assert.Equal(suite.T(), int32(pt.TyLogParaSupervisionNodeStatusUpdate), receipt.Logs[0].Ty)
 
-	ret, err := suite.exec.Query_GetNodeAddrInfo(&pt.ReqParacrossNodeInfo{Title: chain33TestCfg.GetTitle(), Addr: Account14K})
+	ret, err := suite.exec.Query_GetNodeAddrInfo(&pt.ReqParacrossNodeInfo{Title: chainTestCfg.GetTitle(), Addr: Account14K})
 	suite.Nil(err)
 	resp, ok := ret.(*pt.ParaNodeAddrIdStatus)
 	assert.Equal(suite.T(), ok, true)
@@ -152,13 +152,13 @@ func checkSupervisionGroupApplyReceipt(suite *NodeManageTestSuite, receipt *type
 }
 
 func (suite *NodeManageTestSuite) testSupervisionQuery() {
-	ret, err := suite.exec.Query_GetSupervisionNodeGroupAddrs(&pt.ReqParacrossNodeInfo{Title: chain33TestCfg.GetTitle()})
+	ret, err := suite.exec.Query_GetSupervisionNodeGroupAddrs(&pt.ReqParacrossNodeInfo{Title: chainTestCfg.GetTitle()})
 	suite.Nil(err)
 	resp, ok := ret.(*types.ReplyConfig)
 	assert.Equal(suite.T(), ok, true)
 	assert.Equal(suite.T(), resp.Value, "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt,1KufZaLTKVAy37AsXNd9bsva5WZvP8w5uG,1M3XCbWVxAPBH5AR8VmLky4ZtDdGgC6ugD")
 
-	ret, err = suite.exec.Query_GetNodeAddrInfo(&pt.ReqParacrossNodeInfo{Title: chain33TestCfg.GetTitle(), Addr: Account14K})
+	ret, err = suite.exec.Query_GetNodeAddrInfo(&pt.ReqParacrossNodeInfo{Title: chainTestCfg.GetTitle(), Addr: Account14K})
 	suite.Nil(err)
 	resp2, ok := ret.(*pt.ParaNodeAddrIdStatus)
 	assert.Equal(suite.T(), ok, true)

@@ -91,8 +91,8 @@ func NewRaftNode(ctx context.Context, id int, join bool, peers []string, readOnl
 		bootstrapPeers:   peers,
 		readOnlyPeers:    readOnlyPeers,
 		addPeers:         addPeers,
-		waldir:           fmt.Sprintf("chain33_raft-%d%swal", id, string(os.PathSeparator)),
-		snapdir:          fmt.Sprintf("chain33_raft-%d%ssnap", id, string(os.PathSeparator)),
+		waldir:           fmt.Sprintf("chain_raft-%d%swal", id, string(os.PathSeparator)),
+		snapdir:          fmt.Sprintf("chain_raft-%d%ssnap", id, string(os.PathSeparator)),
 		getSnapshot:      getSnapshot,
 		snapCount:        defaultSnapCount,
 		validatorC:       make(chan bool),
@@ -110,7 +110,7 @@ func (rc *raftNode) startRaft() {
 	// 有snapshot就打开，没有则创建
 	if !fileutil.Exist(rc.snapdir) {
 		if err := os.MkdirAll(rc.snapdir, 0750); err != nil {
-			rlog.Error(fmt.Sprintf("chain33_raft: cannot create dir for snapshot (%v)", err.Error()))
+			rlog.Error(fmt.Sprintf("chain_raft: cannot create dir for snapshot (%v)", err.Error()))
 			panic(err)
 		}
 	}
@@ -348,7 +348,7 @@ func (rc *raftNode) replayWAL() *wal.WAL {
 	w := rc.openWAL(snapshot)
 	_, st, ents, err := w.ReadAll()
 	if err != nil {
-		rlog.Error(fmt.Sprintf("chain33_raft: failed to read WAL (%v)", err.Error()))
+		rlog.Error(fmt.Sprintf("chain_raft: failed to read WAL (%v)", err.Error()))
 	}
 	rc.raftStorage = raft.NewMemoryStorage()
 	if snapshot != nil {
@@ -370,7 +370,7 @@ func (rc *raftNode) replayWAL() *wal.WAL {
 func (rc *raftNode) loadSnapshot() *raftpb.Snapshot {
 	snapshot, err := rc.snapshotter.Load()
 	if err != nil && err != snap.ErrNoSnapshot {
-		rlog.Error(fmt.Sprintf("chain33_raft: error loading snapshot (%v)", err.Error()))
+		rlog.Error(fmt.Sprintf("chain_raft: error loading snapshot (%v)", err.Error()))
 	}
 	return snapshot
 }
@@ -441,12 +441,12 @@ func (rc *raftNode) publishSnapshot(snapshotToSave raftpb.Snapshot) {
 func (rc *raftNode) openWAL(snapshot *raftpb.Snapshot) *wal.WAL {
 	if !wal.Exist(rc.waldir) {
 		if err := os.MkdirAll(rc.waldir, 0750); err != nil {
-			rlog.Error(fmt.Sprintf("chain33_raft: cannot create dir for wal (%v)", err.Error()))
+			rlog.Error(fmt.Sprintf("chain_raft: cannot create dir for wal (%v)", err.Error()))
 		}
 
 		w, err := wal.Create(rc.waldir, nil)
 		if err != nil {
-			rlog.Error(fmt.Sprintf("chain33_raft: create wal error (%v)", err))
+			rlog.Error(fmt.Sprintf("chain_raft: create wal error (%v)", err))
 		}
 		w.Close()
 	}
@@ -458,7 +458,7 @@ func (rc *raftNode) openWAL(snapshot *raftpb.Snapshot) *wal.WAL {
 	rlog.Info(fmt.Sprintf("loading WAL at term %d and index %d", walsnap.Term, walsnap.Index))
 	w, err := wal.Open(rc.waldir, walsnap)
 	if err != nil {
-		rlog.Error(fmt.Sprintf("chain33_raft: error loading wal (%v)", err.Error()))
+		rlog.Error(fmt.Sprintf("chain_raft: error loading wal (%v)", err.Error()))
 	}
 
 	return w
@@ -620,7 +620,7 @@ func readWalNames(dirpath string) ([]string, error) {
 	wnames := make([]string, 0)
 	names, err := fileutil.ReadDir(dirpath)
 	if err != nil {
-		rlog.Error(fmt.Sprintf("chain33_raft: error read wal names (%v)", err.Error()))
+		rlog.Error(fmt.Sprintf("chain_raft: error read wal names (%v)", err.Error()))
 		return nil, err
 	}
 	for _, name := range names {
@@ -643,7 +643,7 @@ func removeWal(names []string, waldir string) error {
 	for _, name := range names {
 		srcPath := fmt.Sprintf("%s%s%s", waldir, string(os.PathSeparator), name)
 		if err := os.Remove(srcPath); err != nil {
-			rlog.Error(fmt.Sprintf("chain33_raft: error remove wal (%v)", err.Error()))
+			rlog.Error(fmt.Sprintf("chain_raft: error remove wal (%v)", err.Error()))
 			return err
 		}
 	}

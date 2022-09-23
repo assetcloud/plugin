@@ -26,7 +26,7 @@ function queryTransaction() {
 }
 
 function signRawTxAndQuery() {
-    chain33_SignAndSendTx "${unsignedTx}" "${superManager}" "${MAIN_HTTP}"
+    chain_SignAndSendTx "${unsignedTx}" "${superManager}" "${MAIN_HTTP}"
     queryTransaction ".error | not" "true"
     echo_rst "$1 queryExecRes" "$?"
 }
@@ -34,41 +34,41 @@ function signRawTxAndQuery() {
 function init() {
     ispara=$(echo '"'"${MAIN_HTTP}"'"' | jq '.|contains("8901")')
     echo "ipara=$ispara"
-    chain33_ImportPrivkey "${superManager}" "${tokenAddr}" "tokenAddr" "${MAIN_HTTP}"
+    chain_ImportPrivkey "${superManager}" "${tokenAddr}" "tokenAddr" "${MAIN_HTTP}"
 
     local main_ip=${MAIN_HTTP//8901/8801}
-    chain33_ImportPrivkey "0x882c963ce2afbedc2353cb417492aa9e889becd878a10f2529fc9e6c3b756128" "1CLrYLNhHfCfMUV7mtdqhbMSF6vGmtTvzq" "token1" "${main_ip}"
+    chain_ImportPrivkey "0x882c963ce2afbedc2353cb417492aa9e889becd878a10f2529fc9e6c3b756128" "1CLrYLNhHfCfMUV7mtdqhbMSF6vGmtTvzq" "token1" "${main_ip}"
 
     local ACCOUNT_A="1CLrYLNhHfCfMUV7mtdqhbMSF6vGmtTvzq"
 
     if [ "$ispara" == false ]; then
-        chain33_applyCoins "$ACCOUNT_A" 12000000000 "${main_ip}"
-        chain33_QueryBalance "${ACCOUNT_A}" "$main_ip"
+        chain_applyCoins "$ACCOUNT_A" 12000000000 "${main_ip}"
+        chain_QueryBalance "${ACCOUNT_A}" "$main_ip"
     else
-        chain33_applyCoins "$ACCOUNT_A" 1000000000 "${main_ip}"
-        chain33_QueryBalance "${ACCOUNT_A}" "$main_ip"
+        chain_applyCoins "$ACCOUNT_A" 1000000000 "${main_ip}"
+        chain_QueryBalance "${ACCOUNT_A}" "$main_ip"
 
         local para_ip="${MAIN_HTTP}"
-        chain33_ImportPrivkey "0x882c963ce2afbedc2353cb417492aa9e889becd878a10f2529fc9e6c3b756128" "1CLrYLNhHfCfMUV7mtdqhbMSF6vGmtTvzq" "token1" "$para_ip"
+        chain_ImportPrivkey "0x882c963ce2afbedc2353cb417492aa9e889becd878a10f2529fc9e6c3b756128" "1CLrYLNhHfCfMUV7mtdqhbMSF6vGmtTvzq" "token1" "$para_ip"
 
-        chain33_applyCoins "$ACCOUNT_A" 12000000000 "${para_ip}"
-        chain33_QueryBalance "${ACCOUNT_A}" "$para_ip"
+        chain_applyCoins "$ACCOUNT_A" 12000000000 "${para_ip}"
+        chain_QueryBalance "${ACCOUNT_A}" "$para_ip"
     fi
 
     if [ "$ispara" == true ]; then
         execName="user.p.para.token"
         token_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"user.p.para.token"}]}' ${MAIN_HTTP} | jq -r ".result")
-        chain33_SendToAddress "$recvAddr" "$tokenAddr" 10000000000 "${MAIN_HTTP}"
-        chain33_BlockWait 2 "${MAIN_HTTP}"
-        chain33_SendToAddress "$tokenAddr" "$token_addr" 1000000000 "${MAIN_HTTP}"
-        chain33_BlockWait 2 "${MAIN_HTTP}"
+        chain_SendToAddress "$recvAddr" "$tokenAddr" 10000000000 "${MAIN_HTTP}"
+        chain_BlockWait 2 "${MAIN_HTTP}"
+        chain_SendToAddress "$tokenAddr" "$token_addr" 1000000000 "${MAIN_HTTP}"
+        chain_BlockWait 2 "${MAIN_HTTP}"
     else
         token_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"token"}]}' ${MAIN_HTTP} | jq -r ".result")
         from="12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"
-        chain33_SendToAddress "$from" "$tokenAddr" 10000000000 "${MAIN_HTTP}"
-        chain33_BlockWait 2 "${MAIN_HTTP}"
-        chain33_SendToAddress "$tokenAddr" "$token_addr" 1000000000 "${MAIN_HTTP}"
-        chain33_BlockWait 2 "${MAIN_HTTP}"
+        chain_SendToAddress "$from" "$tokenAddr" 10000000000 "${MAIN_HTTP}"
+        chain_BlockWait 2 "${MAIN_HTTP}"
+        chain_SendToAddress "$tokenAddr" "$token_addr" 1000000000 "${MAIN_HTTP}"
+        chain_BlockWait 2 "${MAIN_HTTP}"
     fi
     echo "token=$token_addr"
     updateConfig
@@ -112,7 +112,7 @@ function token_finish() {
 
 function token_getFinishCreated() {
     req='{"method":"Chain.Query","params":[{"execer":"'"${execName}"'","funcName":"GetTokens","payload":{"queryAll":true,"status":1,"tokens":[],"symbolOnly":false}}]}'
-    chain33_Http "$req" ${MAIN_HTTP} "(.result.tokens[0].symbol != null)" "$FUNCNAME"
+    chain_Http "$req" ${MAIN_HTTP} "(.result.tokens[0].symbol != null)" "$FUNCNAME"
 }
 
 function token_assets() {
@@ -214,14 +214,14 @@ function run_test() {
 }
 
 function main() {
-    chain33_RpcTestBegin token
+    chain_RpcTestBegin token
     local ip=$1
     MAIN_HTTP=$ip
     echo "main_ip=$MAIN_HTTP"
 
     init
     run_test "$ip"
-    chain33_RpcTestRst token "$CASE_ERR"
+    chain_RpcTestRst token "$CASE_ERR"
 }
 
-chain33_debug_function main "$1"
+chain_debug_function main "$1"

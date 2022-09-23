@@ -37,7 +37,7 @@ func (o *Oracle) ProcessSuccessfulClaimForLock(claim, execAddr string, accDB *ac
 		return nil, err
 	}
 
-	receiverAddress := oracleClaim.Chain33Receiver
+	receiverAddress := oracleClaim.ChainReceiver
 
 	if oracleClaim.ClaimType == int64(x2eTy.LockClaimType) {
 		//铸币到相关的tokenSymbolBank账户下
@@ -61,7 +61,7 @@ func (o *Oracle) ProcessSuccessfulClaimForBurn(claim, execAddr, tokenSymbol stri
 		return nil, err
 	}
 
-	senderAddr := oracleClaim.Chain33Receiver
+	senderAddr := oracleClaim.ChainReceiver
 
 	if oracleClaim.ClaimType == int64(x2eTy.BurnClaimType) {
 		amount, _ := strconv.ParseInt(x2eTy.TrimZeroAndDot(oracleClaim.Amount), 10, 64)
@@ -290,8 +290,8 @@ func (o *Oracle) checkProphecy(prophecy *x2eTy.ReceiptEthProphecy) error {
 	return nil
 }
 
-//ProcessClaim 处理接收到的ethchain33请求
-func (o *Oracle) ProcessClaim(claim x2eTy.Eth2Chain33) (*x2eTy.ProphecyStatus, error) {
+//ProcessClaim 处理接收到的ethchain请求
+func (o *Oracle) ProcessClaim(claim x2eTy.Eth2Chain) (*x2eTy.ProphecyStatus, error) {
 	oracleClaim, err := CreateOracleClaimFromEthClaim(claim)
 	if err != nil {
 		elog.Error("CreateEthClaimFromOracleString", "CreateOracleClaimFromOracleString error", err)

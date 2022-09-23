@@ -14,13 +14,13 @@ token执行器支持token的创建，
 */
 
 import (
-	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/assetcloud/chain/account"
 	"github.com/assetcloud/chain/common/address"
 	log "github.com/assetcloud/chain/common/log/log15"
 	"github.com/assetcloud/chain/system/dapp"
 	drivers "github.com/assetcloud/chain/system/dapp"
 	"github.com/assetcloud/chain/types"
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/pkg/errors"
 )
 
@@ -41,7 +41,7 @@ type subConfig struct {
 var subCfg subConfig
 
 // Init 重命名执行器名称
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	if sub != nil {
 		types.MustDecode(sub, &subCfg)
 	}

@@ -32,8 +32,8 @@ function exit_cp_file() {
         docker exec "${dockerNamePrefix}_ebrelayer${name}_1" tail -n 1000 /root/logs/x2Ethereum_relayer.log
     done
 
-    docker cp "${dockerNamePrefix}_chain33_1":/root/logs/chain33.log "${dirName}/chain33.log"
-    docker logs "${dockerNamePrefix}_chain33_1" | tail -n 1000
+    docker cp "${dockerNamePrefix}_chain_1":/root/logs/chain.log "${dirName}/chain.log"
+    docker logs "${dockerNamePrefix}_chain_1" | tail -n 1000
 
     exit 1
 }
@@ -69,7 +69,7 @@ function cli_ret() {
     echo "${msg}"
 }
 
-# 判断 chain33 金额是否正确
+# 判断 chain 金额是否正确
 function balance_ret() {
     set +x
     if [[ $# -lt 2 ]]; then
@@ -136,7 +136,7 @@ function kill_docker_ebrelayer() {
     sleep 1
 }
 
-# chain33 区块等待 $1:cli 路径  $2:等待高度
+# chain 区块等待 $1:cli 路径  $2:等待高度
 function block_wait() {
     set +x
     local CLI=${1}
@@ -161,7 +161,7 @@ function block_wait() {
 
     count=$((count + 1))
     set -x
-    echo -e "${GRE}chain33 wait new block $count s, cur height=$expect,old=$cur_height${NOC}"
+    echo -e "${GRE}chain wait new block $count s, cur height=$expect,old=$cur_height${NOC}"
 }
 
 # 检查交易是否执行成功 $1:cli 路径  $2:交易hash
@@ -190,7 +190,7 @@ function check_tx() {
         sleep 1
 
         if [[ ${count} -ge 100 ]]; then
-            echo "chain33 query tx for too long"
+            echo "chain query tx for too long"
             break
         fi
     done

@@ -16,7 +16,7 @@ var clog = log.New("module", "execs.cert")
 var driverName = ct.CertX
 
 // Init 初始化
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	driverName = name
 	var scfg ct.Authority
 	if sub != nil {

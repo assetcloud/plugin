@@ -120,7 +120,7 @@ contract BridgeBank is GoAssetBank, EvmAssetBank {
      * @dev: Mints new BankTokens
      *
      * @param _goAssetSender: The goAsset sender's address.
-     * @param _chain33Recipient: The intended recipient's Chain address.
+     * @param _chainRecipient: The intended recipient's Chain address.
      * @param _bridgeTokenAddress: The bridge token address
      * @param _symbol: goAsset token symbol
      * @param _amount: number of goAsset tokens to be minted
@@ -220,7 +220,7 @@ contract BridgeBank is GoAssetBank, EvmAssetBank {
     * @dev: Locks received Chain funds.
     *
     * @param _recipient: bytes representation of destination address.
-    * @param _token: token address in origin chain (0x0 if chain33)
+    * @param _token: token address in origin chain (0x0 if chain)
     * @param _amount: value of deposit
     */
     function lock(

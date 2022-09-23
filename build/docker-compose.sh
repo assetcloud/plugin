@@ -18,18 +18,18 @@ export PATH="$PWD:$PATH"
 dockerNamePrefix="${1}"
 echo "dockerNamePrefix : ${dockerNamePrefix}"
 
-NODE3="${1}_chain33_1"
-CLI="docker exec ${NODE3} /root/chain33-cli"
+NODE3="${1}_chain_1"
+CLI="docker exec ${NODE3} /root/chain-cli"
 
 NODE2="${1}_chain32_1"
 
 NODE1="${1}_chain31_1"
 
 NODE4="${1}_chain30_1"
-#CLI4="docker exec ${NODE4} /root/chain33-cli"
+#CLI4="docker exec ${NODE4} /root/chain-cli"
 
 NODE5="${1}_chain29_1"
-CLI5="docker exec ${NODE5} /root/chain33-cli"
+CLI5="docker exec ${NODE5} /root/chain-cli"
 
 # shellcheck disable=SC2034
 NODE6="${1}_chain28_1"
@@ -85,55 +85,55 @@ echo "CLI=$CLI"
 
 function base_init() {
     # update test environment
-    sed -i $sedfix 's/^Title.*/Title="local"/g' chain33.toml
-    sed -i $sedfix 's/^TestNet=.*/TestNet=true/g' chain33.toml
+    sed -i $sedfix 's/^Title.*/Title="local"/g' chain.toml
+    sed -i $sedfix 's/^TestNet=.*/TestNet=true/g' chain.toml
 
-    sed -i $sedfix 's/^powLimitBits=.*/powLimitBits="0x1f2fffff"/g' chain33.toml
-    sed -i $sedfix 's/^targetTimePerBlock=.*/targetTimePerBlock=1/g' chain33.toml
-    sed -i $sedfix 's/^targetTimespan=.*/targetTimespan=10000000/g' chain33.toml
-    sed -i $sedfix 's/^isLevelFee=.*/isLevelFee=false/g' chain33.toml
+    sed -i $sedfix 's/^powLimitBits=.*/powLimitBits="0x1f2fffff"/g' chain.toml
+    sed -i $sedfix 's/^targetTimePerBlock=.*/targetTimePerBlock=1/g' chain.toml
+    sed -i $sedfix 's/^targetTimespan=.*/targetTimespan=10000000/g' chain.toml
+    sed -i $sedfix 's/^isLevelFee=.*/isLevelFee=false/g' chain.toml
     #新ticket 只冻结60s 测试目的
-    sed -i $sedfix 's/^ticketFrozenTime = 43200/ticketFrozenTime = 60/g' chain33.toml
-    sed -i $sedfix 's/^ticketWithdrawTime = 172800/ticketWithdrawTime = 1000/g' chain33.toml
-    sed -i $sedfix 's/^ticketMinerWaitTime = 7200/ticketMinerWaitTime = 600/g' chain33.toml
+    sed -i $sedfix 's/^ticketFrozenTime = 43200/ticketFrozenTime = 60/g' chain.toml
+    sed -i $sedfix 's/^ticketWithdrawTime = 172800/ticketWithdrawTime = 1000/g' chain.toml
+    sed -i $sedfix 's/^ticketMinerWaitTime = 7200/ticketMinerWaitTime = 600/g' chain.toml
 
     # p2p
-    sed -i $sedfix '0,/^seeds=.*/s//seeds=["chain33:13802","chain32:13802","chain31:13802"]/g' chain33.toml
-    #sed -i $sedfix 's/^enable=.*/enable=true/g' chain33.toml
-    sed -i $sedfix '0,/^enable=.*/s//enable=true/' chain33.toml
-    sed -i $sedfix 's/^isSeed=.*/isSeed=true/g' chain33.toml
-    sed -i $sedfix 's/^innerSeedEnable=.*/innerSeedEnable=false/g' chain33.toml
-    sed -i $sedfix 's/^useGithub=.*/useGithub=false/g' chain33.toml
-    sed -i $sedfix 's/^disableShard=false/disableShard=true/g' chain33.toml
+    sed -i $sedfix '0,/^seeds=.*/s//seeds=["chain:13802","chain32:13802","chain31:13802"]/g' chain.toml
+    #sed -i $sedfix 's/^enable=.*/enable=true/g' chain.toml
+    sed -i $sedfix '0,/^enable=.*/s//enable=true/' chain.toml
+    sed -i $sedfix 's/^isSeed=.*/isSeed=true/g' chain.toml
+    sed -i $sedfix 's/^innerSeedEnable=.*/innerSeedEnable=false/g' chain.toml
+    sed -i $sedfix 's/^useGithub=.*/useGithub=false/g' chain.toml
+    sed -i $sedfix 's/^disableShard=false/disableShard=true/g' chain.toml
 
     # rpc
-    sed -i $sedfix 's/^jrpcBindAddr=.*/jrpcBindAddr="0.0.0.0:8801"/g' chain33.toml
-    sed -i $sedfix 's/^grpcBindAddr=.*/grpcBindAddr="0.0.0.0:8802"/g' chain33.toml
-    sed -i $sedfix 's/^whitelist=.*/whitelist=["localhost","127.0.0.1","0.0.0.0"]/g' chain33.toml
+    sed -i $sedfix 's/^jrpcBindAddr=.*/jrpcBindAddr="0.0.0.0:8801"/g' chain.toml
+    sed -i $sedfix 's/^grpcBindAddr=.*/grpcBindAddr="0.0.0.0:8802"/g' chain.toml
+    sed -i $sedfix 's/^whitelist=.*/whitelist=["localhost","127.0.0.1","0.0.0.0"]/g' chain.toml
 
     # wallet
-    sed -i $sedfix 's/^minerdisable=.*/minerdisable=false/g' chain33.toml
+    sed -i $sedfix 's/^minerdisable=.*/minerdisable=false/g' chain.toml
 
-    sed -i $sedfix 's/^paraConsensusStopBlocks=.*/paraConsensusStopBlocks=100/g' chain33.toml
+    sed -i $sedfix 's/^paraConsensusStopBlocks=.*/paraConsensusStopBlocks=100/g' chain.toml
 
     # blockchain
     # TODO 剩下evm trade 测试和这个选项有关，在其他pr中解决，不使得这个pr太大
-    sed -i $sedfix 's/^enableReduceLocaldb=.*/enableReduceLocaldb=false/g' chain33.toml
-    sed -i $sedfix 's/^enablePushSubscribe=.*/enablePushSubscribe=true/g' chain33.toml
+    sed -i $sedfix 's/^enableReduceLocaldb=.*/enableReduceLocaldb=false/g' chain.toml
+    sed -i $sedfix 's/^enablePushSubscribe=.*/enablePushSubscribe=true/g' chain.toml
 
     # ticket
-    sed -i $sedfix 's/^ticketPrice =.*/ticketPrice = 10000/g' chain33.toml
+    sed -i $sedfix 's/^ticketPrice =.*/ticketPrice = 10000/g' chain.toml
 
     #relay genesis
-    sed -i $sedfix 's/^genesis="12qyocayNF7.*/genesis="1G5Cjy8LuQex2fuYv3gzb7B8MxAnxLEqt3"/g' chain33.toml
+    sed -i $sedfix 's/^genesis="12qyocayNF7.*/genesis="1G5Cjy8LuQex2fuYv3gzb7B8MxAnxLEqt3"/g' chain.toml
 
     if [ "$DAPP" == "x2ethereum" ]; then
-        sed -i $sedfix 's/^enableReduceLocaldb=.*/enableReduceLocaldb=false/g' chain33.toml
-        sed -i $sedfix 's/^enablePushSubscribe=.*/enablePushSubscribe=true/g' chain33.toml
+        sed -i $sedfix 's/^enableReduceLocaldb=.*/enableReduceLocaldb=false/g' chain.toml
+        sed -i $sedfix 's/^enablePushSubscribe=.*/enablePushSubscribe=true/g' chain.toml
     fi
 
     #autonomy config
-    sed -i $sedfix 's/^autonomyExec=.*/autonomyExec=""/g' chain33.toml
+    sed -i $sedfix 's/^autonomyExec=.*/autonomyExec=""/g' chain.toml
 
 }
 
@@ -157,8 +157,8 @@ function start() {
     set +e
     influxdbcontainer=$(docker ps -a | grep build_influxdb_1)
     if [ -n "$influxdbcontainer" ]; then
-        echo "create database chain33metrics in docker container build_influxdb_1"
-        docker exec build_influxdb_1 influx -execute 'create database chain33metrics'
+        echo "create database chainmetrics in docker container build_influxdb_1"
+        docker exec build_influxdb_1 influx -execute 'create database chainmetrics'
     fi
     set -e
 
@@ -313,12 +313,12 @@ function block_wait2height() {
 }
 
 function check_docker_status() {
-    status=$(docker-compose ps | grep chain33_1 | awk '{print $6}')
-    statusPara=$(docker-compose ps | grep chain33_1 | awk '{print $3}')
+    status=$(docker-compose ps | grep chain_1 | awk '{print $6}')
+    statusPara=$(docker-compose ps | grep chain_1 | awk '{print $3}')
     if [ "${status}" == "Exit" ] || [ "${statusPara}" == "Exit" ]; then
-        echo "=========== chain33 service Exit logs ========== "
-        docker-compose logs chain33
-        echo "=========== chain33 service Exit logs End========== "
+        echo "=========== chain service Exit logs ========== "
+        docker-compose logs chain
+        echo "=========== chain service Exit logs End========== "
     fi
 
 }

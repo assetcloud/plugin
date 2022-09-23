@@ -82,8 +82,8 @@ func signtxs(priv crypto.PrivKey, cert []byte) {
 /**
 初始化Author实例和userloader
 */
-func initEnv() (*types.Chain33Config, error) {
-	cfg := types.NewChain33Config(types.ReadFile("./test/chain33.auth.test.toml"))
+func initEnv() (*types.ChainConfig, error) {
+	cfg := types.NewChainConfig(types.ReadFile("./test/chain.auth.test.toml"))
 	sub := cfg.GetSubConfig()
 	var subcfg ct.Authority
 	if sub.Exec["cert"] != nil {

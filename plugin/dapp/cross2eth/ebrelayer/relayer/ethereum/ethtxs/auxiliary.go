@@ -6,12 +6,12 @@ import (
 	"math/big"
 	"strings"
 
+	chainAddress "github.com/assetcloud/chain/common/address"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
 	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
 	gnosis "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
 	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	chain33Address "github.com/assetcloud/chain/common/address"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -21,17 +21,17 @@ import (
 
 //NewProphecyClaimPara ...
 type NewProphecyClaimPara struct {
-	ClaimType     uint8
-	Chain33Sender []byte
-	TokenAddr     common.Address
-	EthReceiver   common.Address
-	Symbol        string
-	Amount        *big.Int
-	Txhash        []byte
+	ClaimType   uint8
+	ChainSender []byte
+	TokenAddr   common.Address
+	EthReceiver common.Address
+	Symbol      string
+	Amount      *big.Int
+	Txhash      []byte
 }
 
 //Burn ...
-func Burn(ownerPrivateKeyStr, tokenAddrstr, chain33Receiver string, bridgeBank common.Address, amount *big.Int,
+func Burn(ownerPrivateKeyStr, tokenAddrstr, chainReceiver string, bridgeBank common.Address, amount *big.Int,
 	bridgeBankIns *generated.BridgeBank, client ethinterface.EthClientSpec, addr2TxNonce map[common.Address]*NonceMutex, providerHttp string) (string, error) {
 	ownerPrivateKey, err := crypto.ToECDSA(common.FromHex(ownerPrivateKeyStr))
 	if nil != err {
@@ -57,7 +57,7 @@ func Burn(ownerPrivateKeyStr, tokenAddrstr, chain33Receiver string, bridgeBank c
 	if nil != err {
 		return "", err
 	}
-	//chain33bank 是bridgeBank的基类，所以使用bridgeBank的地址
+	//chainbank 是bridgeBank的基类，所以使用bridgeBank的地址
 	tx, err := tokenInstance.Approve(auth, bridgeBank, amount)
 	if nil != err {
 		return "", err
@@ -78,9 +78,9 @@ func Burn(ownerPrivateKeyStr, tokenAddrstr, chain33Receiver string, bridgeBank c
 
 	prepareDone = true
 
-	receAddr, err := chain33Address.NewBtcAddress(chain33Receiver)
+	receAddr, err := chainAddress.NewBtcAddress(chainReceiver)
 	if nil != err {
-		txslog.Info("Burn", "Failed to decode chain33 address due to", err.Error())
+		txslog.Info("Burn", "Failed to decode chain address due to", err.Error())
 		return "", err
 	}
 
@@ -97,7 +97,7 @@ func Burn(ownerPrivateKeyStr, tokenAddrstr, chain33Receiver string, bridgeBank c
 }
 
 //BurnAsync ...
-func BurnAsync(ownerPrivateKeyStr, tokenAddrstr, chain33Receiver string, amount *big.Int, bridgeBankIns *generated.BridgeBank,
+func BurnAsync(ownerPrivateKeyStr, tokenAddrstr, chainReceiver string, amount *big.Int, bridgeBankIns *generated.BridgeBank,
 	client ethinterface.EthClientSpec, addr2TxNonce map[common.Address]*NonceMutex) (string, error) {
 	ownerPrivateKey, err := crypto.ToECDSA(common.FromHex(ownerPrivateKeyStr))
 	if nil != err {
@@ -120,9 +120,9 @@ func BurnAsync(ownerPrivateKeyStr, tokenAddrstr, chain33Receiver string, amount 
 	prepareDone = true
 
 	tokenAddr := common.HexToAddress(tokenAddrstr)
-	receAddr, err := chain33Address.NewBtcAddress(chain33Receiver)
+	receAddr, err := chainAddress.NewBtcAddress(chainReceiver)
 	if nil != err {
-		txslog.Info("BurnAsync", "Failed to decode chain33 address due to", err.Error())
+		txslog.Info("BurnAsync", "Failed to decode chain address due to", err.Error())
 		return "", err
 	}
 
@@ -239,9 +239,9 @@ func TransferEth(fromPrivateKeyStr, toAddr string, amount *big.Int, client ethin
 }
 
 //LockEthErc20Asset ...
-func LockEthErc20Asset(ownerPrivateKeyStr, tokenAddrStr, chain33Receiver string, amount *big.Int, client ethinterface.EthClientSpec, bridgeBank *generated.BridgeBank, bridgeBankAddr common.Address, addr2TxNonce map[common.Address]*NonceMutex, providerHttp string) (string, error) {
+func LockEthErc20Asset(ownerPrivateKeyStr, tokenAddrStr, chainReceiver string, amount *big.Int, client ethinterface.EthClientSpec, bridgeBank *generated.BridgeBank, bridgeBankAddr common.Address, addr2TxNonce map[common.Address]*NonceMutex, providerHttp string) (string, error) {
 	var prepareDone bool
-	txslog.Info("LockEthErc20Asset", "ownerPrivateKeyStr", ownerPrivateKeyStr, "tokenAddrStr", tokenAddrStr, "chain33Receiver", chain33Receiver, "amount", amount.String())
+	txslog.Info("LockEthErc20Asset", "ownerPrivateKeyStr", ownerPrivateKeyStr, "tokenAddrStr", tokenAddrStr, "chainReceiver", chainReceiver, "amount", amount.String())
 	ownerPrivateKey, err := crypto.ToECDSA(common.FromHex(ownerPrivateKeyStr))
 	if nil != err {
 		return "", err
@@ -271,7 +271,7 @@ func LockEthErc20Asset(ownerPrivateKeyStr, tokenAddrStr, chain33Receiver string,
 
 		prepareDone = true
 
-		//chain33bank 是bridgeBank的基类，所以使用bridgeBank的地址
+		//chainbank 是bridgeBank的基类，所以使用bridgeBank的地址
 		tx, err := tokenInstance.Approve(auth, bridgeBankAddr, amount)
 		if nil != err {
 			return "", err
@@ -297,9 +297,9 @@ func LockEthErc20Asset(ownerPrivateKeyStr, tokenAddrStr, chain33Receiver string,
 		auth.Value = amount
 	}
 
-	recvAddr, err := chain33Address.NewBtcAddress(chain33Receiver)
+	recvAddr, err := chainAddress.NewBtcAddress(chainReceiver)
 	if nil != err {
-		txslog.Info("LockEthErc20Asset", "Failed to decode chain33 address due to", err.Error())
+		txslog.Info("LockEthErc20Asset", "Failed to decode chain address due to", err.Error())
 		return "", err
 	}
 
@@ -318,8 +318,8 @@ func LockEthErc20Asset(ownerPrivateKeyStr, tokenAddrStr, chain33Receiver string,
 }
 
 //LockEthErc20AssetAsync ...
-func LockEthErc20AssetAsync(ownerPrivateKeyStr, tokenAddrStr, chain33Receiver string, amount *big.Int, client ethinterface.EthClientSpec, bridgeBank *generated.BridgeBank, addr2TxNonce map[common.Address]*NonceMutex) (string, error) {
-	txslog.Info("LockEthErc20AssetAsync", "ownerPrivateKeyStr", ownerPrivateKeyStr, "tokenAddrStr", tokenAddrStr, "chain33Receiver", chain33Receiver, "amount", amount.String())
+func LockEthErc20AssetAsync(ownerPrivateKeyStr, tokenAddrStr, chainReceiver string, amount *big.Int, client ethinterface.EthClientSpec, bridgeBank *generated.BridgeBank, addr2TxNonce map[common.Address]*NonceMutex) (string, error) {
+	txslog.Info("LockEthErc20AssetAsync", "ownerPrivateKeyStr", ownerPrivateKeyStr, "tokenAddrStr", tokenAddrStr, "chainReceiver", chainReceiver, "amount", amount.String())
 	ownerPrivateKey, err := crypto.ToECDSA(common.FromHex(ownerPrivateKeyStr))
 	if nil != err {
 		return "", err
@@ -350,9 +350,9 @@ func LockEthErc20AssetAsync(ownerPrivateKeyStr, tokenAddrStr, chain33Receiver st
 	if "" != tokenAddrStr {
 		tokenAddr = common.HexToAddress(tokenAddrStr)
 	}
-	recvAddr, err := chain33Address.NewBtcAddress(chain33Receiver)
+	recvAddr, err := chainAddress.NewBtcAddress(chainReceiver)
 	if nil != err {
-		txslog.Info("LockEthErc20AssetAsync", "Failed to decode chain33 address due to", err.Error())
+		txslog.Info("LockEthErc20AssetAsync", "Failed to decode chain address due to", err.Error())
 		return "", err
 	}
 

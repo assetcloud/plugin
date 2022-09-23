@@ -113,7 +113,7 @@ func TestExecHashsend(t *testing.T) {
 }
 
 func constructHashlockInstance() drivers.Driver {
-	chainTestCfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	chainTestCfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	Init(pty.HashlockX, chainTestCfg, nil)
 	h := newHashlock()
 	q := queue.New("channel")

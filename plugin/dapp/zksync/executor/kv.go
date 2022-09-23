@@ -11,12 +11,12 @@ func GetAccountIdPrimaryKey(accountId uint64) []byte {
 	return []byte(fmt.Sprintf("%s%022d", KeyPrefixStateDB+"accountId-", accountId))
 }
 
-func GetLocalChain33EthPrimaryKey(chain33Addr string, ethAddr string) []byte {
-	return []byte(fmt.Sprintf("%s-%s", address.FormatAddrKey(chain33Addr), address.FormatAddrKey(ethAddr)))
+func GetLocalChainEthPrimaryKey(chainAddr string, ethAddr string) []byte {
+	return []byte(fmt.Sprintf("%s-%s", address.FormatAddrKey(chainAddr), address.FormatAddrKey(ethAddr)))
 }
 
-func GetChain33EthPrimaryKey(chain33Addr string, ethAddr string) []byte {
-	return []byte(fmt.Sprintf("%s%s-%s", KeyPrefixStateDB, address.FormatAddrKey(chain33Addr),
+func GetChainEthPrimaryKey(chainAddr string, ethAddr string) []byte {
+	return []byte(fmt.Sprintf("%s%s-%s", KeyPrefixStateDB, address.FormatAddrKey(chainAddr),
 		address.FormatAddrKey(ethAddr)))
 }
 

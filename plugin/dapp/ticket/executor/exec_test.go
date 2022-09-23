@@ -45,11 +45,11 @@ var (
 		[]byte("1NLHPEcbTWWxxU3dGUZBhayjrCHD3psX7k"),
 		[]byte("1MCftFynyvG2F4ED5mdHYgziDxx6vDrScs"),
 	}
-	//chain33TestCfg = types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	//chainTestCfg = types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 )
 
 func Test_Exec_Bind_Unbind(t *testing.T) {
-	chain33TestCfg := mock33.GetAPI().GetConfig()
+	chainTestCfg := mock33.GetAPI().GetConfig()
 	env := execEnv{
 		1539918074,
 		10000,
@@ -60,7 +60,7 @@ func Test_Exec_Bind_Unbind(t *testing.T) {
 
 	_, ldb, kvdb := util.CreateTestDB()
 	api := new(apimock.QueueProtocolAPI)
-	api.On("GetConfig", mock.Anything).Return(chain33TestCfg, nil)
+	api.On("GetConfig", mock.Anything).Return(chainTestCfg, nil)
 	driver, err := dapp.LoadDriver("ticket", 1000)
 	assert.Nil(t, err)
 	driver.SetAPI(api)
@@ -71,7 +71,7 @@ func Test_Exec_Bind_Unbind(t *testing.T) {
 	priv, err := FromPrivkey(PrivKeyA)
 	assert.Nil(t, err)
 
-	bindTx := createBindMiner(t, chain33TestCfg, string(Nodes[1]), string(Nodes[0]), priv)
+	bindTx := createBindMiner(t, chainTestCfg, string(Nodes[1]), string(Nodes[0]), priv)
 	receipt, err := driver.Exec(bindTx, env.index)
 	if err != nil {
 		assert.Nil(t, err, "exec failed")
@@ -85,7 +85,7 @@ func Test_Exec_Bind_Unbind(t *testing.T) {
 	assert.Equal(t, string(Nodes[1]), bindInfo.MinerAddress)
 	assert.Equal(t, string(Nodes[0]), bindInfo.ReturnAddress)
 
-	unbindTx := createBindMiner(t, chain33TestCfg, "", string(Nodes[0]), priv)
+	unbindTx := createBindMiner(t, chainTestCfg, "", string(Nodes[0]), priv)
 	receipt, err = driver.Exec(unbindTx, env.index)
 	if err != nil {
 		assert.Nil(t, err, "exec failed")

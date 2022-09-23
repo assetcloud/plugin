@@ -45,7 +45,7 @@ type subConfig struct {
 }
 
 // New construct KVMVCCStore module
-func New(cfg *types.Store, sub []byte, chain33cfg *types.Chain33Config) queue.Module {
+func New(cfg *types.Store, sub []byte, chaincfg *types.ChainConfig) queue.Module {
 	bs := drivers.NewBaseStore(cfg)
 	var kvs *KVMVCCStore
 	enable := false

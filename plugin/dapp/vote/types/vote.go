@@ -82,12 +82,12 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(VoteX, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(VoteX, NewType(cfg))
 }
 
@@ -95,7 +95,7 @@ type voteType struct {
 	types.ExecTypeBase
 }
 
-func NewType(cfg *types.Chain33Config) *voteType {
+func NewType(cfg *types.ChainConfig) *voteType {
 	c := &voteType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

@@ -56,7 +56,7 @@ func createParaTestInstance(t *testing.T, q queue.Queue) *client {
 	para.InitClient(q.Client(), initTestSyncBlock)
 
 	//生成rpc Client
-	grpcClient := &typesmocks.Chain33Client{}
+	grpcClient := &typesmocks.ChainClient{}
 	para.grpcClient = grpcClient
 
 	//生成私钥
@@ -432,7 +432,7 @@ func execTest(t *testing.T, para *client, testLoopCount int32) {
 
 //测试入口
 func TestSyncBlocks(t *testing.T) {
-	cfg := types.NewChain33Config(testnode.DefaultConfig)
+	cfg := types.NewChainConfig(testnode.DefaultConfig)
 	q := queue.New("channel")
 	q.SetConfig(cfg)
 	defer q.Close()

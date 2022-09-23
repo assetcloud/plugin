@@ -126,7 +126,7 @@ func processMsg(q queue.Queue) {
 }
 
 //new p2p
-func newP2p(cfg *types.Chain33Config, port int32, dbpath string, q queue.Queue) *P2p {
+func newP2p(cfg *types.ChainConfig, port int32, dbpath string, q queue.Queue) *P2p {
 	p2pCfg := cfg.GetModuleConfig().P2P
 	p2pCfg.Enable = true
 	p2pCfg.DbPath = dbpath
@@ -189,7 +189,7 @@ func testNetInfo(t *testing.T, p2p *P2p) {
 
 //测试Peer
 func testPeer(t *testing.T, p2p *P2p, q queue.Queue) {
-	cfg := types.NewChain33Config(types.ReadFile("../../../chain33.toml"))
+	cfg := types.NewChainConfig(types.ReadFile("../../../chain.toml"))
 	conn, err := grpc.Dial("localhost:53802", grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(grpc.UseCompressor("gzip")))
 	assert.Nil(t, err)
@@ -440,7 +440,7 @@ func testRestart(t *testing.T, p2p *P2p) {
 }
 
 func Test_p2p(t *testing.T) {
-	cfg := types.NewChain33Config(types.ReadFile("../../../chain33.toml"))
+	cfg := types.NewChainConfig(types.ReadFile("../../../chain.toml"))
 	q := queue.New("channel")
 	q.SetConfig(cfg)
 	go q.Start()

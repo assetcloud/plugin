@@ -12,13 +12,13 @@ import (
 )
 
 func TestTradeType_GetName(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	tp := NewType(cfg)
 	assert.Equal(t, TradeX, tp.GetName())
 }
 
 func TestTradeType_GetTypeMap(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	tp := NewType(cfg)
 	actoins := tp.GetTypeMap()
 	assert.NotNil(t, actoins)
@@ -26,7 +26,7 @@ func TestTradeType_GetTypeMap(t *testing.T) {
 }
 
 func TestTradeType_GetLogMap(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	tp := NewType(cfg)
 	l := tp.GetLogMap()
 	assert.NotNil(t, l)

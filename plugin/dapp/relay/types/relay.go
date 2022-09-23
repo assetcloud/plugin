@@ -55,17 +55,17 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(RelayX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(RelayX, NewType(cfg))
 }
 
 // NewType new relay type
-func NewType(cfg *types.Chain33Config) *RelayType {
+func NewType(cfg *types.ChainConfig) *RelayType {
 	c := &RelayType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

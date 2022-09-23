@@ -17,12 +17,12 @@ import (
 	"strings"
 	"time"
 
-	pty "github.com/assetcloud/plugin/plugin/dapp/norm/types"
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/common/address"
 	"github.com/assetcloud/chain/common/crypto"
 	rlog "github.com/assetcloud/chain/common/log"
 	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/norm/types"
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
 )
@@ -31,7 +31,7 @@ const fee = 1e6
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 var conn *grpc.ClientConn
-var c types.Chain33Client
+var c types.ChainClient
 var r *rand.Rand
 
 func createConn(ip string) {
@@ -43,7 +43,7 @@ func createConn(ip string) {
 		fmt.Fprintln(os.Stderr, err)
 		return
 	}
-	c = types.NewChain33Client(conn)
+	c = types.NewChainClient(conn)
 	r = rand.New(rand.NewSource(types.Now().UnixNano()))
 }
 func main() {

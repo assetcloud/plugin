@@ -43,7 +43,7 @@ func initEnv(size int64) *Queue {
 	if size == 0 {
 		size = 1000
 	}
-	_, sub := types.InitCfg("chain33.test.toml")
+	_, sub := types.InitCfg("chain.test.toml")
 	var subcfg subConfig
 	types.MustDecode(sub.Mempool["price"], &subcfg)
 	subcfg.PoolCacheSize = size
@@ -183,7 +183,7 @@ func TestGetProperFee(t *testing.T) {
 }
 
 func TestRealNodeMempool(t *testing.T) {
-	mock33 := testnode.New("chain33.test.toml", nil)
+	mock33 := testnode.New("chain.test.toml", nil)
 	cfg := mock33.GetClient().GetConfig()
 	defer mock33.Close()
 	mock33.Listen()

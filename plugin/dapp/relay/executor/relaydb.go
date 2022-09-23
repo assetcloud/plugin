@@ -26,11 +26,11 @@ const (
 
 type relayLog struct {
 	ty.RelayOrder
-	*types.Chain33Config
+	*types.ChainConfig
 }
 
-func newRelayLog(order *ty.RelayOrder, cfg *types.Chain33Config) *relayLog {
-	return &relayLog{RelayOrder: *order, Chain33Config: cfg}
+func newRelayLog(order *ty.RelayOrder, cfg *types.ChainConfig) *relayLog {
+	return &relayLog{RelayOrder: *order, ChainConfig: cfg}
 }
 
 func (r *relayLog) save(db dbm.KV) []*types.KeyValue {

@@ -17,7 +17,7 @@ var relaylog = log.New("module", "execs.relay")
 var driverName = "relay"
 
 // Init relay register driver
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newRelay, cfg.GetDappFork(driverName, "Enable")) //TODO: ForkV18Relay
 	InitExecType()
 }

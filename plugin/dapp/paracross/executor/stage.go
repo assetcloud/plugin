@@ -11,8 +11,8 @@ import (
 
 	"sort"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/pkg/errors"
 )
 
@@ -132,7 +132,7 @@ func updateStages(db dbm.KV, stage *pt.SelfConsensStage) (*types.Receipt, error)
 
 }
 
-func selfConsensInitStage(cfg *types.Chain33Config) *types.Receipt {
+func selfConsensInitStage(cfg *types.ChainConfig) *types.Receipt {
 	close := cfg.IsEnable(pt.ParaConsSubConf + "." + pt.ParaSelfConsInitConf)
 	stage := &pt.SelfConsensStage{StartHeight: 0, Enable: pt.ParaConfigYes}
 	if close {

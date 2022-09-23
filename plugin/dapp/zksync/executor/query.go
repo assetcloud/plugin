@@ -3,9 +3,9 @@ package executor
 import (
 	"fmt"
 
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/assetcloud/chain/account"
 	"github.com/assetcloud/chain/types"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 )
 
 // Query_GetAccountTree 获取当前的树
@@ -72,7 +72,7 @@ func (z *zksync) Query_GetAccountById(in *zt.ZkQueryReq) (types.Message, error) 
 		return nil, err
 	}
 	leaf.EthAddress = zt.DecimalAddr2Hex(leaf.GetEthAddress())
-	leaf.Chain33Addr = zt.DecimalAddr2Hex(leaf.GetChain33Addr())
+	leaf.ChainAddr = zt.DecimalAddr2Hex(leaf.GetChainAddr())
 	return &leaf, nil
 }
 
@@ -88,11 +88,11 @@ func (z *zksync) Query_GetAccountByEth(in *zt.ZkQueryReq) (types.Message, error)
 	return res, nil
 }
 
-// Query_GetAccountByChain33  通过chain33地址查询account
-func (z *zksync) Query_GetAccountByChain33(in *zt.ZkQueryReq) (types.Message, error) {
+// Query_GetAccountByChain  通过chain地址查询account
+func (z *zksync) Query_GetAccountByChain(in *zt.ZkQueryReq) (types.Message, error) {
 	res := new(zt.ZkQueryResp)
-	in.Chain33Addr = zt.HexAddr2Decimal(in.Chain33Addr)
-	leaves, err := GetLeafByChain33Address(z.GetLocalDB(), in.Chain33Addr)
+	in.ChainAddr = zt.HexAddr2Decimal(in.ChainAddr)
+	leaves, err := GetLeafByChainAddress(z.GetLocalDB(), in.ChainAddr)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +158,7 @@ func (z *zksync) Query_GetZkContractAccount(in *zt.ZkQueryReq) (types.Message, e
 		return nil, types.ErrInvalidParam
 	}
 	accountdb, _ := account.NewAccountDB(z.GetAPI().GetConfig(), zt.Zksync, in.TokenSymbol, z.GetStateDB())
-	contractAccount := accountdb.LoadAccount(in.Chain33WalletAddr)
+	contractAccount := accountdb.LoadAccount(in.ChainWalletAddr)
 	return contractAccount, nil
 }
 

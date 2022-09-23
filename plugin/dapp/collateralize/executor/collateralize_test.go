@@ -29,7 +29,7 @@ type execEnv struct {
 	api         client.QueueProtocolAPI
 	db          dbm.KV
 	execAddr    string
-	cfg         *types.Chain33Config
+	cfg         *types.ChainConfig
 	ldb         dbm.DB
 }
 
@@ -75,8 +75,8 @@ func addrKeySet(value string, db dbm.KV) {
 }
 
 func initEnv() *execEnv {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	cfg.RegisterDappFork(pkt.CollateralizeX, pkt.ForkCollateralizeTableUpdate, 0)
 	Init(pkt.CollateralizeX, cfg, nil)
 	_, ldb, kvdb := util.CreateTestDB()

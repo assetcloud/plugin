@@ -64,7 +64,7 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(ParaX, "Enable", 0)
 	cfg.RegisterDappFork(ParaX, "ForkParacrossWithdrawFromParachain", 0)
 	cfg.RegisterDappFork(ParaX, ForkCommitTx, 0)
@@ -81,12 +81,12 @@ func InitFork(cfg *types.Chain33Config) {
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(ParaX, NewType(cfg))
 }
 
 // GetExecName get para exec name
-func GetExecName(cfg *types.Chain33Config) string {
+func GetExecName(cfg *types.ChainConfig) string {
 	return cfg.ExecName(ParaX)
 }
 
@@ -96,7 +96,7 @@ type ParacrossType struct {
 }
 
 // NewType get paracross type
-func NewType(cfg *types.Chain33Config) *ParacrossType {
+func NewType(cfg *types.ChainConfig) *ParacrossType {
 	c := &ParacrossType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

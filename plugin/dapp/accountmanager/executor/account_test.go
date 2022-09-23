@@ -40,8 +40,8 @@ var (
 
 func TestAccountManager(t *testing.T) {
 	//环境准备
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	Init(et.AccountmanagerX, cfg, nil)
 	total := 100 * types.DefaultCoinPrecision
 	accountA := types.Account{
@@ -218,8 +218,8 @@ func CreateRegister(register *et.Register, privKey string) (tx *types.Transactio
 	if err != nil {
 		return nil, err
 	}
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	tx, err = types.FormatTx(cfg, et.AccountmanagerX, tx)
 	if err != nil {
 		return nil, err
@@ -237,8 +237,8 @@ func CreateReset(reset *et.ResetKey, privKey string) (tx *types.Transaction, err
 	if err != nil {
 		return nil, err
 	}
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	tx, err = types.FormatTx(cfg, et.AccountmanagerX, tx)
 	if err != nil {
 		return nil, err
@@ -256,8 +256,8 @@ func CreateTransfer(tranfer *et.Transfer, privKey string) (tx *types.Transaction
 	if err != nil {
 		return nil, err
 	}
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	tx, err = types.FormatTx(cfg, et.AccountmanagerX, tx)
 	if err != nil {
 		return nil, err
@@ -275,8 +275,8 @@ func CreateSupervise(supervise *et.Supervise, privKey string) (tx *types.Transac
 	if err != nil {
 		return nil, err
 	}
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	tx, err = types.FormatTx(cfg, et.AccountmanagerX, tx)
 	if err != nil {
 		return nil, err
@@ -294,8 +294,8 @@ func CreateApply(apply *et.Apply, privKey string) (tx *types.Transaction, err er
 	if err != nil {
 		return nil, err
 	}
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	tx, err = types.FormatTx(cfg, et.AccountmanagerX, tx)
 	if err != nil {
 		return nil, err
@@ -309,8 +309,8 @@ func CreateApply(apply *et.Apply, privKey string) (tx *types.Transaction, err er
 
 //模拟区块中交易得执行过程
 func Exec_Block(t *testing.T, stateDB db.DB, kvdb db.KVDB, env *execEnv, txs ...*types.Transaction) error {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	exec := newAccountmanager()
 	e := exec.(*Accountmanager)
 	q := queue.New("channel")
@@ -354,8 +354,8 @@ func Exec_Block(t *testing.T, stateDB db.DB, kvdb db.KVDB, env *execEnv, txs ...
 }
 
 func Exec_QueryAccountByID(accountID string, stateDB db.KV, kvdb db.KVDB) (*et.Account, error) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	exec := newAccountmanager()
 	q := queue.New("channel")
 	q.SetConfig(cfg)
@@ -371,8 +371,8 @@ func Exec_QueryAccountByID(accountID string, stateDB db.KV, kvdb db.KVDB) (*et.A
 }
 
 func Exec_QueryAccountByAddr(addr string, stateDB db.KV, kvdb db.KVDB) (*et.Account, error) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	exec := newAccountmanager()
 	q := queue.New("channel")
 	q.SetConfig(cfg)
@@ -388,8 +388,8 @@ func Exec_QueryAccountByAddr(addr string, stateDB db.KV, kvdb db.KVDB) (*et.Acco
 }
 
 func Exec_QueryAccountsByStatus(status int32, stateDB db.KV, kvdb db.KVDB) (*et.ReplyAccountList, error) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	exec := newAccountmanager()
 	q := queue.New("channel")
 	q.SetConfig(cfg)
@@ -405,8 +405,8 @@ func Exec_QueryAccountsByStatus(status int32, stateDB db.KV, kvdb db.KVDB) (*et.
 }
 
 func Exec_QueryBalanceByID(in *et.QueryBalanceByID, stateDB db.KV, kvdb db.KVDB) (*et.Balance, error) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	exec := newAccountmanager()
 	q := queue.New("channel")
 	q.SetConfig(cfg)
@@ -422,8 +422,8 @@ func Exec_QueryBalanceByID(in *et.QueryBalanceByID, stateDB db.KV, kvdb db.KVDB)
 }
 
 func Exec_QueryExpiredAccounts(expiredtime int64, stateDB db.KV, kvdb db.KVDB) (*et.ReplyAccountList, error) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	exec := newAccountmanager()
 	q := queue.New("channel")
 	q.SetConfig(cfg)

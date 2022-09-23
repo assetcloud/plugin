@@ -26,7 +26,7 @@ var (
 var driverName = zt.Zksync
 
 // Init register dapp
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), NewZksync, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

@@ -38,7 +38,7 @@ function token_finish() {
 
 function token_balance() {
     req='{"method":"token.GetTokenBalance","params":[{"addresses": ["'"${tradeAddr}"'"],"tokenSymbol":"'"${tokenSymbol}"'","execer": "'"${tokenExecName}"'"}]}'
-    chain33_Http "$req" ${MAIN_HTTP} '(.error | not) and (.result[0].addr == "'"${tradeAddr}"'") and (.result[0].balance == 1000000000000)' "$FUNCNAME"
+    chain_Http "$req" ${MAIN_HTTP} '(.error | not) and (.result[0].addr == "'"${tradeAddr}"'") and (.result[0].balance == 1000000000000)' "$FUNCNAME"
 }
 
 function token_transfer() {
@@ -72,7 +72,7 @@ function trade_createSellTx() {
 
 function trade_getSellOrder() {
     req='{"method":"Chain.Query","params":[{"execer":"'"${tradeExecName}"'","funcName":"GetOnesSellOrder","payload":{"addr": "'"${tradeAddr}"'","token":["'"${tokenSymbol}"'"]}}]}'
-    chain33_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
+    chain_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
     sellID=$(echo "${RETURN_RESP}" | jq -r ".result.orders[0].sellID" | awk -F '-' '{print $4}')
 }
 
@@ -87,32 +87,32 @@ function trade_createBuyTx() {
 
 function trade_getBuyOrder() {
     req='{"method":"Chain.Query","params":[{"execer":"'"${tradeExecName}"'","funcName":"GetOnesBuyOrder","payload":{"addr": "'"${tradeBuyerAddr}"'","token":["'"${tokenSymbol}"'"]}}]}'
-    chain33_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
+    chain_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
 }
 
 function trade_statusBuyOrder() {
     req='{"method":"Chain.Query","params":[{"execer":"'"${tradeExecName}"'","funcName":"GetOnesBuyOrderWithStatus","payload":{"addr": "'"${tradeBuyerAddr}"'","status":6}}]}'
-    chain33_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
+    chain_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
 }
 
 function trade_statusOrder() {
     req='{"method":"Chain.Query","params":[{"execer":"'"${tradeExecName}"'","funcName":"GetOnesOrderWithStatus","payload":{"addr": "'"${tradeAddr}"'","status":1}}]}'
-    chain33_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
+    chain_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
 }
 
 function trade_statusSellOrder() {
     req='{"method":"Chain.Query","params":[{"execer":"'"${tradeExecName}"'","funcName":"GetOnesSellOrderWithStatus","payload":{"addr": "'"${tradeAddr}"'", "status":1}}]}'
-    chain33_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
+    chain_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
 }
 
 function trade_statusTokenBuyOrder() {
     req='{"method":"Chain.Query","params":[{"execer":"'"${tradeExecName}"'","funcName":"GetTokenBuyOrderByStatus","payload":{"tokenSymbol": "'"${tokenSymbol}"'", "count" :1 , "direction": 1,"status":6}}]}'
-    chain33_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
+    chain_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
 }
 
 function trade_statusTokenSellOrder() {
     req='{"method":"Chain.Query","params":[{"execer":"'"${tradeExecName}"'","funcName":"GetTokenSellOrderByStatus","payload":{"tokenSymbol": "'"${tokenSymbol}"'", "count" :1 , "direction": 1,"status":1}}]}'
-    chain33_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
+    chain_Http "$req" ${MAIN_HTTP} '(.error | not)' "$FUNCNAME"
 }
 
 function trade_buyLimit() {
@@ -167,7 +167,7 @@ function queryTransaction() {
 }
 
 function signRawTxAndQuery() {
-    chain33_SignAndSendTx "${unsignedTx}" "$2" "${MAIN_HTTP}"
+    chain_SignAndSendTx "${unsignedTx}" "$2" "${MAIN_HTTP}"
     queryTransaction ".error | not" "true"
     echo_rst "$1 queryExecRes" "$?"
 }
@@ -191,29 +191,29 @@ function init() {
     fi
 
     local main_ip=${MAIN_HTTP//8901/8801}
-    chain33_ImportPrivkey "0xaeef1ad76d43a2056d0dcb57d5bf1ba96471550614ab9e7f611ef9c5ca403f42" "1CvLe1qNaC7tCf5xmfAqJ9UJkMhtmhUKNg" "trade1" "${main_ip}"
+    chain_ImportPrivkey "0xaeef1ad76d43a2056d0dcb57d5bf1ba96471550614ab9e7f611ef9c5ca403f42" "1CvLe1qNaC7tCf5xmfAqJ9UJkMhtmhUKNg" "trade1" "${main_ip}"
 
     local ACCOUNT_A="1CvLe1qNaC7tCf5xmfAqJ9UJkMhtmhUKNg"
 
     if [ "$ispara" == false ]; then
-        chain33_applyCoins "$ACCOUNT_A" 12000000000 "${main_ip}"
-        chain33_QueryBalance "${ACCOUNT_A}" "$main_ip"
+        chain_applyCoins "$ACCOUNT_A" 12000000000 "${main_ip}"
+        chain_QueryBalance "${ACCOUNT_A}" "$main_ip"
     else
-        chain33_applyCoins "$ACCOUNT_A" 1000000000 "${main_ip}"
-        chain33_QueryBalance "${ACCOUNT_A}" "$main_ip"
+        chain_applyCoins "$ACCOUNT_A" 1000000000 "${main_ip}"
+        chain_QueryBalance "${ACCOUNT_A}" "$main_ip"
 
         local para_ip="${MAIN_HTTP}"
-        chain33_ImportPrivkey "0xaeef1ad76d43a2056d0dcb57d5bf1ba96471550614ab9e7f611ef9c5ca403f42" "1CvLe1qNaC7tCf5xmfAqJ9UJkMhtmhUKNg" "trade1" "$para_ip"
+        chain_ImportPrivkey "0xaeef1ad76d43a2056d0dcb57d5bf1ba96471550614ab9e7f611ef9c5ca403f42" "1CvLe1qNaC7tCf5xmfAqJ9UJkMhtmhUKNg" "trade1" "$para_ip"
 
-        chain33_applyCoins "$ACCOUNT_A" 12000000000 "${para_ip}"
-        chain33_QueryBalance "${ACCOUNT_A}" "$para_ip"
+        chain_applyCoins "$ACCOUNT_A" 12000000000 "${para_ip}"
+        chain_QueryBalance "${ACCOUNT_A}" "$para_ip"
     fi
 
-    chain33_SendToAddress "$tradeAddr" "$trade_addr" 10000000000 "${MAIN_HTTP}"
-    chain33_SendToAddress "$tradeAddr" "$token_addr" 10000000000 "${MAIN_HTTP}"
-    chain33_BlockWait 2 "${MAIN_HTTP}"
-    chain33_SendToAddress "$tradeBuyerAddr" "$trade_addr" 10000000000 "${MAIN_HTTP}"
-    chain33_BlockWait 2 "${MAIN_HTTP}"
+    chain_SendToAddress "$tradeAddr" "$trade_addr" 10000000000 "${MAIN_HTTP}"
+    chain_SendToAddress "$tradeAddr" "$token_addr" 10000000000 "${MAIN_HTTP}"
+    chain_BlockWait 2 "${MAIN_HTTP}"
+    chain_SendToAddress "$tradeBuyerAddr" "$trade_addr" 10000000000 "${MAIN_HTTP}"
+    chain_BlockWait 2 "${MAIN_HTTP}"
 
     echo "trade=$trade_addr"
 
@@ -246,14 +246,14 @@ function run_test() {
 }
 
 function main() {
-    chain33_RpcTestBegin trade
+    chain_RpcTestBegin trade
     local ip=$1
     MAIN_HTTP=$ip
     echo "main_ip=$MAIN_HTTP"
 
     init
     run_test "$MAIN_HTTP"
-    chain33_RpcTestRst trade "$CASE_ERR"
+    chain_RpcTestRst trade "$CASE_ERR"
 }
 
-chain33_debug_function main "$1"
+chain_debug_function main "$1"

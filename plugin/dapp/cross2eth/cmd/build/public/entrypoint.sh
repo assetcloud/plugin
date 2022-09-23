@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-/root/chain33 -f /root/chain33.toml &
+/root/chain -f /root/chain.toml &
 # to wait nginx start
 sleep 15
-/root/chain33 -f "$PARAFILE"
+/root/chain -f "$PARAFILE"

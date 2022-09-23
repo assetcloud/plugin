@@ -5,9 +5,9 @@
 # 3. make build
 # ...
 export GO111MODULE=on
-CLI := build/chain33-cli
+CLI := build/chain-cli
 SRC_CLI := github.com/assetcloud/plugin/cli
-APP := build/chain33
+APP := build/chain
 LDFLAGS := ' -w -s'
 BUILDTIME:=$(shell date +"%Y-%m-%d %H:%M:%S %A")
 VERSION=$(shell git describe --tags || git rev-parse --short=8 HEAD)
@@ -27,15 +27,15 @@ build: depends
 	go build $(BUILD_FLAGS) -v -o $(APP)
 	go build $(BUILD_FLAGS) -v -o $(CLI) $(SRC_CLI)
 	go build $(BUILD_FLAGS) -v -o build/fork-config github.com/assetcloud/plugin/cli/fork_config/
-	@cp chain33.toml build/
-	@cp chain33.para.toml build/ci/paracross/
+	@cp chain.toml build/
+	@cp chain.para.toml build/ci/paracross/
 
 
 build_ci: depends ## Build the binary file for CI
 	@go build -v -o $(CLI) $(SRC_CLI)
 	@go build $(BUILD_FLAGS) -v -o $(APP)
-	@cp chain33.toml build/
-	@cp chain33.para.toml build/ci/paracross/
+	@cp chain.toml build/
+	@cp chain.para.toml build/ci/paracross/
 
 
 PLATFORM_LIST = \
@@ -51,32 +51,32 @@ GOBUILD=go build $(BUILD_FLAGS)" -w -s"
 darwin-amd64:
 	GOARCH=amd64 GOOS=darwin $(GOBUILD) -o $(APP)-$@ $(SRC)
 	GOARCH=amd64 GOOS=darwin $(GOBUILD) -o $(CLI)-$@ $(SRC_CLI)
-	cp chain33.para.toml chain33.toml CHANGELOG.md build/ && cd build && \
-	chmod +x chain33-darwin-amd64 && \
-	chmod +x chain33-cli-darwin-amd64 && \
-	tar -zcvf chain33-darwin-amd64.tar.gz chain33-darwin-amd64 chain33-cli-darwin-amd64 chain33.para.toml chain33.toml CHANGELOG.md
+	cp chain.para.toml chain.toml CHANGELOG.md build/ && cd build && \
+	chmod +x chain-darwin-amd64 && \
+	chmod +x chain-cli-darwin-amd64 && \
+	tar -zcvf chain-darwin-amd64.tar.gz chain-darwin-amd64 chain-cli-darwin-amd64 chain.para.toml chain.toml CHANGELOG.md
 
 darwin-arm64:
 	GOARCH=arm64 GOOS=darwin $(GOBUILD) -o $(APP)-$@ $(SRC)
 	GOARCH=arm64 GOOS=darwin $(GOBUILD) -o $(CLI)-$@ $(SRC_CLI)
-	cp chain33.para.toml chain33.toml CHANGELOG.md build/ && cd build && \
-	chmod +x chain33-darwin-arm64 && \
-	chmod +x chain33-cli-darwin-arm64 && \
-	tar -zcvf chain33-darwin-arm64.tar.gz chain33-darwin-arm64 chain33-cli-darwin-arm64 chain33.toml chain33.para.toml CHANGELOG.md
+	cp chain.para.toml chain.toml CHANGELOG.md build/ && cd build && \
+	chmod +x chain-darwin-arm64 && \
+	chmod +x chain-cli-darwin-arm64 && \
+	tar -zcvf chain-darwin-arm64.tar.gz chain-darwin-arm64 chain-cli-darwin-arm64 chain.toml chain.para.toml CHANGELOG.md
 
 linux-amd64:
 	GOARCH=amd64 GOOS=linux $(GOBUILD) -o $(APP)-$@ $(SRC)
 	GOARCH=amd64 GOOS=linux $(GOBUILD) -o $(CLI)-$@ $(SRC_CLI)
-	cp chain33.para.toml chain33.toml CHANGELOG.md build/ && cd build && \
-	chmod +x chain33-linux-amd64 && \
-	chmod +x chain33-cli-linux-amd64 && \
-	tar -zcvf chain33-linux-amd64.tar.gz chain33-linux-amd64 chain33-cli-linux-amd64 chain33.para.toml chain33.toml CHANGELOG.md
+	cp chain.para.toml chain.toml CHANGELOG.md build/ && cd build && \
+	chmod +x chain-linux-amd64 && \
+	chmod +x chain-cli-linux-amd64 && \
+	tar -zcvf chain-linux-amd64.tar.gz chain-linux-amd64 chain-cli-linux-amd64 chain.para.toml chain.toml CHANGELOG.md
 
 windows-amd64:
 	GOARCH=amd64 GOOS=windows $(GOBUILD) -o $(APP)-$@.exe $(SRC)
 	GOARCH=amd64 GOOS=windows $(GOBUILD) -o $(CLI)-$@.exe $(SRC_CLI)
-	cp chain33.para.toml chain33.toml CHANGELOG.md build/ && cd build && \
-	zip -j  chain33-windows-amd64.zip chain33-windows-amd64.exe chain33-cli-windows-amd64.exe chain33.para.toml chain33.toml CHANGELOG.md
+	cp chain.para.toml chain.toml CHANGELOG.md build/ && cd build && \
+	zip -j  chain-windows-amd64.zip chain-windows-amd64.exe chain-cli-windows-amd64.exe chain.para.toml chain.toml CHANGELOG.md
 
 all-arch: $(PLATFORM_LIST) $(WINDOWS_ARCH_LIST)
 
@@ -154,31 +154,31 @@ coverage: ## Generate global code coverage report
 coverhtml: ## Generate global code coverage report in HTML
 	@./build/tools/coverage.sh html;
 
-docker: ## build docker image for chain33 run
-	@sudo docker build . -f ./build/Dockerfile-run -t chain33:latest
+docker: ## build docker image for chain run
+	@sudo docker build . -f ./build/Dockerfile-run -t chain:latest
 
 #extra can make more test setting
-docker-compose: ## build docker-compose for chain33 run
+docker-compose: ## build docker-compose for chain run
 	@cd build && if ! [ -d ci ]; then \
 	 make -C ../ ; \
 	 fi; \
-	 cp chain33* Dockerfile  docker-compose.yml *.sh ci/ && cd ci/ && ./docker-compose-pre.sh run $(proj) $(dapp) $(extra) && cd ../..
+	 cp chain* Dockerfile  docker-compose.yml *.sh ci/ && cd ci/ && ./docker-compose-pre.sh run $(proj) $(dapp) $(extra) && cd ../..
 
-docker-compose-down: ## build docker-compose for chain33 run
+docker-compose-down: ## build docker-compose for chain run
 	@cd build && if [ -d ci ]; then \
-	 cp chain33* Dockerfile  docker-compose* ci/ && cd ci/ && ./docker-compose-pre.sh down $(proj) $(dapp) && cd .. ; \
+	 cp chain* Dockerfile  docker-compose* ci/ && cd ci/ && ./docker-compose-pre.sh down $(proj) $(dapp) && cd .. ; \
 	 fi; \
 	 cd ..
 
-metrics:## build docker-compose for chain33 metrics
+metrics:## build docker-compose for chain metrics
 	@cd build && if ! [ -d ci ]; then \
 	 make -C ../ ; \
 	 fi; \
-	 cp chain33* Dockerfile  docker-compose.yml docker-compose-metrics.yml influxdb.conf *.sh ci/paracross/testcase.sh metrics/ && ./docker-compose-pre.sh run $(proj) metrics  && cd ../..
+	 cp chain* Dockerfile  docker-compose.yml docker-compose-metrics.yml influxdb.conf *.sh ci/paracross/testcase.sh metrics/ && ./docker-compose-pre.sh run $(proj) metrics  && cd ../..
 
 
-fork-test: ## build fork-test for chain33 run
-	@cd build && cp chain33* Dockerfile system-fork-test.sh docker-compose* ci/ && cd ci/ && ./docker-compose-pre.sh forktest $(proj) $(dapp) && cd ../..
+fork-test: ## build fork-test for chain run
+	@cd build && cp chain* Dockerfile system-fork-test.sh docker-compose* ci/ && cd ci/ && ./docker-compose-pre.sh forktest $(proj) $(dapp) && cd ../..
 
 largefile-check:
 	git gc
@@ -186,7 +186,7 @@ largefile-check:
 
 clean: ## Remove previous build
 	@rm -rf $(shell find . -name 'datadir' -not -path "./vendor/*")
-	@rm -rf build/chain33*
+	@rm -rf build/chain*
 	@rm -rf build/relayd*
 	@rm -rf build/*.log
 	@rm -rf build/logs
@@ -216,7 +216,7 @@ cleandata:
 	rm -rf build/datadir/addrbook
 	rm -rf build/datadir/blockchain.db
 	rm -rf build/datadir/mavltree
-	rm -rf build/chain33.log
+	rm -rf build/chain.log
 
 .PHONY: checkgofmt
 checkgofmt: ## get all go files and run go fmt on them

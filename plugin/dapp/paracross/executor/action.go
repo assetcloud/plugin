@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"strings"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/account"
 	"github.com/assetcloud/chain/client"
 	"github.com/assetcloud/chain/common"
@@ -19,6 +18,7 @@ import (
 	"github.com/assetcloud/chain/system/dapp"
 	"github.com/assetcloud/chain/types"
 	"github.com/assetcloud/chain/util"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 )
@@ -87,7 +87,7 @@ func getParacrossNodes(db dbm.KV, title string) (map[string]struct{}, []string, 
 	return getNodes(db, key)
 }
 
-func validTitle(cfg *types.Chain33Config, title string) bool {
+func validTitle(cfg *types.ChainConfig, title string) bool {
 	if cfg.IsPara() {
 		return cfg.GetTitle() == title
 	}
@@ -101,7 +101,7 @@ func validNode(addr string, nodes map[string]struct{}) bool {
 	return false
 }
 
-func checkCommitInfo(cfg *types.Chain33Config, commit *pt.ParacrossNodeStatus) error {
+func checkCommitInfo(cfg *types.ChainConfig, commit *pt.ParacrossNodeStatus) error {
 	if commit == nil {
 		return types.ErrInvalidParam
 	}
@@ -194,7 +194,7 @@ func makeRecordReceipt(addr string, commit *pt.ParacrossNodeStatus) *types.Recei
 	}
 }
 
-func makeDoneReceipt(cfg *types.Chain33Config, execMainHeight, execHeight int64, commit *pt.ParacrossNodeStatus,
+func makeDoneReceipt(cfg *types.ChainConfig, execMainHeight, execHeight int64, commit *pt.ParacrossNodeStatus,
 	most, commitCount, totalCount, mostSupervisionCount, totalSupervisionCommit, totalSupervisionNodes int32) *types.Receipt {
 
 	log := &pt.ReceiptParacrossDone{
@@ -372,7 +372,7 @@ func updateSupervisionDetailsCommitAddrs(stat *pt.ParacrossHeightStatus, nodes m
 //自共识分阶段使能，综合考虑挖矿奖励和共识分配奖励，判断是否自共识使能需要采用共识的高度，而不能采用当前区块高度a.height
 //考虑自共识使能区块高度100，如果采用区块高度判断，则在100高度可能收到80~99的20条共识交易，这20条交易在100高度参与共识，则无奖励可分配，而且共识高度将是80而不是100
 //采用共识高度commit.Status.Height判断，则严格执行了产生奖励和分配奖励，且共识高度从100开始
-func paraCheckSelfConsOn(cfg *types.Chain33Config, db dbm.KV, commit *pt.ParacrossNodeStatus) (bool, *types.Receipt, error) {
+func paraCheckSelfConsOn(cfg *types.ChainConfig, db dbm.KV, commit *pt.ParacrossNodeStatus) (bool, *types.Receipt, error) {
 	if !cfg.IsDappFork(commit.Height, pt.ParaX, pt.ForkParaSelfConsStages) {
 		return true, nil, nil
 	}
@@ -822,7 +822,7 @@ func (a *action) commitTxDoneStep2(nodeStatus *pt.ParacrossNodeStatus, stat *pt.
 	return receipt, nil
 }
 
-func isHaveCrossTxs(cfg *types.Chain33Config, status *pt.ParacrossNodeStatus) bool {
+func isHaveCrossTxs(cfg *types.ChainConfig, status *pt.ParacrossNodeStatus) bool {
 	//ForkLoopCheckCommitTxDone分叉后只返回全部txResult的结果，要实际过滤出来后才能确定有没有跨链tx
 	if pt.IsParaForkHeight(cfg, status.MainBlockHeight, pt.ForkLoopCheckCommitTxDone) {
 		return true
@@ -1553,7 +1553,7 @@ func (a *action) execCrossTxs(status *pt.ParacrossNodeStatus) (*types.Receipt, e
 
 }
 
-func (a *action) assetTransferMainCheck(cfg *types.Chain33Config, transfer *types.AssetsTransfer) error {
+func (a *action) assetTransferMainCheck(cfg *types.ChainConfig, transfer *types.AssetsTransfer) error {
 	//主链如果没有nodegroup配置，也不允许跨链,直接返回错误，平行链也不会执行
 	if cfg.IsDappFork(a.height, pt.ParaX, pt.ForkParaAssetTransferRbk) {
 		if len(transfer.To) == 0 {
@@ -1584,7 +1584,7 @@ func (a *action) AssetTransfer(transfer *types.AssetsTransfer) (*types.Receipt, 
 	return receipt, nil
 }
 
-func (a *action) assetWithdrawMainCheck(cfg *types.Chain33Config, withdraw *types.AssetsWithdraw) error {
+func (a *action) assetWithdrawMainCheck(cfg *types.ChainConfig, withdraw *types.AssetsWithdraw) error {
 	if !cfg.IsDappFork(a.height, pt.ParaX, "ForkParacrossWithdrawFromParachain") {
 		if withdraw.Cointoken != "" {
 			return errors.Wrapf(types.ErrNotSupport, "not support,token=%s", withdraw.Cointoken)

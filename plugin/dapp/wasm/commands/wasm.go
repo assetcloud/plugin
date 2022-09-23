@@ -45,7 +45,7 @@ func cmdCheckContract() *cobra.Command {
 func cmdCreateContract() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "publish a new contract on chain33",
+		Short: "publish a new contract on chain",
 		Run:   createContract,
 	}
 	cmd.Flags().StringP("name", "n", "", "contract name")
@@ -58,7 +58,7 @@ func cmdCreateContract() *cobra.Command {
 func cmdUpdateContract() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update",
-		Short: "update an existing contract on chain33",
+		Short: "update an existing contract on chain",
 		Run:   updateContract,
 	}
 	cmd.Flags().StringP("name", "n", "", "contract name")
@@ -71,7 +71,7 @@ func cmdUpdateContract() *cobra.Command {
 func cmdCallContract() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "call",
-		Short: "call contract on chain33",
+		Short: "call contract on chain",
 		Run:   callContract,
 	}
 	cmd.Flags().StringP("name", "n", "", "contract name")

@@ -653,7 +653,7 @@ func listPrivacyTxsFlags(cmd *cobra.Command, args []string) {
 
 func parseWalletTxListRes(arg ...interface{}) (interface{}, error) {
 	res := arg[0].(*rpctypes.WalletTxDetails)
-	cfg := arg[1].(*types.Chain33Config)
+	cfg := arg[1].(*types.ChainConfig)
 	var result cmdtypes.WalletTxDetailsResult
 	for _, v := range res.TxDetails {
 		amountResult := types.FormatAmount2FloatDisplay(v.Amount, cfg.GetCoinPrecision(), true)

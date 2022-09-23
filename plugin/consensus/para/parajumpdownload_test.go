@@ -54,7 +54,7 @@ func TestGetHeightsArry(t *testing.T) {
 
 func TestFetchHeightListBlocks(t *testing.T) {
 	para := &client{}
-	grpcClient := &typesmocks.Chain33Client{}
+	grpcClient := &typesmocks.ChainClient{}
 	para.grpcClient = grpcClient
 	jump := &jumpDldClient{paraClient: para}
 

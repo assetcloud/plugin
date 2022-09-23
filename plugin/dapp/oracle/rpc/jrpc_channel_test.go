@@ -42,7 +42,7 @@ func TestJRPCChannel(t *testing.T) {
 	assert.NotNil(t, jrpcClient)
 
 	testCases := []struct {
-		fn func(*testing.T, *types.Chain33Config, *jsonclient.JSONClient) error
+		fn func(*testing.T, *types.ChainConfig, *jsonclient.JSONClient) error
 	}{
 		{fn: testPublishEventRawCmd},
 		{fn: testAbortEventRawTxCmd},
@@ -81,7 +81,7 @@ func TestJRPCChannel(t *testing.T) {
 	}
 }
 
-func testPublishEventRawCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
+func testPublishEventRawCmd(t *testing.T, cfg *types.ChainConfig, jrpc *jsonclient.JSONClient) error {
 	timeStr := "2019-01-21 15:30:00"
 	layout := "2006-01-02 15:04:05"
 	ti, err := time.Parse(layout, timeStr)
@@ -105,7 +105,7 @@ func testPublishEventRawCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsoncl
 	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
-func testAbortEventRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
+func testAbortEventRawTxCmd(t *testing.T, cfg *types.ChainConfig, jrpc *jsonclient.JSONClient) error {
 	payload := &oty.EventAbort{EventID: "123"}
 	params := &rpctypes.CreateTxIn{
 		Execer:     cfg.ExecName(oty.OracleX),
@@ -116,7 +116,7 @@ func testAbortEventRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsoncl
 	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
-func testPrePublishResultRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
+func testPrePublishResultRawTxCmd(t *testing.T, cfg *types.ChainConfig, jrpc *jsonclient.JSONClient) error {
 	payload := &oty.ResultPrePublish{
 		EventID: "123",
 		Source:  "新浪体育",
@@ -131,7 +131,7 @@ func testPrePublishResultRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *
 	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
-func testAbortPrePubResultRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
+func testAbortPrePubResultRawTxCmd(t *testing.T, cfg *types.ChainConfig, jrpc *jsonclient.JSONClient) error {
 	payload := &oty.EventAbort{EventID: "123"}
 	params := &rpctypes.CreateTxIn{
 		Execer:     cfg.ExecName(oty.OracleX),
@@ -142,7 +142,7 @@ func testAbortPrePubResultRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc 
 	return jrpc.Call("Chain.CreateTransaction", params, &res)
 }
 
-func testPublishResultRawTxCmd(t *testing.T, cfg *types.Chain33Config, jrpc *jsonclient.JSONClient) error {
+func testPublishResultRawTxCmd(t *testing.T, cfg *types.ChainConfig, jrpc *jsonclient.JSONClient) error {
 	payload := &oty.ResultPrePublish{
 		EventID: "123",
 		Source:  "新浪体育",

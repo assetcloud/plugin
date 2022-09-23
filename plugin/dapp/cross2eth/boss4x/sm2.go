@@ -7,7 +7,7 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	chain33Common "github.com/assetcloud/chain/common"
+	chainCommon "github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/system/crypto/sm2"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
@@ -79,9 +79,9 @@ func decryptWithSm2(cmd *cobra.Command, args []string) {
 	symmKeyCipherStr, _ := cmd.Flags().GetString("symmKeyCipher")
 
 	//第一步，解密数字信封
-	sm2key, err := chain33Common.FromHex(sm2keyStr)
+	sm2key, err := chainCommon.FromHex(sm2keyStr)
 	if nil != err {
-		fmt.Println("chain33Common.FromHex failed due to:" + err.Error())
+		fmt.Println("chainCommon.FromHex failed due to:" + err.Error())
 		return
 	}
 	if 32 != len(sm2key) {
@@ -101,9 +101,9 @@ func decryptWithSm2(cmd *cobra.Command, args []string) {
 		D: new(big.Int).SetBytes(sm2key),
 	}
 
-	symmKeyCipher, err := chain33Common.FromHex(symmKeyCipherStr)
+	symmKeyCipher, err := chainCommon.FromHex(symmKeyCipherStr)
 	if nil != err {
-		fmt.Println("chain33Common.FromHex failed for cipher due to:" + err.Error())
+		fmt.Println("chainCommon.FromHex failed for cipher due to:" + err.Error())
 		return
 	}
 	symmKeyCipher = append([]byte{0x04}, symmKeyCipher...)
@@ -112,7 +112,7 @@ func decryptWithSm2(cmd *cobra.Command, args []string) {
 		fmt.Println("sm2 decrypt failed due to:" + err.Error())
 		return
 	}
-	fmt.Println("The decrypted sm4 key is:"+chain33Common.ToHex(sm4Key), "len:", len(sm4Key))
+	fmt.Println("The decrypted sm4 key is:"+chainCommon.ToHex(sm4Key), "len:", len(sm4Key))
 	//第二步，通过数字信封中的对称密钥，进行sm4对称解密
 	sm4Cihpher, err := gmsm4.NewCipher(sm4Key)
 	if err != nil {
@@ -120,15 +120,15 @@ func decryptWithSm2(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	cipher, err := chain33Common.FromHex(cipherStr)
+	cipher, err := chainCommon.FromHex(cipherStr)
 	if nil != err {
-		fmt.Println("chain33Common.FromHex failed for cipher due to:" + err.Error())
+		fmt.Println("chainCommon.FromHex failed for cipher due to:" + err.Error())
 		return
 	}
 	dst := make([]byte, 32)
 	sm4Cihpher.Decrypt(dst, cipher)
 	sm4Cihpher.Decrypt(dst[16:], cipher[16:])
-	fmt.Println(chain33Common.ToHex(dst))
+	fmt.Println(chainCommon.ToHex(dst))
 }
 
 func encryptWithSm2Cmd() *cobra.Command {
@@ -156,9 +156,9 @@ func encryptWithSm2(cmd *cobra.Command, args []string) {
 	sm2keyStr, _ := cmd.Flags().GetString("sm2key")
 	privatKeyStr, _ := cmd.Flags().GetString("key")
 	symmKeyCipher, _ := cmd.Flags().GetString("sm4key")
-	sm4Key, err := chain33Common.FromHex(symmKeyCipher)
+	sm4Key, err := chainCommon.FromHex(symmKeyCipher)
 	if nil != err {
-		fmt.Println("chain33Common.FromHex failed for cipher due to:" + err.Error())
+		fmt.Println("chainCommon.FromHex failed for cipher due to:" + err.Error())
 		return
 	}
 
@@ -169,9 +169,9 @@ func encryptWithSm2(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	privateKeySlice, err := chain33Common.FromHex(privatKeyStr)
+	privateKeySlice, err := chainCommon.FromHex(privatKeyStr)
 	if nil != err {
-		fmt.Println("chain33Common.FromHex failed for cipher due to:" + err.Error())
+		fmt.Println("chainCommon.FromHex failed for cipher due to:" + err.Error())
 		return
 	}
 	if len(privateKeySlice) != 32 {
@@ -183,9 +183,9 @@ func encryptWithSm2(cmd *cobra.Command, args []string) {
 	sm4Cihpher.Encrypt(dst[16:], privateKeySlice[16:])
 
 	//第二步，加密数字信封
-	sm2key, err := chain33Common.FromHex(sm2keyStr)
+	sm2key, err := chainCommon.FromHex(sm2keyStr)
 	if nil != err {
-		fmt.Println("chain33Common.FromHex failed due to:" + err.Error())
+		fmt.Println("chainCommon.FromHex failed due to:" + err.Error())
 		return
 	}
 	if 32 != len(sm2key) {

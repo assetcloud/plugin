@@ -16,7 +16,7 @@ var uflog = log.New("module", "execs.unfreeze")
 var driverName = uf.UnfreezeX
 
 // Init 重命名执行器名称
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newUnfreeze, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

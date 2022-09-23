@@ -110,12 +110,12 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(AccountmanagerX, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(AccountmanagerX, NewType(cfg))
 }
 
@@ -125,7 +125,7 @@ type AccountmanagerType struct {
 }
 
 //NewType ...
-func NewType(cfg *types.Chain33Config) *AccountmanagerType {
+func NewType(cfg *types.ChainConfig) *AccountmanagerType {
 	c := &AccountmanagerType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

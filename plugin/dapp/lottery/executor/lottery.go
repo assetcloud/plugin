@@ -24,7 +24,7 @@ type subConfig struct {
 var subCfg subConfig
 
 // Init lottery
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	driverName := GetName()
 	if name != driverName {
 		panic("system dapp can't be rename")

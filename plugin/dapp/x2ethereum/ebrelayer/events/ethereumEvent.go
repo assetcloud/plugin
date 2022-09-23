@@ -25,19 +25,19 @@ type LockEvent struct {
 
 // BurnEvent : struct which represents a BurnEvent event
 type BurnEvent struct {
-	Token           common.Address
-	Symbol          string
-	Amount          *big.Int
-	OwnerFrom       common.Address
-	Chain33Receiver []byte
-	Nonce           *big.Int
+	Token         common.Address
+	Symbol        string
+	Amount        *big.Int
+	OwnerFrom     common.Address
+	ChainReceiver []byte
+	Nonce         *big.Int
 }
 
 // NewProphecyClaimEvent : struct which represents a LogNewProphecyClaim event
 type NewProphecyClaimEvent struct {
 	ProphecyID       *big.Int
 	ClaimType        uint8
-	Chain33Sender    []byte
+	ChainSender      []byte
 	EthereumReceiver common.Address
 	ValidatorAddress common.Address
 	TokenAddress     common.Address
@@ -80,6 +80,6 @@ func UnpackLogBurn(contractAbi abi.ABI, eventName string, eventData []byte) (bur
 
 	eventsLog.Info("UnpackLogBurn", "token addr", event.Token.Hex(), "symbol", event.Symbol,
 		"Amount", event.Amount.String(), "OwnerFrom", event.OwnerFrom.String(),
-		"Chain33Receiver", string(event.Chain33Receiver), "nonce", event.Nonce.String())
+		"ChainReceiver", string(event.ChainReceiver), "nonce", event.Nonce.String())
 	return event, nil
 }

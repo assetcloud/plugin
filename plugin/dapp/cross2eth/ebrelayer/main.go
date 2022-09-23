@@ -15,19 +15,19 @@ import (
 	"path/filepath"
 	"syscall"
 
+	tml "github.com/BurntSushi/toml"
+	dbm "github.com/assetcloud/chain/common/db"
+	logf "github.com/assetcloud/chain/common/log"
+	"github.com/assetcloud/chain/common/log/log15"
+	chainTypes "github.com/assetcloud/chain/types"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer"
-	chain33Relayer "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33"
+	chainRelayer "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain"
 	ethRelayer "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
 	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version"
 	pluginVersion "github.com/assetcloud/plugin/version"
-	tml "github.com/BurntSushi/toml"
-	dbm "github.com/assetcloud/chain/common/db"
-	logf "github.com/assetcloud/chain/common/log"
-	"github.com/assetcloud/chain/common/log/log15"
-	chain33Types "github.com/assetcloud/chain/types"
 	"github.com/btcsuite/btcd/limits"
 )
 
@@ -84,16 +84,16 @@ func main() {
 	db := dbm.NewDB("relayer_db_service", cfg.Dbdriver, cfg.DbPath, cfg.DbCache)
 
 	ethRelayerCnt := len(cfg.EthRelayerCfg)
-	chain33MsgChan2Eths := make(map[string]chan<- *events.Chain33Msg)
+	chainMsgChan2Eths := make(map[string]chan<- *events.ChainMsg)
 	ethBridgeClaimChan := make(chan *ebrelayerTypes.EthBridgeClaim, 100)
-	txRelayAckChan2Chain33 := make(chan *ebrelayerTypes.TxRelayAck, 100)
+	txRelayAckChan2Chain := make(chan *ebrelayerTypes.TxRelayAck, 100)
 	txRelayAckChan2Eth := make(map[string]chan<- *ebrelayerTypes.TxRelayAck)
 
 	//启动多个以太坊系中继器
 	ethRelayerServices := make(map[string]*ethRelayer.Relayer4Ethereum)
 	for i := 0; i < ethRelayerCnt; i++ {
-		chain33MsgChan := make(chan *events.Chain33Msg, 100)
-		chain33MsgChan2Eths[cfg.EthRelayerCfg[i].EthChainName] = chain33MsgChan
+		chainMsgChan := make(chan *events.ChainMsg, 100)
+		chainMsgChan2Eths[cfg.EthRelayerCfg[i].EthChainName] = chainMsgChan
 
 		txRelayAckRecvChan := make(chan *ebrelayerTypes.TxRelayAck, 100)
 		txRelayAckChan2Eth[cfg.EthRelayerCfg[i].EthChainName] = txRelayAckRecvChan
@@ -106,9 +106,9 @@ func main() {
 			Degree:               cfg.EthRelayerCfg[i].EthMaturityDegree,
 			BlockInterval:        cfg.EthRelayerCfg[i].EthBlockFetchPeriod,
 			EthBridgeClaimChan:   ethBridgeClaimChan,
-			TxRelayAckSendChan:   txRelayAckChan2Chain33,
+			TxRelayAckSendChan:   txRelayAckChan2Chain,
 			TxRelayAckRecvChan:   txRelayAckRecvChan,
-			Chain33MsgChan:       chain33MsgChan,
+			ChainMsgChan:         chainMsgChan,
 			ProcessWithDraw:      cfg.ProcessWithDraw,
 			Name:                 cfg.EthRelayerCfg[i].EthChainName,
 			StartListenHeight:    cfg.EthRelayerCfg[i].StartListenHeight,
@@ -126,29 +126,29 @@ func main() {
 		ethRelayerServices[ethStartPara.Name] = ethRelayerService
 	}
 
-	//启动chain33中继器
-	chain33StartPara := &chain33Relayer.Chain33StartPara{
-		ChainName:          cfg.Chain33RelayerCfg.ChainName,
+	//启动chain中继器
+	chainStartPara := &chainRelayer.ChainStartPara{
+		ChainName:          cfg.ChainRelayerCfg.ChainName,
 		Ctx:                ctx,
-		SyncTxConfig:       cfg.Chain33RelayerCfg.SyncTxConfig,
-		BridgeRegistryAddr: cfg.Chain33RelayerCfg.BridgeRegistryOnChain33,
+		SyncTxConfig:       cfg.ChainRelayerCfg.SyncTxConfig,
+		BridgeRegistryAddr: cfg.ChainRelayerCfg.BridgeRegistryOnChain,
 		DBHandle:           db,
 		EthBridgeClaimChan: ethBridgeClaimChan,
-		TxRelayAckRecvChan: txRelayAckChan2Chain33,
+		TxRelayAckRecvChan: txRelayAckChan2Chain,
 		TxRelayAckSendChan: txRelayAckChan2Eth,
-		Chain33MsgChan:     chain33MsgChan2Eths,
-		ChainID:            cfg.Chain33RelayerCfg.ChainID4Chain33,
+		ChainMsgChan:       chainMsgChan2Eths,
+		ChainID:            cfg.ChainRelayerCfg.ChainID4Chain,
 		ProcessWithDraw:    cfg.ProcessWithDraw,
 		DelayedSendTime:    cfg.DelayedSendTime,
 	}
 	if cfg.DelayedSendTime > 0 {
-		chain33StartPara.DelayedSend = true
+		chainStartPara.DelayedSend = true
 	} else {
-		chain33StartPara.DelayedSend = false
+		chainStartPara.DelayedSend = false
 	}
-	chain33RelayerService := chain33Relayer.StartChain33Relayer(chain33StartPara)
+	chainRelayerService := chainRelayer.StartChainRelayer(chainStartPara)
 
-	relayerManager := relayer.NewRelayerManager(chain33RelayerService, ethRelayerServices, db)
+	relayerManager := relayer.NewRelayerManager(chainRelayerService, ethRelayerServices, db)
 
 	go func() {
 		mainlog.Info("ebrelayer", "cfg.JrpcBindAddr = ", cfg.JrpcBindAddr)
@@ -169,8 +169,8 @@ func procSig(cancel context.CancelFunc) {
 	}
 }
 
-func convertLogCfg(log *relayerTypes.Log) *chain33Types.Log {
-	return &chain33Types.Log{
+func convertLogCfg(log *relayerTypes.Log) *chainTypes.Log {
+	return &chainTypes.Log{
 		Loglevel:        log.Loglevel,
 		LogConsoleLevel: log.LogConsoleLevel,
 		LogFile:         log.LogFile,

@@ -1,5 +1,5 @@
 ### 合约开发
-新建 cpp 和 hpp 文件，并导入 common.h 头文件，其中 common.h 中声明了 chain33 中的回调函数，是合约调用 chain33 系统方法的接口。   
+新建 cpp 和 hpp 文件，并导入 common.h 头文件，其中 common.h 中声明了 chain 中的回调函数，是合约调用 chain 系统方法的接口。   
 
 合约中的导出方法的所有参数都只能是数字类型，且必须有一个数字类型的返回值，其中非负值表示执行成功，负值表示执行失败。
 
@@ -34,7 +34,7 @@ em++ -o dice.wasm dice.cpp -s WASM=1 -O3 -s EXPORTED_FUNCTIONS="[_startgame, _de
 - -s WASM=1 指定生成 wasm 文件   
 - -O3 优化等级，可以优化生成的 wasm 文件大小，可指定为 1～3   
 - -s EXPORTED_FUNCTIONS 指定导出方法列表，以逗号分隔，合约外部只可以调用导出方法，不能调用非导出方法，导出方法的函数名需要额外加一个 "_"
-- -s ERROR_ON_UNDEFINED_SYMBOLS=0 忽略未定义错误，因为 common.h 中声明的方法没有具体的 c/c++ 实现，而是在 chain33 中用 go 实现，因此需要忽略该错误，否则将编译失败
+- -s ERROR_ON_UNDEFINED_SYMBOLS=0 忽略未定义错误，因为 common.h 中声明的方法没有具体的 c/c++ 实现，而是在 chain 中用 go 实现，因此需要忽略该错误，否则将编译失败
 
 参考文档：https://developer.mozilla.org/en-US/docs/WebAssembly
 
@@ -57,43 +57,43 @@ wabt/bin/wasm2wat dice.wasm
 ### 发布合约
 ```bash
 # 若合约已存在则会创建失败，可以换一个合约名发布
-./chain33-cli send wasm create -n 指定合约名 -p wasm合约路径 -k 用户私钥
+./chain-cli send wasm create -n 指定合约名 -p wasm合约路径 -k 用户私钥
 ```
 
 ### 检查合约发布结果
 ```bash
 # 检查链上是否存在该合约
-./chain33-cli wasm check -n 合约名
+./chain-cli wasm check -n 合约名
 ```
 
 ### 更新合约
 ```bash
 # 更新合约要求合约已存在，且只有合约创建者有更新权限
-./chain33-cli send wasm update -n 指定合约名 -p wasm合约路径 -k 用户私钥
+./chain-cli send wasm update -n 指定合约名 -p wasm合约路径 -k 用户私钥
 ```
 
 ### 调用合约
 ```bash
 #其中参数为用逗号分隔的数字列表，字符串参数为逗号分隔的字符串列表
-./chain33-cli send wasm call -n 发布合约时指定的合约 -m 调用合约方法名 -p 参数 -v 字符串参数 -k 用户私钥  
+./chain-cli send wasm call -n 发布合约时指定的合约 -m 调用合约方法名 -p 参数 -v 字符串参数 -k 用户私钥  
 ```
 
 ### 查询合约数据
 ```bash
 # 查询statedb
-./chain33-cli wasm query state -n 合约名 -k 数据库key  
+./chain-cli wasm query state -n 合约名 -k 数据库key  
 
 # 查询localdb
-./chain33-cli wasm query local -n 合约名 -k 数据库key  
+./chain-cli wasm query local -n 合约名 -k 数据库key  
 ```
 
 ### 转账及提款
 ```bash
 #部分合约调用可能需要在合约中有余额，需要先转账到 wasm 合约
-./chain33-cli send coins send_exec -e wasm -a 数量 -k 用户私钥
+./chain-cli send coins send_exec -e wasm -a 数量 -k 用户私钥
 
 #提款
-./chain33-cli send coins withdraw -e wasm -a 数量 -k 用户私钥
+./chain-cli send coins withdraw -e wasm -a 数量 -k 用户私钥
 ```
 ### RPC接口调用
 ```bash

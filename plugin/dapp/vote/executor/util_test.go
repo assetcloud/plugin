@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	"github.com/assetcloud/chain/client"
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/common/crypto"
@@ -15,6 +14,7 @@ import (
 	"github.com/assetcloud/chain/types"
 	"github.com/assetcloud/chain/util"
 	wcom "github.com/assetcloud/chain/wallet/common"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -42,7 +42,7 @@ var (
 	}
 
 	privKeys = make([]crypto.PrivKey, len(testPrivateKeys))
-	testCfg  = types.NewChain33Config(types.GetDefaultCfgstring())
+	testCfg  = types.NewChainConfig(types.GetDefaultCfgstring())
 )
 
 func init() {
@@ -59,7 +59,7 @@ type testExecMock struct {
 	stateDB  dbm.DB
 	exec     *vote
 	policy   wcom.WalletBizPolicy
-	cfg      *types.Chain33Config
+	cfg      *types.ChainConfig
 	q        queue.Queue
 	qapi     client.QueueProtocolAPI
 	execType types.ExecutorType

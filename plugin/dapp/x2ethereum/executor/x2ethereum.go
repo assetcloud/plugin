@@ -20,7 +20,7 @@ var (
 var driverName = x2eTy.X2ethereumX
 
 // Init register dapp
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newX2ethereum, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 

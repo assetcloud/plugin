@@ -45,12 +45,12 @@ func init() {
 }
 
 // InitFork initials coins forks.
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(CoinsxX, "Enable", 0)
 }
 
 // InitExecutor registers coins.
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(CoinsxX, NewType(cfg))
 }
 
@@ -60,7 +60,7 @@ type CoinsxType struct {
 }
 
 // NewType new coinstype
-func NewType(cfg *types.Chain33Config) *CoinsxType {
+func NewType(cfg *types.ChainConfig) *CoinsxType {
 	c := &CoinsxType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

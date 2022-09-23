@@ -18,7 +18,7 @@ import (
 var logger = log.New("module", "execs.pokerbull")
 
 // Init 执行器初始化
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, newPBGame().GetName(), newPBGame, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

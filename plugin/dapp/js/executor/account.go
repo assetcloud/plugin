@@ -8,7 +8,7 @@ import (
 )
 
 /*
-//chain33 相关的账户操作函数 （操作某个execer 下面的 symbol）
+//chain 相关的账户操作函数 （操作某个execer 下面的 symbol）
 function Account(execer, symbol) {
 	this.execer = execer
 	this.symbol = symbol

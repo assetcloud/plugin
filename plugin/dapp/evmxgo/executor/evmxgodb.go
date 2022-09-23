@@ -349,8 +349,8 @@ func (action *evmxgoAction) burn(burn *evmxgotypes.EvmxgoBurn) (*types.Receipt, 
 		elog.Error("evmxgo burn ", "symbol", burn.GetSymbol(), "error", err, "from", action.fromaddr)
 		return nil, err
 	}
-	chain33cfg := action.api.GetConfig()
-	evmxgoAccount, err := account.NewAccountDB(chain33cfg, "evmxgo", burn.GetSymbol(), action.stateDB)
+	chaincfg := action.api.GetConfig()
+	evmxgoAccount, err := account.NewAccountDB(chaincfg, "evmxgo", burn.GetSymbol(), action.stateDB)
 	if err != nil {
 		return nil, err
 	}
@@ -420,8 +420,8 @@ func (action *evmxgoAction) burnMap(burn *evmxgotypes.EvmxgoBurnMap) (*types.Rec
 		elog.Error("evmxgo burn ", "symbol", burn.GetSymbol(), "error", err, "from", action.fromaddr)
 		return nil, err
 	}
-	chain33cfg := action.api.GetConfig()
-	evmxgoAccount, err := account.NewAccountDB(chain33cfg, "evmxgo", burn.GetSymbol(), action.stateDB)
+	chaincfg := action.api.GetConfig()
+	evmxgoAccount, err := account.NewAccountDB(chaincfg, "evmxgo", burn.GetSymbol(), action.stateDB)
 	if err != nil {
 		return nil, err
 	}

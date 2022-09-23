@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 #1ks returner chain31
-ZKSYNC_CLI31="docker exec ${NODE1} /root/chain33-cli "
+ZKSYNC_CLI31="docker exec ${NODE1} /root/chain-cli "
 #1jr  authorize chain32
-ZKSYNC_CLI32="docker exec ${NODE2} /root/chain33-cli "
+ZKSYNC_CLI32="docker exec ${NODE2} /root/chain-cli "
 #1nl receiver  chain30
-ZKSYNC_CLI30="docker exec ${NODE4} /root/chain33-cli "
+ZKSYNC_CLI30="docker exec ${NODE4} /root/chain-cli "
 
 # shellcheck source=/dev/null
 #source test-rpc.sh
@@ -61,8 +61,8 @@ function zksync_init() {
 function zksync_deposit() {
     echo "=========== # zksync deposit test ============="
     #1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4 deposit amount 1000000000000
-    chain33Addr=$(${CLI} zksync getChain33Addr -k 6da92a632ab7deb67d38c0f6560bcfed28167998f6496db64c258d5e8393a81b)
-    rawData=$(${CLI} zksync deposit -t 1 -a 1000000000000000000000 -e 12a0E25E62C1dBD32E505446062B26AECB65F028 -c "$chain33Addr")
+    chainAddr=$(${CLI} zksync getChainAddr -k 6da92a632ab7deb67d38c0f6560bcfed28167998f6496db64c258d5e8393a81b)
+    rawData=$(${CLI} zksync deposit -t 1 -a 1000000000000000000000 -e 12a0E25E62C1dBD32E505446062B26AECB65F028 -c "$chainAddr")
     echo "${rawData}"
 
     signData=$(${CLI} wallet sign -d "$rawData" -k 4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01)
@@ -119,7 +119,7 @@ function zksync_treeToContract() {
 function zksync_contractToTree() {
     echo "=========== # zksync contractToTree test ============="
     #1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4 contractToTree to self amount 100000000
-    chain33Addr=$(${CLI} zksync getChain33Addr -k 6da92a632ab7deb67d38c0f6560bcfed28167998f6496db64c258d5e8393a81b)
+    chainAddr=$(${CLI} zksync getChainAddr -k 6da92a632ab7deb67d38c0f6560bcfed28167998f6496db64c258d5e8393a81b)
     rawData=$(${CLI} zksync contractToTree -t 1 -a 1000000000000000000 --accountId 2)
     echo "${rawData}"
 
@@ -131,8 +131,8 @@ function zksync_contractToTree() {
     query_account "${CLI}" 2
 
     #1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR deposit amount 1000000000
-    chain33Addr=$(${CLI} zksync getChain33Addr -k 19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4)
-    rawData=$(${CLI} zksync deposit -t 1 -a 1000000000 -e abcd68033A72978C1084E2d44D1Fa06DdC4A2d57 -c "$chain33Addr")
+    chainAddr=$(${CLI} zksync getChainAddr -k 19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4)
+    rawData=$(${CLI} zksync deposit -t 1 -a 1000000000 -e abcd68033A72978C1084E2d44D1Fa06DdC4A2d57 -c "$chainAddr")
     echo "${rawData}"
 
     signData=$(${CLI} wallet sign -d "$rawData" -k 4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01)
@@ -161,8 +161,8 @@ function zksync_transfer() {
 function zksync_transferToNew() {
     echo "=========== # zksync transferToNew test ============="
     #1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4 transferToNew to 1NLHPEcbTWWxxU3dGUZBhayjrCHD3psX7k amount 100000000
-    chain33Addr=$(${CLI} zksync getChain33Addr -k 7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115)
-    rawData=$(${CLI} zksync transferToNew -t 1 -a 100000000 --accountId 2 -e 12a0E25E62C1dBD32E505446062B26AECB65F027 -c "$chain33Addr")
+    chainAddr=$(${CLI} zksync getChainAddr -k 7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115)
+    rawData=$(${CLI} zksync transferToNew -t 1 -a 100000000 --accountId 2 -e 12a0E25E62C1dBD32E505446062B26AECB65F027 -c "$chainAddr")
     echo "${rawData}"
 
     signData=$(${CLI} wallet sign -d "$rawData" -k 0x6da92a632ab7deb67d38c0f6560bcfed28167998f6496db64c258d5e8393a81b)
@@ -275,9 +275,9 @@ function create_tx() {
         echo "=========== # zksync add new account test ============="
         privateKey=$(${CLI} account rand -l 1 | jq -r ".privateKey")
         echo "${privateKey}"
-        chain33Addr=$(${CLI} zksync getChain33Addr -k "$privateKey")
+        chainAddr=$(${CLI} zksync getChainAddr -k "$privateKey")
 
-        rawData=$(${CLI} zksync deposit -t 1 -a 1000000000000 -e abcd68033A72978C1084E2d44D1Fa06DdC4A2d57 -c "$chain33Addr")
+        rawData=$(${CLI} zksync deposit -t 1 -a 1000000000000 -e abcd68033A72978C1084E2d44D1Fa06DdC4A2d57 -c "$chainAddr")
         echo "${rawData}"
 
         signData=$(${CLI} wallet sign -d "$rawData" -k 4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01)

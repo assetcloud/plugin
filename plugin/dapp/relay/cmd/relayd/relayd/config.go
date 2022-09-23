@@ -27,7 +27,7 @@ type Config struct {
 	Btcd           Btcd
 	Log            types.Log
 	Auth           Auth
-	Chain33Cfg     *types.Chain33Config
+	ChainCfg       *types.ChainConfig
 }
 
 // Btcd adapt to btcd
@@ -79,7 +79,7 @@ func (b *Btcd) BitConnConfig() *rpcclient.ConnConfig {
 	return conn
 }
 
-// Chain define adapt to chain33 relay exec
+// Chain define adapt to chain relay exec
 type Chain struct {
 	ID                   string
 	Host                 string

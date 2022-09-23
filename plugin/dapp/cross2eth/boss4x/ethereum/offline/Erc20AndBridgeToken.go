@@ -302,7 +302,7 @@ func AddToken2LockListTx(cmd *cobra.Command, _ []string) {
 func CreateBridgeTokenTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create_bridge_token",
-		Short: "create new token as chain33 asset on Ethereum, and it's should be done by operator",
+		Short: "create new token as chain asset on Ethereum, and it's should be done by operator",
 		Run:   CreateBridgeTokenTx,
 	}
 	CreateBridgeTokenTxFlags(cmd)

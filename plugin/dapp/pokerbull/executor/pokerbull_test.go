@@ -32,8 +32,8 @@ var (
 )
 
 func TestPokerbull(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	Init(pkt.PokerBullX, cfg, nil)
 	total := 1000 * types.DefaultCoinPrecision
 	accountA := types.Account{

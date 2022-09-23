@@ -8,9 +8,9 @@ import (
 	"bytes"
 	"encoding/hex"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 //1,如果全部是paracross的，主链成功会ExecOk，如果有一个不成功，全部回退回PACK，后面检查TyLogErr，OK意味着全部成功
@@ -47,7 +47,7 @@ func checkReceiptExecOk(receipt *types.ReceiptData) bool {
 // 1, 主链+平行链 user.p.xx.paracross 交易组				混合跨链资产转移  paracross主链执行成功
 // 2, 平行链	    user.p.xx.paracross + user.p.xx.other   混合平行链组合    paracross主链执行成功
 // 3, 平行链     user.p.xx.other  交易组					混合平行链组合    other主链pack
-func filterParaTxGroup(cfg *types.Chain33Config, tx *types.Transaction, allTxs []*types.TxDetail, index int, mainBlockHeight, forkHeight int64) ([]*types.Transaction, int) {
+func filterParaTxGroup(cfg *types.ChainConfig, tx *types.Transaction, allTxs []*types.TxDetail, index int, mainBlockHeight, forkHeight int64) ([]*types.Transaction, int) {
 	var headIdx int
 
 	for i := index; i >= 0; i-- {
@@ -80,7 +80,7 @@ func filterParaTxGroup(cfg *types.Chain33Config, tx *types.Transaction, allTxs [
 }
 
 //FilterTxsForPara include some main tx in tx group before ForkParacrossCommitTx
-func FilterTxsForPara(cfg *types.Chain33Config, main *types.ParaTxDetail) []*types.Transaction {
+func FilterTxsForPara(cfg *types.ChainConfig, main *types.ParaTxDetail) []*types.Transaction {
 	var txs []*types.Transaction
 	forkHeight := pt.GetDappForkHeight(cfg, pt.ForkCommitTx)
 	for i := 0; i < len(main.TxDetails); i++ {

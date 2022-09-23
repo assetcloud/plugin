@@ -28,7 +28,7 @@ var (
 )
 
 // Init 重命名执行器名称
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	if sub != nil {
 		types.MustDecode(sub, &subcfg)
 	}

@@ -18,9 +18,9 @@ jobs:
       - name: download zk key file
         run: |
           pwd&&cd ./plugin/dapp/mix/cmd/
-          wget https://github.com/mdj33/gnark/blob/main/chain33key.tar.gz?raw=true -O chain33key.tar.gz
-          tar -xzvf chain33key.tar.gz
-          cp chain33key/* ./gnark/
+          wget https://github.com/mdj33/gnark/blob/main/chainkey.tar.gz?raw=true -O chainkey.tar.gz
+          tar -xzvf chainkey.tar.gz
+          cp chainkey/* ./gnark/
           cd -
       - name: deploy
         run: |

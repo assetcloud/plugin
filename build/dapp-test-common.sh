@@ -24,7 +24,7 @@ echo_rst() {
     fi
 }
 
-chain33_Http() {
+chain_Http() {
     #  echo "#$4 request: request="$1" MAIN_HTTP="$2" js="$3" FUNCNAME="$4" response="$5""
     local body
     body=$(curl -ksd "$1" "$2")
@@ -36,15 +36,15 @@ chain33_Http() {
     echo_rst "$4" "$rst" "$body"
 }
 
-chain33_SignAndSendTxWait() {
+chain_SignAndSendTxWait() {
     # txHex="$1" priKey="$2" MAIN_HTTP="$3" FUNCNAME="$4"
     req='{"method":"Chain.DecodeRawTransaction","params":[{"txHex":"'"$1"'"}]}'
-    chain33_Http "$req" "$3" '(.result.txs[0].execer != "") and (.result.txs[0].execer != null)' "$4"
-    chain33_SignAndSendTx "$1" "$2" "$3"
-    chain33_BlockWait 1 "$3"
+    chain_Http "$req" "$3" '(.result.txs[0].execer != "") and (.result.txs[0].execer != null)' "$4"
+    chain_SignAndSendTx "$1" "$2" "$3"
+    chain_BlockWait 1 "$3"
 }
 
-chain33_BlockWait() {
+chain_BlockWait() {
     local MAIN_HTTP=$2
     local req='"method":"Chain.GetLastHeader","params":[]'
 
@@ -63,9 +63,9 @@ chain33_BlockWait() {
     echo "wait new block $count/10 s, cur height=$expect,old=$cur_height"
 }
 
-chain33_QueryTx() {
+chain_QueryTx() {
     local MAIN_HTTP=$2
-    chain33_BlockWait 1 "$MAIN_HTTP"
+    chain_BlockWait 1 "$MAIN_HTTP"
     local txhash="$1"
     local req='"method":"Chain.QueryTransaction","params":[{"hash":"'"$txhash"'"}]'
 
@@ -73,7 +73,7 @@ chain33_QueryTx() {
     while true; do
         ret=$(curl -ksd "{$req}" "${MAIN_HTTP}" | jq -r ".result.tx.hash")
         if [ "${ret}" != "${1}" ]; then
-            chain33_BlockWait 1 "$MAIN_HTTP"
+            chain_BlockWait 1 "$MAIN_HTTP"
             times=$((times - 1))
             if [ $times -le 0 ]; then
                 echo "====query tx=$1 failed"
@@ -88,7 +88,7 @@ chain33_QueryTx() {
     done
 }
 
-chain33_SendTx() {
+chain_SendTx() {
     local signedTx=$1
     local MAIN_HTTP=$2
 
@@ -98,13 +98,13 @@ chain33_SendTx() {
     txhash=$(jq -r ".result" <<<"$resp")
 
     if [ "$err" == null ]; then
-        chain33_QueryTx "$txhash" "$MAIN_HTTP"
+        chain_QueryTx "$txhash" "$MAIN_HTTP"
     else
         echo "send tx error:$err"
     fi
 }
 
-chain33_SendToAddress() {
+chain_SendToAddress() {
     local from="$1"
     local to="$2"
     local amount=$3
@@ -118,10 +118,10 @@ chain33_SendToAddress() {
 
     hash=$(jq -r ".result.hash" <<<"$resp")
     echo "hash"
-    chain33_QueryTx "$hash" "$MAIN_HTTP"
+    chain_QueryTx "$hash" "$MAIN_HTTP"
 }
 
-chain33_ImportPrivkey() {
+chain_ImportPrivkey() {
     local pri="$1"
     local acc="$2"
     local label="$3"
@@ -135,7 +135,7 @@ chain33_ImportPrivkey() {
     [ "$ok" == true ]
 }
 
-chain33_SignAndSendTx() {
+chain_SignAndSendTx() {
     local txHex="$1"
     local priKey="$2"
     local MAIN_HTTP=$3
@@ -155,13 +155,13 @@ chain33_SignAndSendTx() {
     signedTx=$(curl -ksd "{$req}" "${MAIN_HTTP}" | jq -r ".result")
 
     if [ "$signedTx" != null ]; then
-        chain33_SendTx "$signedTx" "${MAIN_HTTP}"
+        chain_SendTx "$signedTx" "${MAIN_HTTP}"
     else
         echo "signedTx null error"
     fi
 }
 
-chain33_QueryBalance() {
+chain_QueryBalance() {
     local addr=$1
     local MAIN_HTTP=$2
     req='"method":"Chain.GetAllExecBalance","params":[{"addr":"'"${addr}"'"}]'
@@ -174,7 +174,7 @@ chain33_QueryBalance() {
     echo "$resp" | jq -r ".result"
 }
 
-chain33_QueryExecBalance() {
+chain_QueryExecBalance() {
     local addr=$1
     local exec=$2
     local MAIN_HTTP=$3
@@ -186,50 +186,50 @@ chain33_QueryExecBalance() {
     [ "$ok" == true ]
 }
 
-chain33_GetAccounts() {
+chain_GetAccounts() {
     local MAIN_HTTP=$1
     resp=$(curl -ksd '{"jsonrpc":"2.0","id":2,"method":"Chain.GetAccounts","params":[{}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}")
     echo "$resp"
 }
 
-chain33_LastBlockhash() {
+chain_LastBlockhash() {
     local MAIN_HTTP=$1
     result=$(curl -ksd '{"method":"Chain.GetLastHeader","params":[{}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}" | jq -r ".result.hash")
     LAST_BLOCK_HASH=$result
     echo -e "######\\n  last blockhash is $LAST_BLOCK_HASH  \\n######"
 }
 
-chain33_LastBlockHeight() {
+chain_LastBlockHeight() {
     local MAIN_HTTP=$1
     result=$(curl -ksd '{"method":"Chain.GetLastHeader","params":[{}]}' -H 'content-type:text/plain;' "${MAIN_HTTP}" | jq -r ".result.height")
     LAST_BLOCK_HEIGHT=$result
     echo -e "######\\n  last blockheight is $LAST_BLOCK_HEIGHT \\n######"
 }
 
-chain33_applyCoins() {
-    echo "chain33_getMainChainCoins"
+chain_applyCoins() {
+    echo "chain_getMainChainCoins"
     if [ "$#" -lt 3 ]; then
-        echo "chain33_getMainCoins wrong params"
+        echo "chain_getMainCoins wrong params"
         exit 1
     fi
     local targetAddr=$1
     local count=$2
     local ip=$3
     if [ "$count" -gt 15000000000 ]; then
-        echo "chain33_getMainCoins wrong coins count,should less than 150 00000000"
+        echo "chain_getMainCoins wrong coins count,should less than 150 00000000"
         exit 1
     fi
 
     local poolAddr="1PcGKYYoLn1PLLJJodc1UpgWGeFAQasAkx"
-    chain33_SendToAddress "${poolAddr}" "${targetAddr}" "$count" "${ip}"
+    chain_SendToAddress "${poolAddr}" "${targetAddr}" "$count" "${ip}"
 
 }
 
-chain33_RpcTestBegin() {
+chain_RpcTestBegin() {
     echo -e "${GRE}====== $1 Rpc Test Begin ===========${NOC}"
 }
 
-chain33_RpcTestRst() {
+chain_RpcTestRst() {
     if [ -n "$2" ]; then
         echo -e "${RED}====== $1 Rpc Test Fail ===========${NOC}"
         exit 1
@@ -238,7 +238,7 @@ chain33_RpcTestRst() {
     fi
 }
 
-chain33_debug_function() {
+chain_debug_function() {
     set -x
     eval "$@"
     set +x

@@ -557,12 +557,12 @@ func (action *Action) readGame(id string) (*gt.Game, error) {
 }
 
 // List query game list
-func List(cfg *types.Chain33Config, db dbm.Lister, stateDB dbm.KV, param *gt.QueryGameListByStatusAndAddr) (types.Message, error) {
+func List(cfg *types.ChainConfig, db dbm.Lister, stateDB dbm.KV, param *gt.QueryGameListByStatusAndAddr) (types.Message, error) {
 	return QueryGameListByPage(cfg, db, stateDB, param)
 }
 
 // QueryGameListByPage 分页查询
-func QueryGameListByPage(cfg *types.Chain33Config, db dbm.Lister, stateDB dbm.KV, param *gt.QueryGameListByStatusAndAddr) (types.Message, error) {
+func QueryGameListByPage(cfg *types.ChainConfig, db dbm.Lister, stateDB dbm.KV, param *gt.QueryGameListByStatusAndAddr) (types.Message, error) {
 	switch param.GetStatus() {
 	case gt.GameActionCreate, gt.GameActionMatch, gt.GameActionClose, gt.GameActionCancel:
 		return queryGameListByStatusAndAddr(cfg, db, stateDB, param)
@@ -570,7 +570,7 @@ func QueryGameListByPage(cfg *types.Chain33Config, db dbm.Lister, stateDB dbm.KV
 	return nil, fmt.Errorf("%s", "the status only fill in 1,2,3,4!")
 }
 
-func queryGameListByStatusAndAddr(cfg *types.Chain33Config, db dbm.Lister, stateDB dbm.KV, param *gt.QueryGameListByStatusAndAddr) (types.Message, error) {
+func queryGameListByStatusAndAddr(cfg *types.ChainConfig, db dbm.Lister, stateDB dbm.KV, param *gt.QueryGameListByStatusAndAddr) (types.Message, error) {
 	direction := ListDESC
 	if param.GetDirection() == ListASC {
 		direction = ListASC
@@ -685,7 +685,7 @@ func GetGameList(db dbm.KV, values []string) []*gt.Game {
 	}
 	return games
 }
-func getConfValue(cfg *types.Chain33Config, db dbm.KV, key string, defaultValue int64) int64 {
+func getConfValue(cfg *types.ChainConfig, db dbm.KV, key string, defaultValue int64) int64 {
 	var item types.ConfigItem
 	value, err := getManageKey(cfg, key, db)
 	if err != nil {
@@ -711,7 +711,7 @@ func getConfValue(cfg *types.Chain33Config, db dbm.KV, key string, defaultValue 
 	}
 	return v
 }
-func getManageKey(cfg *types.Chain33Config, key string, db dbm.KV) ([]byte, error) {
+func getManageKey(cfg *types.ChainConfig, key string, db dbm.KV) ([]byte, error) {
 	manageKey := types.ManageKey(key)
 	value, err := db.Get([]byte(manageKey))
 	if err != nil {

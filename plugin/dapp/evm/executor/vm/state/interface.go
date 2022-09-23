@@ -84,5 +84,5 @@ type EVMStateDB interface {
 	GetBlockHeight() int64
 
 	// GetConfig 获取系统配置
-	GetConfig() *types.Chain33Config
+	GetConfig() *types.ChainConfig
 }

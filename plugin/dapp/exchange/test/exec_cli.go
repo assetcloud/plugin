@@ -29,7 +29,7 @@ type ExecCli struct {
 	blockTime  int64
 	difficulty uint64
 	q          queue.Queue
-	cfg        *types.Chain33Config
+	cfg        *types.ChainConfig
 	execAddr   string
 
 	accA  *account.DB //exec account
@@ -60,8 +60,8 @@ func NewExecCli() *ExecCli {
 	dir, sdb, ldb := util.CreateTestDB()
 	log.Println(dir)
 
-	cfg := types.NewChain33Config(et.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(et.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 
 	executor.Init(et.ExchangeX, cfg, nil)
 	total := 100000000 * types.DefaultCoinPrecision

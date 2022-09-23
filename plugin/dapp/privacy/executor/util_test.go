@@ -54,7 +54,7 @@ var (
 	testPolicy     = pwallet.New()
 	testPolicyName = pty.PrivacyX + "test"
 
-	testCfg = types.NewChain33Config(types.GetDefaultCfgstring())
+	testCfg = types.NewChainConfig(types.GetDefaultCfgstring())
 )
 
 func init() {
@@ -70,7 +70,7 @@ type testExecMock struct {
 	exec    dapp.Driver
 	wallet  *walletMock
 	policy  wcom.WalletBizPolicy
-	cfg     *types.Chain33Config
+	cfg     *types.ChainConfig
 	q       queue.Queue
 	qapi    client.QueueProtocolAPI
 }

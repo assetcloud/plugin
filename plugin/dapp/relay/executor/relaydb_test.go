@@ -40,7 +40,7 @@ func (s *suiteRelayLog) SetupSuite() {
 	}
 	s.db = new(mocks.KV)
 
-	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 
 	s.log = newRelayLog(order, cfg)
 }

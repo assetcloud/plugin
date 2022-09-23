@@ -21,13 +21,13 @@ const (
 	Oracle
 	// BridgeBank : bridgeBank contract
 	BridgeBank
-	// Chain33Bridge : chain33Bridge contract
-	Chain33Bridge
+	// ChainBridge : chainBridge contract
+	ChainBridge
 )
 
 // String : returns the event type as a string
 func (d ContractRegistry) String() string {
-	return [...]string{"valset", "oracle", "bridgebank", "chain33bridge", "notsupport"}[d-1]
+	return [...]string{"valset", "oracle", "bridgebank", "chainbridge", "notsupport"}[d-1]
 }
 
 // GetAddressFromBridgeRegistry : utility method which queries the requested contract address from the BridgeRegistry
@@ -72,12 +72,12 @@ func GetAddressFromBridgeRegistry(client ethinterface.EthClientSpec, sender, reg
 			log.Fatal(err)
 		}
 		return &bridgeBankAddress, nil
-	case Chain33Bridge:
-		chain33BridgeAddress, err := registryInstance.Chain33Bridge(&auth)
+	case ChainBridge:
+		chainBridgeAddress, err := registryInstance.ChainBridge(&auth)
 		if err != nil {
 			log.Fatal(err)
 		}
-		return &chain33BridgeAddress, nil
+		return &chainBridgeAddress, nil
 	default:
 		txslog.Error("GetAddressFromBridgeRegistry", "invalid target contract type:", target)
 		return nil, ebrelayerTypes.ErrInvalidContractAddress

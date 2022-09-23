@@ -81,7 +81,7 @@ boardPeriod=518400
 itemWaitBlockNumber=40000
 `
 
-var chainTestCfg = types.NewChain33Config(types.MergeCfg(autoC, types.GetDefaultCfgstring()))
+var chainTestCfg = types.NewChainConfig(types.MergeCfg(autoC, types.GetDefaultCfgstring()))
 
 var autoCfg = GetAutonomyParam(chainTestCfg, 0)
 

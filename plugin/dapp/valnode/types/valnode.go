@@ -23,12 +23,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(ValNodeX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(ValNodeX, NewType(cfg))
 }
 
@@ -38,7 +38,7 @@ type ValNodeType struct {
 }
 
 // NewType method
-func NewType(cfg *types.Chain33Config) *ValNodeType {
+func NewType(cfg *types.ChainConfig) *ValNodeType {
 	c := &ValNodeType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)
@@ -85,7 +85,7 @@ func (t *ValNodeType) CreateTx(action string, message json.RawMessage) (*types.T
 }
 
 // CreateNodeUpdateTx ...
-func CreateNodeUpdateTx(cfg *types.Chain33Config, parm *NodeUpdateTx) (*types.Transaction, error) {
+func CreateNodeUpdateTx(cfg *types.ChainConfig, parm *NodeUpdateTx) (*types.Transaction, error) {
 	if parm == nil {
 		tlog.Error("CreateNodeUpdateTx", "parm", parm)
 		return nil, types.ErrInvalidParam

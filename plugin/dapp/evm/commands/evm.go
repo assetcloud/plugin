@@ -68,7 +68,7 @@ func evmToolsCmd() *cobra.Command {
 	return cmd
 }
 
-// transfer address format between ethereum and chain33
+// transfer address format between ethereum and chain
 func evmToolsAddressCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "address",

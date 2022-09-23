@@ -37,8 +37,8 @@ var (
 )
 
 func TestGame(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	Init(pty.GameX, cfg, nil)
 	total := 100 * types.DefaultCoinPrecision
 	accountA := types.Account{

@@ -15,15 +15,15 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer"
-	chain33Relayer "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain33"
-	ethRelayer "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/ethereum"
-	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	tml "github.com/BurntSushi/toml"
 	dbm "github.com/assetcloud/chain/common/db"
 	logf "github.com/assetcloud/chain/common/log"
 	"github.com/assetcloud/chain/common/log/log15"
-	chain33Types "github.com/assetcloud/chain/types"
+	chainTypes "github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer"
+	chainRelayer "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain"
+	ethRelayer "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/ethereum"
+	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	"github.com/btcsuite/btcd/limits"
 )
 
@@ -69,10 +69,10 @@ func main() {
 	mainlog.Info("db info:", " Dbdriver = ", cfg.SyncTxConfig.Dbdriver, ", DbPath = ", cfg.SyncTxConfig.DbPath, ", DbCache = ", cfg.SyncTxConfig.DbCache)
 	db := dbm.NewDB("relayer_db_service", cfg.SyncTxConfig.Dbdriver, cfg.SyncTxConfig.DbPath, cfg.SyncTxConfig.DbCache)
 
-	chain33RelayerService := chain33Relayer.StartChain33Relayer(ctx, cfg.SyncTxConfig, cfg.BridgeRegistry, cfg.EthProvider, db)
-	ethRelayerService := ethRelayer.StartEthereumRelayer(cfg.SyncTxConfig.Chain33Host, db, cfg.EthProvider, cfg.BridgeRegistry, cfg.Deploy, cfg.EthMaturityDegree, cfg.EthBlockFetchPeriod)
+	chainRelayerService := chainRelayer.StartChainRelayer(ctx, cfg.SyncTxConfig, cfg.BridgeRegistry, cfg.EthProvider, db)
+	ethRelayerService := ethRelayer.StartEthereumRelayer(cfg.SyncTxConfig.ChainHost, db, cfg.EthProvider, cfg.BridgeRegistry, cfg.Deploy, cfg.EthMaturityDegree, cfg.EthBlockFetchPeriod)
 
-	relayerManager := relayer.NewRelayerManager(chain33RelayerService, ethRelayerService, db)
+	relayerManager := relayer.NewRelayerManager(chainRelayerService, ethRelayerService, db)
 
 	mainlog.Info("cfg.JrpcBindAddr = ", cfg.JrpcBindAddr)
 	startRPCServer(cfg.JrpcBindAddr, relayerManager)
@@ -87,8 +87,8 @@ func main() {
 	}()
 }
 
-func convertLogCfg(log *relayerTypes.Log) *chain33Types.Log {
-	return &chain33Types.Log{
+func convertLogCfg(log *relayerTypes.Log) *chainTypes.Log {
+	return &chainTypes.Log{
 		Loglevel:        log.Loglevel,
 		LogConsoleLevel: log.LogConsoleLevel,
 		LogFile:         log.LogFile,

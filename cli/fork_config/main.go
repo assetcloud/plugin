@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 	forks, err := cfg.GetForks()
 	if err != nil {
 		fmt.Printf("clone fork failed: %v", err)

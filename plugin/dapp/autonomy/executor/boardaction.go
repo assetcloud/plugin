@@ -52,7 +52,7 @@ type AutonomyParam struct {
 }
 
 // GetAutonomyParam 获取autonomy config params
-func GetAutonomyParam(cfg *types.Chain33Config, height int64) *AutonomyParam {
+func GetAutonomyParam(cfg *types.ChainConfig, height int64) *AutonomyParam {
 	conf := types.Conf(cfg, "mver.autonomy")
 	c := &AutonomyParam{}
 	c.MinBoards = conf.MGInt("minBoards", height)

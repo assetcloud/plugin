@@ -44,7 +44,7 @@ message Leaf {
   uint64 accountId = 2; //accountId其实就是叶子的totalIndex
   string ethAddress = 5; //账户对应的以太坊地址
   ZkPubKey pubKey = 6; //eddsa公钥，用于验证身份
-  string chain33Addr = 7; //chain33地址
+  string chainAddr = 7; //chain地址
   string tokenHash = 8; //叶子下token的hash
   repeated uint64 tokenIds = 9; //叶子下拥有的tokenId
 }
@@ -53,7 +53,7 @@ message HistoryLeaf {
   uint64 accountId = 2; //accountId其实就是叶子的totalIndex
   string ethAddress = 5; //账户对应的以太坊地址
   ZkPubKey pubKey = 6; //eddsa公钥，用于验证身份
-  string chain33Addr = 7; //chain33地址
+  string chainAddr = 7; //chain地址
   string tokenHash = 8; //叶子下token的hash
   repeated TokenBalance tokens = 9; //叶子下拥有的token
   uint64 proofId = 10; //账户状态所在的proofId
@@ -80,7 +80,7 @@ message ZkDeposit {
   uint64 tokenId = 1;
   string amount = 2;
   string ethAddress = 3;
-  string chain33Addr = 4;
+  string chainAddr = 4;
   int64 ethPriorityQueueId = 5; //需要在合约保证id连续
   ZkSignature signature = 6;
 
@@ -120,7 +120,7 @@ message ZkTransferToNew {
   string amount = 2;
   uint64 fromAccountId = 3;
   string toEthAddress = 4;
-  string toChain33Address = 5;
+  string toChainAddress = 5;
   ZkSignature signature = 6;
 }
 
@@ -240,9 +240,9 @@ message ZkQueryReq {
   uint64 blockHeight = 2;
   uint32 txIndex = 3;
   string ethAddress = 4;
-  string chain33Addr = 5;
+  string chainAddr = 5;
   string tokenSymbol = 6;
-  string chain33WalletAddr = 7;
+  string chainWalletAddr = 7;
   uint64 tokenId = 8;
   string txHash = 9;
   uint64 proofId = 10;
@@ -278,7 +278,7 @@ message ZkOperation {
   string amount = 3;
   string ethAddress = 5; //账户对应的以太坊地址
   ZkPubKey pubKey = 6; //eddsa公钥，用于验证身份
-  string chain33Addr = 7; //chain33地址
+  string chainAddr = 7; //chain地址
   uint64 toAccountId = 4;
 
   int32 ty = 8;

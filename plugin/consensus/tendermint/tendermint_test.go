@@ -42,7 +42,7 @@ var (
 	r         *rand.Rand
 	loopCount = 3
 	conn      *grpc.ClientConn
-	c         types.Chain33Client
+	c         types.ChainClient
 )
 
 func init() {
@@ -88,25 +88,25 @@ func TendermintPerf(t *testing.T) {
 
 func initEnvTendermint() (queue.Queue, *blockchain.BlockChain, queue.Module, queue.Module, *executor.Executor, queue.Module) {
 	flag.Parse()
-	chain33Cfg := types.NewChain33Config(types.ReadFile("chain33.test.toml"))
+	chainCfg := types.NewChainConfig(types.ReadFile("chain.test.toml"))
 	var q = queue.New("channel")
-	q.SetConfig(chain33Cfg)
-	cfg := chain33Cfg.GetModuleConfig()
-	sub := chain33Cfg.GetSubConfig()
+	q.SetConfig(chainCfg)
+	cfg := chainCfg.GetModuleConfig()
+	sub := chainCfg.GetSubConfig()
 
-	chain := blockchain.New(chain33Cfg)
+	chain := blockchain.New(chainCfg)
 	chain.SetQueueClient(q.Client())
 
-	exec := executor.New(chain33Cfg)
+	exec := executor.New(chainCfg)
 	exec.SetQueueClient(q.Client())
-	chain33Cfg.SetMinFee(0)
-	s := store.New(chain33Cfg)
+	chainCfg.SetMinFee(0)
+	s := store.New(chainCfg)
 	s.SetQueueClient(q.Client())
 
 	cs := New(cfg.Consensus, sub.Consensus["tendermint"])
 	cs.SetQueueClient(q.Client())
 
-	mem := mempool.New(chain33Cfg)
+	mem := mempool.New(chainCfg)
 	mem.SetQueueClient(q.Client())
 
 	rpc.InitCfg(cfg.RPC)
@@ -124,7 +124,7 @@ func createConn() error {
 		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
-	c = types.NewChain33Client(conn)
+	c = types.NewChainClient(conn)
 	return nil
 }
 

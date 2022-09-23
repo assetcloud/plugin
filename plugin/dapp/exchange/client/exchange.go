@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var cfg = types.NewChain33Config(types.GetDefaultCfgstring())
+var cfg = types.NewChainConfig(types.GetDefaultCfgstring())
 
 type ExchangeClient struct {
 	client   Cli

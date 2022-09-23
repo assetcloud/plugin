@@ -20,7 +20,7 @@ import (
 
 const (
 	// CONFIGFILENAME 配置文件名
-	CONFIGFILENAME = "chain33.cryptogen.yaml"
+	CONFIGFILENAME = "chain.cryptogen.yaml"
 	// OUTPUTDIR 证书文件输出路径
 	OUTPUTDIR = "./authdir/crypto"
 )
@@ -28,7 +28,7 @@ const (
 var (
 	cmd = &cobra.Command{
 		Use:   "cryptogen [-f configfile] [-o output directory]",
-		Short: "chain33 crypto tool for generating key and certificate",
+		Short: "chain crypto tool for generating key and certificate",
 		Run:   generate,
 	}
 	cfg    *generator.GenConfig

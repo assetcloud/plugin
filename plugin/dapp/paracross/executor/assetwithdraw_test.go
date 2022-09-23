@@ -47,7 +47,7 @@ func (suite *AssetWithdrawTestSuite) SetupTest() {
 	//suite.localDB, _ = dbm.NewGoMemDB("local", "local", 1024)
 	suite.localDB = new(dbmock.KVDB)
 	suite.api = new(apimock.QueueProtocolAPI)
-	suite.api.On("GetConfig", mock.Anything).Return(chain33TestCfg, nil)
+	suite.api.On("GetConfig", mock.Anything).Return(chainTestCfg, nil)
 
 	suite.exec = newParacross().(*Paracross)
 	suite.exec.SetAPI(suite.api)
@@ -60,7 +60,7 @@ func (suite *AssetWithdrawTestSuite) SetupTest() {
 	blockDetail := &types.BlockDetail{
 		Block: &types.Block{},
 	}
-	MainBlockHash10 = blockDetail.Block.Hash(chain33TestCfg)
+	MainBlockHash10 = blockDetail.Block.Hash(chainTestCfg)
 
 	// setup title nodes : len = 1
 	nodeConfigKey := calcManageConfigNodesKey(Title)
@@ -94,7 +94,7 @@ func (suite *AssetWithdrawTestSuite) SetupTest() {
 func (suite *AssetWithdrawTestSuite) TestExecAssetWithdrawOnMainChain() {
 	//types.Init("test", nil)
 	suite.api = new(apimock.QueueProtocolAPI)
-	suite.api.On("GetConfig", mock.Anything).Return(chain33TestMainCfg, nil)
+	suite.api.On("GetConfig", mock.Anything).Return(chainTestMainCfg, nil)
 	suite.exec.SetAPI(suite.api)
 	tx, err := createAssetWithdrawTx(suite.Suite, PrivKeyA, Nodes[1])
 	if err != nil {
@@ -121,7 +121,7 @@ func (suite *AssetWithdrawTestSuite) TestExecAssetWithdrawOnParaChain() {
 		Frozen:  0,
 		Addr:    string(Nodes[0]),
 	}
-	paraAcc, _ := NewParaAccount(chain33TestCfg, Title, "coins", "bty", suite.stateDB)
+	paraAcc, _ := NewParaAccount(chainTestCfg, Title, "coins", "bty", suite.stateDB)
 	paraAcc.SaveAccount(&accountA)
 
 	tx, err := createAssetWithdrawTx(suite.Suite, PrivKeyA, Nodes[1])
@@ -152,11 +152,11 @@ func (suite *AssetWithdrawTestSuite) TestExecAssetWithdrawOnParaChain() {
 func (suite *AssetWithdrawTestSuite) TestExecAssetWithdrawAfterPara() {
 	// types.Init("test", nil)
 	suite.api = new(apimock.QueueProtocolAPI)
-	suite.api.On("GetConfig", mock.Anything).Return(chain33TestMainCfg, nil)
+	suite.api.On("GetConfig", mock.Anything).Return(chainTestMainCfg, nil)
 	suite.exec.SetAPI(suite.api)
 
 	// make coins for transfer
-	acc := account.NewCoinsAccount(chain33TestCfg)
+	acc := account.NewCoinsAccount(chainTestCfg)
 	acc.SetDB(suite.stateDB)
 
 	total := 10 * types.DefaultCoinPrecision
@@ -224,7 +224,7 @@ func (suite *AssetWithdrawTestSuite) TestExecAssetWithdrawAfterPara() {
 func (suite *AssetWithdrawTestSuite) TestExecWithdrawFailedOnPara() {
 	//para_init(Title)
 	// make coins for transfer
-	acc := account.NewCoinsAccount(chain33TestCfg)
+	acc := account.NewCoinsAccount(chainTestCfg)
 	acc.SetDB(suite.stateDB)
 
 	addrPara := address.ExecAddress(Title + pt.ParaX)
@@ -268,7 +268,7 @@ func createAssetWithdrawTx(s suite.Suite, privFrom string, to []byte) (*types.Tr
 		TokenSymbol: "",
 		ExecName:    Title + pt.ParaX,
 	}
-	tx, err := pt.CreateRawAssetTransferTx(chain33TestCfg, &param)
+	tx, err := pt.CreateRawAssetTransferTx(chainTestCfg, &param)
 	assert.Nil(s.T(), err, "create asset Withdraw failed")
 	if err != nil {
 		return nil, err

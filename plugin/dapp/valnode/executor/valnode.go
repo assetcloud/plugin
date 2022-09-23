@@ -16,7 +16,7 @@ var clog = log.New("module", "execs.valnode")
 var driverName = "valnode"
 
 // Init method
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	clog.Debug("register valnode execer")
 	drivers.Register(cfg, GetName(), newValNode, 0)
 	InitExecType()

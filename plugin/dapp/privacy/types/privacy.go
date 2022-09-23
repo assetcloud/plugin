@@ -46,12 +46,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(PrivacyX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(PrivacyX, NewType(cfg))
 }
 
@@ -61,7 +61,7 @@ type PrivacyType struct {
 }
 
 // NewType create PrivacyType object
-func NewType(cfg *types.Chain33Config) *PrivacyType {
+func NewType(cfg *types.ChainConfig) *PrivacyType {
 	c := &PrivacyType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

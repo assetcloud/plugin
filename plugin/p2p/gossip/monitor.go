@@ -607,7 +607,7 @@ func (n *Node) monitorCerts() {
 	}
 	ticker := time.NewTicker(CheckCfgCertInterVal)
 	defer ticker.Stop()
-	jcli, err := jsonclient.New("chain33-ca-server", n.nodeInfo.caServer, false)
+	jcli, err := jsonclient.New("chain-ca-server", n.nodeInfo.caServer, false)
 	if err != nil {
 		log.Error("monitorCerts", "rpc call err", err)
 		return

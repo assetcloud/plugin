@@ -4,8 +4,8 @@ import (
 	"crypto/ecdsa"
 	"math/big"
 
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
 	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -23,7 +23,7 @@ type DeployResult struct {
 type X2EthContracts struct {
 	BridgeRegistry *generated.BridgeRegistry
 	BridgeBank     *generated.BridgeBank
-	Chain33Bridge  *generated.Chain33Bridge
+	ChainBridge    *generated.ChainBridge
 	Valset         *generated.Valset
 	Oracle         *generated.Oracle
 }
@@ -32,7 +32,7 @@ type X2EthContracts struct {
 type X2EthDeployInfo struct {
 	BridgeRegistry *DeployResult
 	BridgeBank     *DeployResult
-	Chain33Bridge  *DeployResult
+	ChainBridge    *DeployResult
 	Valset         *DeployResult
 	Oracle         *DeployResult
 }

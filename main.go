@@ -34,8 +34,8 @@ func main() {
 		fmt.Println(fmt.Sprintf("System version: %s", version.Platform))
 		fmt.Println(fmt.Sprintf("Golang version: %s", version.GoVersion))
 		fmt.Println(fmt.Sprintf("plugin version: %s", version.GetVersion()))
-		fmt.Println(fmt.Sprintf("chain33 frame version: %s", frameVersion.GetVersion()))
+		fmt.Println(fmt.Sprintf("chain frame version: %s", frameVersion.GetVersion()))
 		return
 	}
-	cli.RunChain33("", "")
+	cli.RunChain("", "")
 }

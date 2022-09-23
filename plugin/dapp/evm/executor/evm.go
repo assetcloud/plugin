@@ -60,7 +60,7 @@ func initEvmSubConfig(sub []byte, evmEnableHeight int64) {
 }
 
 // Init 初始化本合约对象
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 
 	enableHeight := cfg.GetDappFork(driverName, evmtypes.EVMEnable)
 	initEvmSubConfig(sub, enableHeight)

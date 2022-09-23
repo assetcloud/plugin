@@ -20,7 +20,7 @@ import (
 )
 
 func newTestAction() *action {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	au := &action{}
 	q := queue.New("channel")
 	q.SetConfig(cfg)

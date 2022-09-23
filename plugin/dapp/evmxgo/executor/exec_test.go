@@ -38,8 +38,8 @@ var (
 	mainNetgrpcAddr = "localhost:8802"
 	ParaNetgrpcAddr = "localhost:8902"
 
-	mainClient types.Chain33Client
-	paraClient types.Chain33Client
+	mainClient types.ChainClient
+	paraClient types.ChainClient
 	r          *rand.Rand
 
 	ErrTest = errors.New("ErrTest")
@@ -116,13 +116,13 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	mainClient = types.NewChain33Client(conn)
+	mainClient = types.NewChainClient(conn)
 
 	conn, err = grpc.Dial(ParaNetgrpcAddr, grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
-	paraClient = types.NewChain33Client(conn)
+	paraClient = types.NewChainClient(conn)
 
 	r = rand.New(rand.NewSource(time.Now().UnixNano()))
 	addrexec = address.ExecAddress("")
@@ -207,7 +207,7 @@ func signTx(tx *types.Transaction, hexPrivKey string) (*types.Transaction, error
 }
 
 func Test_Token(t *testing.T) {
-	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 	Init(pty.EvmxgoX, cfg, nil)
 	total := int64(100000)
 	accountA := types.Account{

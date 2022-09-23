@@ -23,13 +23,13 @@ const (
 	PRIVACYDBVERSION int64 = 1
 )
 
-func newStore(db db.DB, cfg *types.Chain33Config) *privacyStore {
-	return &privacyStore{Store: wcom.NewStore(db), Chain33Config: cfg}
+func newStore(db db.DB, cfg *types.ChainConfig) *privacyStore {
+	return &privacyStore{Store: wcom.NewStore(db), ChainConfig: cfg}
 }
 
 // privacyStore 隐私交易数据库存储操作类
 type privacyStore struct {
-	*types.Chain33Config
+	*types.ChainConfig
 	*wcom.Store
 }
 
@@ -253,7 +253,7 @@ func (store *privacyStore) getWalletPrivacyTxDetails(param *privacytypes.ReqPriv
 			return nil, types.ErrUnmarshal
 		}
 		txDetail.Txhash = txDetail.GetTx().Hash()
-		if txDetail.GetTx().IsWithdraw(store.Chain33Config.GetCoinExec()) {
+		if txDetail.GetTx().IsWithdraw(store.ChainConfig.GetCoinExec()) {
 			//swap from and to
 			txDetail.Fromaddr, txDetail.Tx.To = txDetail.Tx.To, txDetail.Fromaddr
 		}
@@ -552,7 +552,7 @@ func (store *privacyStore) selectCurrentWalletPrivacyTx(txDetal *types.Transacti
 	}
 
 	if assetExec == "" {
-		assetExec = store.Chain33Config.GetCoinExec()
+		assetExec = store.ChainConfig.GetCoinExec()
 	}
 
 	//处理output

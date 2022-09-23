@@ -18,12 +18,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(PokerBullX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(PokerBullX, NewType(cfg))
 }
 
@@ -33,7 +33,7 @@ type PokerBullType struct {
 }
 
 // NewType 创建pokerbull执行器类型
-func NewType(cfg *types.Chain33Config) *PokerBullType {
+func NewType(cfg *types.ChainConfig) *PokerBullType {
 	c := &PokerBullType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

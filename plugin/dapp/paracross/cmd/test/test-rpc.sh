@@ -8,7 +8,7 @@ IS_PARA=false
 source ../dapp-test-common.sh
 
 paracross_GetBlock2MainInfo() {
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName": "GetBlock2MainInfo", "payload" : {"start":1,"end":3}}]}' ${UNIT_HTTP} '(.result.items[1].height == "2")' "$FUNCNAME"
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName": "GetBlock2MainInfo", "payload" : {"start":1,"end":3}}]}' ${UNIT_HTTP} '(.result.items[1].height == "2")' "$FUNCNAME"
 }
 
 function paracross_QueryParaBalance() {
@@ -115,7 +115,7 @@ function paracross_Transfer_Withdraw_Inner() {
 
     #2  存钱到合约地址
     tx_hash=$(curl -ksd '{"method":"Chain.CreateRawTransaction","params":[{"to":"'"$paracross_addr"'","amount":'$amount_save'}]}' ${UNIT_HTTP} | jq -r ".result")
-    chain33_SignAndSendTx "$tx_hash" "$privkey" ${UNIT_HTTP}
+    chain_SignAndSendTx "$tx_hash" "$privkey" ${UNIT_HTTP}
 
     #1. 查询资产转移前余额状态
     para_balance_before=$(paracross_QueryParaBalance "$from_addr" "paracross")
@@ -125,7 +125,7 @@ function paracross_Transfer_Withdraw_Inner() {
 
     #3  资产从主链转移到平行链
     tx_hash=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"'"$execer_name"'","actionName":"ParacrossAssetTransfer","payload":{"execName":"'"$execer_name"'","to":"'"$from_addr"'","amount":'$amount_should'}}]}' ${UNIT_HTTP} | jq -r ".result")
-    chain33_SignAndSendTx "$tx_hash" "$privkey" ${UNIT_HTTP}
+    chain_SignAndSendTx "$tx_hash" "$privkey" ${UNIT_HTTP}
 
     #4 查询转移后余额状态
     local times=200
@@ -139,7 +139,7 @@ function paracross_Transfer_Withdraw_Inner() {
         main_amount_real=$((main_balance_before - main_balance_after))
         #echo $amount_real
         if [ "$para_amount_real" != "$amount_should" ] || [ "$main_amount_real" != "$amount_should" ]; then
-            chain33_BlockWait 2 ${UNIT_HTTP}
+            chain_BlockWait 2 ${UNIT_HTTP}
             times=$((times - 1))
             if [ $times -le 0 ]; then
                 echo "para_cross_transfer_withdraw failed"
@@ -153,7 +153,7 @@ function paracross_Transfer_Withdraw_Inner() {
 
     #5 取钱
     tx_hash=$(curl -ksd '{"method":"Chain.CreateTransaction","params":[{"execer":"'"$execer_name"'","actionName":"ParacrossAssetWithdraw","payload":{"IsWithdraw":true,"execName":"'"$execer_name"'","to":"'"$from_addr"'","amount":'$withdraw_should'}}]}' ${UNIT_HTTP} | jq -r ".result")
-    chain33_SignAndSendTx "$tx_hash" "$privkey" ${UNIT_HTTP}
+    chain_SignAndSendTx "$tx_hash" "$privkey" ${UNIT_HTTP}
 
     #6 查询取钱后余额状态
     local times=200
@@ -166,7 +166,7 @@ function paracross_Transfer_Withdraw_Inner() {
         para_withdraw_real=$((para_balance_after - para_balance_withdraw_after))
         main_withdraw_real=$((main_balance_withdraw_after - main_balance_after))
         if [ "$withdraw_should" != "$para_withdraw_real" ] && [ "$withdraw_should" != "$main_withdraw_real" ]; then
-            chain33_BlockWait 2 ${UNIT_HTTP}
+            chain_BlockWait 2 ${UNIT_HTTP}
             times=$((times - 1))
             if [ $times -le 0 ]; then
                 echo "para_cross_transfer_withdraw failed"
@@ -203,39 +203,39 @@ function paracross_IsSync() {
     else
         req='{"method":"Chain.IsSync","params":[]}'
     fi
-    chain33_Http "$req" ${UNIT_HTTP} '(.error|not)' "$FUNCNAME"
+    chain_Http "$req" ${UNIT_HTTP} '(.error|not)' "$FUNCNAME"
 }
 
 function paracross_ListTitles() {
     local main_ip=${UNIT_HTTP//8901/8801}
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName": "ListTitles", "payload" : {}}]}' ${main_ip} '(.error|not) and (.result| [has("titles"),true])' "$FUNCNAME"
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName": "ListTitles", "payload" : {}}]}' ${main_ip} '(.error|not) and (.result| [has("titles"),true])' "$FUNCNAME"
 }
 
 function paracross_GetHeight() {
     if [ "$IS_PARA" == "true" ]; then
-        chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName": "GetHeight", "payload" : {}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("consensHeight"),true])' "$FUNCNAME"
+        chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName": "GetHeight", "payload" : {}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("consensHeight"),true])' "$FUNCNAME"
     fi
 }
 
 function paracross_GetNodeGroupAddrs() {
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeGroupAddrs","payload":{"title":"user.p.para."}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("key","value"),true])' "$FUNCNAME"
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeGroupAddrs","payload":{"title":"user.p.para."}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("key","value"),true])' "$FUNCNAME"
 }
 
 function paracross_GetNodeGroupStatus() {
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeGroupStatus","payload":{"title":"user.p.para."}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("status"),true])' "$FUNCNAME"
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeGroupStatus","payload":{"title":"user.p.para."}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("status"),true])' "$FUNCNAME"
 }
 
 function paracross_ListNodeGroupStatus() {
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"ListNodeGroupStatus","payload":{"title":"user.p.para.","status":2}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("status"),true])' "$FUNCNAME"
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"ListNodeGroupStatus","payload":{"title":"user.p.para.","status":2}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("status"),true])' "$FUNCNAME"
 }
 
 function paracross_ListNodeStatus() {
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"ListNodeStatusInfo","payload":{"title":"user.p.para.","status":3}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("status"),true])' "$FUNCNAME"
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"ListNodeStatusInfo","payload":{"title":"user.p.para.","status":3}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("status"),true])' "$FUNCNAME"
 }
 
 function paracross_GetSupervisionInfo() {
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetSupervisionNodeGroupAddrs","payload":{"title":"user.p.para."}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("key","value"),true])' "GetSupervisionNodeGroupAddrs"
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"ListSupervisionNodeStatusInfo","payload":{"title":"user.p.para.","status":0}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("status"),true])' "ListSupervisionNodeStatusInfo status:0"
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetSupervisionNodeGroupAddrs","payload":{"title":"user.p.para."}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("key","value"),true])' "GetSupervisionNodeGroupAddrs"
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"ListSupervisionNodeStatusInfo","payload":{"title":"user.p.para.","status":0}}]}' ${UNIT_HTTP} '(.error|not) and (.result| [has("status"),true])' "ListSupervisionNodeStatusInfo status:0"
 }
 
 para_test_addr="1MAuE8QSbbech3bVKK2JPJJxYxNtT95oSU"
@@ -292,7 +292,7 @@ function paracross_txgroupex() {
     tx_sign2=$(curl -ksd '{"method":"Chain.SignRawTx","params":[{"privkey":"'"$para_test_prikey"'","txHex":"'"$tx_sign"'","index":3,"expire":"120s"}]}' "${para_ip}" | jq -r ".result")
 
     #send
-    chain33_SendTx "${tx_sign2}" "${para_ip}"
+    chain_SendTx "${tx_sign2}" "${para_ip}"
 }
 
 #测试平行链交易组跨链失败,主链自动恢复原值
@@ -336,7 +336,7 @@ function paracross_testTxGroupFail() {
         left_exec_val=$(paracross_QueryMainBalance "${para_test_addr}")
         if [ "${left_exec_val}" != $amount_left ] || [ "${transfer_val}" != $transfer_expect ] || [ "${transfer_exec_val}" != $exec_expect ]; then
             echo "trans=${transfer_val}-expect=${transfer_expect},trader=${transfer_exec_val}-expect=${exec_expect},left=${left_exec_val}-expect=${amount_left}"
-            chain33_BlockWait 2 ${UNIT_HTTP}
+            chain_BlockWait 2 ${UNIT_HTTP}
             times=$((times - 1))
             if [ $times -le 0 ]; then
                 echo "para_cross_transfer_testfail failed"
@@ -387,7 +387,7 @@ function paracross_testParaAssetWithdrawFail() {
         left_exec_val=$(paracross_QueryMainAssetBalance "${game_token_test_addr}" "paracross" "user.p.game.coins.para")
         if [ "${left_exec_val}" != $amount_left ]; then
             echo "left=${left_exec_val}-expect=${amount_left}"
-            chain33_BlockWait 2 ${UNIT_HTTP}
+            chain_BlockWait 2 ${UNIT_HTTP}
             times=$((times - 1))
             if [ $times -le 0 ]; then
                 echo "para_cross_transfer_testfail failed"
@@ -423,15 +423,15 @@ function paracross_testTxGroup() {
     local amount_deposit=800000000
     local amount_transfer=300000000
     local amount_left=500000000
-    chain33_ImportPrivkey "${para_test_prikey}" "${para_test_addr}" "paracross-transfer6" "${main_ip}"
+    chain_ImportPrivkey "${para_test_prikey}" "${para_test_addr}" "paracross-transfer6" "${main_ip}"
 
     # tx fee + transfer 10 coins
-    chain33_applyCoins "${para_test_addr}" 1000000000 "${main_ip}"
-    chain33_QueryBalance "${para_test_addr}" "$main_ip"
+    chain_applyCoins "${para_test_addr}" 1000000000 "${main_ip}"
+    chain_QueryBalance "${para_test_addr}" "$main_ip"
 
     #deposit 8 coins to paracross
-    chain33_SendToAddress "${para_test_addr}" "$paracross_addr" "$amount_deposit" "${main_ip}"
-    chain33_QueryExecBalance "${para_test_addr}" "paracross" "${main_ip}"
+    chain_SendToAddress "${para_test_addr}" "$paracross_addr" "$amount_deposit" "${main_ip}"
+    chain_QueryExecBalance "${para_test_addr}" "paracross" "${main_ip}"
 
     paracross_txgroupex "${amount_transfer}" "${amount_trade}" "${para_ip}" "user.p.para" "coins" "bty"
 
@@ -472,7 +472,7 @@ paracross_testSelfConsensStages() {
     req='"method":"Chain.CreateTransaction","params":[{"execer" : "user.p.para.paracross","actionName" : "SelfStageConfig","payload" : {"title":"user.p.para.","ty" : "1", "stage" : {"startHeight":'"$newHeight"',"enable":2} }}]'
     resp=$(curl -ksd "{$req}" "${para_ip}")
     rawtx=$(jq -r ".result" <<<"$resp")
-    chain33_SignAndSendTx "$rawtx" "$para_test_prikey" "${para_ip}"
+    chain_SignAndSendTx "$rawtx" "$para_test_prikey" "${para_ip}"
 
     echo "2. get stage apply id"
     req='"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"ListSelfStages","payload":{"status":1,"count":1}}]'
@@ -493,11 +493,11 @@ paracross_testSelfConsensStages() {
     resp=$(curl -ksd "{$req}" "${para_ip}")
     rawtx=$(jq -r ".result" <<<"$resp")
     echo "send vote 1"
-    chain33_SignAndSendTx "$rawtx" "$KS_PRI" "${para_ip}"
+    chain_SignAndSendTx "$rawtx" "$KS_PRI" "${para_ip}"
     echo "send vote 2"
-    chain33_SignAndSendTx "$rawtx" "$JR_PRI" "${para_ip}" "130s"
+    chain_SignAndSendTx "$rawtx" "$JR_PRI" "${para_ip}" "130s"
     echo "send vote 3"
-    chain33_SignAndSendTx "$rawtx" "$NL_PRI" "${para_ip}" "140s"
+    chain_SignAndSendTx "$rawtx" "$NL_PRI" "${para_ip}" "140s"
 
     echo "query status"
     req='"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"ListSelfStages","payload":{"status":3,"count":1}}]'
@@ -536,11 +536,11 @@ paracross_testBind() {
     req='"method":"Chain.CreateTransaction","params":[{"execer" : "user.p.para.paracross","actionName" : "ParaBindMiner","payload" : {"bindAction":"1","bindCoins":5, "targetNode":"1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"}}]'
     resp=$(curl -ksd "{$req}" "${para_ip}")
     rawtx=$(jq -r ".result" <<<"$resp")
-    chain33_SignAndSendTxWait "$rawtx" "${priv1q9}" "${para_ip}"
+    chain_SignAndSendTxWait "$rawtx" "${priv1q9}" "${para_ip}"
 
     echo "2. get bind"
-    #    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeBindMinerList","payload":{"Node":"1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"}}]}' "${para_ip}" '(.error|not) and (.result.List| [has("1KSBd17H7Z"),true])' "$FUNCNAME" '(.result.List)'
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeBindMinerList","payload":{"node":"1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"}}]}' "${para_ip}" '(.error|not) and (.result.List| [has("1Q9sQw"),true])' "$FUNCNAME" '(.result.List)'
+    #    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeBindMinerList","payload":{"Node":"1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"}}]}' "${para_ip}" '(.error|not) and (.result.List| [has("1KSBd17H7Z"),true])' "$FUNCNAME" '(.result.List)'
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeBindMinerList","payload":{"node":"1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"}}]}' "${para_ip}" '(.error|not) and (.result.List| [has("1Q9sQw"),true])' "$FUNCNAME" '(.result.List)'
 }
 
 paracross_testUnBind() {
@@ -550,7 +550,7 @@ paracross_testUnBind() {
     req='"method":"Chain.CreateTransaction","params":[{"execer" : "user.p.para.paracross","actionName" : "ParaBindMiner","payload" : {"bindAction":"2", "targetNode" : "1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"}}]'
     resp=$(curl -ksd "{$req}" "${para_ip}")
     rawtx=$(jq -r ".result" <<<"$resp")
-    chain33_SignAndSendTxWait "$rawtx" "${priv1q9}" "${para_ip}"
+    chain_SignAndSendTxWait "$rawtx" "${priv1q9}" "${para_ip}"
 
     echo "2. get bind"
     #    req='"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeBindMinerList","payload":{"data":$nodeAddr}]'
@@ -559,7 +559,7 @@ paracross_testUnBind() {
     #    superNode=$(jq -r ".result.List.SuperNode" <<<"$resp")
     #    miners=$(jq -r ".result.List.Miners" <<<"$resp")
 
-    chain33_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeBindMinerList","payload":{"node":"1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4","miner":"1Q9sQwothzM1gKSzkVZ8Dt1tqKX1uzSagx"}}]}' "${para_ip}" '(.error|not) and (.result.List| [has("1Q9sQw"),true])' "$FUNCNAME" '(.result.List)'
+    chain_Http '{"method":"Chain.Query","params":[{ "execer":"paracross", "funcName":"GetNodeBindMinerList","payload":{"node":"1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4","miner":"1Q9sQwothzM1gKSzkVZ8Dt1tqKX1uzSagx"}}]}' "${para_ip}" '(.error|not) and (.result.List| [has("1Q9sQw"),true])' "$FUNCNAME" '(.result.List)'
 }
 
 paracross_testBindMiner() {
@@ -572,20 +572,20 @@ paracross_testBindMiner() {
 function apply_coins() {
     local main_ip=${UNIT_HTTP//8901/8801}
 
-    chain33_applyCoins "${addr1q9}" 1000000000 "${main_ip}"
-    chain33_QueryBalance "${addr1q9}" "$main_ip"
+    chain_applyCoins "${addr1q9}" 1000000000 "${main_ip}"
+    chain_QueryBalance "${addr1q9}" "$main_ip"
 
     local para_ip="${UNIT_HTTP}"
 
-    chain33_applyCoins "${addr1q9}" 1000000000 "${para_ip}"
-    chain33_QueryBalance "${addr1q9}" "$para_ip"
+    chain_applyCoins "${addr1q9}" 1000000000 "${para_ip}"
+    chain_QueryBalance "${addr1q9}" "$para_ip"
 
-    chain33_ImportPrivkey "$priv1q9" "$addr1q9" "bindminer" "$para_ip"
+    chain_ImportPrivkey "$priv1q9" "$addr1q9" "bindminer" "$para_ip"
 
     local para_exec_addr=""
     para_exec_addr=$(curl -ksd '{"method":"Chain.ConvertExectoAddr","params":[{"execname":"user.p.para.paracross"}]}' ${para_ip} | jq -r ".result")
-    chain33_SendToAddress "$addr1q9" "${para_exec_addr}" 900000000 "${para_ip}"
-    chain33_QueryExecBalance "${addr1q9}" "user.p.para.paracross" "$para_ip"
+    chain_SendToAddress "$addr1q9" "${para_exec_addr}" 900000000 "${para_ip}"
+    chain_QueryExecBalance "${addr1q9}" "user.p.para.paracross" "$para_ip"
 }
 
 function run_testcases() {
@@ -607,7 +607,7 @@ function run_testcases() {
 }
 
 function main() {
-    chain33_RpcTestBegin paracross
+    chain_RpcTestBegin paracross
     UNIT_HTTP=$1
     IS_PARA=$(echo '"'"${UNIT_HTTP}"'"' | jq '.|contains("8901")')
 
@@ -624,7 +624,7 @@ function main() {
         echo "=========== # start cross transfer monitor ============="
         while true; do
             paracross_Transfer_Withdraw_Inner "$from_addr" "$privkey" "$paracross_addr" "$execer_name"
-            chain33_BlockWait 1 "${UNIT_HTTP}"
+            chain_BlockWait 1 "${UNIT_HTTP}"
         done
     else
         if [ "$IS_PARA" == "true" ]; then
@@ -634,9 +634,9 @@ function main() {
         fi
     fi
 
-    chain33_RpcTestRst paracross "$CASE_ERR"
+    chain_RpcTestRst paracross "$CASE_ERR"
 }
 
-chain33_debug_function main "$1" "$2" "$3" "$4"
+chain_debug_function main "$1" "$2" "$3" "$4"
 #main http://127.0.0.1:8801
 #main http://47.98.253.127:8801 1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4 0x6da92a632ab7deb67d38c0f6560bcfed28167998f6496db64c258d5e8393a81b user.p.fzmtest.paracross

@@ -30,7 +30,7 @@ const (
 )
 
 func TestForceCloseTicketList(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	cfg.GetModuleConfig().Consensus.Name = "ticket"
 
 	ticket := &ticketPolicy{mtx: &sync.Mutex{}}
@@ -58,7 +58,7 @@ func TestForceCloseTicketList(t *testing.T) {
 }
 
 func TestCloseTicketsByAddr(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	cfg.GetModuleConfig().Consensus.Name = "ticket"
 
 	pk, err := hex.DecodeString("CC38546E9E659D15E6B4893F0AB32A06D103931A8230B0BDE71459D2B27D6944")
@@ -89,7 +89,7 @@ func TestCloseTicketsByAddr(t *testing.T) {
 }
 
 func TestBuyTicketOne(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	cfg.GetModuleConfig().Consensus.Name = "ticket"
 
 	ticket := &ticketPolicy{mtx: &sync.Mutex{}}
@@ -112,7 +112,7 @@ func TestBuyTicketOne(t *testing.T) {
 }
 
 func TestBuyMinerAddrTicketOne(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	cfg.GetModuleConfig().Consensus.Name = "ticket"
 
 	pk, err := hex.DecodeString("CC38546E9E659D15E6B4893F0AB32A06D103931A8230B0BDE71459D2B27D6944")

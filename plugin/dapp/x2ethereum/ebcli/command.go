@@ -23,7 +23,7 @@ func RelayerCmd() *cobra.Command {
 		ChangePwdCmd(),
 		LockCmd(),
 		UnlockCmd(),
-		Chain33RelayerCmd(),
+		ChainRelayerCmd(),
 		EthereumRelayerCmd(),
 	)
 

@@ -97,7 +97,7 @@ func showBtcHeadHeightList(cmd *cobra.Command, args []string) {
 	parseRelayBtcHeadHeightList(res)
 }
 
-// ShowBTCHeadCurHeightCmd show BTC head current height in chain33
+// ShowBTCHeadCurHeightCmd show BTC head current height in chain
 func ShowBTCHeadCurHeightCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "btc_cur_height",

@@ -89,7 +89,7 @@ func (t *trade) GetOnesOrderWithStatus(req *pty.ReqAddrAssets) (types.Message, e
 	return t.toTradeOrders(rows)
 }
 
-func fmtReply(cfg *types.Chain33Config, order *pty.LocalOrder) *pty.ReplyTradeOrder {
+func fmtReply(cfg *types.ChainConfig, order *pty.LocalOrder) *pty.ReplyTradeOrder {
 	priceExec := order.PriceExec
 	priceSymbol := order.PriceSymbol
 	if priceExec == "" {

@@ -7,13 +7,13 @@ package executor
 import (
 	"strings"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
-	token "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/assetcloud/chain/account"
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/common/address"
 	"github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	token "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/pkg/errors"
 )
 
@@ -374,7 +374,7 @@ func (a *action) paraAssetWithdrawRollback(wtw *pt.CrossAssetTransfer, withdrawT
 	return nil, nil
 }
 
-func (a *action) createAccount(cfg *types.Chain33Config, db db.KV, exec, symbol string) (*account.DB, error) {
+func (a *action) createAccount(cfg *types.ChainConfig, db db.KV, exec, symbol string) (*account.DB, error) {
 	var accDB *account.DB
 	if symbol == "" {
 		accDB = account.NewCoinsAccount(cfg)

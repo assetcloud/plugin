@@ -1,8 +1,8 @@
 package minerrewards
 
 import (
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 type normal struct{}
@@ -12,7 +12,7 @@ func init() {
 }
 
 //获取配置的奖励数值
-func (n *normal) GetConfigReward(cfg *types.Chain33Config, height int64) (int64, int64, int64) {
+func (n *normal) GetConfigReward(cfg *types.ChainConfig, height int64) (int64, int64, int64) {
 	coinReward := cfg.MGInt("mver.consensus.paracross.coinReward", height)
 	fundReward := cfg.MGInt("mver.consensus.paracross.coinDevFund", height)
 	coinBaseReward := cfg.MGInt("mver.consensus.paracross.coinBaseReward", height)
@@ -36,7 +36,7 @@ func (n *normal) GetConfigReward(cfg *types.Chain33Config, height int64) (int64,
 }
 
 //奖励矿工算法
-func (n *normal) RewardMiners(cfg *types.Chain33Config, coinReward int64, miners []string, height int64) ([]*pt.ParaMinerReward, int64) {
+func (n *normal) RewardMiners(cfg *types.ChainConfig, coinReward int64, miners []string, height int64) ([]*pt.ParaMinerReward, int64) {
 	//找零
 	var change int64
 	var rewards []*pt.ParaMinerReward

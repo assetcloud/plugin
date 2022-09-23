@@ -32,7 +32,7 @@ var clog = log.New("module", "execs.ticket")
 var driverName = "ticket"
 
 // Init initial
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newTicket, cfg.GetDappFork(driverName, "Enable"))
 	drivers.RegisterKVExpiredChecker(ty.TicketX, expiredKVChecker)
 	InitExecType()

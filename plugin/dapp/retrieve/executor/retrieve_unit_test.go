@@ -247,8 +247,8 @@ func TestExecDelLocalBackup(t *testing.T) {
 }
 
 func constructRetrieveInstance() drivers.Driver {
-	cfgstring := strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1)
-	chainTestCfg := types.NewChain33Config(cfgstring)
+	cfgstring := strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1)
+	chainTestCfg := types.NewChainConfig(cfgstring)
 	chainTestCfg.SetDappFork(rt.RetrieveX, rt.ForkRetriveX, 180000)
 	chainTestCfg.SetDappFork(rt.RetrieveX, rt.ForkRetriveAssetX, 3150000)
 	Init(rt.RetrieveX, chainTestCfg, nil)

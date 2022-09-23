@@ -31,7 +31,7 @@ func newJrpc(api client.QueueProtocolAPI) *Jrpc {
 }
 
 func TestChannelClient_IsSync(t *testing.T) {
-	cfg := types.NewChain33Config(ptestNode.DefaultConfig)
+	cfg := types.NewChainConfig(ptestNode.DefaultConfig)
 	api := new(mocks.QueueProtocolAPI)
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	client := newGrpc(api)

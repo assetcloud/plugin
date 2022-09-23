@@ -86,7 +86,7 @@ type Node struct {
 	peerStore  sync.Map //peerIp-->PeerName
 	closed     int32
 	pubsub     *pubsub.PubSub
-	chainCfg   *types.Chain33Config
+	chainCfg   *types.ChainConfig
 	p2pMgr     *p2p.Manager
 }
 

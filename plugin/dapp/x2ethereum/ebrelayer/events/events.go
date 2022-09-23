@@ -12,14 +12,14 @@ var eventsLog = log.New("module", "ethereum_relayer")
 const (
 	// Unsupported : unsupported Chain or Ethereum event
 	Unsupported Event = iota
-	// MsgBurn : Chain event 'Chain33Msg' type MsgBurn
+	// MsgBurn : Chain event 'ChainMsg' type MsgBurn
 	MsgBurn
-	// MsgLock :  Chain event 'Chain33Msg' type MsgLock
+	// MsgLock :  Chain event 'ChainMsg' type MsgLock
 	MsgLock
 	// LogLock : Ethereum event 'LockEvent'
 	LogLock
-	// LogChain33TokenBurn : Ethereum event 'LogChain33TokenBurn' in contract chain33Bank
-	LogChain33TokenBurn
+	// LogChainTokenBurn : Ethereum event 'LogChainTokenBurn' in contract chainBank
+	LogChainTokenBurn
 	// LogNewProphecyClaim : Ethereum event 'NewProphecyClaimEvent'
 	LogNewProphecyClaim
 )
@@ -32,17 +32,17 @@ const (
 
 // String : returns the event type as a string
 func (d Event) String() string {
-	return [...]string{"unknown-x2ethereum", "Chain33ToEthBurn", "Chain33ToEthLock", "LogLock", "LogChain33TokenBurn", "LogNewProphecyClaim"}[d]
+	return [...]string{"unknown-x2ethereum", "ChainToEthBurn", "ChainToEthLock", "LogLock", "LogChainTokenBurn", "LogNewProphecyClaim"}[d]
 }
 
-// Chain33MsgAttributeKey : enum containing supported attribute keys
-type Chain33MsgAttributeKey int
+// ChainMsgAttributeKey : enum containing supported attribute keys
+type ChainMsgAttributeKey int
 
 const (
 	// UnsupportedAttributeKey : unsupported attribute key
-	UnsupportedAttributeKey Chain33MsgAttributeKey = iota
-	// Chain33Sender : sender's address on Chain network
-	Chain33Sender
+	UnsupportedAttributeKey ChainMsgAttributeKey = iota
+	// ChainSender : sender's address on Chain network
+	ChainSender
 	// EthereumReceiver : receiver's address on Ethereum network
 	EthereumReceiver
 	// Coin : coin type
@@ -52,6 +52,6 @@ const (
 )
 
 // String : returns the event type as a string
-func (d Chain33MsgAttributeKey) String() string {
-	return [...]string{"unsupported", "chain33_sender", "ethereum_receiver", "amount", "token_contract_address"}[d]
+func (d ChainMsgAttributeKey) String() string {
+	return [...]string{"unsupported", "chain_sender", "ethereum_receiver", "amount", "token_contract_address"}[d]
 }

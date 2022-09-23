@@ -34,7 +34,7 @@ type execEnv struct {
 	api         client.QueueProtocolAPI
 	db          dbm.KV
 	execAddr    string
-	cfg         *types.Chain33Config
+	cfg         *types.ChainConfig
 	ldb         dbm.DB
 	user        *authority.User
 }
@@ -75,8 +75,8 @@ func manageKeySet(key string, value string, db dbm.KV) {
 }
 
 func initEnv() (*execEnv, error) {
-	cfg := types.NewChain33Config(types.ReadFile("./test/chain33.auth.test.toml"))
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.ReadFile("./test/chain.auth.test.toml"))
+	cfg.SetTitleOnlyForTest("chain")
 
 	sub := cfg.GetSubConfig()
 	var subcfg ct.Authority

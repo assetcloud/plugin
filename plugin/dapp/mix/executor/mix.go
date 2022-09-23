@@ -23,7 +23,7 @@ type Mix struct {
 }
 
 //Init paracross exec register
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newMix, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 	setPrefix()

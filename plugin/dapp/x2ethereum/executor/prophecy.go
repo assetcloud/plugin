@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	x2eTy "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 	"github.com/assetcloud/chain/types"
+	x2eTy "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 )
 
 //NewProphecy ...
@@ -68,12 +68,12 @@ func FindHighestClaim(prophecy *x2eTy.ReceiptEthProphecy, validators map[string]
 }
 
 //NewOracleClaimContent ...
-func NewOracleClaimContent(chain33Receiver string, amount string, claimType, decimals int64) x2eTy.OracleClaimContent {
+func NewOracleClaimContent(chainReceiver string, amount string, claimType, decimals int64) x2eTy.OracleClaimContent {
 	return x2eTy.OracleClaimContent{
-		Chain33Receiver: chain33Receiver,
-		Amount:          amount,
-		ClaimType:       claimType,
-		Decimals:        decimals,
+		ChainReceiver: chainReceiver,
+		Amount:        amount,
+		ClaimType:     claimType,
+		Decimals:      decimals,
 	}
 }
 
@@ -86,8 +86,8 @@ func NewClaim(id string, validatorAddress string, content string) x2eTy.OracleCl
 	}
 }
 
-//CreateOracleClaimFromEthClaim 通过ethchain33结构构造一个OracleClaim结构，包括生成唯一的ID
-func CreateOracleClaimFromEthClaim(ethClaim x2eTy.Eth2Chain33) (x2eTy.OracleClaim, error) {
+//CreateOracleClaimFromEthClaim 通过ethchain结构构造一个OracleClaim结构，包括生成唯一的ID
+func CreateOracleClaimFromEthClaim(ethClaim x2eTy.Eth2Chain) (x2eTy.OracleClaim, error) {
 	if ethClaim.ClaimType != int64(x2eTy.LockClaimType) && ethClaim.ClaimType != int64(x2eTy.BurnClaimType) {
 		return x2eTy.OracleClaim{}, x2eTy.ErrInvalidClaimType
 	}
@@ -97,7 +97,7 @@ func CreateOracleClaimFromEthClaim(ethClaim x2eTy.Eth2Chain33) (x2eTy.OracleClai
 	} else if ethClaim.ClaimType == int64(x2eTy.BurnClaimType) {
 		oracleID = oracleID + "burn"
 	}
-	claimContent := NewOracleClaimContent(ethClaim.Chain33Receiver, ethClaim.Amount, ethClaim.ClaimType, ethClaim.Decimals)
+	claimContent := NewOracleClaimContent(ethClaim.ChainReceiver, ethClaim.Amount, ethClaim.ClaimType, ethClaim.Decimals)
 	claimBytes := types.Encode(&claimContent)
 
 	claimString := string(claimBytes)

@@ -38,7 +38,7 @@ func TestEcrecoverSignTypedMessage(t *testing.T) {
 
 	//privateKeyStr := "0xcc38546e9e659d15e6b4893f0ab32a06d103931a8230b0bde71459d2b27d6944"
 	//var driver secp256k1.Driver
-	//privateKeySli, err := chain33Common.FromHex(privateKeyStr)
+	//privateKeySli, err := chainCommon.FromHex(privateKeyStr)
 	//if nil != err {
 	//	panic(err.Error())
 	//

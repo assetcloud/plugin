@@ -11,14 +11,14 @@ import (
 	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/merkletree"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
-	"github.com/assetcloud/plugin/plugin/dapp/zksync/wallet"
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/assetcloud/plugin/plugin/dapp/zksync/wallet"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
 	"github.com/pkg/errors"
@@ -49,14 +49,14 @@ func ZksyncCmd() *cobra.Command {
 		setVerifyKeyCmd(),
 		setOperatorCmd(),
 		commitProofCmd(),
-		getChain33AddrCmd(),
+		getChainAddrCmd(),
 		getAccountTreeCmd(),
 		getTxProofCmd(),
 		getTxProofByHeightCmd(),
 		getLastCommitProofCmd(),
 		getAccountByIdCmd(),
 		getAccountByEthCmd(),
-		getAccountByChain33Cmd(),
+		getAccountByChainCmd(),
 		getContractAccountCmd(),
 		getTokenBalanceCmd(),
 		getZkCommitProofCmd(),
@@ -83,8 +83,8 @@ func depositFlag(cmd *cobra.Command) {
 	cmd.MarkFlagRequired("amount")
 	cmd.Flags().StringP("ethAddress", "e", "", "deposit ethaddress")
 	cmd.MarkFlagRequired("ethAddress")
-	cmd.Flags().StringP("chain33Addr", "c", "", "deposit chain33Addr")
-	cmd.MarkFlagRequired("chain33Addr")
+	cmd.Flags().StringP("chainAddr", "c", "", "deposit chainAddr")
+	cmd.MarkFlagRequired("chainAddr")
 
 }
 
@@ -92,10 +92,10 @@ func deposit(cmd *cobra.Command, args []string) {
 	tokenId, _ := cmd.Flags().GetUint64("tokenId")
 	amount, _ := cmd.Flags().GetString("amount")
 	ethAddress, _ := cmd.Flags().GetString("ethAddress")
-	chain33Addr, _ := cmd.Flags().GetString("chain33Addr")
+	chainAddr, _ := cmd.Flags().GetString("chainAddr")
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	payload, err := wallet.CreateRawTx(zt.TyDepositAction, tokenId, amount, ethAddress, "", chain33Addr, 0, 0)
+	payload, err := wallet.CreateRawTx(zt.TyDepositAction, tokenId, amount, ethAddress, "", chainAddr, 0, 0)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, errors.Wrapf(err, "createRawTx"))
 		return
@@ -291,8 +291,8 @@ func transferToNewFlag(cmd *cobra.Command) {
 	cmd.MarkFlagRequired("accountId")
 	cmd.Flags().StringP("ethAddress", "e", "", "transferToNew toEthAddress")
 	cmd.MarkFlagRequired("ethAddress")
-	cmd.Flags().StringP("chain33Addr", "c", "", "transferToNew toChain33Addr")
-	cmd.MarkFlagRequired("chain33Addr")
+	cmd.Flags().StringP("chainAddr", "c", "", "transferToNew toChainAddr")
+	cmd.MarkFlagRequired("chainAddr")
 }
 
 func transferToNew(cmd *cobra.Command, args []string) {
@@ -300,10 +300,10 @@ func transferToNew(cmd *cobra.Command, args []string) {
 	amount, _ := cmd.Flags().GetString("amount")
 	accountId, _ := cmd.Flags().GetUint64("accountId")
 	toEthAddress, _ := cmd.Flags().GetString("ethAddress")
-	chain33Addr, _ := cmd.Flags().GetString("chain33Addr")
+	chainAddr, _ := cmd.Flags().GetString("chainAddr")
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	payload, err := wallet.CreateRawTx(zt.TyTransferToNewAction, tokenId, amount, "", toEthAddress, chain33Addr, accountId, 0)
+	payload, err := wallet.CreateRawTx(zt.TyTransferToNewAction, tokenId, amount, "", toEthAddress, chainAddr, accountId, 0)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, errors.Wrapf(err, "createRawTx"))
 		return
@@ -562,21 +562,21 @@ func commitProof(cmd *cobra.Command, args []string) {
 	ctx.RunWithoutMarshal()
 }
 
-func getChain33AddrCmd() *cobra.Command {
+func getChainAddrCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "getChain33Addr",
-		Short: "get chain33 address by privateKey",
-		Run:   getChain33Addr,
+		Use:   "getChainAddr",
+		Short: "get chain address by privateKey",
+		Run:   getChainAddr,
 	}
-	getChain33AddrFlag(cmd)
+	getChainAddrFlag(cmd)
 	return cmd
 }
 
-func getChain33AddrFlag(cmd *cobra.Command) {
+func getChainAddrFlag(cmd *cobra.Command) {
 	cmd.Flags().StringP("private", "k", "", "private key")
 }
 
-func getChain33Addr(cmd *cobra.Command, args []string) {
+func getChainAddr(cmd *cobra.Command, args []string) {
 	privateKeyString, _ := cmd.Flags().GetString("private")
 	privateKeyBytes, err := common.FromHex(privateKeyString)
 	if err != nil {
@@ -790,33 +790,33 @@ func getAccountByEth(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-func getAccountByChain33Cmd() *cobra.Command {
+func getAccountByChainCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "accountC",
-		Short: "get zksync account by chain33Addr",
-		Run:   getAccountByChain33,
+		Short: "get zksync account by chainAddr",
+		Run:   getAccountByChain,
 	}
-	getAccountByChain33Flag(cmd)
+	getAccountByChainFlag(cmd)
 	return cmd
 }
 
-func getAccountByChain33Flag(cmd *cobra.Command) {
-	cmd.Flags().StringP("chain33Addr", "c", "", "zksync account chain33Addr")
-	cmd.MarkFlagRequired("chain33Addr")
+func getAccountByChainFlag(cmd *cobra.Command) {
+	cmd.Flags().StringP("chainAddr", "c", "", "zksync account chainAddr")
+	cmd.MarkFlagRequired("chainAddr")
 }
 
-func getAccountByChain33(cmd *cobra.Command, args []string) {
+func getAccountByChain(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	chain33Addr, _ := cmd.Flags().GetString("chain33Addr")
+	chainAddr, _ := cmd.Flags().GetString("chainAddr")
 
 	var params rpctypes.Query4Jrpc
 
 	params.Execer = zt.Zksync
 	req := &zt.ZkQueryReq{
-		Chain33Addr: chain33Addr,
+		ChainAddr: chainAddr,
 	}
 
-	params.FuncName = "GetAccountByChain33"
+	params.FuncName = "GetAccountByChain"
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryResp
@@ -827,7 +827,7 @@ func getAccountByChain33(cmd *cobra.Command, args []string) {
 func getContractAccountCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "contractAccount",
-		Short: "get zksync contractAccount by chain33WalletAddr and token symbol",
+		Short: "get zksync contractAccount by chainWalletAddr and token symbol",
 		Run:   getContractAccount,
 	}
 	getContractAccountFlag(cmd)
@@ -835,23 +835,23 @@ func getContractAccountCmd() *cobra.Command {
 }
 
 func getContractAccountFlag(cmd *cobra.Command) {
-	cmd.Flags().StringP("chain33Addr", "c", "", "chain33 wallet address")
-	cmd.MarkFlagRequired("chain33Addr")
+	cmd.Flags().StringP("chainAddr", "c", "", "chain wallet address")
+	cmd.MarkFlagRequired("chainAddr")
 	cmd.Flags().StringP("token", "t", "", "token symbol")
 	cmd.MarkFlagRequired("token")
 }
 
 func getContractAccount(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	chain33Addr, _ := cmd.Flags().GetString("chain33Addr")
+	chainAddr, _ := cmd.Flags().GetString("chainAddr")
 	token, _ := cmd.Flags().GetString("token")
 
 	var params rpctypes.Query4Jrpc
 
 	params.Execer = zt.Zksync
 	req := &zt.ZkQueryReq{
-		TokenSymbol:       token,
-		Chain33WalletAddr: chain33Addr,
+		TokenSymbol:     token,
+		ChainWalletAddr: chainAddr,
 	}
 
 	params.FuncName = "GetZkContractAccount"
@@ -990,10 +990,10 @@ func getFirstRootHashFlag(cmd *cobra.Command) {
 
 func getFirstRootHash(cmd *cobra.Command, args []string) {
 	leaf := &zt.Leaf{
-		EthAddress:  "980818135352849559554652468538757099471386586455",
-		AccountId:   1,
-		Chain33Addr: "20033148478649779061292402960935477249437023394422514689332944628159941947226",
-		TokenHash:   "0",
+		EthAddress: "980818135352849559554652468538757099471386586455",
+		AccountId:  1,
+		ChainAddr:  "20033148478649779061292402960935477249437023394422514689332944628159941947226",
+		TokenHash:  "0",
 		PubKey: &zt.ZkPubKey{
 			X: "14100288826287343691225102305171330918997717795915902072008127148547196365751",
 			Y: "13575378421883862534829584367244516767645518094963505752293596385949094459968",
@@ -1010,7 +1010,7 @@ func getLeafHash(leaf *zt.Leaf) []byte {
 	accountIdBytes := new(fr.Element).SetUint64(leaf.GetAccountId()).Bytes()
 	hash.Write(accountIdBytes[:])
 	hash.Write(zt.Str2Byte(leaf.GetEthAddress()))
-	hash.Write(zt.Str2Byte(leaf.GetChain33Addr()))
+	hash.Write(zt.Str2Byte(leaf.GetChainAddr()))
 	if leaf.GetPubKey() != nil {
 		hash.Write(zt.Str2Byte(leaf.GetPubKey().GetX()))
 		hash.Write(zt.Str2Byte(leaf.GetPubKey().GetY()))

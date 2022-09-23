@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"strings"
 
-	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 	"github.com/assetcloud/chain/client"
 	dbm "github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/system/dapp"
 	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 )
 
 type sellDB struct {
@@ -38,7 +38,7 @@ func (selldb *sellDB) save(db dbm.KV) []*types.KeyValue {
 	return set
 }
 
-func (selldb *sellDB) getSellLogs(tradeType int32, txhash string, cfg *types.Chain33Config) *types.ReceiptLog {
+func (selldb *sellDB) getSellLogs(tradeType int32, txhash string, cfg *types.ChainConfig) *types.ReceiptLog {
 	log := &types.ReceiptLog{}
 	log.Ty = tradeType
 	base := &pty.ReceiptSellBase{
@@ -73,7 +73,7 @@ func (selldb *sellDB) getSellLogs(tradeType int32, txhash string, cfg *types.Cha
 	return log
 }
 
-func (selldb *sellDB) getBuyLogs(buyerAddr string, boardlotcnt int64, txhash string, cfg *types.Chain33Config) *types.ReceiptLog {
+func (selldb *sellDB) getBuyLogs(buyerAddr string, boardlotcnt int64, txhash string, cfg *types.ChainConfig) *types.ReceiptLog {
 	log := &types.ReceiptLog{}
 	log.Ty = pty.TyLogTradeBuyMarket
 	base := &pty.ReceiptBuyBase{
@@ -146,7 +146,7 @@ func (buydb *buyDB) getKVSet() (kvset []*types.KeyValue) {
 	return kvset
 }
 
-func (buydb *buyDB) getBuyLogs(tradeType int32, txhash string, cfg *types.Chain33Config) *types.ReceiptLog {
+func (buydb *buyDB) getBuyLogs(tradeType int32, txhash string, cfg *types.ChainConfig) *types.ReceiptLog {
 	log := &types.ReceiptLog{}
 	log.Ty = tradeType
 	base := &pty.ReceiptBuyBase{
@@ -193,7 +193,7 @@ func getBuyOrderFromID(buyID []byte, db dbm.KV) (*pty.BuyLimitOrder, error) {
 	return &buy, nil
 }
 
-func (buydb *buyDB) getSellLogs(sellerAddr string, sellID string, boardlotCnt int64, txhash string, cfg *types.Chain33Config) *types.ReceiptLog {
+func (buydb *buyDB) getSellLogs(sellerAddr string, sellID string, boardlotCnt int64, txhash string, cfg *types.ChainConfig) *types.ReceiptLog {
 	log := &types.ReceiptLog{}
 	log.Ty = pty.TyLogTradeSellMarket
 	base := &pty.ReceiptSellBase{

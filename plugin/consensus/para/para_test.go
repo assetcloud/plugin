@@ -31,7 +31,7 @@ var (
 )
 
 func TestFilterTxsForPara(t *testing.T) {
-	cfg := types.NewChain33Config(types.ReadFile("../../../plugin/dapp/paracross/cmd/build/chain33.para.test.toml"))
+	cfg := types.NewChainConfig(types.ReadFile("../../../plugin/dapp/paracross/cmd/build/chain.para.test.toml"))
 
 	detail, filterTxs, _ := createTestTxs(cfg, t)
 	rst := paraexec.FilterTxsForPara(cfg, detail.FilterParaTxsByTitle(cfg, Title))
@@ -40,7 +40,7 @@ func TestFilterTxsForPara(t *testing.T) {
 
 }
 
-func createCrossParaTx(cfg *types.Chain33Config, to string, amount int64) (*types.Transaction, error) {
+func createCrossParaTx(cfg *types.ChainConfig, to string, amount int64) (*types.Transaction, error) {
 	param := types.CreateTx{
 		To:          to,
 		Amount:      amount,
@@ -56,7 +56,7 @@ func createCrossParaTx(cfg *types.Chain33Config, to string, amount int64) (*type
 	return tx, err
 }
 
-func createCrossParaTempTx(cfg *types.Chain33Config, to string, amount int64) (*types.Transaction, error) {
+func createCrossParaTempTx(cfg *types.ChainConfig, to string, amount int64) (*types.Transaction, error) {
 	param := types.CreateTx{
 		To:          to,
 		Amount:      amount,
@@ -72,7 +72,7 @@ func createCrossParaTempTx(cfg *types.Chain33Config, to string, amount int64) (*
 	return tx, err
 }
 
-func createTxsGroup(cfg *types.Chain33Config, txs []*types.Transaction) ([]*types.Transaction, error) {
+func createTxsGroup(cfg *types.ChainConfig, txs []*types.Transaction) ([]*types.Transaction, error) {
 
 	group, err := types.CreateTxGroup(txs, cfg.GetMinTxFeeRate())
 	if err != nil {
@@ -85,7 +85,7 @@ func createTxsGroup(cfg *types.Chain33Config, txs []*types.Transaction) ([]*type
 	return group.Txs, nil
 }
 
-func createTestTxs(cfg *types.Chain33Config, t *testing.T) (*types.BlockDetail, []*types.Transaction, []*types.Transaction) {
+func createTestTxs(cfg *types.ChainConfig, t *testing.T) (*types.BlockDetail, []*types.Transaction, []*types.Transaction) {
 	//all para tx group
 	tx5, err := createCrossParaTx(cfg, "toB", 5)
 	assert.Nil(t, err)
@@ -151,7 +151,7 @@ func createTestTxs(cfg *types.Chain33Config, t *testing.T) (*types.BlockDetail, 
 }
 
 func TestAddMinerTx(t *testing.T) {
-	cfg := types.NewChain33Config(types.ReadFile("../../../plugin/dapp/paracross/cmd/build/chain33.para.test.toml"))
+	cfg := types.NewChainConfig(types.ReadFile("../../../plugin/dapp/paracross/cmd/build/chain.para.test.toml"))
 	pk, err := hex.DecodeString(minerPrivateKey)
 	assert.Nil(t, err)
 
@@ -207,7 +207,7 @@ func getMockLastBlock(para *client, returnBlock *types.Block) {
 
 func TestGetLastBlockInfo(t *testing.T) {
 	para := new(client)
-	grpcClient := &typesmocks.Chain33Client{}
+	grpcClient := &typesmocks.ChainClient{}
 	para.grpcClient = grpcClient
 
 	block := &types.Block{Height: 0}

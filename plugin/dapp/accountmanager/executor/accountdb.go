@@ -292,7 +292,7 @@ func (a *Action) Apply(payload *et.Apply) (*types.Receipt, error) {
 	return receipts, nil
 }
 
-func getConfValue(cfg *types.Chain33Config, db dbm.KV, key string, defaultValue int64) int64 {
+func getConfValue(cfg *types.ChainConfig, db dbm.KV, key string, defaultValue int64) int64 {
 	var item types.ConfigItem
 	value, err := getManageKey(cfg, key, db)
 	if err != nil {
@@ -318,7 +318,7 @@ func getConfValue(cfg *types.Chain33Config, db dbm.KV, key string, defaultValue 
 	}
 	return v
 }
-func getManagerAddr(cfg *types.Chain33Config, db dbm.KV, key, defaultValue string) string {
+func getManagerAddr(cfg *types.ChainConfig, db dbm.KV, key, defaultValue string) string {
 	var item types.ConfigItem
 	value, err := getManageKey(cfg, key, db)
 	if err != nil {
@@ -339,7 +339,7 @@ func getManagerAddr(cfg *types.Chain33Config, db dbm.KV, key, defaultValue strin
 	return values[len(values)-1]
 }
 
-func getManageKey(cfg *types.Chain33Config, key string, db dbm.KV) ([]byte, error) {
+func getManageKey(cfg *types.ChainConfig, key string, db dbm.KV) ([]byte, error) {
 	manageKey := types.ManageKey(key)
 	value, err := db.Get([]byte(manageKey))
 	if err != nil {
@@ -456,7 +456,7 @@ func findAccountListByStatus(localdb dbm.KV, status, direction int32, primaryKey
 	return &reply, nil
 }
 
-func queryBalanceByID(statedb, localdb dbm.KV, cfg *types.Chain33Config, execName string, in *et.QueryBalanceByID) (*et.Balance, error) {
+func queryBalanceByID(statedb, localdb dbm.KV, cfg *types.ChainConfig, execName string, in *et.QueryBalanceByID) (*et.Balance, error) {
 	acc, err := findAccountByID(localdb, in.AccountID)
 	if err != nil {
 		return nil, err

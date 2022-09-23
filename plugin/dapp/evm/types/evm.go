@@ -28,7 +28,7 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(ExecutorName, EVMEnable, 0)
 	// EVM合约中的数据分散存储，支持大数据量
 	cfg.RegisterDappFork(ExecutorName, ForkEVMState, 0)
@@ -45,7 +45,7 @@ func InitFork(cfg *types.Chain33Config) {
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(ExecutorName, NewType(cfg))
 }
 
@@ -55,7 +55,7 @@ type EvmType struct {
 }
 
 // NewType 新建EVM类型对象
-func NewType(cfg *types.Chain33Config) *EvmType {
+func NewType(cfg *types.ChainConfig) *EvmType {
 	c := &EvmType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

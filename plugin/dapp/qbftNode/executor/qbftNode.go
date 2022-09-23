@@ -16,7 +16,7 @@ var clog = log.New("module", "execs.qbftNode")
 var driverName = "qbftNode"
 
 // Init method
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	clog.Debug("register qbftNode execer")
 	drivers.Register(cfg, GetName(), newQbftNode, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()

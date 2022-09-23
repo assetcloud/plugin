@@ -2,8 +2,8 @@
 [TOC]
 
 ### 启动 relayer A
-#### 完成 ethererum 和 chain33 相关合约的部署
-得到 BridgeRegistryOnChain33, BridgeRegistryOnEth, multisignChain33Addr, multisignEthAddr 4个合约地址。
+#### 完成 ethererum 和 chain 相关合约的部署
+得到 BridgeRegistryOnChain, BridgeRegistryOnEth, multisignChainAddr, multisignEthAddr 4个合约地址。
 
 拼凑 ebcli_A 命令
 
@@ -20,10 +20,10 @@
 |ethProvider|ethereum 的 socket 通信地址, 例如: ["ws://43.130.113.145:9545/","ws://43.130.113.145:9545/"], 如果有多个就根据 EthChainName 分别配置, 提高通信的稳定性, 支持多个配置, 用逗号分隔|
 |EthProviderCli|ethereum 的 http url 地址, 例如: ["http://43.130.113.145:9545","http://43.130.113.145:9545"], 如果有多个就根据 EthChainName 分别配置, 提高通信的稳定性, 支持多个配置, 用逗号分隔|
 |BridgeRegistry|部署在 ethereum 的 BridgeRegistry 地址, 如果有多个就根据 EthChainName 分别配置|
-|chain33BridgeRegistry|部署在 chain33 的 BridgeRegistry 地址|
-|ChainID4Chain33|chain33 链的 ID, 默认为 0|
+|chainBridgeRegistry|部署在 chain 的 BridgeRegistry 地址|
+|ChainID4Chain|chain 链的 ID, 默认为 0|
 |ChainName|链的名称, 用来区分主链和平行链, 如user.p.xxx., 必须包含最后一个点|
-|chain33Host|平行链的 host 地址, 默认: http://localhost:8801|
+|chainHost|平行链的 host 地址, 默认: http://localhost:8801|
 |pushHost|relayer 的 host 地址, 默认: http://localhost:20000|
 |pushBind|relayer 的 bind 端口, 默认: 0.0.0.0:20000|
 |keepAliveDuration|单位毫秒, 默认 600000, 表示 10 分钟之内未收到信息, 通过重新订阅, 确保订阅可用, 提高稳定性|
@@ -38,13 +38,13 @@
 # 解锁
 ./ebcli_A unlock -p 密码
 
-# 设置 chain33 验证私钥
-./ebcli_A chain33 import_privatekey -k "${chain33ValidatorKeya}"
+# 设置 chain 验证私钥
+./ebcli_A chain import_privatekey -k "${chainValidatorKeya}"
 # 设置 ethereum 验证私钥
 ./ebcli_A ethereum import_privatekey -k "${ethValidatorAddrKeya}"
 
-# 设置 chain33 多签合约地址
-./ebcli_A chain33 multisign set_multiSign -a "${chain33MultisignAddr}"
+# 设置 chain 多签合约地址
+./ebcli_A chain multisign set_multiSign -a "${chainMultisignAddr}"
 # 设置 ethereum 多签合约地址
 ./ebcli_A ethereum multisign set_multiSign -a "${ethereumMultisignAddr}"
 ```
@@ -84,7 +84,7 @@ done
 |字段|说明|
 |----|----|
 |pushName|4 个 relayer 不同相同, `sed -i 's/^pushName=.*/pushName="XXX"/g' relayer.toml`|
-|chain33Host|平行链的 host 地址, 默认: http://localhost:8801, 4 个 relayer 对应 4 个不同 chain33 平行链地址|
+|chainHost|平行链的 host 地址, 默认: http://localhost:8801, 4 个 relayer 对应 4 个不同 chain 平行链地址|
 
 #### 首次启动 relayer 进行设置
 ```shell
@@ -93,8 +93,8 @@ done
 # 解锁
 ./ebcli_A unlock -p 密码
 
-# 设置 chain33 验证私钥
-./ebcli_A chain33 import_privatekey -k "${chain33ValidatorKeya}"
+# 设置 chain 验证私钥
+./ebcli_A chain import_privatekey -k "${chainValidatorKeya}"
 # 设置 ethereum 验证私钥
 ./ebcli_A ethereum import_privatekey -k "${ethValidatorAddrKeya}"
 ```
@@ -109,14 +109,14 @@ done
 |----|----|
 |pushName|4 个 relayer 不同相同, `sed -i 's/^pushName=.*/pushName="x2ethProxy"/g' relayer.toml`|
 |ProcessWithDraw|改为 true|
-|chain33Host|平行链的 host 地址, 默认: http://localhost:8801, 选任意一个 chain33 平行链地址就可以|
-|pushHost|relayer 的 host 地址, 默认: http://localhost:20000, chain33Host 和本地IP 不同时要换成本地 IP|
+|chainHost|平行链的 host 地址, 默认: http://localhost:8801, 选任意一个 chain 平行链地址就可以|
+|pushHost|relayer 的 host 地址, 默认: http://localhost:20000, chainHost 和本地IP 不同时要换成本地 IP|
 |RemindUrl|代理打币地址不够时, 提醒打币发送短信的URL|
 
 #### 首次启动 relayer 进行设置
 同上...
 
-#### 设置 chain33 代理地址, 及手续费设置
+#### 设置 chain 代理地址, 及手续费设置
 ```shell
 # 设置 withdraw 的手续费及每日转帐最大值, 实时变动, 价格波动大的时候重新设置, 需要跟前端底层都商量一下
 ./ebcli_A --eth_chain_name Ethereum ethereum cfgWithdraw -f 0.0016 -s ETH -a 2 -d 18
@@ -132,8 +132,8 @@ Flags:
   -f, --fee float       手续费
   -s, --symbol string   symbol
   
-# 设置 chain33 代理地址
-./boss4x chain33 offline set_withdraw_proxy -c "${chain33BridgeBank}" -a "${chain33Validatorsp}" -k "${chain33DeployKey}" -n "set_withdraw_proxy:${chain33Validatorsp}"
+# 设置 chain 代理地址
+./boss4x chain offline set_withdraw_proxy -c "${chainBridgeBank}" -a "${chainValidatorsp}" -k "${chainDeployKey}" -n "set_withdraw_proxy:${chainValidatorsp}"
 Flags:
   -a, --address string    withdraw address
   -c, --contract string   bridgebank contract address

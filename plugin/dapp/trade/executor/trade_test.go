@@ -87,6 +87,6 @@ func TestPriceCheck(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		assert.Equal(t, c.result, checkPrice(chain33TestCfg, chain33TestCfg.GetDappFork(pty.TradeX, pty.ForkTradePriceX), c.exec, c.symbol))
+		assert.Equal(t, c.result, checkPrice(chainTestCfg, chainTestCfg.GetDappFork(pty.TradeX, pty.ForkTradePriceX), c.exec, c.symbol))
 	}
 }

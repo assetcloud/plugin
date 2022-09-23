@@ -122,7 +122,7 @@ func init() {
 
 // InitEnv 初始化环境
 func InitEnv() (*ExecEnv, drivers.Driver, dbm.KV, dbm.KVDB) {
-	//cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	//cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	accountA := types.Account{
 		Balance: total,
 		Frozen:  0,

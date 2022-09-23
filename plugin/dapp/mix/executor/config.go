@@ -12,7 +12,7 @@ import (
 )
 
 // IsSuperManager is supper manager or not
-func isSuperManager(cfg *types.Chain33Config, addr string) bool {
+func isSuperManager(cfg *types.ChainConfig, addr string) bool {
 	confMix := types.ConfSub(cfg, mixTy.MixX)
 	for _, m := range confMix.GStrList("mixApprs") {
 		if addr == m {

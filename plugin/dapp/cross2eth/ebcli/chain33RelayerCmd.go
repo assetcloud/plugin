@@ -3,17 +3,17 @@ package main
 import (
 	"fmt"
 
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 	"github.com/spf13/cobra"
 )
 
-//Chain33RelayerCmd RelayerCmd command func
-func Chain33RelayerCmd() *cobra.Command {
+//ChainRelayerCmd RelayerCmd command func
+func ChainRelayerCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "chain33 ",
+		Use:   "chain ",
 		Short: "Chain relayer ",
 		Args:  cobra.MinimumNArgs(1),
 	}
@@ -22,16 +22,16 @@ func Chain33RelayerCmd() *cobra.Command {
 		ImportPrivateKeyCmd(),
 		ShowValidatorAddrCmd(),
 		ShowTxsHashCmd(),
-		LockAsyncFromChain33Cmd(),
-		BurnfromChain33Cmd(),
+		LockAsyncFromChainCmd(),
+		BurnfromChainCmd(),
 		simBurnFromEthCmd(),
 		simLockFromEthCmd(),
-		ShowBridgeRegistryAddr4chain33Cmd(),
+		ShowBridgeRegistryAddr4chainCmd(),
 		TokenAddressCmd(),
 		MultiSignCmd(),
-		ResendChain33EventCmd(),
-		WithdrawFromChain33Cmd(),
-		BurnWithIncreasefromChain33Cmd(),
+		ResendChainEventCmd(),
+		WithdrawFromChainCmd(),
+		BurnWithIncreasefromChainCmd(),
 	)
 
 	return cmd
@@ -72,27 +72,27 @@ func ShowTokenAddress(cmd *cobra.Command, args []string) {
 	var res ebTypes.TokenAddressArray
 	para := ebTypes.TokenAddress{
 		Symbol:    symbol,
-		ChainName: ebTypes.Chain33BlockChainName,
+		ChainName: ebTypes.ChainBlockChainName,
 	}
 
 	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowTokenAddress", para, &res)
 	ctx.Run()
 }
 
-func ShowBridgeRegistryAddr4chain33Cmd() *cobra.Command {
+func ShowBridgeRegistryAddr4chainCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bridgeRegistry",
-		Short: "show the address of Contract BridgeRegistry for chain33",
-		Run:   ShowBridgeRegistryAddr4chain33,
+		Short: "show the address of Contract BridgeRegistry for chain",
+		Run:   ShowBridgeRegistryAddr4chain,
 	}
 	return cmd
 }
 
 //ShowBridgeRegistryAddr ...
-func ShowBridgeRegistryAddr4chain33(cmd *cobra.Command, args []string) {
+func ShowBridgeRegistryAddr4chain(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	var res ebTypes.ReplyAddr
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowBridgeRegistryAddr4chain33", nil, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowBridgeRegistryAddr4chain", nil, &res)
 	ctx.Run()
 }
 
@@ -112,7 +112,7 @@ func SimBurnFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("key")
 	cmd.Flags().StringP("token", "t", "", "token address")
 	_ = cmd.MarkFlagRequired("token")
-	cmd.Flags().StringP("receiver", "r", "", "receiver address on chain33")
+	cmd.Flags().StringP("receiver", "r", "", "receiver address on chain")
 	_ = cmd.MarkFlagRequired("receiver")
 	cmd.Flags().Float64P("amount", "m", float64(0), "amount")
 	_ = cmd.MarkFlagRequired("amount")
@@ -128,10 +128,10 @@ func simBurnFromEth(cmd *cobra.Command, args []string) {
 	realAmount := utils.ToWei(amount, 8)
 
 	para := ebTypes.Burn{
-		OwnerKey:        key,
-		TokenAddr:       tokenAddr,
-		Amount:          realAmount.String(),
-		Chain33Receiver: receiver,
+		OwnerKey:      key,
+		TokenAddr:     tokenAddr,
+		Amount:        realAmount.String(),
+		ChainReceiver: receiver,
 	}
 	var res rpctypes.Reply
 	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.SimBurnFromEth", para, &res)
@@ -155,7 +155,7 @@ func simLockEthErc20AssetFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("token", "t", "", "token address, optional, nil for ETH")
 	cmd.Flags().Float64P("amount", "m", float64(0), "amount")
 	_ = cmd.MarkFlagRequired("amount")
-	cmd.Flags().StringP("receiver", "r", "", "chain33 receiver address")
+	cmd.Flags().StringP("receiver", "r", "", "chain receiver address")
 	_ = cmd.MarkFlagRequired("receiver")
 }
 
@@ -169,10 +169,10 @@ func simLockFromEth(cmd *cobra.Command, args []string) {
 	realAmount := utils.ToWei(amount, 8)
 
 	para := ebTypes.LockEthErc20{
-		OwnerKey:        key,
-		TokenAddr:       tokenAddr,
-		Amount:          realAmount.String(),
-		Chain33Receiver: receiver,
+		OwnerKey:      key,
+		TokenAddr:     tokenAddr,
+		Amount:        realAmount.String(),
+		ChainReceiver: receiver,
 	}
 	var res rpctypes.Reply
 	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.SimLockFromEth", para, &res)
@@ -180,10 +180,10 @@ func simLockFromEth(cmd *cobra.Command, args []string) {
 }
 
 //LockAsyncCmd ...
-func LockAsyncFromChain33Cmd() *cobra.Command {
+func LockAsyncFromChainCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "lock",
-		Short: "async lock bty from chain33 and cross-chain transfer to ethereum",
+		Short: "async lock bty from chain and cross-chain transfer to ethereum",
 		Run:   LockBTYAssetAsync,
 	}
 	LockBTYAssetFlags(cmd)
@@ -217,19 +217,19 @@ func LockBTYAssetAsync(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-func BurnfromChain33Cmd() *cobra.Command {
+func BurnfromChainCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "burn",
-		Short: "async burn the asset from chain33 to make it unlocked on ethereum",
-		Run:   BurnAsyncFromChain33,
+		Short: "async burn the asset from chain to make it unlocked on ethereum",
+		Run:   BurnAsyncFromChain,
 	}
-	BurnAsyncFromChain33Flags(cmd)
+	BurnAsyncFromChainFlags(cmd)
 	return cmd
 }
 
-//BurnAsyncFromChain33Flags ...
-func BurnAsyncFromChain33Flags(cmd *cobra.Command) {
-	cmd.Flags().StringP("key", "k", "", "owner private key for chain33")
+//BurnAsyncFromChainFlags ...
+func BurnAsyncFromChainFlags(cmd *cobra.Command) {
+	cmd.Flags().StringP("key", "k", "", "owner private key for chain")
 	_ = cmd.MarkFlagRequired("key")
 	cmd.Flags().StringP("token", "t", "", "token address")
 	_ = cmd.MarkFlagRequired("token")
@@ -239,7 +239,7 @@ func BurnAsyncFromChain33Flags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("amount")
 }
 
-func BurnAsyncFromChain33(cmd *cobra.Command, args []string) {
+func BurnAsyncFromChain(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	key, _ := cmd.Flags().GetString("key")
 	tokenAddr, _ := cmd.Flags().GetString("token")
@@ -251,28 +251,28 @@ func BurnAsyncFromChain33(cmd *cobra.Command, args []string) {
 		fmt.Println("get decimals err")
 		return
 	}
-	para := ebTypes.BurnFromChain33{
+	para := ebTypes.BurnFromChain{
 		OwnerKey:         key,
 		TokenAddr:        tokenAddr,
 		Amount:           utils.ToWei(amount, d).String(),
 		EthereumReceiver: receiver,
 	}
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.BurnAsyncFromChain33", para, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.BurnAsyncFromChain", para, &res)
 	ctx.Run()
 }
 
-func BurnWithIncreasefromChain33Cmd() *cobra.Command {
+func BurnWithIncreasefromChainCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "burn_increase",
-		Short: "async burn the asset from chain33 to make it unlocked on ethereum",
-		Run:   BurnWithIncreaseAsyncFromChain33,
+		Short: "async burn the asset from chain to make it unlocked on ethereum",
+		Run:   BurnWithIncreaseAsyncFromChain,
 	}
-	BurnAsyncFromChain33Flags(cmd)
+	BurnAsyncFromChainFlags(cmd)
 	return cmd
 }
 
-func BurnWithIncreaseAsyncFromChain33(cmd *cobra.Command, args []string) {
+func BurnWithIncreaseAsyncFromChain(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	key, _ := cmd.Flags().GetString("key")
 	tokenAddr, _ := cmd.Flags().GetString("token")
@@ -284,14 +284,14 @@ func BurnWithIncreaseAsyncFromChain33(cmd *cobra.Command, args []string) {
 		fmt.Println("get decimals err")
 		return
 	}
-	para := ebTypes.BurnFromChain33{
+	para := ebTypes.BurnFromChain{
 		OwnerKey:         key,
 		TokenAddr:        tokenAddr,
 		Amount:           utils.ToWei(amount, d).String(),
 		EthereumReceiver: receiver,
 	}
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.BurnWithIncreaseAsyncFromChain33", para, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.BurnWithIncreaseAsyncFromChain", para, &res)
 	ctx.Run()
 }
 
@@ -299,7 +299,7 @@ func BurnWithIncreaseAsyncFromChain33(cmd *cobra.Command, args []string) {
 func ImportPrivateKeyCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "import_privatekey",
-		Short: "import chain33 private key to sign txs to be submitted to chain33 evm",
+		Short: "import chain private key to sign txs to be submitted to chain evm",
 		Run:   importPrivatekey,
 	}
 	addImportPrivateKeyFlags(cmd)
@@ -307,7 +307,7 @@ func ImportPrivateKeyCmd() *cobra.Command {
 }
 
 func addImportPrivateKeyFlags(cmd *cobra.Command) {
-	cmd.Flags().StringP("key", "k", "", "chain33 private key")
+	cmd.Flags().StringP("key", "k", "", "chain private key")
 	_ = cmd.MarkFlagRequired("key")
 }
 
@@ -319,7 +319,7 @@ func importPrivatekey(cmd *cobra.Command, args []string) {
 	}
 
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ImportChain33RelayerPrivateKey", importKeyReq, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ImportChainRelayerPrivateKey", importKeyReq, &res)
 	ctx.Run()
 }
 
@@ -336,7 +336,7 @@ func ShowValidatorAddrCmd() *cobra.Command {
 func showValidatorAddr(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowChain33RelayerValidator", nil, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowChainRelayerValidator", nil, &res)
 	ctx.Run()
 }
 
@@ -345,16 +345,16 @@ func ShowTxsHashCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show_txhashes",
 		Short: "show me the tx hashes",
-		Run:   showChain33Relayer2EthTxs,
+		Run:   showChainRelayer2EthTxs,
 	}
 	return cmd
 }
 
-func showChain33Relayer2EthTxs(cmd *cobra.Command, args []string) {
+func showChainRelayer2EthTxs(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 
 	var res ebTypes.Txhashes
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowChain33Relayer2EthTxs", nil, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowChainRelayer2EthTxs", nil, &res)
 	if _, err := ctx.RunResult(); nil != err {
 		errInfo := err.Error()
 		fmt.Println("errinfo:" + errInfo)
@@ -365,46 +365,46 @@ func showChain33Relayer2EthTxs(cmd *cobra.Command, args []string) {
 	}
 }
 
-func ResendChain33EventCmd() *cobra.Command {
+func ResendChainEventCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "resendChain33Event",
-		Short: "resend Chain33Event to ethereum process goroutine",
-		Run:   resendChain33Event,
+		Use:   "resendChainEvent",
+		Short: "resend ChainEvent to ethereum process goroutine",
+		Run:   resendChainEvent,
 	}
-	addResendChain33EventFlags(cmd)
+	addResendChainEventFlags(cmd)
 	return cmd
 }
 
-func addResendChain33EventFlags(cmd *cobra.Command) {
-	cmd.Flags().Int64P("height", "g", 0, "height begin to resend chain33 event ")
+func addResendChainEventFlags(cmd *cobra.Command) {
+	cmd.Flags().Int64P("height", "g", 0, "height begin to resend chain event ")
 	_ = cmd.MarkFlagRequired("height")
 }
 
-func resendChain33Event(cmd *cobra.Command, args []string) {
+func resendChainEvent(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	height, _ := cmd.Flags().GetInt64("height")
-	resendChain33EventReq := &ebTypes.ResendChain33EventReq{
+	resendChainEventReq := &ebTypes.ResendChainEventReq{
 		Height: height,
 	}
 
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ResendChain33Event", resendChain33EventReq, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ResendChainEvent", resendChainEventReq, &res)
 	ctx.Run()
 }
 
-func WithdrawFromChain33Cmd() *cobra.Command {
+func WithdrawFromChainCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "withdraw",
-		Short: "async withdraw the asset from chain33 to make it unlocked on ethereum",
-		Run:   WithdrawFromChain33,
+		Short: "async withdraw the asset from chain to make it unlocked on ethereum",
+		Run:   WithdrawFromChain,
 	}
-	addWithdrawFromChain33Flags(cmd)
+	addWithdrawFromChainFlags(cmd)
 	return cmd
 }
 
-//addWithdrawFromChain33CmdFlags ...
-func addWithdrawFromChain33Flags(cmd *cobra.Command) {
-	cmd.Flags().StringP("key", "k", "", "owner private key for chain33")
+//addWithdrawFromChainCmdFlags ...
+func addWithdrawFromChainFlags(cmd *cobra.Command) {
+	cmd.Flags().StringP("key", "k", "", "owner private key for chain")
 	_ = cmd.MarkFlagRequired("key")
 	cmd.Flags().StringP("token", "t", "", "token address")
 	_ = cmd.MarkFlagRequired("token")
@@ -414,7 +414,7 @@ func addWithdrawFromChain33Flags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("amount")
 }
 
-func WithdrawFromChain33(cmd *cobra.Command, args []string) {
+func WithdrawFromChain(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	key, _ := cmd.Flags().GetString("key")
 	tokenAddr, _ := cmd.Flags().GetString("token")
@@ -426,13 +426,13 @@ func WithdrawFromChain33(cmd *cobra.Command, args []string) {
 		fmt.Println("get decimals err")
 		return
 	}
-	para := ebTypes.WithdrawFromChain33{
+	para := ebTypes.WithdrawFromChain{
 		OwnerKey:         key,
 		TokenAddr:        tokenAddr,
 		Amount:           utils.ToWei(amount, d).String(),
 		EthereumReceiver: receiver,
 	}
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.WithdrawFromChain33", para, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.WithdrawFromChain", para, &res)
 	ctx.Run()
 }

@@ -187,7 +187,7 @@ func (policy *mixPolicy) signatureTx(tx *types.Transaction, transfer *mixTy.MixT
 	}
 
 	//1.如果是coins 执行器，默认符号是BTY，扣mix执行器地址的手续费
-	//2.如果token执行器, 如果tokenFee=false,则不扣token,且不以token做交易费，需要从另一个特殊地址mixtoken扣bty交易费，chain33发交易费给mixtoken地址
+	//2.如果token执行器, 如果tokenFee=false,则不扣token,且不以token做交易费，需要从另一个特殊地址mixtoken扣bty交易费，chain发交易费给mixtoken地址
 	//  不然从mix执行器扣交易费会导致基于coins的隐私余额 入账和出账不平
 	//3.如果配置项tokenFee=true 则从以token扣手续费，地址是mix执行器的token资产
 	cfg := policy.getWalletOperate().GetAPI().GetConfig()

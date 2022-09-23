@@ -21,7 +21,7 @@ import (
 
 // TestQueryDebug 测试命令行调用rpc接口
 func TestQueryDebug(t *testing.T) {
-	var cfg = types.NewChain33Config(types.GetDefaultCfgstring())
+	var cfg = types.NewChainConfig(types.GetDefaultCfgstring())
 	evm.Init(evmtypes.ExecutorName, cfg, nil)
 	var debugReq = evmtypes.EvmDebugReq{Optype: 1}
 	js, err := types.PBToJSON(&debugReq)

@@ -57,7 +57,7 @@ var (
 	PrintFlag                    = false
 	InAmount              int64  = 10
 	OutAmount             int64  = 5
-	chainTestCfg                 = types.NewChain33Config(types.GetDefaultCfgstring())
+	chainTestCfg                 = types.NewChainConfig(types.GetDefaultCfgstring())
 )
 
 func init() {

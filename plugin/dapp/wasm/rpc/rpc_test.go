@@ -13,10 +13,10 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-var cfg *types.Chain33Config
+var cfg *types.ChainConfig
 
 func init() {
-	cfg = types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	cfg = types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 }
 
 func TestJrpc_CheckContract(t *testing.T) {

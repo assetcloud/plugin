@@ -1,10 +1,10 @@
 package executor
 
 import (
-	votetypes "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	log "github.com/assetcloud/chain/common/log/log15"
 	drivers "github.com/assetcloud/chain/system/dapp"
 	"github.com/assetcloud/chain/types"
+	votetypes "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 )
 
 /*
@@ -20,7 +20,7 @@ var (
 var driverName = votetypes.VoteX
 
 // Init register dapp
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newVote, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

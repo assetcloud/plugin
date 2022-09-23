@@ -9,7 +9,7 @@ import (
 	"encoding/hex"
 	"errors"
 
-	chain33Comm "github.com/assetcloud/chain/common"
+	chainComm "github.com/assetcloud/chain/common"
 	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 
 	"github.com/assetcloud/chain/types"
@@ -67,7 +67,7 @@ func (c *Jrpc) CalcNewContractAddr(parm *evm.EvmCalcNewContractAddrReq, result *
 	if callerAddr == nil {
 		return errors.New("InvalidCallerAddress")
 	}
-	hashByte, err := chain33Comm.FromHex(parm.Txhash)
+	hashByte, err := chainComm.FromHex(parm.Txhash)
 	if err != nil {
 		return errors.New("InvalidHexTxHash")
 	}

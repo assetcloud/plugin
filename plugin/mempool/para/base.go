@@ -20,7 +20,7 @@ type Mempool struct {
 	key         string
 	wg          sync.WaitGroup
 	client      queue.Client
-	mainGrpcCli types.Chain33Client
+	mainGrpcCli types.ChainClient
 
 	isclose int32
 }
@@ -68,7 +68,7 @@ func (mem *Mempool) SetQueueClient(client queue.Client) {
 	}()
 }
 
-func (mem *Mempool) setMainGrpcCli(cfg *types.Chain33Config) {
+func (mem *Mempool) setMainGrpcCli(cfg *types.ChainConfig) {
 	if cfg != nil && cfg.IsPara() {
 		grpcCli, err := grpcclient.NewMainChainClient(cfg, "")
 		if err != nil {

@@ -221,7 +221,7 @@ func (evm *EVMExecutor) GetMessage(tx *types.Transaction, index int, fromPtr *co
 	if err != nil {
 		return msg, err
 	}
-	// 此处暂时不考虑消息发送签名的处理，chain33在mempool中对签名做了检查
+	// 此处暂时不考虑消息发送签名的处理，chain在mempool中对签名做了检查
 	var from common.Address
 	if fromPtr == nil {
 		from = getCaller(tx)

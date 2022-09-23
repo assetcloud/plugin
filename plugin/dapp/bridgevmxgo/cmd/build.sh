@@ -24,13 +24,13 @@ go build -ldflags "${BUILD_FLAGS}" -i ${FLAG} -v -o "${OUT_DIR}/ebcli_A" "${SRC_
 go build -i ${FLAG} -v -o "${OUT_DIR}/boss4x" "${SRC_BOSS4XCLI}"
 go build -i ${FLAG} -v -o "${OUT_DIR}/evmxgoboss4x" "${SRC_EVMXGOBOSS4XCLI}"
 
-cp ../../../../chain33.para.toml "${OUT_DIR}"
+cp ../../../../chain.para.toml "${OUT_DIR}"
 cp ../../cross2eth/ebrelayer/relayer.toml "${OUT_DIR}/relayer.toml"
 cp ./build/* "${OUT_DIR}"
 cp ./build/abi/* "${OUT_DIR}"
 cp ../../cross2eth/cmd/build/public/* "${OUT_DIR}"
 cp ../../cross2eth/cmd/build/abi/* "${OUT_DIR}"
-cp ../../cross2eth/boss4x/chain33/deploy_chain33.toml "${OUT_DIR}"
+cp ../../cross2eth/boss4x/chain/deploy_chain.toml "${OUT_DIR}"
 cp ../../cross2eth/boss4x/ethereum/deploy_ethereum.toml "${OUT_DIR}"
 
 OUT_TESTDIR="${1}/dapptest/$strapp"

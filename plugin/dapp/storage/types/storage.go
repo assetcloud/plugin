@@ -86,13 +86,13 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(StorageX, "Enable", 0)
 	cfg.RegisterDappFork(StorageX, ForkStorageLocalDB, 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(StorageX, NewType(cfg))
 }
 
@@ -102,7 +102,7 @@ type StorageType struct {
 }
 
 //NewType ...
-func NewType(cfg *types.Chain33Config) *StorageType {
+func NewType(cfg *types.ChainConfig) *StorageType {
 	c := &StorageType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

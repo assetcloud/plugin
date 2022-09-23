@@ -91,14 +91,14 @@ const ZkVerifierKey = "verifier"
 
 //msg宽度
 const (
-	TxTypeBitWidth      = 8   //1byte
-	AccountBitWidth     = 32  //4byte
-	TokenBitWidth       = 16  //2byte
-	AmountBitWidth      = 128 //16byte
-	AddrBitWidth        = 160 //20byte
-	Chain33AddrBitWidth = 256 //20byte
-	PubKeyBitWidth      = 256 //32byte
-	FeeAmountBitWidth   = 72  //fee op凑满one chunk=128bit，最大10byte
+	TxTypeBitWidth    = 8   //1byte
+	AccountBitWidth   = 32  //4byte
+	TokenBitWidth     = 16  //2byte
+	AmountBitWidth    = 128 //16byte
+	AddrBitWidth      = 160 //20byte
+	ChainAddrBitWidth = 256 //20byte
+	PubKeyBitWidth    = 256 //32byte
+	FeeAmountBitWidth = 72  //fee op凑满one chunk=128bit，最大10byte
 
 	PacAmountManBitWidth = 35 //amount mantissa part, 比如12340000,只取1234部分，0000用exponent表示
 	PacAmountExpBitWidth = 5  //amount exponent part
@@ -195,12 +195,12 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(Zksync, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(Zksync, NewType(cfg))
 }
 
@@ -210,7 +210,7 @@ type ZksyncType struct {
 }
 
 //NewType ...
-func NewType(cfg *types.Chain33Config) *ZksyncType {
+func NewType(cfg *types.ChainConfig) *ZksyncType {
 	c := &ZksyncType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

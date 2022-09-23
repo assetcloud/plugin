@@ -35,7 +35,7 @@ func TestTicket(t *testing.T) {
 }
 
 func testTicket(t *testing.T) {
-	mock33 := testnode.New("testdata/chain33.cfg.toml", nil)
+	mock33 := testnode.New("testdata/chain.cfg.toml", nil)
 	defer mock33.Close()
 	cfg := mock33.GetClient().GetConfig()
 	mock33.Listen()
@@ -117,7 +117,7 @@ func testTicket(t *testing.T) {
 	assert.Equal(t, isbestBlock, false)
 }
 
-func createBindMiner(cfg *types.Chain33Config, t *testing.T, m, r string, priv crypto.PrivKey) *types.Transaction {
+func createBindMiner(cfg *types.ChainConfig, t *testing.T, m, r string, priv crypto.PrivKey) *types.Transaction {
 	ety := types.LoadExecutorType("ticket")
 	tx, err := ety.Create("Tbind", &ty.TicketBind{MinerAddress: m, ReturnAddress: r})
 	assert.Nil(t, err)
@@ -184,7 +184,7 @@ func Test_genPrivHash(t *testing.T) {
 }
 
 func Test_getNextRequiredDifficulty(t *testing.T) {
-	cfg := types.NewChain33Config(types.ReadFile("testdata/chain33.cfg.toml"))
+	cfg := types.NewChainConfig(types.ReadFile("testdata/chain.cfg.toml"))
 
 	api := new(apimocks.QueueProtocolAPI)
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)

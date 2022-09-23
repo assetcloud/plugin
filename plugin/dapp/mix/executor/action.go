@@ -38,7 +38,7 @@ func newAction(t *Mix, tx *types.Transaction) *action {
 		t.GetBlockTime(), t.GetHeight(), dapp.ExecAddress(string(tx.Execer)), t.GetAPI(), tx, t}
 }
 
-func createAccount(cfg *types.Chain33Config, execer, symbol string, db dbm.KV) (*account.DB, error) {
+func createAccount(cfg *types.ChainConfig, execer, symbol string, db dbm.KV) (*account.DB, error) {
 	var accDB *account.DB
 	if symbol == "" {
 		accDB = account.NewCoinsAccount(cfg)

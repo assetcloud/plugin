@@ -24,7 +24,7 @@ import (
 var (
 	pubsByte     [10][]byte
 	secsByte     [10][]byte
-	chainTestCfg = types.NewChain33Config(types.GetDefaultCfgstring())
+	chainTestCfg = types.NewChainConfig(types.GetDefaultCfgstring())
 )
 
 func init() {

@@ -47,7 +47,7 @@ func init() {
 	r = rand.New(rand.NewSource(types.Now().UnixNano()))
 }
 func TestOrace(t *testing.T) {
-	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 	Init(oty.OracleX, cfg, nil)
 	total := 100 * types.DefaultCoinPrecision
 	accountA := types.Account{

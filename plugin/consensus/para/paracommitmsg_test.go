@@ -51,7 +51,7 @@ func TestParseSelfConsEnableStr(t *testing.T) {
 }
 
 func TestSetSelfConsEnable(t *testing.T) {
-	cfg := types.NewChain33Config(testnode.DefaultConfig)
+	cfg := types.NewChainConfig(testnode.DefaultConfig)
 	q := queue.New("channel")
 	q.SetConfig(cfg)
 	para := new(client)

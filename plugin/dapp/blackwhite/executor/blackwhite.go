@@ -7,11 +7,11 @@ package executor
 import (
 	"fmt"
 
-	gt "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
 	"github.com/assetcloud/chain/common/address"
 	log "github.com/assetcloud/chain/common/log/log15"
 	drivers "github.com/assetcloud/chain/system/dapp"
 	"github.com/assetcloud/chain/types"
+	gt "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
 )
 
 var (
@@ -21,7 +21,7 @@ var (
 )
 
 // Init 重命名执行器名称
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	driverName = name
 	gt.BlackwhiteX = driverName
 	gt.ExecerBlackwhite = []byte(driverName)

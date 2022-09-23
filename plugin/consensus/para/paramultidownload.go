@@ -28,7 +28,7 @@ const (
 
 type connectCli struct {
 	ip        string
-	conn      types.Chain33Client
+	conn      types.ChainClient
 	downTimes int64
 	timeout   uint32
 }
@@ -403,7 +403,7 @@ func (d *downloadJob) checkDownLoadRate() {
 
 }
 
-func requestMainBlocks(cfg *types.Chain33Config, inv *inventory) (*types.ParaTxDetails, error) {
+func requestMainBlocks(cfg *types.ChainConfig, inv *inventory) (*types.ParaTxDetails, error) {
 	req := &types.ReqParaTxByTitle{IsSeq: false, Start: inv.curHeight, End: inv.end, Title: cfg.GetTitle()}
 	txs, err := inv.connCli.conn.GetParaTxByTitle(context.Background(), req)
 	if err != nil {
@@ -421,7 +421,7 @@ func requestMainBlocks(cfg *types.Chain33Config, inv *inventory) (*types.ParaTxD
 	return validMainBlocks(txs), nil
 }
 
-func requestMainBlockWithTime(cfg *types.Chain33Config, inv *inventory) *types.ParaTxDetails {
+func requestMainBlockWithTime(cfg *types.ChainConfig, inv *inventory) *types.ParaTxDetails {
 	retCh := make(chan *types.ParaTxDetails, 1)
 	go func() {
 		tx, err := requestMainBlocks(cfg, inv)

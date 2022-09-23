@@ -24,7 +24,7 @@ var codecache *lru.Cache
 var isinit int64
 
 //Init 插件初始化
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	if atomic.CompareAndSwapInt64(&isinit, 0, 1) {
 		//最新的64个code做cache
 		var err error

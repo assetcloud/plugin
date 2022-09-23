@@ -15,7 +15,7 @@ type Means interface {
 	calcFrozen(unfreeze *pty.Unfreeze, now int64) (int64, error)
 }
 
-func newMeans(cfg *types.Chain33Config, means string, height int64) (Means, error) {
+func newMeans(cfg *types.ChainConfig, means string, height int64) (Means, error) {
 	if cfg.IsDappFork(height, pty.UnfreezeX, "ForkTerminatePart") {
 		if means == "FixAmount" {
 			return &fixAmountV2{}, nil

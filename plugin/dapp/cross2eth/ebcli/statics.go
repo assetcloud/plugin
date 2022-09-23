@@ -12,7 +12,7 @@ import (
 func StaticsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "statics",
-		Short: "statics of lock/burn asset from or to Ethereum and chain33",
+		Short: "statics of lock/burn asset from or to Ethereum and chain",
 		Run:   ShowStatics,
 	}
 
@@ -23,7 +23,7 @@ func StaticsCmd() *cobra.Command {
 //ShowLockStaticsFlags ...
 func ShowStaticsFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("symbol", "s", "", "token symbol(optional)")
-	cmd.Flags().Int32P("from", "f", 0, "source chain, 0=ethereum, and 1=chain33")
+	cmd.Flags().Int32P("from", "f", 0, "source chain, 0=ethereum, and 1=chain")
 	_ = cmd.MarkFlagRequired("from")
 	cmd.Flags().StringP("operation", "o", "b", "operation type, b=burn, l=lock, w=withdraw")
 	_ = cmd.MarkFlagRequired("operation")
@@ -43,7 +43,7 @@ func ShowStatics(cmd *cobra.Command, args []string) {
 	index, _ := cmd.Flags().GetInt32("index")
 
 	if from != 0 && 1 != from {
-		fmt.Println("Pls set correct source chain flag, 0=ethereum, and 1=chain33")
+		fmt.Println("Pls set correct source chain flag, 0=ethereum, and 1=chain")
 		return
 	}
 

@@ -18,7 +18,7 @@ var glog = log.New("module", "execs.game")
 var driverName = gt.GameX
 
 // Init register dapp
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newGame, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

@@ -24,16 +24,16 @@ func TestZksyncOption(t *testing.T) {
 	defer util.CloseTestDB(dir, statedb)
 	/*************************deposit*************************/
 
-	cfg := types.NewChain33Config(cfgstring)
+	cfg := types.NewChainConfig(cfgstring)
 	api := new(mocks.QueueProtocolAPI)
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 
 	action := &Action{localDB: localdb, statedb: statedb, height: 1, index: 0, fromaddr: "12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv", api: api}
 	deposit := &zt.ZkDeposit{
-		TokenId:     1,
-		Amount:      "100000000",
-		EthAddress:  "abcd68033A72978C1084E2d44D1Fa06DdC4A2d58",
-		Chain33Addr: getChain33Addr("7266444b7e6408a9ee603de7b73cc8fc168ebf570c7fd482f7fa6b968b6a5aec"),
+		TokenId:    1,
+		Amount:     "100000000",
+		EthAddress: "abcd68033A72978C1084E2d44D1Fa06DdC4A2d58",
+		ChainAddr:  getChainAddr("7266444b7e6408a9ee603de7b73cc8fc168ebf570c7fd482f7fa6b968b6a5aec"),
 	}
 	receipt, err := action.Deposit(deposit)
 	assert.Equal(t, nil, err)
@@ -126,11 +126,11 @@ func TestZksyncOption(t *testing.T) {
 	info, err = generateTreeUpdateInfo(statedb)
 	assert.Equal(t, nil, err)
 	transferToNew := &zt.ZkTransferToNew{
-		FromAccountId:    2,
-		TokenId:          1,
-		Amount:           "5000",
-		ToEthAddress:     "abcd68033A72978C1084E2d44D1Fa06DdC4A2d59",
-		ToChain33Address: getChain33Addr("7266444b7e6408a9ee603de7b73cc8fc168ebf570c7fd482f7fa6b968b6a5aed"),
+		FromAccountId:  2,
+		TokenId:        1,
+		Amount:         "5000",
+		ToEthAddress:   "abcd68033A72978C1084E2d44D1Fa06DdC4A2d59",
+		ToChainAddress: getChainAddr("7266444b7e6408a9ee603de7b73cc8fc168ebf570c7fd482f7fa6b968b6a5aed"),
 	}
 	t.Log(strings.ToLower(transferToNew.ToEthAddress))
 	msg = wallet.GetTransferToNewMsg(transferToNew)
@@ -229,7 +229,7 @@ func TestEddsa(t *testing.T) {
 }
 
 func TestBigInt(t *testing.T) {
-	byteVal :=  big.NewInt(0).Bytes()
+	byteVal := big.NewInt(0).Bytes()
 	stringVal := hex.EncodeToString(byteVal)
 	t.Log("bigInt 0 byteVal", byteVal)
 	t.Log("bigInt 0 stringVal", stringVal)
@@ -238,10 +238,8 @@ func TestBigInt(t *testing.T) {
 	t.Log("is equal", stringVal == "0")
 }
 
-
-
 var cfgstring = `
-Title="chain33"
+Title="chain"
 TestNet=true
 FixTime=false
 version="6.3.0"
@@ -253,7 +251,7 @@ version="6.3.0"
 loglevel = "debug"
 logConsoleLevel = "info"
 # 日志文件名，可带目录，所有生成的日志文件都放到此目录下
-logFile = "logs/chain33.log"
+logFile = "logs/chain.log"
 # 单个日志文件的最大值（单位：兆）
 maxFileSize = 300
 # 最多保存的历史日志文件个数
@@ -576,7 +574,7 @@ dataEmitMode="influxdb"
 #以纳秒为单位的发送间隔
 duration=1000000000
 url="http://influxdb:8086"
-database="chain33metrics"
+database="chainmetrics"
 username=""
 password=""
 namespace=""

@@ -7,10 +7,10 @@ package types
 import (
 	"reflect"
 
-	token "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	log "github.com/assetcloud/chain/common/log/log15"
 	coins "github.com/assetcloud/chain/system/dapp/coins/types"
 	"github.com/assetcloud/chain/types"
+	token "github.com/assetcloud/plugin/plugin/dapp/token/types"
 )
 
 var (
@@ -28,18 +28,18 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(MixX, "Enable", 0)
 
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(MixX, NewType(cfg))
 }
 
 // GetExecName get para exec name
-func GetExecName(cfg *types.Chain33Config) string {
+func GetExecName(cfg *types.ChainConfig) string {
 	return cfg.ExecName(MixX)
 }
 
@@ -49,7 +49,7 @@ type MixType struct {
 }
 
 // NewType get paracross type
-func NewType(cfg *types.Chain33Config) *MixType {
+func NewType(cfg *types.ChainConfig) *MixType {
 	c := &MixType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)
@@ -92,7 +92,7 @@ func (p *MixType) GetPayload() types.Message {
 	return &MixAction{}
 }
 
-func GetAssetExecSymbol(cfg *types.Chain33Config, execer, symbol string) (string, string) {
+func GetAssetExecSymbol(cfg *types.ChainConfig, execer, symbol string) (string, string) {
 	if symbol == "" {
 		return coins.CoinsX, cfg.GetCoinSymbol()
 	}
@@ -102,7 +102,7 @@ func GetAssetExecSymbol(cfg *types.Chain33Config, execer, symbol string) (string
 	return execer, symbol
 }
 
-func GetTransferTxFee(cfg *types.Chain33Config, assetExecer string) int64 {
+func GetTransferTxFee(cfg *types.ChainConfig, assetExecer string) int64 {
 	conf := types.ConfSub(cfg, MixX)
 	txFee := conf.GInt("txFee")
 	tokenFee := conf.IsEnable("tokenFee")

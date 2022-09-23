@@ -66,7 +66,7 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork("store-kvmvccmavl", "ForkKvmvccmavl", 0)
 }
 
@@ -120,7 +120,7 @@ type subConfig struct {
 }
 
 // New construct KVMVCCStore module
-func New(cfg *types.Store, sub []byte, chain33cfg *types.Chain33Config) queue.Module {
+func New(cfg *types.Store, sub []byte, chaincfg *types.ChainConfig) queue.Module {
 	var kvms *KVmMavlStore
 	var subcfg subConfig
 	var subKVMVCCcfg subKVMVCCConfig
@@ -163,8 +163,8 @@ func New(cfg *types.Store, sub []byte, chain33cfg *types.Chain33Config) queue.Mo
 	// 查询是否是删除裁剪版mavl
 	isPrunedMavl = isPrunedMavlDB(bs.GetDB())
 	// 读取fork高度
-	if chain33cfg != nil {
-		kvmvccMavlFork = chain33cfg.GetDappFork("store-kvmvccmavl", "ForkKvmvccmavl")
+	if chaincfg != nil {
+		kvmvccMavlFork = chaincfg.GetDappFork("store-kvmvccmavl", "ForkKvmvccmavl")
 	}
 	delMavlDataHeight = kvmvccMavlFork + 10000
 	bs.SetChild(kvms)

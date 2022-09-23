@@ -14,7 +14,7 @@ var clog = log.New("module", "execs.norm")
 var driverName = "norm"
 
 // Init norm
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	clog.Debug("register norm execer")
 	drivers.Register(cfg, GetName(), newNorm, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
