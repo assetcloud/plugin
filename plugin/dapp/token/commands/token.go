@@ -13,11 +13,11 @@ import (
 	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/pkg/errors"
 
-	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/system/dapp/commands"
 	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/spf13/cobra"
 )
 

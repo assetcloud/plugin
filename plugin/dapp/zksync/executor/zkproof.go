@@ -2,21 +2,15 @@ package executor
 
 import (
 	"bytes"
-	"fmt"
+	"hash"
 	"math/big"
 
 	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/db/table"
-	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/merkletree"
-	"github.com/assetcloud/plugin/plugin/dapp/zksync/wallet"
-
 	dbm "github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/types"
-	"github.com/consensys/gnark-crypto/ecc"
-
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
-
 	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/zksnark"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/consensys/gnark/backend/witness"
@@ -24,16 +18,16 @@ import (
 	"github.com/pkg/errors"
 )
 
-func makeSetVerifyKeyReceipt(old, new *zt.ZkVerifyKey) *types.Receipt {
-	key := getVerifyKey()
+func makeSetVerifyKeyReceipt(oldKey, newKey *zt.ZkVerifyKey) *types.Receipt {
+	key := getVerifyKey(new(big.Int).SetUint64(newKey.GetChainTitleId()).String())
 	log := &zt.ReceiptSetVerifyKey{
-		Prev:    old,
-		Current: new,
+		Prev:    oldKey,
+		Current: newKey,
 	}
 	return &types.Receipt{
 		Ty: types.ExecOk,
 		KV: []*types.KeyValue{
-			{Key: key, Value: types.Encode(new)},
+			{Key: key, Value: types.Encode(newKey)},
 		},
 		Logs: []*types.ReceiptLog{
 			{Ty: zt.TySetVerifyKeyLog, Log: types.Encode(log)},
@@ -42,24 +36,52 @@ func makeSetVerifyKeyReceipt(old, new *zt.ZkVerifyKey) *types.Receipt {
 
 }
 
-func makeCommitProofReceipt(old, new *zt.CommitProofState) *types.Receipt {
-	key := getLastCommitProofKey()
-	heightKey := getHeightCommitProofKey(new.BlockStart)
+func makeCommitProofReceipt(old, newState *zt.CommitProofState) *types.Receipt {
+	key := getLastProofIdKey(new(big.Int).SetUint64(newState.GetChainTitleId()).String())
 	log := &zt.ReceiptCommitProof{
 		Prev:    old,
-		Current: new,
+		Current: newState,
 	}
-	return &types.Receipt{
+	r := &types.Receipt{
 		Ty: types.ExecOk,
 		KV: []*types.KeyValue{
-			{Key: key, Value: types.Encode(new)},
-			{Key: heightKey, Value: types.Encode(new)},
+			{Key: key, Value: types.Encode(newState)},
 		},
 		Logs: []*types.ReceiptLog{
 			{Ty: zt.TyCommitProofLog, Log: types.Encode(log)},
 		},
 	}
+	//只在onChainProof 有效时候保存
+	if newState.OnChainProofId > 0 {
+		onChainIdKey := getLastOnChainProofIdKey(new(big.Int).SetUint64(newState.GetChainTitleId()).String())
+		r.KV = append(r.KV, &types.KeyValue{Key: onChainIdKey,
+			Value: types.Encode(&zt.LastOnChainProof{ChainTitleId: newState.ChainTitleId, ProofId: newState.ProofId, OnChainProofId: newState.OnChainProofId})})
+	}
+	return r
+}
 
+func makeCommitProofRecordReceipt(proof *zt.CommitProofState, maxRecordId uint64) *types.Receipt {
+	key := getProofIdKey(new(big.Int).SetUint64(proof.ChainTitleId).String(), proof.ProofId)
+	log := &zt.ReceiptCommitProofRecord{
+		Proof: proof,
+	}
+	r := &types.Receipt{
+		Ty: types.ExecOk,
+		KV: []*types.KeyValue{
+			{Key: key, Value: types.Encode(proof)},
+		},
+		Logs: []*types.ReceiptLog{
+			{Ty: zt.TyCommitProofRecordLog, Log: types.Encode(log)},
+		},
+	}
+
+	//如果此proofId 比maxRecordId更大，记录下来
+	if proof.ProofId > maxRecordId {
+		r.KV = append(r.KV, &types.KeyValue{Key: getMaxRecordProofIdKey(new(big.Int).SetUint64(proof.ChainTitleId).String()),
+			Value: types.Encode(&types.Int64{Data: int64(proof.ProofId)})})
+	}
+
+	return r
 }
 
 func isNotFound(err error) bool {
@@ -80,8 +102,8 @@ func isSuperManager(cfg *types.ChainConfig, addr string) bool {
 	return false
 }
 
-func isVerifier(statedb dbm.KV, addr string) bool {
-	verifier, err := getVerifierData(statedb)
+func isVerifier(statedb dbm.KV, chainTitleId, addr string) bool {
+	verifier, err := getVerifierData(statedb, chainTitleId)
 	if err != nil {
 		if isNotFound(errors.Cause(err)) {
 			return false
@@ -97,8 +119,8 @@ func isVerifier(statedb dbm.KV, addr string) bool {
 	return false
 }
 
-func getVerifyKeyData(db dbm.KV) (*zt.ZkVerifyKey, error) {
-	key := getVerifyKey()
+func getVerifyKeyData(db dbm.KV, chainTitleId string) (*zt.ZkVerifyKey, error) {
+	key := getVerifyKey(chainTitleId)
 	v, err := db.Get(key)
 	if err != nil {
 		return nil, errors.Wrapf(err, "get db verify key")
@@ -115,25 +137,42 @@ func getVerifyKeyData(db dbm.KV) (*zt.ZkVerifyKey, error) {
 //合约管理员或管理员设置在链上的管理员才可设置
 func (a *Action) setVerifyKey(payload *zt.ZkVerifyKey) (*types.Receipt, error) {
 	cfg := a.api.GetConfig()
+	v, ok := new(big.Int).SetString(zt.ZkParaChainInnerTitleId, 10)
+	if !ok {
+		return nil, errors.Wrapf(types.ErrInvalidParam, "innertitleId=%s", zt.ZkParaChainInnerTitleId)
+	}
+	chainId := v.Uint64()
+	if !cfg.IsPara() {
+		if payload.GetChainTitleId() <= 0 {
+			return nil, errors.Wrapf(types.ErrInvalidParam, "chain title not set")
+		}
+		chainId = payload.GetChainTitleId()
+	}
 	if !isSuperManager(cfg, a.fromaddr) {
 		return nil, errors.Wrapf(types.ErrNotAllow, "from addr is not manager")
 	}
 
-	oldKey, err := getVerifyKeyData(a.statedb)
+	oldKey, err := getVerifyKeyData(a.statedb, new(big.Int).SetUint64(chainId).String())
 	if isNotFound(errors.Cause(err)) {
-		key := &zt.ZkVerifyKey{Key: payload.Key}
-
+		key := &zt.ZkVerifyKey{
+			Key:          payload.Key,
+			ChainTitleId: chainId,
+		}
 		return makeSetVerifyKeyReceipt(nil, key), nil
 	}
+
 	if err != nil {
 		return nil, errors.Wrap(err, "setVerifyKey.getVerifyKeyData")
 	}
-	newKey := &zt.ZkVerifyKey{Key: payload.Key}
+	newKey := &zt.ZkVerifyKey{
+		Key:          payload.Key,
+		ChainTitleId: chainId,
+	}
 	return makeSetVerifyKeyReceipt(oldKey, newKey), nil
 }
 
-func getLastCommitProofData(db dbm.KV) (*zt.CommitProofState, error) {
-	key := getLastCommitProofKey()
+func getLastCommitProofData(db dbm.KV, titleId string) (*zt.CommitProofState, error) {
+	key := getLastProofIdKey(titleId)
 	v, err := db.Get(key)
 	if err != nil {
 		if isNotFound(err) {
@@ -159,11 +198,46 @@ func getLastCommitProofData(db dbm.KV) (*zt.CommitProofState, error) {
 	return &data, nil
 }
 
+func getLastOnChainProofData(db dbm.KV, chainTitle string) (*zt.LastOnChainProof, error) {
+	key := getLastOnChainProofIdKey(chainTitle)
+	v, err := db.Get(key)
+	if err != nil {
+		if isNotFound(err) {
+			return &zt.LastOnChainProof{OnChainProofId: 0}, nil
+		}
+		return nil, err
+	}
+	var data zt.LastOnChainProof
+	err = types.Decode(v, &data)
+	if err != nil {
+		return nil, errors.Wrapf(err, "decode db")
+	}
+	return &data, nil
+}
+
+func getMaxRecordProofIdData(db dbm.KV, chainTitle string) (*types.Int64, error) {
+	key := getMaxRecordProofIdKey(chainTitle)
+	v, err := db.Get(key)
+	if err != nil {
+		if isNotFound(err) {
+			return &types.Int64{Data: 0}, nil
+		}
+		return nil, err
+	}
+	var data types.Int64
+	err = types.Decode(v, &data)
+	if err != nil {
+		return nil, errors.Wrapf(err, "decode db")
+	}
+	return &data, nil
+}
+
 type commitProofCircuit struct {
-	//SeqNum, blockStart,blockEnd, oldTreeRoot, newRootHash, deposit, partialExit... pubData[...]
-	PriorityPubDataCommitment frontend.Variable `gnark:",public"`
 	//SeqNum, blockStart,blockEnd, oldTreeRoot, newRootHash, full pubData[...]
 	PubDataCommitment frontend.Variable `gnark:",public"`
+
+	//SeqNum, blockStart,blockEnd, oldTreeRoot, newRootHash, deposit, partialExit... pubData[...]
+	OnChainPubDataCommitment frontend.Variable `gnark:",public"`
 }
 
 func (circuit *commitProofCircuit) Define(curveID ecc.ID, api frontend.API) error {
@@ -184,36 +258,59 @@ func getByteBuff(input string) (*bytes.Buffer, error) {
 
 }
 
-//
+func (a *Action) verifyInitRoot(payload *zt.ZkCommitProof) error {
+	//只在第一个proof检查
+	if payload.ProofId != 1 {
+		return nil
+	}
+	if len(payload.GetCfgFeeAddrs().EthFeeAddr) <= 0 || len(payload.GetCfgFeeAddrs().L2FeeAddr) <= 0 {
+		return errors.Wrapf(types.ErrInvalidParam, "1st proofId fee Addr nil, eth=%s,l2=%s", payload.GetCfgFeeAddrs().EthFeeAddr, payload.GetCfgFeeAddrs().L2FeeAddr)
+	}
+
+	initRoot := getInitTreeRoot(a.api.GetConfig(), payload.GetCfgFeeAddrs().EthFeeAddr, payload.GetCfgFeeAddrs().L2FeeAddr)
+	if initRoot != payload.OldTreeRoot {
+		return errors.Wrapf(types.ErrInvalidParam, "calcInitRoot=%s, proof's oldRoot=%s, EthFeeAddrDecimal=%s, L2FeeAddrDecimal=%s",
+			initRoot, payload.OldTreeRoot, payload.GetCfgFeeAddrs().EthFeeAddr, payload.GetCfgFeeAddrs().L2FeeAddr)
+	}
+	return nil
+}
+
 func (a *Action) commitProof(payload *zt.ZkCommitProof) (*types.Receipt, error) {
 	cfg := a.api.GetConfig()
-	if !isSuperManager(cfg, a.fromaddr) && !isVerifier(a.statedb, a.fromaddr) {
+	chainId := zt.ZkParaChainInnerTitleId
+	if !cfg.IsPara() {
+		if payload.GetChainTitleId() <= 0 {
+			return nil, errors.Wrapf(types.ErrInvalidParam, "chainTitle is null")
+		}
+		chainId = new(big.Int).SetUint64(payload.GetChainTitleId()).String()
+	}
+
+	if !isSuperManager(cfg, a.fromaddr) && !isVerifier(a.statedb, chainId, a.fromaddr) {
 		return nil, errors.Wrapf(types.ErrNotAllow, "from addr is not validator")
 	}
-
-	lastProof, err := getLastCommitProofData(a.statedb)
-	if err != nil && !isNotFound(errors.Cause(err)) {
-		return nil, errors.Wrap(err, "get last commit Proof")
+	//如果系统配置了无效证明，则相应证明失效，相继的证明也失效。在exodus mode场景下使用，系统回滚到此证明则丢弃，后面重新接受上一个证明基础上的新的证明
+	if isInvalidProof(a.api.GetConfig(), payload.NewTreeRoot) {
+		return nil, errors.Wrapf(types.ErrNotAllow, "system cfg invalid proof")
+	}
+	//基本检查
+	/* len(onChainPubdata)     OnChainProofId
+	   =0                      =0
+	   >0                      >0
+	*/
+	if (len(payload.OnChainPubDatas) == 0 && payload.GetOnChainProofId() != 0) ||
+		(len(payload.OnChainPubDatas) > 0 && payload.GetOnChainProofId() <= 0) {
+		return nil, errors.Wrapf(types.ErrInvalidParam, "OnChainData, proofId=%d,onChainProofId=%d,lenOnChain=%d", payload.ProofId, payload.OnChainProofId, len(payload.OnChainPubDatas))
+	}
+	//验证proofId=1时候的initRoot
+	err := a.verifyInitRoot(payload)
+	if err != nil {
+		zklog.Error("commitProof.verifyInitRoot", "chainId", chainId, "err", err)
+		return nil, err
 	}
 
-	//proofId需要连续,高度需要衔接
-	if lastProof != nil && (lastProof.ProofId+1 != payload.ProofId || lastProof.BlockEnd != payload.BlockStart) {
-		return nil, errors.Wrapf(types.ErrInvalidParam, "last proof id end=%d, new id start=%d",
-			lastProof.ProofId, payload.ProofId)
-	}
-
-	lastTreeRoot := "0"
-	if lastProof != nil {
-		lastTreeRoot = lastProof.NewTreeRoot
-	}
-	//tree root 需要衔接
-	if lastTreeRoot != payload.OldTreeRoot {
-		return nil, errors.Wrapf(types.ErrInvalidParam, "last proof treeRoot=%s, commit oldTreeRoot=%s",
-			lastTreeRoot, payload.OldTreeRoot)
-	}
-
+	//1. 先验证proof是否ok
 	//get verify key
-	verifyKey, err := getVerifyKeyData(a.statedb)
+	verifyKey, err := getVerifyKeyData(a.statedb, chainId)
 	if err != nil {
 		return nil, errors.Wrapf(err, "get verify key")
 	}
@@ -222,25 +319,110 @@ func (a *Action) commitProof(payload *zt.ZkCommitProof) (*types.Receipt, error) 
 		return nil, errors.Wrapf(err, "verify proof")
 	}
 
-	//更新数据库, public and proof上链， pubdata 不上链，存localdb
-	newProof := &zt.CommitProofState{
-		BlockStart:  payload.BlockStart,
-		BlockEnd:    payload.BlockEnd,
-		IndexStart:  payload.IndexStart,
-		IndexEnd:    payload.IndexEnd,
-		OpIndex:     payload.OpIndex,
-		ProofId:     payload.ProofId,
-		OldTreeRoot: payload.OldTreeRoot,
-		NewTreeRoot: payload.NewTreeRoot,
-		PublicInput: payload.PublicInput,
-		Proof:       payload.Proof,
+	//更新数据库, public and proof, pubdata 不上链，存localdb
+	chainTitleVal, ok := new(big.Int).SetString(chainId, 10)
+	if !ok {
+		return nil, errors.Wrapf(types.ErrInvalidParam, "chainTitleVal=%s", chainId)
 	}
-	return makeCommitProofReceipt(lastProof, newProof), nil
+	newProof := &zt.CommitProofState{
+		BlockStart:        payload.BlockStart,
+		BlockEnd:          payload.BlockEnd,
+		IndexStart:        payload.IndexStart,
+		IndexEnd:          payload.IndexEnd,
+		OpIndex:           payload.OpIndex,
+		ProofId:           payload.ProofId,
+		OldTreeRoot:       payload.OldTreeRoot,
+		NewTreeRoot:       payload.NewTreeRoot,
+		OnChainProofId:    payload.OnChainProofId,
+		CommitBlockHeight: a.height,
+		ChainTitleId:      chainTitleVal.Uint64(),
+	}
 
+	//2. 验证proof是否连续，不连续则暂时保存(考虑交易顺序被打散的场景)
+	lastProof, err := getLastCommitProofData(a.statedb, chainId)
+	if err != nil {
+		return nil, errors.Wrap(err, "get last commit Proof")
+	}
+	if payload.ProofId < lastProof.ProofId+1 {
+		return nil, errors.Wrapf(types.ErrInvalidParam, "commitedId=%d less or equal  lastProofId=%d", payload.ProofId, lastProof.ProofId)
+	}
+	//get未处理的证明的最大id
+	maxRecordId, err := getMaxRecordProofIdData(a.statedb, chainId)
+	if err != nil {
+		return nil, errors.Wrapf(err, "getMaxRecordProofId for id=%d", payload.ProofId)
+	}
+	//不连续，先保存数据库,连续时候再验证
+	if payload.ProofId > lastProof.ProofId+1 {
+		return makeCommitProofRecordReceipt(newProof, uint64(maxRecordId.Data)), nil
+	}
+	lastOnChainProof, err := getLastOnChainProofData(a.statedb, chainId)
+	if err != nil {
+		return nil, errors.Wrap(err, "getLastOnChainProof")
+	}
+	lastOnChainProofId, err := checkNewProof(lastProof, newProof, lastOnChainProof.OnChainProofId)
+	if err != nil {
+		return nil, errors.Wrapf(err, "checkNewProof id=%d", newProof.ProofId)
+	}
+	receipt := makeCommitProofReceipt(lastProof, newProof)
+
+	//循环检查可能未处理的recordProof
+	lastProof = newProof
+	for i := lastProof.ProofId + 1; i < uint64(maxRecordId.Data); i++ {
+		recordProof, _ := getRecordProof(a.statedb, chainId, i)
+		if recordProof == nil {
+			break
+		}
+		lastOnChainProofId, err = checkNewProof(lastProof, recordProof, lastOnChainProofId)
+		if err != nil {
+			zklog.Error("commitProof.checkRecordProof", "lastProofId", lastProof.ProofId, "recordProofId", recordProof.ProofId, "err", err)
+			//record检查出错，不作为本交易的错误，待下次更新错误的proofId
+			break
+		}
+		mergeReceipt(receipt, makeCommitProofReceipt(lastProof, newProof))
+		lastProof = recordProof
+	}
+	return receipt, nil
+}
+
+func getRecordProof(db dbm.KV, title string, id uint64) (*zt.CommitProofState, error) {
+	key := getProofIdKey(title, id)
+	v, err := db.Get(key)
+	if err != nil {
+		return nil, err
+	}
+	var data zt.CommitProofState
+	err = types.Decode(v, &data)
+	if err != nil {
+		return nil, errors.Wrapf(err, "decode db")
+	}
+	return &data, nil
+}
+
+func checkNewProof(lastProof, newProof *zt.CommitProofState, lastOnChainProofId uint64) (uint64, error) {
+	//proofId需要连续,区块高度需要衔接
+	if lastProof.ProofId+1 != newProof.ProofId || (lastProof.ProofId > 0 && lastProof.BlockEnd != newProof.BlockStart) {
+		return lastOnChainProofId, errors.Wrapf(types.ErrInvalidParam, "lastProofId=%d,newProofId=%d, lastBlockEnd=%d,newBlockStart=%d",
+			lastProof.ProofId, newProof.ProofId, lastProof.BlockEnd, newProof.BlockStart)
+	}
+
+	//tree root 需要衔接, 从proofId=1开始校验
+	if lastProof.ProofId > 0 && lastProof.NewTreeRoot != newProof.OldTreeRoot {
+		return lastOnChainProofId, errors.Wrapf(types.ErrInvalidParam, "last proof treeRoot=%s, commit oldTreeRoot=%s",
+			lastProof.NewTreeRoot, newProof.OldTreeRoot)
+	}
+
+	//如果包含OnChainPubData, OnChainProofId需要连续
+	if newProof.OnChainProofId > 0 {
+		if lastOnChainProofId+1 != newProof.OnChainProofId {
+			return lastOnChainProofId, errors.Wrapf(types.ErrInvalidParam, "lastOnChainId not match, lastOnChainId=%d, commit=%d", lastOnChainProofId, newProof.OnChainProofId)
+		}
+		//更新新的onChainProofId
+		return newProof.OnChainProofId, nil
+	}
+	return lastOnChainProofId, nil
 }
 
 func verifyProof(verifyKey string, proof *zt.ZkCommitProof) error {
-
 	//decode public inputs
 	pBuff, err := getByteBuff(proof.PublicInput)
 	if err != nil {
@@ -251,14 +433,20 @@ func verifyProof(verifyKey string, proof *zt.ZkCommitProof) error {
 	if err != nil {
 		return errors.Wrapf(err, "read public input")
 	}
-
 	//计算pubData hash 需要和commit的一致
+	mimcHash := mimc.NewMiMC(zt.ZkMimcHashSeed)
 	commitPubDataHash := proofCircuit.PubDataCommitment.GetWitnessValue(ecc.BN254)
-	calcPubDataHash := calcPubDataCommitHash(proof.BlockStart, proof.BlockEnd, proof.OldTreeRoot, proof.NewTreeRoot, proof.PubDatas)
+	calcPubDataHash := calcPubDataCommitHash(mimcHash, proof.BlockStart, proof.BlockEnd, proof.ChainTitleId, proof.OldTreeRoot, proof.NewTreeRoot, proof.PubDatas)
 	if commitPubDataHash.String() != calcPubDataHash {
 		return errors.Wrapf(types.ErrInvalidParam, "pubData hash not match, PI=%s,calc=%s", commitPubDataHash.String(), calcPubDataHash)
 	}
 
+	//计算onChain pubData hash 需要和commit的一致
+	commitOnChainPubDataHash := proofCircuit.OnChainPubDataCommitment.GetWitnessValue(ecc.BN254)
+	calcOnChainPubDataHash := calcOnChainPubDataCommitHash(mimcHash, proof.ChainTitleId, proof.NewTreeRoot, proof.OnChainPubDatas)
+	if commitOnChainPubDataHash.String() != calcOnChainPubDataHash {
+		return errors.Wrapf(types.ErrInvalidParam, "onChain pubData hash not match, PI=%s,calc=%s", commitOnChainPubDataHash.String(), calcOnChainPubDataHash)
+	}
 	//验证证明
 	ok, err := zksnark.Verify(verifyKey, proof.Proof, proof.PublicInput)
 	if err != nil {
@@ -268,12 +456,9 @@ func verifyProof(verifyKey string, proof *zt.ZkCommitProof) error {
 		return errors.Wrapf(types.ErrInvalidParam, "proof verify fail")
 	}
 	return nil
-
 }
 
-func calcPubDataCommitHash(blockStart, blockEnd uint64, oldRoot, newRoot string, pubDatas []string) string {
-	mimcHash := mimc.NewMiMC(zt.ZkMimcHashSeed)
-
+func calcPubDataCommitHash(mimcHash hash.Hash, blockStart, blockEnd, chainTitleId uint64, oldRoot, newRoot string, pubDatas []string) string {
 	mimcHash.Reset()
 
 	var f fr.Element
@@ -289,6 +474,9 @@ func calcPubDataCommitHash(blockStart, blockEnd uint64, oldRoot, newRoot string,
 	t = f.SetString(newRoot).Bytes()
 	mimcHash.Write(t[:])
 
+	t = f.SetUint64(chainTitleId).Bytes()
+	mimcHash.Write(t[:])
+
 	for _, r := range pubDatas {
 		t = f.SetString(r).Bytes()
 		mimcHash.Write(t[:])
@@ -298,27 +486,64 @@ func calcPubDataCommitHash(blockStart, blockEnd uint64, oldRoot, newRoot string,
 	return f.SetBytes(ret).String()
 }
 
+func calcOnChainPubDataCommitHash(mimcHash hash.Hash, chainTitleId uint64, newRoot string, pubDatas []string) string {
+	mimcHash.Reset()
+	var f fr.Element
+
+	t := f.SetString(newRoot).Bytes()
+	mimcHash.Write(t[:])
+	t = f.SetUint64(chainTitleId).Bytes()
+	mimcHash.Write(t[:])
+
+	sum := mimcHash.Sum(nil)
+
+	for _, p := range pubDatas {
+		mimcHash.Reset()
+		t = f.SetString(p).Bytes()
+		mimcHash.Write(sum)
+		mimcHash.Write(t[:])
+		sum = mimcHash.Sum(nil)
+	}
+
+	return f.SetBytes(sum).String()
+}
+
 //合约管理员或管理员设置在链上的管理员才可设置
 func (a *Action) setVerifier(payload *zt.ZkVerifier) (*types.Receipt, error) {
 	cfg := a.api.GetConfig()
 	if !isSuperManager(cfg, a.fromaddr) {
 		return nil, errors.Wrapf(types.ErrNotAllow, "from addr is not manager")
 	}
+	if len(payload.Verifiers) == 0 {
+		return nil, errors.Wrap(types.ErrInvalidParam, "verifier nil")
+	}
+	//chainTitle只是在主链有作用，区分不同平行链， 平行链默认为0
+	v, ok := new(big.Int).SetString(zt.ZkParaChainInnerTitleId, 10)
+	if !ok {
+		return nil, errors.Wrapf(types.ErrInvalidParam, "innertitleId=%s", zt.ZkParaChainInnerTitleId)
+	}
+	chainTitleId := v.Uint64()
+	if !cfg.IsPara() {
+		if payload.GetChainTitleId() <= 0 {
+			return nil, errors.Wrap(types.ErrInvalidParam, "chainTitle or verifier nil")
+		}
+		chainTitleId = payload.ChainTitleId
+	}
 
-	oldKey, err := getVerifierData(a.statedb)
+	oldKey, err := getVerifierData(a.statedb, new(big.Int).SetUint64(chainTitleId).String())
 	if isNotFound(errors.Cause(err)) {
-		key := &zt.ZkVerifier{Verifiers: payload.Verifiers}
+		key := &zt.ZkVerifier{ChainTitleId: chainTitleId, Verifiers: payload.Verifiers}
 		return makeSetVerifierReceipt(nil, key), nil
 	}
 	if err != nil {
 		return nil, errors.Wrap(err, "setVerifyKey.getVerifyKeyData")
 	}
-	newKey := &zt.ZkVerifier{Verifiers: payload.Verifiers}
+	newKey := &zt.ZkVerifier{ChainTitleId: chainTitleId, Verifiers: payload.Verifiers}
 	return makeSetVerifierReceipt(oldKey, newKey), nil
 }
 
-func getVerifierData(db dbm.KV) (*zt.ZkVerifier, error) {
-	key := getVerifier()
+func getVerifierData(db dbm.KV, chainTitleId string) (*zt.ZkVerifier, error) {
+	key := getVerifier(chainTitleId)
 	v, err := db.Get(key)
 	if err != nil {
 		return nil, errors.Wrapf(err, "get db verify key")
@@ -332,877 +557,19 @@ func getVerifierData(db dbm.KV) (*zt.ZkVerifier, error) {
 	return &data, nil
 }
 
-func makeSetVerifierReceipt(old, new *zt.ZkVerifier) *types.Receipt {
-	key := getVerifier()
+func makeSetVerifierReceipt(old, newData *zt.ZkVerifier) *types.Receipt {
+	key := getVerifier(new(big.Int).SetUint64(newData.ChainTitleId).String())
 	log := &zt.ReceiptSetVerifier{
 		Prev:    old,
-		Current: new,
+		Current: newData,
 	}
 	return &types.Receipt{
 		Ty: types.ExecOk,
 		KV: []*types.KeyValue{
-			{Key: key, Value: types.Encode(new)},
+			{Key: key, Value: types.Encode(newData)},
 		},
 		Logs: []*types.ReceiptLog{
 			{Ty: zt.TySetVerifierLog, Log: types.Encode(log)},
 		},
 	}
-
-}
-
-//根据rootHash获取account在该root下的证明
-func getAccountProofInHistory(localdb dbm.KV, accountId uint64, rootHash string) (*zt.MerkleTreeProof, error) {
-	proofTable := NewCommitProofTable(localdb)
-	accountMap := make(map[uint64]*zt.HistoryLeaf)
-	maxAccountId := uint64(0)
-	rows, err := proofTable.ListIndex("root", getRootCommitProofKey(rootHash), nil, 1, zt.ListASC)
-	if err != nil {
-		return nil, errors.Wrapf(err, "proofTable.ListIndex")
-	}
-	proof := rows[0].Data.(*zt.ZkCommitProof)
-	if proof == nil {
-		return nil, errors.New("proof not exist")
-	}
-
-	for i := uint64(1); i <= proof.ProofId; i++ {
-		row, err := proofTable.GetData(getProofIdCommitProofKey(i))
-		if err != nil {
-			return nil, err
-		}
-		data := row.Data.(*zt.ZkCommitProof)
-		operations := transferPubDatasToOption(data.PubDatas)
-		for _, operation := range operations {
-			switch operation.Ty {
-			case zt.TyDepositAction:
-				fromLeaf, ok := accountMap[operation.AccountId]
-				if !ok {
-					fromLeaf = &zt.HistoryLeaf{
-						AccountId:  operation.GetAccountId(),
-						EthAddress: operation.GetEthAddress(),
-						ChainAddr:  operation.GetChainAddr(),
-						Tokens: []*zt.TokenBalance{
-							{
-								TokenId: operation.TokenId,
-								Balance: operation.GetAmount(),
-							},
-						},
-					}
-				} else {
-					var tokenBalance *zt.TokenBalance
-					//找到token
-					for _, token := range fromLeaf.Tokens {
-						if token.TokenId == operation.TokenId {
-							tokenBalance = token
-						}
-					}
-					if tokenBalance == nil {
-						tokenBalance = &zt.TokenBalance{
-							TokenId: operation.TokenId,
-							Balance: operation.Amount,
-						}
-						fromLeaf.Tokens = append(fromLeaf.Tokens, tokenBalance)
-					} else {
-						balance, _ := new(big.Int).SetString(tokenBalance.GetBalance(), 10)
-						change, _ := new(big.Int).SetString(operation.Amount, 10)
-						tokenBalance.Balance = new(big.Int).Add(balance, change).String()
-					}
-				}
-				accountMap[operation.AccountId] = fromLeaf
-				if operation.AccountId > maxAccountId {
-					maxAccountId = operation.AccountId
-				}
-			case zt.TyWithdrawAction:
-				fromLeaf, ok := accountMap[operation.AccountId]
-				if !ok {
-					return nil, errors.New("account not exist")
-				}
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					return nil, errors.New("token not exist")
-				} else {
-					balance, _ := new(big.Int).SetString(tokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					if change.Cmp(balance) > 0 {
-						return nil, errors.New("balance not enough")
-					}
-					tokenBalance.Balance = new(big.Int).Sub(balance, change).String()
-				}
-				accountMap[operation.AccountId] = fromLeaf
-			case zt.TyTreeToContractAction:
-				fromLeaf, ok := accountMap[operation.AccountId]
-				if !ok {
-					return nil, errors.New("account not exist")
-				}
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					return nil, errors.New("token not exist")
-				} else {
-					balance, _ := new(big.Int).SetString(tokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					if change.Cmp(balance) > 0 {
-						return nil, errors.New("balance not enough")
-					}
-					tokenBalance.Balance = new(big.Int).Sub(balance, change).String()
-				}
-				accountMap[operation.AccountId] = fromLeaf
-			case zt.TyContractToTreeAction:
-				fromLeaf, ok := accountMap[operation.AccountId]
-				if !ok {
-					return nil, errors.New("account not exist")
-				}
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					tokenBalance = &zt.TokenBalance{
-						TokenId: operation.TokenId,
-						Balance: operation.Amount,
-					}
-					fromLeaf.Tokens = append(fromLeaf.Tokens, tokenBalance)
-				} else {
-					balance, _ := new(big.Int).SetString(tokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					tokenBalance.Balance = new(big.Int).Add(balance, change).String()
-				}
-				accountMap[operation.AccountId] = fromLeaf
-			case zt.TyTransferAction:
-				fromLeaf, ok := accountMap[operation.AccountId]
-				if !ok {
-					return nil, errors.New("account not exist")
-				}
-				toLeaf, ok := accountMap[operation.ToAccountId]
-				if !ok {
-					return nil, errors.New("account not exist")
-				}
-
-				var fromTokenBalance, toTokenBalance *zt.TokenBalance
-				//找到fromToken
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						fromTokenBalance = token
-					}
-				}
-				if fromTokenBalance == nil {
-					return nil, errors.New("token not exist")
-				} else {
-					balance, _ := new(big.Int).SetString(fromTokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					if change.Cmp(balance) > 0 {
-						return nil, errors.New("balance not enough")
-					}
-					fromTokenBalance.Balance = new(big.Int).Sub(balance, change).String()
-				}
-
-				//找到toToken
-				for _, token := range toLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						toTokenBalance = token
-					}
-				}
-				if toTokenBalance == nil {
-					toTokenBalance = &zt.TokenBalance{
-						TokenId: operation.TokenId,
-						Balance: operation.Amount,
-					}
-					toLeaf.Tokens = append(toLeaf.Tokens, toTokenBalance)
-				} else {
-					balance, _ := new(big.Int).SetString(toTokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					toTokenBalance.Balance = new(big.Int).Add(balance, change).String()
-				}
-				accountMap[operation.AccountId] = fromLeaf
-				accountMap[operation.ToAccountId] = toLeaf
-			case zt.TyTransferToNewAction:
-				fromLeaf, ok := accountMap[operation.AccountId]
-				if !ok {
-					return nil, errors.New("account not exist")
-				}
-
-				var fromTokenBalance *zt.TokenBalance
-				//找到fromToken
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						fromTokenBalance = token
-					}
-				}
-				if fromTokenBalance == nil {
-					return nil, errors.New("token not exist")
-				} else {
-					balance, _ := new(big.Int).SetString(fromTokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					if change.Cmp(balance) > 0 {
-						return nil, errors.New("balance not enough")
-					}
-					fromTokenBalance.Balance = new(big.Int).Sub(balance, change).String()
-				}
-
-				toLeaf := &zt.HistoryLeaf{
-					AccountId:  operation.GetToAccountId(),
-					EthAddress: operation.GetEthAddress(),
-					ChainAddr:  operation.GetChainAddr(),
-					Tokens: []*zt.TokenBalance{
-						{
-							TokenId: operation.TokenId,
-							Balance: operation.GetAmount(),
-						},
-					},
-				}
-
-				accountMap[operation.AccountId] = fromLeaf
-				accountMap[operation.ToAccountId] = toLeaf
-				if operation.ToAccountId > maxAccountId {
-					maxAccountId = operation.ToAccountId
-				}
-			case zt.TySetPubKeyAction:
-				fromLeaf, ok := accountMap[operation.AccountId]
-				if !ok {
-					return nil, errors.New("account not exist")
-				}
-				fromLeaf.PubKey = &zt.ZkPubKey{
-					X: operation.PubKey.X,
-					Y: operation.PubKey.Y,
-				}
-				accountMap[operation.AccountId] = fromLeaf
-			case zt.TyForceExitAction:
-				fromLeaf, ok := accountMap[operation.AccountId]
-				if !ok {
-					return nil, errors.New("account not exist")
-				}
-
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					return nil, errors.New("token not exist")
-				} else {
-					tokenBalance.Balance = "0"
-				}
-				accountMap[operation.AccountId] = fromLeaf
-			case zt.TyFullExitAction:
-				fromLeaf, ok := accountMap[operation.AccountId]
-				if !ok {
-					return nil, errors.New("account not exist")
-				}
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					return nil, errors.New("token not exist")
-				} else {
-					tokenBalance.Balance = "0"
-				}
-				accountMap[operation.AccountId] = fromLeaf
-			}
-		}
-	}
-
-	tree := getNewTree()
-	err = tree.SetIndex(accountId - 1)
-	if err != nil {
-		return nil, errors.Wrapf(err, "tree.SetIndex")
-	}
-	for i := uint64(1); i <= maxAccountId; i++ {
-		tree.Push(getHistoryLeafHash(accountMap[i]))
-	}
-
-	merkleRoot, proofSet, proofIndex, numLeaves := tree.Prove()
-	helpers := make([]string, 0)
-	proofStringSet := make([]string, 0)
-	for _, v := range merkletree.GenerateProofHelper(proofSet, proofIndex, numLeaves) {
-		helpers = append(helpers, big.NewInt(int64(v)).String())
-	}
-	for _, v := range proofSet {
-		proofStringSet = append(proofStringSet, zt.Byte2Str(v))
-	}
-	merkleProof := &zt.MerkleTreeProof{
-		RootHash: zt.Byte2Str(merkleRoot),
-		ProofSet: proofStringSet,
-		Helpers:  helpers,
-	}
-	return merkleProof, nil
-}
-
-func transferPubDatasToOption(pubDatas []string) []*zt.ZkOperation {
-	operations := make([]*zt.ZkOperation, 0)
-	start := 0
-	for start < len(pubDatas) {
-		chunk := wallet.ChunkStringToByte(pubDatas[start])
-		operationTy := getTyByChunk(chunk)
-		chunkNum := getChunkNum(operationTy)
-		if operationTy != zt.TyNoopAction {
-			operation := getOperationByChunk(pubDatas[start:start+chunkNum], operationTy)
-			fmt.Print(operation, "\n")
-			operations = append(operations, operation)
-		}
-		start = start + chunkNum
-	}
-	return operations
-}
-
-func getTyByChunk(chunk []byte) uint64 {
-	return new(big.Int).SetBytes(chunk[:1]).Uint64()
-}
-
-func getChunkNum(opType uint64) int {
-	switch opType {
-	case zt.TyDepositAction:
-		return zt.DepositChunks
-	case zt.TyWithdrawAction:
-		return zt.WithdrawChunks
-	case zt.TyContractToTreeAction:
-		return zt.Contract2TreeChunks
-	case zt.TyTreeToContractAction:
-		return zt.Tree2ContractChunks
-	case zt.TyTransferAction:
-		return zt.TransferChunks
-	case zt.TyTransferToNewAction:
-		return zt.Transfer2NewChunks
-	case zt.TyForceExitAction:
-		return zt.ForceExitChunks
-	case zt.TyFullExitAction:
-		return zt.FullExitChunks
-	case zt.TySetPubKeyAction:
-		return zt.ChangePubKeyChunks
-	case zt.TyNoopAction:
-		return zt.NoopChunks
-	default:
-		panic(fmt.Sprintf("operation tx type=%d not support", opType))
-	}
-
-}
-
-func getOperationByChunk(chunks []string, optionTy uint64) *zt.ZkOperation {
-	totalChunk := make([]byte, 0)
-	for _, chunk := range chunks {
-		totalChunk = append(totalChunk, wallet.ChunkStringToByte(chunk)...)
-	}
-	switch optionTy {
-	case zt.TyDepositAction:
-		return getDepositOperationByChunk(totalChunk)
-	case zt.TyWithdrawAction:
-		return getWithDrawOperationByChunk(totalChunk)
-	case zt.TyTreeToContractAction:
-		return getTree2ContractOperationByChunk(totalChunk)
-	case zt.TyContractToTreeAction:
-		return getContract2TreeOptionByChunk(totalChunk)
-	case zt.TyTransferAction:
-		return getTransferOperationByChunk(totalChunk)
-	case zt.TyTransferToNewAction:
-		return getTransfer2NewOperationByChunk(totalChunk)
-	case zt.TySetPubKeyAction:
-		return getSetPubKeyOperationByChunk(totalChunk)
-	case zt.TyForceExitAction:
-		return getForceExitOperationByChunk(totalChunk)
-	case zt.TyFullExitAction:
-		return getFullExitOperationByChunk(totalChunk)
-	default:
-		panic("operationTy not support")
-	}
-}
-
-//根据proofId重建merkleTree
-func saveHistoryAccountTree(localdb dbm.KV, endProofId uint64) ([]*types.KeyValue, error) {
-	var localKvs []*types.KeyValue
-	proofTable := NewCommitProofTable(localdb)
-	historyTable := NewHistoryAccountTreeTable(localdb)
-	//todo 多少ID归档一次实现可配置化
-	historyId := (endProofId/10 - 1) * 10
-	for i := historyId + 1; i <= endProofId; i++ {
-		row, err := proofTable.GetData(getProofIdCommitProofKey(i))
-		if err != nil {
-			return localKvs, err
-		}
-		data := row.Data.(*zt.ZkCommitProof)
-		operations := transferPubDatasToOption(data.PubDatas)
-		for _, operation := range operations {
-			fromLeaf, err := getAccountByProofIdAndHistoryId(historyTable, endProofId, historyId, operation.GetAccountId())
-			if err != nil {
-				return localKvs, errors.Wrapf(err, "getAccountByProofIdAndHistoryId")
-			}
-			switch operation.Ty {
-			case zt.TyDepositAction:
-				if fromLeaf == nil {
-					fromLeaf = &zt.HistoryLeaf{
-						AccountId:  operation.GetAccountId(),
-						EthAddress: operation.GetEthAddress(),
-						ChainAddr:  operation.GetChainAddr(),
-						ProofId:    endProofId,
-						Tokens: []*zt.TokenBalance{
-							{
-								TokenId: operation.TokenId,
-								Balance: operation.GetAmount(),
-							},
-						},
-					}
-				} else {
-					fromLeaf.ProofId = endProofId
-					var tokenBalance *zt.TokenBalance
-					//找到token
-					for _, token := range fromLeaf.Tokens {
-						if token.TokenId == operation.TokenId {
-							tokenBalance = token
-						}
-					}
-					if tokenBalance == nil {
-						tokenBalance = &zt.TokenBalance{
-							TokenId: operation.TokenId,
-							Balance: operation.Amount,
-						}
-						fromLeaf.Tokens = append(fromLeaf.Tokens, tokenBalance)
-					} else {
-						balance, _ := new(big.Int).SetString(tokenBalance.GetBalance(), 10)
-						change, _ := new(big.Int).SetString(operation.Amount, 10)
-						tokenBalance.Balance = new(big.Int).Add(balance, change).String()
-					}
-				}
-				err = historyTable.Replace(fromLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-			case zt.TyWithdrawAction:
-				if fromLeaf == nil {
-					return localKvs, errors.New("account not exist")
-				}
-				fromLeaf.ProofId = endProofId
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					return localKvs, errors.New("token not exist")
-				} else {
-					balance, _ := new(big.Int).SetString(tokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					if change.Cmp(balance) > 0 {
-						return localKvs, errors.New("balance not enough")
-					}
-					tokenBalance.Balance = new(big.Int).Sub(balance, change).String()
-				}
-				err = historyTable.Replace(fromLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-			case zt.TyTreeToContractAction:
-				if fromLeaf == nil {
-					return localKvs, errors.New("account not exist")
-				}
-				fromLeaf.ProofId = endProofId
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					return localKvs, errors.New("token not exist")
-				} else {
-					balance, _ := new(big.Int).SetString(tokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					if change.Cmp(balance) > 0 {
-						return localKvs, errors.New("balance not enough")
-					}
-					tokenBalance.Balance = new(big.Int).Sub(balance, change).String()
-				}
-				err = historyTable.Replace(fromLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-			case zt.TyContractToTreeAction:
-				if fromLeaf == nil {
-					return localKvs, errors.New("account not exist")
-				}
-				fromLeaf.ProofId = endProofId
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					tokenBalance = &zt.TokenBalance{
-						TokenId: operation.TokenId,
-						Balance: operation.Amount,
-					}
-					fromLeaf.Tokens = append(fromLeaf.Tokens, tokenBalance)
-				} else {
-					balance, _ := new(big.Int).SetString(tokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					tokenBalance.Balance = new(big.Int).Add(balance, change).String()
-				}
-				err = historyTable.Replace(fromLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-			case zt.TyTransferAction:
-				toLeaf, err := getAccountByProofIdAndHistoryId(historyTable, endProofId, historyId, operation.GetAccountId())
-				if err != nil {
-					return localKvs, errors.Wrapf(err, "getAccountByProofIdAndHistoryId")
-				}
-				if fromLeaf == nil || toLeaf == nil {
-					return localKvs, errors.New("account not exist")
-				}
-
-				fromLeaf.ProofId = endProofId
-				toLeaf.ProofId = endProofId
-
-				var fromTokenBalance, toTokenBalance *zt.TokenBalance
-				//找到fromToken
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						fromTokenBalance = token
-					}
-				}
-				if fromTokenBalance == nil {
-					return localKvs, errors.New("token not exist")
-				} else {
-					balance, _ := new(big.Int).SetString(fromTokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					if change.Cmp(balance) > 0 {
-						return localKvs, errors.New("balance not enough")
-					}
-					fromTokenBalance.Balance = new(big.Int).Sub(balance, change).String()
-				}
-
-				//找到toToken
-				for _, token := range toLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						toTokenBalance = token
-					}
-				}
-				if toTokenBalance == nil {
-					toTokenBalance = &zt.TokenBalance{
-						TokenId: operation.TokenId,
-						Balance: operation.Amount,
-					}
-					toLeaf.Tokens = append(toLeaf.Tokens, toTokenBalance)
-				} else {
-					balance, _ := new(big.Int).SetString(toTokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					toTokenBalance.Balance = new(big.Int).Add(balance, change).String()
-				}
-
-				err = historyTable.Replace(fromLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-				err = historyTable.Replace(toLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-			case zt.TyTransferToNewAction:
-				if fromLeaf == nil {
-					return localKvs, errors.New("account not exist")
-				}
-
-				fromLeaf.ProofId = endProofId
-
-				var fromTokenBalance *zt.TokenBalance
-				//找到fromToken
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						fromTokenBalance = token
-					}
-				}
-				if fromTokenBalance == nil {
-					return localKvs, errors.New("token not exist")
-				} else {
-					balance, _ := new(big.Int).SetString(fromTokenBalance.GetBalance(), 10)
-					change, _ := new(big.Int).SetString(operation.Amount, 10)
-					if change.Cmp(balance) > 0 {
-						return localKvs, errors.New("balance not enough")
-					}
-					fromTokenBalance.Balance = new(big.Int).Sub(balance, change).String()
-				}
-
-				toLeaf := &zt.HistoryLeaf{
-					AccountId:  operation.GetToAccountId(),
-					EthAddress: operation.GetEthAddress(),
-					ChainAddr:  operation.GetChainAddr(),
-					ProofId:    endProofId,
-					Tokens: []*zt.TokenBalance{
-						{
-							TokenId: operation.TokenId,
-							Balance: operation.GetAmount(),
-						},
-					},
-				}
-
-				err = historyTable.Replace(fromLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-				err = historyTable.Replace(toLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-			case zt.TySetPubKeyAction:
-				if fromLeaf == nil {
-					return localKvs, errors.New("account not exist")
-				}
-				fromLeaf.ProofId = endProofId
-				fromLeaf.PubKey = &zt.ZkPubKey{
-					X: operation.PubKey.X,
-					Y: operation.PubKey.Y,
-				}
-				err = historyTable.Replace(fromLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-			case zt.TyForceExitAction:
-				if fromLeaf == nil {
-					return localKvs, errors.New("account not exist")
-				}
-				fromLeaf.ProofId = endProofId
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					return localKvs, errors.New("token not exist")
-				} else {
-					tokenBalance.Balance = "0"
-				}
-				err = historyTable.Replace(fromLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-			case zt.TyFullExitAction:
-				if fromLeaf == nil {
-					return localKvs, errors.New("account not exist")
-				}
-				fromLeaf.ProofId = endProofId
-				var tokenBalance *zt.TokenBalance
-				//找到token
-				for _, token := range fromLeaf.Tokens {
-					if token.TokenId == operation.TokenId {
-						tokenBalance = token
-					}
-				}
-				if tokenBalance == nil {
-					return localKvs, errors.New("token not exist")
-				} else {
-					tokenBalance.Balance = "0"
-				}
-				err = historyTable.Replace(fromLeaf)
-				if err != nil {
-					return localKvs, err
-				}
-			}
-		}
-	}
-	localKvs, err := historyTable.Save()
-	if err != nil {
-		return localKvs, err
-	}
-	return localKvs, nil
-}
-
-//首先通过当前proofId去拿，如果没拿到，使用历史id去拿，因为同一个accountId会被多次更新
-func getAccountByProofIdAndHistoryId(historyTable *table.Table, currentId, historyId, accountId uint64) (*zt.HistoryLeaf, error) {
-	row, err := historyTable.GetData(getHistoryAccountTreeKey(currentId, accountId))
-	if err != nil {
-		if isNotFound(err) {
-			row, err = historyTable.GetData(getHistoryAccountTreeKey(historyId, accountId))
-			if err != nil {
-				if isNotFound(err) {
-					return nil, nil
-				} else {
-					return nil, err
-				}
-			}
-			data := row.Data.(*zt.HistoryLeaf)
-			return data, nil
-		} else {
-			return nil, err
-		}
-	}
-	data := row.Data.(*zt.HistoryLeaf)
-	return data, nil
-}
-
-func getDepositOperationByChunk(chunk []byte) *zt.ZkOperation {
-	operation := &zt.ZkOperation{Ty: zt.TyDepositAction}
-	start := zt.TxTypeBitWidth / 8
-	end := start + zt.AccountBitWidth/8
-	operation.AccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.TokenBitWidth/8
-	operation.TokenId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AmountBitWidth/8
-	operation.Amount = zt.Byte2Str(chunk[start:end])
-	start = end
-	end = start + zt.AddrBitWidth/8
-	operation.EthAddress = zt.Byte2Str(chunk[start:end])
-	start = end
-	end = start + zt.ChainAddrBitWidth/8
-	operation.ChainAddr = zt.Byte2Str(chunk[start:end])
-	return operation
-}
-
-func getWithDrawOperationByChunk(chunk []byte) *zt.ZkOperation {
-	operation := &zt.ZkOperation{Ty: zt.TyWithdrawAction}
-	start := zt.TxTypeBitWidth / 8
-	end := start + zt.AccountBitWidth/8
-	operation.AccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.TokenBitWidth/8
-	operation.TokenId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AmountBitWidth/8
-	operation.Amount = zt.Byte2Str(chunk[start:end])
-	start = end
-	end = start + zt.AddrBitWidth/8
-	operation.EthAddress = zt.Byte2Str(chunk[start:end])
-	return operation
-}
-
-func getContract2TreeOptionByChunk(chunk []byte) *zt.ZkOperation {
-	operation := &zt.ZkOperation{Ty: zt.TyContractToTreeAction}
-	start := zt.TxTypeBitWidth / 8
-	end := start + zt.AccountBitWidth/8
-	operation.AccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.TokenBitWidth/8
-	operation.TokenId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AmountBitWidth/8
-	operation.Amount = zt.Byte2Str(chunk[start:end])
-	return operation
-}
-
-func getTree2ContractOperationByChunk(chunk []byte) *zt.ZkOperation {
-	operation := &zt.ZkOperation{Ty: zt.TyTreeToContractAction}
-	start := zt.TxTypeBitWidth / 8
-	end := start + zt.AccountBitWidth/8
-	operation.AccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.TokenBitWidth/8
-	operation.TokenId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AmountBitWidth/8
-	operation.Amount = zt.Byte2Str(chunk[start:end])
-	return operation
-}
-
-func getTransferOperationByChunk(chunk []byte) *zt.ZkOperation {
-	operation := &zt.ZkOperation{Ty: zt.TyTransferAction}
-	start := zt.TxTypeBitWidth / 8
-	end := start + zt.AccountBitWidth/8
-	operation.AccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.TokenBitWidth/8
-	operation.TokenId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AccountBitWidth/8
-	operation.ToAccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AmountBitWidth/8
-	operation.Amount = zt.Byte2Str(chunk[start:end])
-	return operation
-}
-
-func getTransfer2NewOperationByChunk(chunk []byte) *zt.ZkOperation {
-	operation := &zt.ZkOperation{Ty: zt.TyTransferToNewAction}
-	start := zt.TxTypeBitWidth / 8
-	end := start + zt.AccountBitWidth/8
-	operation.AccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.TokenBitWidth/8
-	operation.TokenId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AccountBitWidth/8
-	operation.ToAccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AmountBitWidth/8
-	operation.Amount = zt.Byte2Str(chunk[start:end])
-	start = end
-	end = start + zt.AddrBitWidth/8
-	operation.EthAddress = zt.Byte2Str(chunk[start:end])
-	start = end
-	end = start + zt.ChainAddrBitWidth/8
-	operation.ChainAddr = zt.Byte2Str(chunk[start:end])
-	return operation
-}
-
-func getSetPubKeyOperationByChunk(chunk []byte) *zt.ZkOperation {
-	operation := &zt.ZkOperation{Ty: zt.TySetPubKeyAction}
-	start := zt.TxTypeBitWidth / 8
-	end := start + zt.AccountBitWidth/8
-	operation.AccountId = zt.Byte2Uint64(chunk[start:end])
-	pubkey := &zt.ZkPubKey{}
-	start = end
-	end = start + zt.ChainAddrBitWidth/8
-	pubkey.X = zt.Byte2Str(chunk[start:end])
-	start = end
-	end = start + zt.ChainAddrBitWidth/8
-	pubkey.Y = zt.Byte2Str(chunk[start:end])
-	operation.PubKey = pubkey
-	return operation
-}
-
-func getForceExitOperationByChunk(chunk []byte) *zt.ZkOperation {
-	operation := &zt.ZkOperation{Ty: zt.TyForceExitAction}
-	start := zt.TxTypeBitWidth / 8
-	end := start + zt.AccountBitWidth/8
-	operation.AccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.TokenBitWidth/8
-	operation.TokenId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AmountBitWidth/8
-	operation.Amount = zt.Byte2Str(chunk[start:end])
-	start = end
-	end = start + zt.AddrBitWidth/8
-	operation.EthAddress = zt.Byte2Str(chunk[start:end])
-	return operation
-}
-
-func getFullExitOperationByChunk(chunk []byte) *zt.ZkOperation {
-	operation := &zt.ZkOperation{Ty: zt.TyFullExitAction}
-	start := zt.TxTypeBitWidth / 8
-	end := start + zt.AccountBitWidth/8
-	operation.AccountId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.TokenBitWidth/8
-	operation.TokenId = zt.Byte2Uint64(chunk[start:end])
-	start = end
-	end = start + zt.AmountBitWidth/8
-	operation.Amount = zt.Byte2Str(chunk[start:end])
-	start = end
-	end = start + zt.AddrBitWidth/8
-	operation.EthAddress = zt.Byte2Str(chunk[start:end])
-	return operation
 }

@@ -7,40 +7,10 @@ import (
 
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 
-	"github.com/assetcloud/chain/util"
 	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
-	"github.com/stretchr/testify/assert"
 )
-
-func TestAccountTree(t *testing.T) {
-	dir, statedb, localdb := util.CreateTestDB()
-	defer util.CloseTestDB(dir, statedb)
-	info, err := generateTreeUpdateInfo(statedb)
-	assert.Equal(t, nil, err)
-	ethAddress := zt.HexAddr2Decimal("abcd68033A72978C1084E2d44D1Fa06DdC4A2d58")
-	chainAddr := zt.HexAddr2Decimal(getChainAddr("7266444b7e6408a9ee603de7b73cc8fc168ebf570c7fd482f7fa6b968b6a5aec"))
-	_, localKvs, err := AddNewLeaf(statedb, localdb, info, ethAddress, 1, "1000", chainAddr)
-	assert.Equal(t, nil, err)
-	tree, err := getAccountTree(statedb, info)
-	t.Log("treeIndex", tree)
-	assert.Equal(t, nil, err)
-	for _, kv := range localKvs {
-		localdb.Set(kv.GetKey(), kv.GetValue())
-	}
-
-	tree, err = getAccountTree(statedb, info)
-	assert.Equal(t, nil, err)
-	assert.Equal(t, uint64(2), tree.GetTotalIndex())
-
-	_, localKvs, err = UpdateLeaf(statedb, localdb, info, 2, 2, "1000", zt.Add)
-	assert.Equal(t, nil, err)
-	for _, kv := range localKvs {
-		localdb.Set(kv.GetKey(), kv.GetValue())
-	}
-
-}
 
 func getChainAddr(privateKeyString string) string {
 	privateKeyBytes, err := hex.DecodeString(privateKeyString)
@@ -63,7 +33,7 @@ func TestAccountHash(t *testing.T) {
 	leaf.EthAddress = "980818135352849559554652468538757099471386586455"
 	leaf.ChainAddr = "3415326846406104843498339737738292353412449296387254161761470177873504232418"
 
-	leaf.TokenHash = "14633446003514262524099709640745596521508648778482661942408784061885334136010"
+	leaf.TokenHash = zt.Str2Byte("14633446003514262524099709640745596521508648778482661942408784061885334136010")
 	var pubkey zt.ZkPubKey
 	pubkey.X = "110829526890202442231796950896186450339098004198300292113013256946470504791"
 	pubkey.Y = "12207062062295480868601430817261127111444831355336859496235449885847711361351"
@@ -73,4 +43,15 @@ func TestAccountHash(t *testing.T) {
 	var f fr.Element
 	f.SetBytes(hash)
 	t.Log("hash", f.String())
+}
+
+func TestInitRoot(t *testing.T) {
+	ethFeeAddr := "832367164346888E248bd58b9A5f480299F1e88d"
+	chainFeeAddr := "2c4a5c378be2424fa7585320630eceba764833f1ec1ffb2fafc1af97f27baf5a"
+
+	ethFeeAddrDecimal, _ := zt.HexAddr2Decimal(ethFeeAddr)
+	chainFeeAddrDecimal, _ := zt.HexAddr2Decimal(chainFeeAddr)
+	root := getInitTreeRoot(nil, ethFeeAddrDecimal, chainFeeAddrDecimal)
+	//root 10504580268631993551496725490269484542796412497472171704511488082346545793961
+	t.Log("root", root)
 }

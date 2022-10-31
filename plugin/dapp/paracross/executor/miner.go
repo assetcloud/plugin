@@ -5,9 +5,9 @@
 package executor
 
 import (
+	"github.com/assetcloud/chain/types"
 	"github.com/assetcloud/plugin/plugin/dapp/paracross/executor/minerrewards"
 	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
-	"github.com/assetcloud/chain/types"
 	"github.com/pkg/errors"
 )
 
@@ -22,6 +22,7 @@ func (a *action) Miner(miner *pt.ParacrossMinerAction) (*types.Receipt, error) {
 	}
 
 	if miner.Status.Title != cfg.GetTitle() || miner.Status.MainBlockHash == nil {
+		clog.Error("paracross miner", "miner.title", miner.Status.Title, "cfg.title", cfg.GetTitle(), "mainBlockHash", miner.Status.MainBlockHash)
 		return nil, pt.ErrParaMinerExecErr
 	}
 

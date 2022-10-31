@@ -15,6 +15,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	frameVersion "github.com/assetcloud/chain/common/version"
 	_ "github.com/assetcloud/chain/system"
@@ -30,11 +31,11 @@ var (
 func main() {
 	flag.Parse()
 	if *versionCmd {
-		fmt.Println(fmt.Sprintf("Build time: %s", version.BuildTime))
-		fmt.Println(fmt.Sprintf("System version: %s", version.Platform))
-		fmt.Println(fmt.Sprintf("Golang version: %s", version.GoVersion))
-		fmt.Println(fmt.Sprintf("plugin version: %s", version.GetVersion()))
-		fmt.Println(fmt.Sprintf("chain frame version: %s", frameVersion.GetVersion()))
+		fmt.Fprintln(os.Stdout, "Build time:", version.BuildTime)
+		fmt.Fprintln(os.Stdout, "System version:", version.Platform)
+		fmt.Fprintln(os.Stdout, "Golang version:", version.GoVersion)
+		fmt.Fprintln(os.Stdout, "plugin version:", version.GetVersion())
+		fmt.Fprintln(os.Stdout, "chain frame version:", frameVersion.GetVersion())
 		return
 	}
 	cli.RunChain("", "")

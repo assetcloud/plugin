@@ -8,8 +8,8 @@ import (
 
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	types2 "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/system/dapp/commands"
 	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
 	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebcli/buildflags"
 	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
 	types3 "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"

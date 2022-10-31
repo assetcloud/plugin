@@ -7,6 +7,10 @@ import (
 	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 )
 
+func GetAccountIdPrimaryKeyPrefix() string {
+	return fmt.Sprintf("%s", KeyPrefixStateDB+"accountId-")
+}
+
 func GetAccountIdPrimaryKey(accountId uint64) []byte {
 	return []byte(fmt.Sprintf("%s%022d", KeyPrefixStateDB+"accountId-", accountId))
 }
@@ -24,6 +28,18 @@ func GetTokenPrimaryKey(accountId uint64, tokenId uint64) []byte {
 	return []byte(fmt.Sprintf("%s%022d%s%022d", KeyPrefixStateDB+"token-", accountId, "-", tokenId))
 }
 
+func GetTokenPrimaryKeyPrefix() string {
+	return fmt.Sprintf("%s", KeyPrefixStateDB+"token-")
+}
+
+func GetNFTIdPrimaryKey(nftTokenId uint64) []byte {
+	return []byte(fmt.Sprintf("%s%022d", KeyPrefixStateDB+"nftTokenId-", nftTokenId))
+}
+
+func GetNFTHashPrimaryKey(nftHash string) []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+"nftHash-"+nftHash))
+}
+
 func GetRootIndexPrimaryKey(rootIndex uint64) []byte {
 	return []byte(fmt.Sprintf("%s%016d", KeyPrefixStateDB+"rootIndex-", rootIndex))
 }
@@ -36,20 +52,20 @@ func getHeightKey(height int64) []byte {
 	return []byte(fmt.Sprintf("%s%022d", KeyPrefixStateDB+"treeHeightRoot", height))
 }
 
-func getVerifyKey() []byte {
-	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+"verifyKey"))
+func getVerifyKey(chainTitleId string) []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+chainTitleId+"-verifyKey"))
 }
 
-func getVerifier() []byte {
-	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+zt.ZkVerifierKey))
+func getVerifier(chainTitleId string) []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+chainTitleId+"-"+zt.ZkVerifierKey))
 }
 
-func getLastCommitProofKey() []byte {
-	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+"commitProof"))
+func getLastProofKey() []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+"lastProof"))
 }
 
-func getHeightCommitProofKey(blockHeight uint64) []byte {
-	return []byte(fmt.Sprintf("%s%022d", KeyPrefixStateDB+"proofHeight", blockHeight))
+func getLastOnChainProofIdKey(chainTitleId string) []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+chainTitleId+"-lastOnChainProofId"))
 }
 
 func getValidatorsKey() []byte {
@@ -60,12 +76,13 @@ func getEthPriorityQueueKey(chainID uint32) []byte {
 	return []byte(fmt.Sprintf("%s-%d", KeyPrefixStateDB+"priorityQueue", chainID))
 }
 
-func getProofIdCommitProofKey(proofId uint64) []byte {
-	return []byte(fmt.Sprintf("%016d", proofId))
+//特意把title放后面，方便按id=1搜索所有的chain
+func getProofIdCommitProofKey(chainTitleId string, proofId uint64) []byte {
+	return []byte(fmt.Sprintf("%016d-%s", proofId, chainTitleId))
 }
 
-func getRootCommitProofKey(root string) []byte {
-	return []byte(fmt.Sprintf("%s", root))
+func getRootCommitProofKey(chainTitleId, root string) []byte {
+	return []byte(fmt.Sprintf("%s-%s", chainTitleId, root))
 }
 
 func getHistoryAccountTreeKey(proofId, accountId uint64) []byte {
@@ -73,5 +90,35 @@ func getHistoryAccountTreeKey(proofId, accountId uint64) []byte {
 }
 
 func getZkFeeKey(actionTy int32, tokenId uint64) []byte {
-	return []byte(fmt.Sprintf("%016d.%16d", actionTy, tokenId))
+	return []byte(fmt.Sprintf("%s%02d-%03d", KeyPrefixStateDB+"fee-", actionTy, tokenId))
+}
+
+func CalcLatestAccountIDKey() []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+"latestAccountID"))
+}
+
+func getExodusModeKey() []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+"exodusMode"))
+}
+
+//GetTokenSymbolKey tokenId 对应symbol
+func GetTokenSymbolKey(tokenId string) []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+"tokenId-"+tokenId))
+}
+
+//GetTokenSymbolIdKey token symbol 对应id
+func GetTokenSymbolIdKey(symbol string) []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+"tokenSym-"+symbol))
+}
+
+func getLastProofIdKey(chainTitleId string) []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+chainTitleId+"-lastProofId"))
+}
+
+func getMaxRecordProofIdKey(chainTitleId string) []byte {
+	return []byte(fmt.Sprintf("%s", KeyPrefixStateDB+chainTitleId+"-maxRecordProofId"))
+}
+
+func getProofIdKey(chainTitleId string, id uint64) []byte {
+	return []byte(fmt.Sprintf("%s%022d", KeyPrefixStateDB+chainTitleId+"-ProofId", id))
 }

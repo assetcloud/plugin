@@ -8,7 +8,7 @@ require (
 	github.com/NebulousLabs/errors v0.0.0-20181203160057-9f787ce8f69e // indirect
 	github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e // indirect
 	github.com/NebulousLabs/merkletree v0.0.0-20181203152040-08d5d54b07f5 // indirect
-	github.com/assetcloud/chain v0.0.0-20220923092804-88967dbd9f39
+	github.com/assetcloud/chain v0.0.0-20221027103303-5dd175a4e293
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/btcsuite/btcd v0.22.0-beta
@@ -39,9 +39,9 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tjfoc/gmsm v1.3.2
 	github.com/valyala/fasthttp v1.34.0
-	golang.org/x/crypto v0.0.0-20220919173607-35f4265a4bc0
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
-	golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8
+	golang.org/x/sys v0.0.0-20220422013727-9388b58f7150
 	google.golang.org/grpc v1.40.0
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect

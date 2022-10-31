@@ -1,8 +1,6 @@
 package executor
 
 import (
-	"encoding/hex"
-
 	"github.com/assetcloud/chain/types"
 	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 )
@@ -22,7 +20,6 @@ func (z *zksync) execAutoLocalZksync(tx *types.Transaction, receiptData *types.R
 
 func (z *zksync) execLocalZksync(tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	infoTable := NewZksyncInfoTable(z.GetLocalDB())
-	proofTable := NewCommitProofTable(z.GetLocalDB())
 
 	dbSet := &types.LocalDBSet{}
 	for _, log := range receiptData.Logs {
@@ -34,40 +31,39 @@ func (z *zksync) execLocalZksync(tx *types.Transaction, receiptData *types.Recei
 			zt.TyContractToTreeLog,
 			zt.TyTransferLog,
 			zt.TyTransferToNewLog,
-			zt.TySetPubKeyLog,
-			zt.TyForceExitLog,
+			//zt.TySetPubKeyLog,
+			zt.TyProxyExitLog,
 			zt.TyFullExitLog,
 			zt.TySwapLog,
+			zt.TyMintNFTLog,
+			zt.TyWithdrawNFTLog,
 			zt.TyFeeLog:
-			var zklog zt.ZkReceiptLog
-			err := types.Decode(log.GetLog(), &zklog)
+			var receipt zt.AccountTokenBalanceReceipt
+			err := types.Decode(log.GetLog(), &receipt)
 			if err != nil {
 				return nil, err
 			}
-			zklog.OperationInfo.TxHash = hex.EncodeToString(tx.Hash())
-			err = infoTable.Replace(zklog.OperationInfo)
+			err = infoTable.Replace(&receipt)
 			if err != nil {
 				return nil, err
 			}
-			dbSet.KV = append(dbSet.KV, zklog.LocalKvs...)
-		case zt.TyCommitProofLog:
-			var proof zt.ReceiptCommitProof
-			err := types.Decode(log.GetLog(), &proof)
+		case zt.TyTransferNFTLog:
+			var receipt zt.TransferReceipt4L2
+			err := types.Decode(log.GetLog(), &receipt)
 			if err != nil {
 				return nil, err
 			}
-			err = proofTable.Replace(proof.Current)
+			err = infoTable.Replace(receipt.From)
+			if err != nil {
+				return nil, err
+			}
+			err = infoTable.Replace(receipt.To)
 			if err != nil {
 				return nil, err
 			}
 		}
 	}
 	kvs, err := infoTable.Save()
-	if err != nil {
-		return nil, err
-	}
-	dbSet.KV = append(dbSet.KV, kvs...)
-	kvs, err = proofTable.Save()
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +89,7 @@ func (z *zksync) execCommitProofLocal(payload *zt.ZkCommitProof, tx *types.Trans
 	proofTable := NewCommitProofTable(z.GetLocalDB())
 
 	set := &types.LocalDBSet{}
-
+	payload.CommitBlockHeight = z.GetHeight()
 	err := proofTable.Replace(payload)
 	if err != nil {
 		return nil, err

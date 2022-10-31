@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"os"
 
-	evmxgotypes "github.com/assetcloud/plugin/plugin/dapp/evmxgo/types"
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/system/dapp/commands"
 	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
+	evmxgotypes "github.com/assetcloud/plugin/plugin/dapp/evmxgo/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )

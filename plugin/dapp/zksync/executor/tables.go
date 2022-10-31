@@ -2,6 +2,7 @@ package executor
 
 import (
 	"fmt"
+	"math/big"
 
 	"github.com/assetcloud/chain/common/address"
 
@@ -73,8 +74,8 @@ func (r *AccountTreeRow) Get(key string) ([]byte, error) {
 var opt_zksync_info = &table.Option{
 	Prefix:  KeyPrefixLocalDB,
 	Name:    "zksync",
-	Primary: "height_index_opIndex",
-	Index:   []string{"height", "txHash"},
+	Primary: "account_token_id",
+	Index:   []string{"accountID", "tokenID"},
 }
 
 // NewZksyncInfoTable ...
@@ -89,22 +90,22 @@ func NewZksyncInfoTable(kvdb db.KV) *table.Table {
 
 // AccountTreeRow table meta 结构
 type ZksyncInfoRow struct {
-	*zt.OperationInfo
+	*zt.AccountTokenBalanceReceipt
 }
 
 func NewZksyncInfoRow() *ZksyncInfoRow {
-	return &ZksyncInfoRow{OperationInfo: &zt.OperationInfo{}}
+	return &ZksyncInfoRow{AccountTokenBalanceReceipt: &zt.AccountTokenBalanceReceipt{}}
 }
 
 //CreateRow 新建数据行
 func (r *ZksyncInfoRow) CreateRow() *table.Row {
-	return &table.Row{Data: &zt.OperationInfo{}}
+	return &table.Row{Data: &zt.AccountTokenBalanceReceipt{}}
 }
 
 //SetPayload 设置数据
 func (r *ZksyncInfoRow) SetPayload(data types.Message) error {
-	if txdata, ok := data.(*zt.OperationInfo); ok {
-		r.OperationInfo = txdata
+	if txdata, ok := data.(*zt.AccountTokenBalanceReceipt); ok {
+		r.AccountTokenBalanceReceipt = txdata
 		return nil
 	}
 	return types.ErrTypeAsset
@@ -112,12 +113,12 @@ func (r *ZksyncInfoRow) SetPayload(data types.Message) error {
 
 //Get 按照indexName 查询 indexValue
 func (r *ZksyncInfoRow) Get(key string) ([]byte, error) {
-	if key == "height_index_opIndex" {
-		return []byte(fmt.Sprintf("%016d.%016d.%016d", r.GetBlockHeight(), r.GetTxIndex(), r.GetOpIndex())), nil
-	} else if key == "height" {
-		return []byte(fmt.Sprintf("%016d", r.GetBlockHeight())), nil
-	} else if key == "txHash" {
-		return []byte(fmt.Sprintf("%s", r.GetTxHash())), nil
+	if key == "account_token_id" {
+		return []byte(fmt.Sprintf("%016d.%016d", r.GetAccountId(), r.GetTokenId())), nil
+	} else if key == "accountID" {
+		return []byte(fmt.Sprintf("%016d", r.GetAccountId())), nil
+	} else if key == "tokenID" {
+		return []byte(fmt.Sprintf("%016d", r.GetTokenId())), nil
 	}
 	return nil, types.ErrNotFound
 }
@@ -126,7 +127,7 @@ var opt_commit_proof = &table.Option{
 	Prefix:  KeyPrefixLocalDB,
 	Name:    "proof",
 	Primary: "proofId",
-	Index:   []string{"height", "root"},
+	Index:   []string{"endHeight", "root", "commitHeight", "onChainId"},
 }
 
 // NewCommitProofTable ...
@@ -162,14 +163,26 @@ func (r *CommitProofRow) SetPayload(data types.Message) error {
 	return types.ErrTypeAsset
 }
 
+func (r *CommitProofRow) isProofNeedOnChain() int {
+	if len(r.GetOnChainPubDatas()) > 0 {
+		return 1
+	}
+	return 0
+}
+
 //Get 按照indexName 查询 indexValue
 func (r *CommitProofRow) Get(key string) ([]byte, error) {
+	chainTitleId := new(big.Int).SetUint64(r.ChainTitleId).String()
 	if key == "proofId" {
-		return []byte(fmt.Sprintf("%016d", r.GetProofId())), nil
+		return []byte(fmt.Sprintf("%016d-%s", r.GetProofId(), chainTitleId)), nil
 	} else if key == "root" {
-		return []byte(fmt.Sprintf("%s", r.GetNewTreeRoot())), nil
-	} else if key == "height" {
-		return []byte(fmt.Sprintf("%016d", r.GetBlockEnd())), nil
+		return []byte(fmt.Sprintf("%s-%s", chainTitleId, r.GetNewTreeRoot())), nil
+	} else if key == "endHeight" {
+		return []byte(fmt.Sprintf("%s-%016d", chainTitleId, r.GetBlockEnd())), nil
+	} else if key == "commitHeight" {
+		return []byte(fmt.Sprintf("%s-%016d", chainTitleId, r.GetCommitBlockHeight())), nil
+	} else if key == "onChainId" {
+		return []byte(fmt.Sprintf("%s-%016d", chainTitleId, r.GetOnChainProofId())), nil
 	}
 	return nil, types.ErrNotFound
 }

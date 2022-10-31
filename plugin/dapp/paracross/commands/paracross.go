@@ -11,12 +11,12 @@ import (
 	"os"
 	"strings"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/system/dapp/commands"
 	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -1007,9 +1007,9 @@ func addNodeGroupApproveCmdFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("id", "i", "", "apply id for nodegroup ")
 	_ = cmd.MarkFlagRequired("id")
 
-	cmd.Flags().StringP("autonomyId", "a", "", "autonomy approved id ")
+	cmd.Flags().StringP("autonomyId", "a", "", "optional: autonomy approved id ")
 
-	cmd.Flags().Float64P("coins", "c", 0, "coins amount to frozen, not less config")
+	cmd.Flags().Float64P("coins", "c", 0, "optional: coins amount to frozen, not less config")
 
 }
 

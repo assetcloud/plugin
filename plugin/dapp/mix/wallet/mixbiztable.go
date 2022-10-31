@@ -5,10 +5,10 @@ import (
 
 	"github.com/assetcloud/chain/common/address"
 
-	mix "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	"github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/common/db/table"
 	"github.com/assetcloud/chain/types"
+	mix "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 )
 
 /*

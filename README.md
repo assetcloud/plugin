@@ -6,9 +6,10 @@ https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/6874
 [![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/assetcloud/plugin?svg=true&branch=master&passingText=Windows%20-%20OK&failingText=Windows%20-%20failed&pendingText=Windows%20-%20pending)](https://ci.appveyor.com/project/assetcloud/plugin)
 [![codecov](https://codecov.io/gh/assetcloud/plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/assetcloud/plugin)
 
-# chain 官方插件系统（v1.67.3）
+# chain 官方插件系统（v1.67.4）
 
-* chain 地址: https://github.com/assetcloud/chain
+* chain地址: https://github.com/assetcloud/chain
+* chain官网: https://chain.33.cn
 
 ### 环境
 
