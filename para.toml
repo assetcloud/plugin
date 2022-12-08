@@ -136,7 +136,7 @@ halvePeriod=1000
 [consensus.sub.para]
 #主链节点的grpc服务器ip，当前可以支持多ip负载均衡，如“118.31.177.1:8802,39.97.2.127:8802”
 #ParaRemoteGrpcClient="118.31.177.1:8802,39.97.2.127:8802,120.77.111.44:8802,jiedian2.bityuan.com,cloud.bityuan.com"
-ParaRemoteGrpcClient="124.71.110.109:8802"
+ParaRemoteGrpcClient="124.71.110.109:8802" # TODO 以实际部署为准
 #主链指定高度的区块开始同步
 startHeight=1# TODO 不一样
 #主链指定高度后等待块数，防止主链回滚，联盟链最小为1，小于1则采用缺省高度100
