@@ -164,11 +164,20 @@ func (evm *EVMExecutor) Query_EstimateGas(req *evmtypes.EstimateEVMGasReq) (type
 	}
 
 	result := &evmtypes.EstimateEVMGasResp{}
-	result.Gas = hi
+	result.Gas = quickFixGas(hi)
 	log.Info("Query_EstimateGas", "gas:", result.Gas)
 	return result, nil
 
 }
+
+func quickFixGas(gas uint64) uint64 {
+  gas = gas * 12 / 10
+  if gas > evmtypes.MaxGasLimit {
+    gas = evmtypes.MaxGasLimit
+  }
+  return gas
+}
+
 func (evm *EVMExecutor) Query1_EstimateGas(req *evmtypes.EstimateEVMGasReq) (types.Message, error) {
 	evm.CheckInit()
 
