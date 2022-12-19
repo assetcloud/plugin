@@ -60,7 +60,125 @@ func (evm *EVMExecutor) Query_CheckAddrExists(in *evmtypes.CheckEVMAddrReq) (typ
 }
 
 // Query_EstimateGas 此方法用来估算合约消耗的Gas，不能修改原有执行器的状态数据
+// Query_EstimateGas 此方法用来估算合约消耗的Gas，不能修改原有执行器的状态数据
 func (evm *EVMExecutor) Query_EstimateGas(req *evmtypes.EstimateEVMGasReq) (types.Message, error) {
+	evm.CheckInit()
+	txBytes, err := hex.DecodeString(req.Tx)
+	if nil != err {
+		return nil, err
+	}
+	var tx types.Transaction
+	err = types.Decode(txBytes, &tx)
+	if nil != err {
+		return nil, err
+	}
+	var index int
+	from := evmCommon.StringToAddress(req.From)
+	msg, err := evm.GetMessage(&tx, index, from)
+	if err != nil {
+		return nil, err
+	}
+	//初始状态设置
+	var lo uint64 = 21000
+	var hi uint64 = evmtypes.MaxGasLimit
+	var cap = hi
+	//get coins balance
+	if evm.mStateDB != nil && !evm.GetAPI().GetConfig().IsPara() {
+		fromBalance := evm.mStateDB.GetBalance(from.String())
+		if fromBalance-msg.Value() > 0 {
+			hi = fromBalance - msg.Value()
+			if hi > evmtypes.MaxGasLimit {
+				cap = hi
+			}
+
+		}
+	}
+
+	// 创建EVM运行时对象
+	env := runtime.NewEVM(evm.NewEVMContext(msg, tx.Hash()), evm.mStateDB, *evm.vmCfg, evm.GetAPI().GetConfig())
+	isTransferOnly := strings.Compare(msg.To().String(), EvmAddress) == 0 && 0 == len(msg.Data())
+	//coins转账，para数据作为备注交易
+	isTransferNote := strings.Compare(msg.To().String(), EvmAddress) != 0 && !env.StateDB.Exist(msg.To().String()) && len(msg.Para()) > 0 && msg.Value() != 0
+	//如果是普通转账或者带有备注的Coins 转账 则直接返回
+	if isTransferOnly || isTransferNote {
+
+		result := &evmtypes.EstimateEVMGasResp{}
+		result.Gas = lo
+		log.Info("Query_EstimateGas", "gas:", result.Gas, "isTransferOnly:", isTransferOnly, "isTransferNote:", isTransferNote)
+		return result, nil
+
+	}
+
+	executable := func(evm *EVMExecutor, msg *evmCommon.Message, gas uint64) (bool, *evmtypes.EstimateEVMGasResp, error) {
+		msg.SetGasLimit(gas)
+		receipt, err := evm.innerExec(msg, tx.Hash(), tx.GetSignature().GetTy(), index, evmtypes.MaxGasLimit, true)
+		if err != nil {
+			if strings.Contains(err.Error(), "out of gas") {
+				return false, nil, nil
+			}
+			return false, nil, err
+		}
+
+		if receipt.Ty != types.ExecOk {
+			return false, nil, errors.New("contract call error")
+		}
+		callData := getCallReceipt(receipt.GetLogs())
+		if callData == nil {
+			return false, nil, errors.New("nil receipt")
+		}
+		log.Info("executable", "evm usedGas:", callData.UsedGas)
+		result := &evmtypes.EstimateEVMGasResp{}
+		result.Gas = callData.UsedGas
+		return true, result, nil
+	}
+
+	var count int
+	//通过二分查找确定可执行的gaslimit.
+	for lo+1 < hi {
+		count++
+		evm.mStateDB.Snapshot()
+		snapID := evm.mStateDB.GetLastSnapshot().GetID()
+		mid := (hi + lo) / 2
+		log.Info("Query_EstimateGas", "[executable  count]:", count, "the last low gas:", lo, "the last high gas:", hi, "the mid gas:", mid)
+		// ok 设置的gas可以执行
+		ok, _, err := executable(evm, msg, mid)
+		evm.mStateDB.RevertToSnapshot(snapID)
+		if err != nil {
+			return nil, err
+		}
+		if !ok { //如果!ok 说明GaS 不够用，则把上一轮计算的mid gas 赋值给low gas, 进而提高mid gas 的值
+			lo = mid
+		} else { //如果ok,说明mid Gas 有较多余量，则把mid gas 赋值给hi 降低high gas 的值,进而压缩mid gas 的值
+			hi = mid
+		}
+
+	}
+	log.Info("Query_EstimateGas", "[complete,executable count]:", count, "the last low gas:", lo, "the last high gas:", hi)
+
+	if hi == cap {
+		ok, result, err := executable(evm, msg, hi)
+		if err != nil || !ok {
+			return nil, err
+		}
+		return result, nil
+	}
+
+	result := &evmtypes.EstimateEVMGasResp{}
+	result.Gas = quickFixGas(hi)
+	log.Info("Query_EstimateGas", "gas:", result.Gas)
+	return result, nil
+
+}
+
+func quickFixGas(gas uint64) uint64 {
+  gas = gas * 12 / 10
+  if gas > evmtypes.MaxGasLimit {
+    gas = evmtypes.MaxGasLimit
+  }
+  return gas
+}
+
+func (evm *EVMExecutor) Query1_EstimateGas(req *evmtypes.EstimateEVMGasReq) (types.Message, error) {
 	evm.CheckInit()
 
 	txBytes, err := hex.DecodeString(req.Tx)
