@@ -8,7 +8,7 @@ require (
 	github.com/NebulousLabs/errors v0.0.0-20181203160057-9f787ce8f69e // indirect
 	github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e // indirect
 	github.com/NebulousLabs/merkletree v0.0.0-20181203152040-08d5d54b07f5 // indirect
-	github.com/assetcloud/chain v0.0.0-20221219074036-eab0613fd112
+	github.com/assetcloud/chain v0.0.0-20230104021121-aeafb1d476ed
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/btcsuite/btcd v0.22.0-beta
