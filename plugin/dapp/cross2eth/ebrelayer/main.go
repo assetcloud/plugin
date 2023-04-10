@@ -15,7 +15,6 @@ import (
 	"path/filepath"
 	"syscall"
 
-	tml "github.com/BurntSushi/toml"
 	dbm "github.com/assetcloud/chain/common/db"
 	logf "github.com/assetcloud/chain/common/log"
 	"github.com/assetcloud/chain/common/log/log15"
@@ -28,6 +27,7 @@ import (
 	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version"
 	pluginVersion "github.com/assetcloud/plugin/version"
+	tml "github.com/BurntSushi/toml"
 	"github.com/btcsuite/btcd/limits"
 )
 
@@ -85,17 +85,17 @@ func main() {
 
 	ethRelayerCnt := len(cfg.EthRelayerCfg)
 	chainMsgChan2Eths := make(map[string]chan<- *events.ChainMsg)
-	ethBridgeClaimChan := make(chan *ebrelayerTypes.EthBridgeClaim, 100)
-	txRelayAckChan2Chain := make(chan *ebrelayerTypes.TxRelayAck, 100)
+	ethBridgeClaimChan := make(chan *ebrelayerTypes.EthBridgeClaim, 1000)
+	txRelayAckChan2Chain := make(chan *ebrelayerTypes.TxRelayAck, 1000)
 	txRelayAckChan2Eth := make(map[string]chan<- *ebrelayerTypes.TxRelayAck)
 
 	//启动多个以太坊系中继器
 	ethRelayerServices := make(map[string]*ethRelayer.Relayer4Ethereum)
 	for i := 0; i < ethRelayerCnt; i++ {
-		chainMsgChan := make(chan *events.ChainMsg, 100)
+		chainMsgChan := make(chan *events.ChainMsg, 1000)
 		chainMsgChan2Eths[cfg.EthRelayerCfg[i].EthChainName] = chainMsgChan
 
-		txRelayAckRecvChan := make(chan *ebrelayerTypes.TxRelayAck, 100)
+		txRelayAckRecvChan := make(chan *ebrelayerTypes.TxRelayAck, 1000)
 		txRelayAckChan2Eth[cfg.EthRelayerCfg[i].EthChainName] = txRelayAckRecvChan
 
 		ethStartPara := &ethRelayer.EthereumStartPara{
@@ -108,7 +108,7 @@ func main() {
 			EthBridgeClaimChan:   ethBridgeClaimChan,
 			TxRelayAckSendChan:   txRelayAckChan2Chain,
 			TxRelayAckRecvChan:   txRelayAckRecvChan,
-			ChainMsgChan:         chainMsgChan,
+			ChainMsgChan:       chainMsgChan,
 			ProcessWithDraw:      cfg.ProcessWithDraw,
 			Name:                 cfg.EthRelayerCfg[i].EthChainName,
 			StartListenHeight:    cfg.EthRelayerCfg[i].StartListenHeight,
@@ -136,7 +136,7 @@ func main() {
 		EthBridgeClaimChan: ethBridgeClaimChan,
 		TxRelayAckRecvChan: txRelayAckChan2Chain,
 		TxRelayAckSendChan: txRelayAckChan2Eth,
-		ChainMsgChan:       chainMsgChan2Eths,
+		ChainMsgChan:     chainMsgChan2Eths,
 		ChainID:            cfg.ChainRelayerCfg.ChainID4Chain,
 		ProcessWithDraw:    cfg.ProcessWithDraw,
 		DelayedSendTime:    cfg.DelayedSendTime,

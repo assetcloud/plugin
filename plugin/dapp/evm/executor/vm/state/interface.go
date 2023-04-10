@@ -17,7 +17,6 @@ import (
 type EVMStateDB interface {
 	// CreateAccount 创建新的合约对象
 	CreateAccount(string, string, string, string)
-
 	// SubBalance 从指定地址扣除金额
 	SubBalance(string, string, uint64)
 	// AddBalance 向指定地址增加金额
@@ -77,12 +76,20 @@ type EVMStateDB interface {
 
 	// CanTransfer 当前账户余额是否足够转账
 	CanTransfer(sender string, amount uint64) bool
-	// Transfer 转账交易
+	// Transfer 转账交易 coins 交易
 	Transfer(sender, recipient string, amount uint64) bool
 
 	// GetBlockHeight 返回当前区块高度
 	GetBlockHeight() int64
-
+	//GetAccount return contract address info
+	GetAccount(addr string) *ContractAccount
 	// GetConfig 获取系统配置
 	GetConfig() *types.ChainConfig
+
+	// EVM 转移Token
+	TransferToToken(from, recipient, symbol string, amount int64) (bool, error)
+	//返回Token 合约下symbol 的余额
+	TokenBalance(from common.Address, execer string, symbol string) (int64, error)
+	//查询代币总量
+	TokenSupply(tokensymbol string) (int64, error)
 }

@@ -9,9 +9,8 @@ import (
 	"fmt"
 	"math/big"
 	"os"
-	"sort"
-
 	"reflect"
+	"sort"
 
 	log "github.com/assetcloud/chain/common/log/log15"
 
@@ -26,14 +25,17 @@ import (
 
 var (
 	evmDebugInited = false
-	// EvmAddress 本合约地址
-	EvmAddress = ""
-	driverName = evmtypes.ExecutorName
+	// 执行器地址, 格式由evm配置的地址驱动指定
+	evmExecAddress       = ""
+	evmExecFormatAddress = ""
+	driverName           = evmtypes.ExecutorName
 )
 
 type subConfig struct {
 	// AddressDriver address driver name, support btc/eth
 	AddressDriver string `json:"addressDriver"`
+	// PreCompileAddr key: preContractorAddress  value: real contract information
+	PreCompile runtime.TokenContract `json:"preCompile,omitempty"`
 }
 
 func initEvmSubConfig(sub []byte, evmEnableHeight int64) {
@@ -56,7 +58,10 @@ func initEvmSubConfig(sub []byte, evmEnableHeight int64) {
 	if err != nil {
 		panic(fmt.Sprintf("address driver must enable before %d", evmEnableHeight))
 	}
-	common.InitEvmAddressTypeOnce(driver)
+	common.InitEvmAddressDriver(driver)
+
+	runtime.CustomizePrecompiledContracts[common.HexToAddress(runtime.TokenPrecompileAddr)] = runtime.NewTokenPrecompile(&runtime.TokenContract{SuperManager: subCfg.PreCompile.SuperManager})
+
 }
 
 // Init 初始化本合约对象
@@ -66,7 +71,10 @@ func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	initEvmSubConfig(sub, enableHeight)
 	driverName = name
 	drivers.Register(cfg, driverName, newEVMDriver, enableHeight)
-	EvmAddress = address.ExecAddress(cfg.ExecName(name))
+	// 格式化为配置地址格式
+	evmExecAddress = common.StringToAddress(address.ExecAddress(cfg.ExecName(name))).String()
+	evmExecFormatAddress = address.ToLower(evmExecAddress)
+	log.Info("evmInit", "execAddr", evmExecAddress, "formatAddr", evmExecFormatAddress)
 	// 初始化硬分叉数据
 	state.InitForkData()
 	InitExecType()

@@ -139,7 +139,7 @@ func Test_UnpackInputLockOfBridgevmxgo(t *testing.T) {
 
 func TestEVMExecutor_Query_GetCode(t *testing.T) {
 	api := new(apimock.QueueProtocolAPI)
-	cfg := ctypes.Newtypes.ChainConfig(ctypes.GetDefaultCfgstring())
+	cfg := ctypes.NewChainConfig(ctypes.GetDefaultCfgstring())
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	exec := initEvmExeccutor(t, api)
 	var contractorAddr = strings.ToLower("0xDe79A84DD3A16BB91044167075dE17a1CA4b1d6b")
@@ -163,7 +163,7 @@ func TestEVMExecutor_Query_GetCode(t *testing.T) {
 
 func TestNewEVMExecutor_Query_GetNonce(t *testing.T) {
 	api := new(apimock.QueueProtocolAPI)
-	cfg := ctypes.Newtypes.ChainConfig(ctypes.GetDefaultCfgstring())
+	cfg := ctypes.NewChainConfig(ctypes.GetDefaultCfgstring())
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	exec := initEvmExeccutor(t, api)
 	localDB := new(dbmock.KVDB)
@@ -187,7 +187,7 @@ func initEvmExeccutor(t *testing.T, api *apimock.QueueProtocolAPI) *EVMExecutor 
 	driver, err := address.LoadDriver(2, -1)
 	assert.Equal(t, nil, err)
 
-	vcomm.InitEvmAddressTypeOnce(driver)
+	vcomm.InitEvmAddressDriver(driver)
 	var exec = NewEVMExecutor()
 	exec.SetAPI(api)
 	statDB, err := dbm.NewGoMemDB("state", "state", 1024)
@@ -204,7 +204,7 @@ func initEvmExeccutor(t *testing.T, api *apimock.QueueProtocolAPI) *EVMExecutor 
 func TestEVMExecutor_Check(t *testing.T) {
 	api := new(apimock.QueueProtocolAPI)
 
-	cfg := ctypes.Newtypes.ChainConfig(ctypes.GetDefaultCfgstring())
+	cfg := ctypes.NewChainConfig(ctypes.GetDefaultCfgstring())
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	pub := vcomm.FromHex("0x04715e4e07d983c2d98eeac7018bce6e68ef9de25835340f6455f1b1c9686132ac54904f5e04b07966a256140a5f487c4aef3ddc461e02d58f90cc8baa49f9c7ca")
 	sig := &ctypes.Signature{
