@@ -29,6 +29,7 @@ func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(TokenX, ForkTokenPriceX, 0)
 	cfg.RegisterDappFork(TokenX, ForkTokenSymbolWithNumberX, 0)
 	cfg.RegisterDappFork(TokenX, ForkTokenCheckX, 0)
+	cfg.RegisterDappFork(TokenX, ForkTokenEvm, 0)
 }
 
 //InitExecutor ...

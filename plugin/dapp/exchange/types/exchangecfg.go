@@ -296,6 +296,27 @@ ForkParamV6 = 0
 ForkParamV7 = 0
 ForkParamV8 = 0
 ForkParamV9 = 0
+ForkParamV10 = 0
+ForkParamV11 = 0
+ForkParamV12 = 0
+ForkParamV13 = 0
+ForkParamV14 = 0
+ForkParamV15 = 0
+ForkParamV16 = 0
+ForkParamV17 = 0
+ForkParamV18 = 0
+ForkParamV19 = 0
+ForkParamV20 = 0
+ForkParamV21 = 0
+ForkParamV22 = 0
+ForkParamV23 = 0
+ForkParamV24 = 0
+ForkParamV25 = 0
+ForkParamV26 = 0
+ForkParamV27 = 0
+ForkParamV28 = 0
+ForkParamV29 = 0
+
 
 `
 
@@ -381,6 +402,9 @@ whitelist=["127.0.0.1"]
 jrpcFuncWhitelist=["*"]
 grpcFuncWhitelist=["*"]
 
+[rpc.parachain]
+mainChainGrpcAddr="localhost:8802"
+
 [mempool]
 name="timeline"
 poolCacheSize=102400
@@ -426,7 +450,6 @@ targetTimespan = 288 #only for test
 targetTimePerBlock = 2
 
 [consensus.sub.para]
-ParaRemoteGrpcClient="localhost:8802"
 #主链指定高度的区块开始同步
 startHeight=345850
 #打包时间间隔，单位秒

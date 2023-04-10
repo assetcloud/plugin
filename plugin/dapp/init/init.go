@@ -28,6 +28,7 @@ import (
 	_ "github.com/assetcloud/plugin/plugin/dapp/qbftNode"       //auto gen
 	_ "github.com/assetcloud/plugin/plugin/dapp/relay"          //auto gen
 	_ "github.com/assetcloud/plugin/plugin/dapp/retrieve"       //auto gen
+	_ "github.com/assetcloud/plugin/plugin/dapp/rollup"         //auto gen
 	_ "github.com/assetcloud/plugin/plugin/dapp/storage"        //auto gen
 	_ "github.com/assetcloud/plugin/plugin/dapp/ticket"         //auto gen
 	_ "github.com/assetcloud/plugin/plugin/dapp/token"          //auto gen

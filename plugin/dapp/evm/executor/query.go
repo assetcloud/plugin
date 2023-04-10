@@ -12,15 +12,15 @@ import (
 	"strings"
 	"sync/atomic"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/runtime"
+	"github.com/assetcloud/chain/executor"
 
 	"github.com/assetcloud/chain/common"
+	log "github.com/assetcloud/chain/common/log/log15"
 	"github.com/assetcloud/chain/types"
 	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
 	evmCommon "github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/model"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/runtime"
 	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 )
 
@@ -60,9 +60,9 @@ func (evm *EVMExecutor) Query_CheckAddrExists(in *evmtypes.CheckEVMAddrReq) (typ
 }
 
 // Query_EstimateGas 此方法用来估算合约消耗的Gas，不能修改原有执行器的状态数据
-// Query_EstimateGas 此方法用来估算合约消耗的Gas，不能修改原有执行器的状态数据
 func (evm *EVMExecutor) Query_EstimateGas(req *evmtypes.EstimateEVMGasReq) (types.Message, error) {
 	evm.CheckInit()
+
 	txBytes, err := hex.DecodeString(req.Tx)
 	if nil != err {
 		return nil, err
@@ -82,68 +82,70 @@ func (evm *EVMExecutor) Query_EstimateGas(req *evmtypes.EstimateEVMGasReq) (type
 	var lo uint64 = 21000
 	var hi uint64 = evmtypes.MaxGasLimit
 	var cap = hi
-	//get coins balance
-	if evm.mStateDB != nil && !evm.GetAPI().GetConfig().IsPara() {
-		fromBalance := evm.mStateDB.GetBalance(from.String())
-		if fromBalance-msg.Value() > 0 {
-			hi = fromBalance - msg.Value()
-			if hi > evmtypes.MaxGasLimit {
-				cap = hi
-			}
-
-		}
-	}
-
+	execAddr := evm.getEvmExecAddress()
 	// 创建EVM运行时对象
 	env := runtime.NewEVM(evm.NewEVMContext(msg, tx.Hash()), evm.mStateDB, *evm.vmCfg, evm.GetAPI().GetConfig())
-	isTransferOnly := strings.Compare(msg.To().String(), EvmAddress) == 0 && 0 == len(msg.Data())
+	isTransferOnly := strings.Compare(msg.To().String(), execAddr) == 0 && 0 == len(msg.Data())
 	//coins转账，para数据作为备注交易
-	isTransferNote := strings.Compare(msg.To().String(), EvmAddress) != 0 && !env.StateDB.Exist(msg.To().String()) && len(msg.Para()) > 0 && msg.Value() != 0
+	isTransferNote := strings.Compare(msg.To().String(), execAddr) != 0 && !env.StateDB.Exist(msg.To().String()) && len(msg.Para()) > 0 && msg.Value() != 0
 	//如果是普通转账或者带有备注的Coins 转账 则直接返回
 	if isTransferOnly || isTransferNote {
-
 		result := &evmtypes.EstimateEVMGasResp{}
 		result.Gas = lo
 		log.Info("Query_EstimateGas", "gas:", result.Gas, "isTransferOnly:", isTransferOnly, "isTransferNote:", isTransferNote)
 		return result, nil
 
 	}
+	var sigType int32 = 0
+	if req.GetEthquery() {
+		sigType = types.EncodeSignID(types.SECP256K1ETH, 2)
+	}
 
-	executable := func(evm *EVMExecutor, msg *evmCommon.Message, gas uint64) (bool, *evmtypes.EstimateEVMGasResp, error) {
+	executable := func(evm *EVMExecutor, tx *types.Transaction, msg *evmCommon.Message, gas uint64) (bool, *evmtypes.EstimateEVMGasResp, error) {
 		msg.SetGasLimit(gas)
-		receipt, err := evm.innerExec(msg, tx.Hash(), tx.GetSignature().GetTy(), index, evmtypes.MaxGasLimit, true)
+		index := 0
+		receipt, err := evm.innerExec(msg, tx.Hash(), sigType, index, evmtypes.MaxGasLimit, true)
 		if err != nil {
-			if strings.Contains(err.Error(), "out of gas") {
+			log.Info("Query_EstimateGas", "err:", err)
+			if strings.Contains(err.Error(), "out of gas") || strings.Contains(err.Error(), model.ErrIntrinsicGas.Error()) {
 				return false, nil, nil
 			}
-			return false, nil, err
-		}
+			//允许合约地址不存在的情况下，对evm data 数据进行gas估算
+			if !strings.Contains(err.Error(), model.ErrAddrNotExists.Error()) {
+				return false, nil, err
+			}
 
-		if receipt.Ty != types.ExecOk {
+		}
+		if receipt == nil || len(receipt.GetLogs()) == 0 {
+			log.Error("executable,contract call error", err.Error())
 			return false, nil, errors.New("contract call error")
 		}
+
 		callData := getCallReceipt(receipt.GetLogs())
 		if callData == nil {
 			return false, nil, errors.New("nil receipt")
 		}
-		log.Info("executable", "evm usedGas:", callData.UsedGas)
+
+		log.Info("executable", "evm usedGas:", callData.GetUsedGas(), "contractAddr:", callData.GetContractAddr())
 		result := &evmtypes.EstimateEVMGasResp{}
 		result.Gas = callData.UsedGas
+
 		return true, result, nil
 	}
-
 	var count int
-	//通过二分查找确定可执行的gaslimit.
 	for lo+1 < hi {
 		count++
-		evm.mStateDB.Snapshot()
-		snapID := evm.mStateDB.GetLastSnapshot().GetID()
 		mid := (hi + lo) / 2
 		log.Info("Query_EstimateGas", "[executable  count]:", count, "the last low gas:", lo, "the last high gas:", hi, "the mid gas:", mid)
 		// ok 设置的gas可以执行
-		ok, _, err := executable(evm, msg, mid)
+		snapID := evm.mStateDB.Snapshot()
+		ok, _, err := executable(evm, &tx, msg, mid)
 		evm.mStateDB.RevertToSnapshot(snapID)
-		if err != nil {
+		ldb := evm.mStateDB.LocalDB.(*executor.LocalDB)
+		ldb.ResetCache()
+		sdb := evm.mStateDB.StateDB.(*executor.StateDB)
+		sdb.ResetCache()
+		if err != nil && count == 1 { //第一次执行出错，停止估算
 			return nil, err
 		}
 		if !ok { //如果!ok 说明GaS 不够用，则把上一轮计算的mid gas 赋值给low gas, 进而提高mid gas 的值
@@ -151,12 +153,12 @@ func (evm *EVMExecutor) Query_EstimateGas(req *evmtypes.EstimateEVMGasReq) (type
 		} else { //如果ok,说明mid Gas 有较多余量，则把mid gas 赋值给hi 降低high gas 的值,进而压缩mid gas 的值
 			hi = mid
 		}
-
+		evm.CheckInit()
 	}
 	log.Info("Query_EstimateGas", "[complete,executable count]:", count, "the last low gas:", lo, "the last high gas:", hi)
 
 	if hi == cap {
-		ok, result, err := executable(evm, msg, hi)
+		ok, result, err := executable(evm, &tx, msg, hi)
 		if err != nil || !ok {
 			return nil, err
 		}
@@ -164,56 +166,10 @@ func (evm *EVMExecutor) Query_EstimateGas(req *evmtypes.EstimateEVMGasReq) (type
 	}
 
 	result := &evmtypes.EstimateEVMGasResp{}
-	result.Gas = quickFixGas(hi)
+	result.Gas = hi
 	log.Info("Query_EstimateGas", "gas:", result.Gas)
 	return result, nil
 
-}
-
-func quickFixGas(gas uint64) uint64 {
-  gas = gas * 12 / 10
-  if gas > evmtypes.MaxGasLimit {
-    gas = evmtypes.MaxGasLimit
-  }
-  return gas
-}
-
-func (evm *EVMExecutor) Query1_EstimateGas(req *evmtypes.EstimateEVMGasReq) (types.Message, error) {
-	evm.CheckInit()
-
-	txBytes, err := hex.DecodeString(req.Tx)
-	if nil != err {
-		return nil, err
-	}
-	var tx types.Transaction
-	err = types.Decode(txBytes, &tx)
-	if nil != err {
-		return nil, err
-	}
-
-	index := 0
-	from := evmCommon.StringToAddress(req.From)
-	msg, err := evm.GetMessage(&tx, index, from)
-	if err != nil {
-		return nil, err
-	}
-
-	msg.SetGasLimit(evmtypes.MaxGasLimit)
-	receipt, err := evm.innerExec(msg, tx.Hash(), tx.GetSignature().GetTy(), index, evmtypes.MaxGasLimit, true)
-	if err != nil {
-		return nil, err
-	}
-
-	if receipt.Ty != types.ExecOk {
-		return nil, errors.New("contract call error")
-	}
-	callData := getCallReceipt(receipt.GetLogs())
-	if callData == nil {
-		return nil, errors.New("nil receipt")
-	}
-	result := &evmtypes.EstimateEVMGasResp{}
-	result.Gas = callData.UsedGas
-	return result, nil
 }
 
 // 从日志中查找调用结果
@@ -278,22 +234,27 @@ func (evm *EVMExecutor) Query_Query(in *evmtypes.EvmQueryReq) (types.Message, er
 	} else {
 		caller = evmCommon.ExecAddress(cfg.ExecName(evmtypes.ExecutorName))
 	}
-
-	msg := evmCommon.NewMessage(caller, evmCommon.StringToAddress(in.Address), 0, 0, evmtypes.MaxGasLimit, 1, nil, evmCommon.FromHex(in.Input), "estimateGas")
+	log.Info("Query_Query", "caller", caller, "to:", in.Address, "isEthQuery:", in.GetEthquery())
+	msg := evmCommon.NewMessage(caller, evmCommon.StringToAddress(in.Address), 0, 0, evmtypes.MaxGasLimit, 1, nil, evmCommon.FromHex(in.Input), "")
 	txHash := evmCommon.BigToHash(big.NewInt(evmtypes.MaxGasLimit)).Bytes()
-
-	receipt, err := evm.innerExec(msg, txHash, 0, 1, evmtypes.MaxGasLimit, true)
+	var sigType int32 = 0
+	if in.GetEthquery() { // eth rpc 接口过来的请求
+		sigType = types.EncodeSignID(types.SECP256K1ETH, 2)
+	}
+	receipt, err := evm.innerExec(msg, txHash, sigType, 1, evmtypes.MaxGasLimit, true)
 	if err != nil {
 		ret.JsonData = fmt.Sprintf("%v", err)
 		return ret, nil
 	}
 	if receipt.Ty == types.ExecOk {
 		callData := getCallReceipt(receipt.GetLogs())
+
 		if callData != nil {
 			ret.RawData = evmCommon.Bytes2Hex(callData.Ret)
 			ret.JsonData = callData.JsonRet
 			return ret, nil
 		}
+
 	}
 	return ret, nil
 }

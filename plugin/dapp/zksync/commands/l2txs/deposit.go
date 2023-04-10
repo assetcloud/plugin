@@ -21,7 +21,7 @@ func sendDepositTxCmd() *cobra.Command {
 func sendDepositFlags(cmd *cobra.Command) {
 	cmd.Flags().Uint64P("tokenId", "t", 0, "eth token id")
 	_ = cmd.MarkFlagRequired("tokenId")
-	cmd.Flags().Int64P("queueId", "q", 0, "deposit queue id")
+	cmd.Flags().Int64P("queueId", "q", 0, "deposit priority queue id")
 	_ = cmd.MarkFlagRequired("queueId")
 	cmd.Flags().StringP("amount", "m", "0", "deposit amount")
 	_ = cmd.MarkFlagRequired("amount")
@@ -45,11 +45,11 @@ func sendDeposit(cmd *cobra.Command, args []string) {
 	paraName, _ := cmd.Flags().GetString("paraName")
 
 	deposit := &zksyncTypes.ZkDeposit{
-		TokenId:            tokenId,
-		Amount:             amount,
-		EthAddress:         ethAddress,
-		ChainAddr:        chainAddr,
-		EthPriorityQueueId: queueId,
+		TokenId:      tokenId,
+		Amount:       amount,
+		EthAddress:   ethAddress,
+		ChainAddr:  chainAddr,
+		L1PriorityId: queueId,
 	}
 
 	action := &zksyncTypes.ZksyncAction{
@@ -107,11 +107,11 @@ func batchSendDeposit(cmd *cobra.Command, args []string) {
 	paraName, _ := cmd.Flags().GetString("paraName")
 
 	deposit := &zksyncTypes.ZkDeposit{
-		TokenId:            tokenId,
-		Amount:             amount,
-		EthAddress:         ethAddress,
-		ChainAddr:        chainAddr,
-		EthPriorityQueueId: queueId,
+		TokenId:      tokenId,
+		Amount:       amount,
+		EthAddress:   ethAddress,
+		ChainAddr:  chainAddr,
+		L1PriorityId: queueId,
 	}
 
 	action := &zksyncTypes.ZksyncAction{
@@ -170,11 +170,11 @@ func sendManyDeposit(cmd *cobra.Command, args []string) {
 
 	for i := 0; i < len(toChainAddrs); i++ {
 		deposit := &zksyncTypes.ZkDeposit{
-			TokenId:            tokenId,
-			Amount:             amount,
-			EthAddress:         ethAddress,
-			ChainAddr:        toChainAddrs[i],
-			EthPriorityQueueId: queueId,
+			TokenId:      tokenId,
+			Amount:       amount,
+			EthAddress:   ethAddress,
+			ChainAddr:  toChainAddrs[i],
+			L1PriorityId: queueId,
 		}
 		queueId++
 

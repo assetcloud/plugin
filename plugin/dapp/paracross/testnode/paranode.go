@@ -3,6 +3,7 @@ package testnode
 import (
 	"github.com/assetcloud/chain/types"
 	"github.com/assetcloud/chain/util/testnode"
+	_ "github.com/assetcloud/plugin/plugin/mempool/init"
 )
 
 /*
@@ -24,7 +25,7 @@ func NewParaNode(main *testnode.ChainMock, para *testnode.ChainMock) *ParaNode {
 	}
 	if para == nil {
 		cfg := types.NewChainConfig(DefaultConfig)
-		testnode.ModifyParaClient(cfg, main.GetCfg().RPC.GrpcBindAddr)
+		cfg.GetModuleConfig().RPC.ParaChain.MainChainGrpcAddr = main.GetCfg().RPC.GrpcBindAddr
 		para = testnode.NewWithConfig(cfg, nil)
 		para.Listen()
 	}
