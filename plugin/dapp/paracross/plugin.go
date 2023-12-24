@@ -5,6 +5,7 @@
 package paracross
 
 import (
+	"github.com/assetcloud/chain/pluginmgr"
 	_ "github.com/assetcloud/plugin/plugin/crypto/bls"              // register bls package for ut usage
 	_ "github.com/assetcloud/plugin/plugin/dapp/paracross/autotest" // register autotest package
 	"github.com/assetcloud/plugin/plugin/dapp/paracross/commands"
@@ -12,7 +13,6 @@ import (
 	"github.com/assetcloud/plugin/plugin/dapp/paracross/rpc"
 	"github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	_ "github.com/assetcloud/plugin/plugin/dapp/paracross/wallet" // register wallet package
-	"github.com/assetcloud/chain/pluginmgr"
 )
 
 func init() {

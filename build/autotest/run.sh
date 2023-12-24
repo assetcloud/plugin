@@ -13,20 +13,20 @@ if [ "$(uname)" == "Darwin" ]; then
 fi
 
 ## get chain path
-CHAIN33_PATH=$(go list -f "{{.Dir}}" github.com/assetcloud/chain)
+CHAIN_PATH=$(go list -f "{{.Dir}}" github.com/assetcloud/chain)
 
 function build_auto_test() {
 
     trap "rm -f ../autotest/main.go" INT TERM EXIT
-    local AutoTestMain="${CHAIN33_PATH}/cmd/autotest/main.go"
+    local AutoTestMain="${CHAIN_PATH}/cmd/autotest/main.go"
     cp "${AutoTestMain}" ./
-    sed -i $sedfix '/^package/a import _ \"github.com\/33cn\/plugin\/plugin\"' main.go
+    sed -i $sedfix '/^package/a import _ \"github.com\/assetcloud\/plugin\/plugin\"' main.go
     go build -v -i -o autotest
 }
 
 function copyAutoTestConfig() {
 
-    declare -a ChainAutoTestDirs=("${CHAIN33_PATH}/system" "../../plugin")
+    declare -a ChainAutoTestDirs=("${CHAIN_PATH}/system" "../../plugin")
     echo "#copy auto test config to path \"$1\""
     local AutoTestConfigFile="$1/autotest.toml"
 
@@ -73,7 +73,7 @@ function copyChain() {
 
     echo "# copy chain bin to path \"$1\", make sure build chain"
     cp ../chain ../chain-cli ../chain.toml "$1"
-    cp "${CHAIN33_PATH}"/cmd/chain/chain.test.toml "$1"
+    cp "${CHAIN_PATH}"/cmd/chain/chain.test.toml "$1"
 }
 
 function copyAll() {
@@ -97,7 +97,7 @@ function main() {
         dir="$1"
         echo "$dir"
         rm -rf ../autotest/"$dir" && mkdir "$dir"
-        cp -r "$CHAIN33_PATH"/build/autotest/"$dir"/* ./"$dir"/ && copyAll "$dir"
+        cp -r "$CHAIN_PATH"/build/autotest/"$dir"/* ./"$dir"/ && copyAll "$dir"
         chmod -R 755 "$dir" && cd "$dir" && ./autotest.sh "${@:2}" && cd ../
     fi
 }

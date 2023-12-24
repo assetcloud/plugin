@@ -19,7 +19,6 @@ import (
 /*
 1. verify(zk-proof)
 2. check if exist in authorize pool and nullifier pool
-
 */
 func transferInput(cfg *types.ChainConfig, db dbm.KV, execer, symbol string, proof *mixTy.ZkProofInfo) (*mixTy.TransferInputCircuit, error) {
 	var input mixTy.TransferInputCircuit
@@ -58,7 +57,6 @@ func transferInput(cfg *types.ChainConfig, db dbm.KV, execer, symbol string, pro
 /*
 1. verify(zk-proof)
 2. check if exist in authorize pool and nullifier pool
-
 */
 func transferOutputVerify(cfg *types.ChainConfig, db dbm.KV, proof *mixTy.ZkProofInfo) (*mixTy.TransferOutputCircuit, error) {
 	var input mixTy.TransferOutputCircuit
@@ -159,7 +157,7 @@ func MixTransferInfoVerify(cfg *types.ChainConfig, db dbm.KV, transfer *mixTy.Mi
 	return inputs, outputs, nil
 }
 
-//1. 如果
+// 1. 如果
 func (a *action) processTransferFee(exec, symbol string) (*types.Receipt, error) {
 	cfg := a.api.GetConfig()
 	accoutDb, err := createAccount(cfg, exec, symbol, a.db)

@@ -19,7 +19,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-//NewProphecyClaimPara ...
+// NewProphecyClaimPara ...
 type NewProphecyClaimPara struct {
 	ClaimType   uint8
 	ChainSender []byte
@@ -30,7 +30,7 @@ type NewProphecyClaimPara struct {
 	Txhash      []byte
 }
 
-//Burn ...
+// Burn ...
 func Burn(ownerPrivateKeyStr, tokenAddrstr, chainReceiver string, bridgeBank common.Address, amount *big.Int,
 	bridgeBankIns *generated.BridgeBank, client ethinterface.EthClientSpec, addr2TxNonce map[common.Address]*NonceMutex, providerHttp string) (string, error) {
 	ownerPrivateKey, err := crypto.ToECDSA(common.FromHex(ownerPrivateKeyStr))
@@ -96,7 +96,7 @@ func Burn(ownerPrivateKeyStr, tokenAddrstr, chainReceiver string, bridgeBank com
 	return tx.Hash().String(), nil
 }
 
-//BurnAsync ...
+// BurnAsync ...
 func BurnAsync(ownerPrivateKeyStr, tokenAddrstr, chainReceiver string, amount *big.Int, bridgeBankIns *generated.BridgeBank,
 	client ethinterface.EthClientSpec, addr2TxNonce map[common.Address]*NonceMutex) (string, error) {
 	ownerPrivateKey, err := crypto.ToECDSA(common.FromHex(ownerPrivateKeyStr))
@@ -134,7 +134,7 @@ func BurnAsync(ownerPrivateKeyStr, tokenAddrstr, chainReceiver string, amount *b
 	return tx.Hash().String(), nil
 }
 
-//TransferToken ...
+// TransferToken ...
 func TransferToken(tokenAddr, fromPrivateKeyStr, toAddr string, amount *big.Int, client ethinterface.EthClientSpec, addr2TxNonce map[common.Address]*NonceMutex, providerHttp string) (string, error) {
 	tokenInstance, err := generated.NewBridgeToken(common.HexToAddress(tokenAddr), client)
 	if nil != err {
@@ -238,7 +238,7 @@ func TransferEth(fromPrivateKeyStr, toAddr string, amount *big.Int, client ethin
 	return signedTx.Hash().String(), nil
 }
 
-//LockEthErc20Asset ...
+// LockEthErc20Asset ...
 func LockEthErc20Asset(ownerPrivateKeyStr, tokenAddrStr, chainReceiver string, amount *big.Int, client ethinterface.EthClientSpec, bridgeBank *generated.BridgeBank, bridgeBankAddr common.Address, addr2TxNonce map[common.Address]*NonceMutex, providerHttp string) (string, error) {
 	var prepareDone bool
 	txslog.Info("LockEthErc20Asset", "ownerPrivateKeyStr", ownerPrivateKeyStr, "tokenAddrStr", tokenAddrStr, "chainReceiver", chainReceiver, "amount", amount.String())
@@ -317,7 +317,7 @@ func LockEthErc20Asset(ownerPrivateKeyStr, tokenAddrStr, chainReceiver string, a
 	return tx.Hash().String(), nil
 }
 
-//LockEthErc20AssetAsync ...
+// LockEthErc20AssetAsync ...
 func LockEthErc20AssetAsync(ownerPrivateKeyStr, tokenAddrStr, chainReceiver string, amount *big.Int, client ethinterface.EthClientSpec, bridgeBank *generated.BridgeBank, addr2TxNonce map[common.Address]*NonceMutex) (string, error) {
 	txslog.Info("LockEthErc20AssetAsync", "ownerPrivateKeyStr", ownerPrivateKeyStr, "tokenAddrStr", tokenAddrStr, "chainReceiver", chainReceiver, "amount", amount.String())
 	ownerPrivateKey, err := crypto.ToECDSA(common.FromHex(ownerPrivateKeyStr))

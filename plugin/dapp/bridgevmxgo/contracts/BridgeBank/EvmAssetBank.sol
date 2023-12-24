@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 import "../../openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./BridgeToken.sol";
 
-  /*
+/*
    *  @title: EvmAssetBank
    *  @dev: EvmAsset bank which locks Chain/ERC20 token deposits, and unlocks
    *        Chain/ERC20 tokens once the prophecy has been successfully processed.
@@ -11,7 +11,6 @@ import "./BridgeToken.sol";
    *       当emv资产从go合约进行提币时，用于解锁资产;
    */
 contract EvmAssetBank {
-
     using SafeMath for uint256;
 
     address payable public offlineSave;
@@ -19,7 +18,7 @@ contract EvmAssetBank {
     mapping(address => uint256) public lockedFunds;
     mapping(bytes32 => address) public tokenAllow2Lock;
     mapping(address => OfflineSaveCfg) public offlineSaveCfgs;
-    uint8 public lowThreshold  = 5;
+    uint8 public lowThreshold = 5;
     uint8 public highThreshold = 80;
 
     struct OfflineSaveCfg {
@@ -32,70 +31,40 @@ contract EvmAssetBank {
     /*
     * @dev: Event declarations
     */
-    event LogLock(
-        address _from,
-        address _to,
-        address _token,
-        string _symbol,
-        uint256 _value,
-        uint256 _nonce
-    );
+    event LogLock(address _from, address _to, address _token, string _symbol, uint256 _value, uint256 _nonce);
 
-    event LogUnlock(
-        address _to,
-        address _token,
-        string _symbol,
-        uint256 _value
-    );
+    event LogUnlock(address _to, address _token, string _symbol, uint256 _value);
 
     /*
     * @dev: Modifier declarations
     */
 
-    modifier hasLockedFunds(
-        address _token,
-        uint256 _amount
-    ) {
-        require(
-            lockedFunds[_token] >= _amount,
-            "The Bank does not hold enough locked tokens to fulfill this request."
-        );
+    modifier hasLockedFunds(address _token, uint256 _amount) {
+        require(lockedFunds[_token] >= _amount, "The Bank does not hold enough locked tokens to fulfill this request.");
         _;
     }
 
-    modifier canDeliver(
-        address _token,
-        uint256 _amount
-    )
-    {
-        if(_token == address(0)) {
-            require(
-                address(this).balance >= _amount,
-                'Insufficient Chain balance for delivery.'
-            );
+    modifier canDeliver(address _token, uint256 _amount) {
+        if (_token == address(0)) {
+            require(address(this).balance >= _amount, "Insufficient Chain balance for delivery.");
         } else {
             require(
                 BridgeToken(_token).balanceOf(address(this)) >= _amount,
-                'Insufficient ERC20 token balance for delivery.'
+                "Insufficient ERC20 token balance for delivery."
             );
         }
         _;
     }
 
     modifier availableNonce() {
-        require(
-            lockNonce + 1 > lockNonce,
-            'No available nonces.'
-        );
+        require(lockNonce + 1 > lockNonce, "No available nonces.");
         _;
     }
 
     /*
     * @dev: Constructor which sets the lock nonce
     */
-    constructor()
-        public
-    {
+    constructor() public {
         lockNonce = 0;
     }
 
@@ -106,15 +75,10 @@ contract EvmAssetBank {
      * @param _token: token contract address
      * @param _symbol: token symbol
      */
-    function addToken2AllowLock(
-        address _token,
-        string memory _symbol
-    )
-    internal
-    {
+    function addToken2AllowLock(address _token, string memory _symbol) internal {
         bytes32 symHash = keccak256(abi.encodePacked(_symbol));
         address tokenQuery = tokenAllow2Lock[symHash];
-        require(tokenQuery == address(0), 'The token with the same symbol has been added to lock allow list already.');
+        require(tokenQuery == address(0), "The token with the same symbol has been added to lock allow list already.");
         tokenAllow2Lock[symHash] = _token;
     }
 
@@ -125,8 +89,7 @@ contract EvmAssetBank {
       * @param _symbol: token symbol
      */
 
-    function getLockedTokenAddress(string memory _symbol) public view returns(address)
-    {
+    function getLockedTokenAddress(string memory _symbol) public view returns (address) {
         bytes32 symHash = keccak256(abi.encodePacked(_symbol));
         return tokenAllow2Lock[symHash];
     }
@@ -140,24 +103,14 @@ contract EvmAssetBank {
     * @param _threshold: _threshold to trigger transfer
     * @param _percents: amount to transfer per percents of threshold
     */
-    function configOfflineSave4Lock(
-        address _token,
-        string memory _symbol,
-        uint256 _threshold,
-        uint8 _percents
-    )
-    internal
+    function configOfflineSave4Lock(address _token, string memory _symbol, uint256 _threshold, uint8 _percents)
+        internal
     {
         require(
             _percents >= lowThreshold && _percents <= highThreshold,
             "The percents to trigger should within range [5, 80]"
         );
-        OfflineSaveCfg memory offlineSaveCfg = OfflineSaveCfg(
-            _token,
-            _symbol,
-            _threshold,
-            _percents
-        );
+        OfflineSaveCfg memory offlineSaveCfg = OfflineSaveCfg(_token, _symbol, _threshold, _percents);
         offlineSaveCfgs[_token] = offlineSaveCfg;
     }
 
@@ -167,9 +120,8 @@ contract EvmAssetBank {
       * @param _token: token contract address
      */
 
-    function getofflineSaveCfg(address _token) public view returns(uint256, uint8)
-    {
-        OfflineSaveCfg memory offlineSaveCfg =  offlineSaveCfgs[_token];
+    function getofflineSaveCfg(address _token) public view returns (uint256, uint8) {
+        OfflineSaveCfg memory offlineSaveCfg = offlineSaveCfgs[_token];
         return (offlineSaveCfg._threshold, offlineSaveCfg._percents);
     }
 
@@ -187,23 +139,14 @@ contract EvmAssetBank {
         address _token,
         string memory _symbol,
         uint256 _amount
-    )
-        internal
-    {
+    ) internal {
         // Incerment the lock nonce
         lockNonce = lockNonce.add(1);
-        
+
         // Increment locked funds by the amount of tokens to be locked
         lockedFunds[_token] = lockedFunds[_token].add(_amount);
 
-         emit LogLock(
-            _sender,
-            _recipient,
-            _token,
-            _symbol,
-            _amount,
-            lockNonce
-        );
+        emit LogLock(_sender, _recipient, _token, _symbol, _amount, lockNonce);
 
         if (address(0) == offlineSave) {
             return;
@@ -221,7 +164,7 @@ contract EvmAssetBank {
         if (offlineSaveCfg._percents < lowThreshold) {
             return;
         }
-        if (balance < offlineSaveCfg._threshold ) {
+        if (balance < offlineSaveCfg._threshold) {
             return;
         }
         uint256 amount = offlineSaveCfg._percents * balance / 100;
@@ -229,7 +172,9 @@ contract EvmAssetBank {
         if (address(0) == _token) {
             offlineSave.transfer(amount);
         } else {
-            require(BridgeToken(_token).transfer(offlineSave, amount), "Erc20 Token Transfer to offline Save account failed");
+            require(
+                BridgeToken(_token).transfer(offlineSave, amount), "Erc20 Token Transfer to offline Save account failed"
+            );
         }
     }
 
@@ -242,32 +187,17 @@ contract EvmAssetBank {
     * @param _symbol: token symbol
     * @param _amount: wei amount or ERC20 token count
     */
-    function unlockFunds(
-        address payable _recipient,
-        address _token,
-        string memory _symbol,
-        uint256 _amount
-    )
-        internal
-    {
+    function unlockFunds(address payable _recipient, address _token, string memory _symbol, uint256 _amount) internal {
         // Decrement locked funds mapping by the amount of tokens to be unlocked
         lockedFunds[_token] = lockedFunds[_token].sub(_amount);
 
         // Transfer funds to intended recipient
         if (_token == address(0)) {
-          _recipient.transfer(_amount);
+            _recipient.transfer(_amount);
         } else {
-            require(
-                BridgeToken(_token).transfer(_recipient, _amount),
-                "Token transfer failed"
-            );
+            require(BridgeToken(_token).transfer(_recipient, _amount), "Token transfer failed");
         }
 
-        emit LogUnlock(
-            _recipient,
-            _token,
-            _symbol,
-            _amount
-        );
+        emit LogUnlock(_recipient, _token, _symbol, _amount);
     }
 }

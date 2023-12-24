@@ -120,7 +120,7 @@ func (s *suiteRelay) testExecDelLocal(tx *types.Transaction, receipt *types.Rece
 	s.Subset(set.KV, kv)
 }
 
-//create sell
+// create sell
 func (s *suiteRelay) TestExec_1() {
 	order := &ty.RelayCreate{
 		Operation:       ty.RelayOrderSell,
@@ -167,7 +167,7 @@ func (s *suiteRelay) TestExec_1() {
 
 }
 
-//accept
+// accept
 func (s *suiteRelay) TestExec_2() {
 	order := &ty.RelayAccept{
 		OrderId: s.orderID,
@@ -204,7 +204,7 @@ func (s *suiteRelay) TestExec_2() {
 
 }
 
-//confirm
+// confirm
 func (s *suiteRelay) TestExec_3() {
 
 	order := &ty.RelayConfirmTx{
@@ -438,7 +438,7 @@ func (s *suiteBtcHeader) testExecBtcHeadDelLocal(tx *types.Transaction, receipt 
 	s.Subset(set.KV, kv)
 }
 
-//rcv btchead
+// rcv btchead
 func (s *suiteBtcHeader) TestSaveBtcHead_1() {
 	head0 := &ty.BtcHeader{
 		Hash:          "5e7d9c599cd040ec2ba53f4dee28028710be8c135e779f65c56feadaae34c3f2",

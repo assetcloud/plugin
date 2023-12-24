@@ -15,12 +15,12 @@ import (
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	"github.com/assetcloud/chain/types"
 
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	"github.com/spf13/cobra"
 )
 
-//ParcCmd paracross cmd register
+// ParcCmd paracross cmd register
 func MixCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "mix",

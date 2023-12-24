@@ -5,10 +5,10 @@
 package executor
 
 import (
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/common/db/table"
 	"github.com/assetcloud/chain/system/dapp"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 func (e *Paracross) execAutoLocalStage(tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {

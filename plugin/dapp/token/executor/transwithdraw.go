@@ -5,12 +5,12 @@
 package executor
 
 import (
-	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/assetcloud/chain/account"
 	"github.com/assetcloud/chain/common/address"
 	dbm "github.com/assetcloud/chain/common/db"
 	drivers "github.com/assetcloud/chain/system/dapp"
 	"github.com/assetcloud/chain/types"
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 )
 
 func (t *token) ExecTransWithdraw(accountDB *account.DB, tx *types.Transaction, action *tokenty.TokenAction, index int) (*types.Receipt, error) {

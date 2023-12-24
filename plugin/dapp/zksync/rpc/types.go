@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 )
 
 /*

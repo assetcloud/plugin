@@ -7,12 +7,12 @@ package rpc_test
 import (
 	"testing"
 
-	_ "github.com/assetcloud/plugin/plugin"
-	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	_ "github.com/assetcloud/chain/system"
 	"github.com/assetcloud/chain/types"
 	"github.com/assetcloud/chain/util"
 	"github.com/assetcloud/chain/util/testnode"
+	_ "github.com/assetcloud/plugin/plugin"
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -6,12 +6,12 @@
 package token
 
 import (
+	"github.com/assetcloud/chain/pluginmgr"
 	_ "github.com/assetcloud/plugin/plugin/dapp/token/autotest" // register token autotest package
 	"github.com/assetcloud/plugin/plugin/dapp/token/commands"
 	"github.com/assetcloud/plugin/plugin/dapp/token/executor"
 	"github.com/assetcloud/plugin/plugin/dapp/token/rpc"
 	"github.com/assetcloud/plugin/plugin/dapp/token/types"
-	"github.com/assetcloud/chain/pluginmgr"
 )
 
 func init() {

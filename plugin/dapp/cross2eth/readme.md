@@ -1,15 +1,16 @@
-# 一、 chain与以太坊跨链系统
+# 一、 chain 与以太坊跨链系统
 
-1.中心化服务relayer(由多个中继器进行协同工作，一般由4个中继器组成)
+1.中心化服务 relayer(由多个中继器进行协同工作，一般由 4 个中继器组成)
 
-2.运行在以太坊上的合约contract4eth,其中包括多签离线钱包合约(gnosis)
+2.运行在以太坊上的合约 contract4eth,其中包括多签离线钱包合约(gnosis)
 
-3.运行在chain上的合约contract4chain,其中包括多签离线钱包合约(gnosis)
+3.运行在 chain 上的合约 contract4chain,其中包括多签离线钱包合约(gnosis)
 
 # 二、去中心化交易功能
+
 1.在以太坊上的部署工具
 
-2.在chain上的部署工具
+2.在 chain 上的部署工具
 
 ### 运行环境
 
@@ -18,6 +19,4 @@
 
 ```
 
-#### 支持make file的平台
-
-
+#### 支持 make file 的平台

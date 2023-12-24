@@ -10,15 +10,18 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strings"
 	"time"
+
+	"github.com/assetcloud/chain/common"
 
 	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/pkg/errors"
 
-	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
 	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 	"github.com/spf13/cobra"
 )
 
@@ -112,6 +115,9 @@ func bindMiner(cmd *cobra.Command, args []string) {
 	//a, _ := common.FromHex(key)
 	//privKey, _ := c.PrivKeyFromBytes(a)
 	//originAddr := account.PubKeyToAddress(privKey.PubKey().Bytes()).String()
+	if common.IsHex(originAddr) {
+		originAddr = strings.ToLower(originAddr)
+	}
 	ta := &ty.TicketAction{}
 	tBind := &ty.TicketBind{
 		MinerAddress:  bindAddr,

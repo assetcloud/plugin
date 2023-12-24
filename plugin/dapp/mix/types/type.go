@@ -27,13 +27,13 @@ func init() {
 
 }
 
-//InitFork ...
+// InitFork ...
 func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(MixX, "Enable", 0)
 
 }
 
-//InitExecutor ...
+// InitExecutor ...
 func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(MixX, NewType(cfg))
 }

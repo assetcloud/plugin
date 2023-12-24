@@ -3,9 +3,9 @@ package client_test
 import (
 	"testing"
 
+	"github.com/assetcloud/chain/types"
 	excli "github.com/assetcloud/plugin/plugin/dapp/exchange/client"
 	etypes "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
-	"github.com/assetcloud/chain/types"
 )
 
 var (

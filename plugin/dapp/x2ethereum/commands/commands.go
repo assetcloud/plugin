@@ -8,8 +8,8 @@ import (
 
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	types2 "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/system/dapp/commands"
 	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
 	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebcli/buildflags"
 	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
 	types3 "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
@@ -48,7 +48,7 @@ func Cmd() *cobra.Command {
 	return cmd
 }
 
-//CreateRawWithdrawChainTxCmd Burn
+// CreateRawWithdrawChainTxCmd Burn
 func CreateRawWithdrawChainTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "burn",
@@ -104,7 +104,7 @@ func burn(cmd *cobra.Command, args []string) {
 	createTx(cmd, payLoad, types3.NameWithdrawChainAction)
 }
 
-//CreateRawChainToEthTxCmd Lock
+// CreateRawChainToEthTxCmd Lock
 func CreateRawChainToEthTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "lock",
@@ -148,7 +148,7 @@ func lock(cmd *cobra.Command, args []string) {
 	createTx(cmd, payLoad, types3.NameChainToEthAction)
 }
 
-//CreateTransferCmd Transfer
+// CreateTransferCmd Transfer
 func CreateTransferCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "transfer",
@@ -234,7 +234,7 @@ func createTokenWithdraw(cmd *cobra.Command, args []string) {
 	commands.CreateAssetWithdraw(cmd, args, types3.X2ethereumX)
 }
 
-//CreateRawAddValidatorTxCmd AddValidator
+// CreateRawAddValidatorTxCmd AddValidator
 func CreateRawAddValidatorTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add",
@@ -267,7 +267,7 @@ func addValidator(cmd *cobra.Command, args []string) {
 	createTx(cmd, payLoad, types3.NameAddValidatorAction)
 }
 
-//CreateRawRemoveValidatorTxCmd RemoveValidator
+// CreateRawRemoveValidatorTxCmd RemoveValidator
 func CreateRawRemoveValidatorTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove",
@@ -291,7 +291,7 @@ func removeValidator(cmd *cobra.Command, args []string) {
 	createTx(cmd, payLoad, types3.NameRemoveValidatorAction)
 }
 
-//CreateRawModifyValidatorTxCmd ModifyValidator
+// CreateRawModifyValidatorTxCmd ModifyValidator
 func CreateRawModifyValidatorTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "modify",
@@ -320,7 +320,7 @@ func modify(cmd *cobra.Command, args []string) {
 	createTx(cmd, payLoad, types3.NameModifyPowerAction)
 }
 
-//CreateRawSetConsensusTxCmd MsgSetConsensusNeeded
+// CreateRawSetConsensusTxCmd MsgSetConsensusNeeded
 func CreateRawSetConsensusTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "setconsensus",

@@ -19,7 +19,8 @@ import (
 )
 
 // RelayLockToChain : RelayLockToChain applies validator's signature to an EthBridgeClaim message
-//		containing information about an event on the Ethereum blockchain before relaying to the Bridge
+//
+//	containing information about an event on the Ethereum blockchain before relaying to the Bridge
 func RelayLockToChain(privateKey chainCrypto.PrivKey, claim *ebrelayerTypes.EthBridgeClaim, rpcURL string) (string, error) {
 	var res string
 
@@ -76,7 +77,7 @@ func RelayLockToChain(privateKey chainCrypto.PrivKey, claim *ebrelayerTypes.EthB
 	return txhash, err
 }
 
-//RelayBurnToChain ...
+// RelayBurnToChain ...
 func RelayBurnToChain(privateKey chainCrypto.PrivKey, claim *ebrelayerTypes.EthBridgeClaim, rpcURL string) (string, error) {
 	var res string
 

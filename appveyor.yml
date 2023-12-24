@@ -1,6 +1,5 @@
 version: "{build}"
 
-
 #init:
 #  - git config --global core.autocrlf input
 
@@ -10,19 +9,17 @@ os: Visual Studio 2019
 
 build: off
 
-clone_folder: c:\gopath\src\github.com\33cn\plugin
+clone_folder: c:\gopath\src\github.com\assetcloud\plugin
 
 environment:
   GOPATH: c:\gopath
 
-
 # set go version
 before_test:
-  - set PATH=C:\go116\bin;%PATH%
-  - set GOROOT=C:\go116
+  - set PATH=C:\go119\bin;%PATH%
+  - set GOROOT=C:\go119
   - go version
   - go env
-
 
 test_script:
   - build.bat

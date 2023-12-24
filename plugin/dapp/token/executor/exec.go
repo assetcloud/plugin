@@ -5,9 +5,9 @@
 package executor
 
 import (
-	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/assetcloud/chain/account"
 	"github.com/assetcloud/chain/types"
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 )
 
 func (t *token) Exec_Transfer(payload *types.AssetsTransfer, tx *types.Transaction, index int) (*types.Receipt, error) {

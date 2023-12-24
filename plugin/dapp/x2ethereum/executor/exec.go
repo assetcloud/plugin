@@ -29,7 +29,7 @@ func (x *x2ethereum) Exec_Eth2ChainLock(payload *x2eTy.Eth2Chain, tx *types.Tran
 	return action.procEth2Chain_lock(payload)
 }
 
-//----------------  Chain(eth/erc20)------> Ethereum -------------------//
+// ----------------  Chain(eth/erc20)------> Ethereum -------------------//
 // 在chain端将铸的币销毁，返还给eth
 func (x *x2ethereum) Exec_ChainToEthBurn(payload *x2eTy.ChainToEth, tx *types.Transaction, index int) (*types.Receipt, error) {
 	action := newAction(x, tx, int32(index))
@@ -39,7 +39,7 @@ func (x *x2ethereum) Exec_ChainToEthBurn(payload *x2eTy.ChainToEth, tx *types.Tr
 	return action.procChainToEth_burn(payload)
 }
 
-//---------------- Ethereum (bty) --> Chain-------------------//
+// ---------------- Ethereum (bty) --> Chain-------------------//
 // 在eth端将铸的bty币销毁，返还给chain
 func (x *x2ethereum) Exec_Eth2ChainBurn(payload *x2eTy.Eth2Chain, tx *types.Transaction, index int) (*types.Receipt, error) {
 	action := newAction(x, tx, int32(index))
@@ -52,7 +52,7 @@ func (x *x2ethereum) Exec_Eth2ChainBurn(payload *x2eTy.Eth2Chain, tx *types.Tran
 	return action.procEth2Chain_burn(payload)
 }
 
-//---------------- Chain --> Ethereum (bty) -------------------//
+// ---------------- Chain --> Ethereum (bty) -------------------//
 // 在 ethereum 上为 chain 铸币
 func (x *x2ethereum) Exec_ChainToEthLock(payload *x2eTy.ChainToEth, tx *types.Transaction, index int) (*types.Receipt, error) {
 	action := newAction(x, tx, int32(index))

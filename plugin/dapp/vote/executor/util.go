@@ -1,9 +1,9 @@
 package executor
 
 import (
-	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	"github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 )
 
 const (

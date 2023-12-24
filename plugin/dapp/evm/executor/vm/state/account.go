@@ -7,11 +7,11 @@ package state
 import (
 	"fmt"
 
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
-	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	"github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/common/log/log15"
 	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -59,7 +59,7 @@ func (ca *ContractAccount) GetState(key common.Hash) common.Hash {
 		// 如果缓存中取不到数据，则只能到本地数据库中查询
 		val, err := ca.mdb.LocalDB.Get([]byte(keyStr))
 		if err != nil {
-			log15.Debug("GetState error!", "key", key, "error", err)
+			//log15.Debug("GetState error!", "key", key, "error", err)
 			return common.Hash{}
 		}
 		valHash := common.BytesToHash(val)

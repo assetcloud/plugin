@@ -5,8 +5,8 @@ import (
 
 	"github.com/assetcloud/plugin/plugin/dapp/paracross/executor/minerrewards"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 func (a *action) rewardSuperNode(coinReward int64, miners []string, statusHeight int64) (*types.Receipt, int64, error) {
@@ -39,7 +39,7 @@ func (a *action) rewardDeposit(rewards []*pt.ParaMinerReward, statusHeight int64
 	return receipt, nil
 }
 
-//奖励委托挖矿账户
+// 奖励委托挖矿账户
 func (a *action) rewardBindAddr(coinReward int64, nodes []string, bindNodeList map[string][]*pt.ParaBindMinerInfo, statusHeight int64) (*types.Receipt, int64, error) {
 	if coinReward <= 0 || len(bindNodeList) <= 0 {
 		return nil, 0, nil

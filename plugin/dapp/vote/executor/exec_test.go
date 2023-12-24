@@ -3,8 +3,8 @@ package executor
 import (
 	"testing"
 
-	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	"github.com/assetcloud/chain/system/dapp"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 
 	"github.com/assetcloud/chain/common/crypto"
 	"github.com/assetcloud/chain/types"

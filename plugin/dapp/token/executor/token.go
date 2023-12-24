@@ -14,6 +14,8 @@ token执行器支持token的创建，
 */
 
 import (
+	"bytes"
+
 	"github.com/assetcloud/chain/account"
 	"github.com/assetcloud/chain/common/address"
 	log "github.com/assetcloud/chain/common/log/log15"
@@ -35,7 +37,8 @@ const (
 var driverName = "token"
 
 type subConfig struct {
-	SaveTokenTxList bool `json:"saveTokenTxList"`
+	SaveTokenTxList bool     `json:"saveTokenTxList"`
+	FriendExecer    []string `json:"friendExecer,omitempty"`
 }
 
 var subCfg subConfig
@@ -49,7 +52,7 @@ func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	InitExecType()
 }
 
-//InitExecType ...
+// InitExecType ...
 func InitExecType() {
 	ety := types.LoadExecutorType(driverName)
 	ety.InitFuncList(types.ListMethod(&token{}))
@@ -79,6 +82,25 @@ func (t *token) GetDriverName() string {
 // CheckTx ...
 func (t *token) CheckTx(tx *types.Transaction, index int) error {
 	return nil
+}
+
+func (t *token) IsFriend(myexec, writekey []byte, othertx *types.Transaction) bool {
+	cfg := t.GetAPI().GetConfig()
+	if cfg.IsDappFork(t.GetHeight(), t.GetDriverName(), tokenty.ForkTokenEvm) {
+		for _, friendExec := range subCfg.FriendExecer {
+			if cfg.ExecName(friendExec) == string(othertx.Execer) {
+				if bytes.HasPrefix(writekey, []byte("mavl-token-")) {
+					//TODO check tokenSymbol
+					/*if friendExec == "evm" {
+						keyTokenSymbol := strings.Split(string(writekey), "=")[2]
+					}*/
+					return true
+				}
+			}
+		}
+	}
+
+	return false
 }
 
 func (t *token) queryTokenAssetsKey(addr string) (*types.ReplyStrings, error) {

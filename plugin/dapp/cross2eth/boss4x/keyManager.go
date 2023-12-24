@@ -123,7 +123,7 @@ func addShowKeyFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("key")
 }
 
-//Address:    crypto.PubkeyToAddress(privateKeyECDSA.PublicKey),
+// Address:    crypto.PubkeyToAddress(privateKeyECDSA.PublicKey),
 func showEtheremKey(cmd *cobra.Command, _ []string) {
 	key, _ := cmd.Flags().GetString("key")
 	privateKeySlice, err := chainCommon.FromHex(key)

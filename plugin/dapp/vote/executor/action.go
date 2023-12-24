@@ -5,9 +5,9 @@ import (
 
 	"github.com/assetcloud/chain/system/dapp"
 
-	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	dbm "github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 )
 
 type action struct {

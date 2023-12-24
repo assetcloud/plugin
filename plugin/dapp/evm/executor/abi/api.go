@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 	"github.com/golang-collections/collections/stack"
 )
 
@@ -116,6 +116,7 @@ func Unpack(data []byte, methodName, abiData string) (output []*Param, err error
 		log.Info("Unpack", "Data len", 0, "methodName", methodName)
 		return output, err
 	}
+
 	// 解析ABI数据结构，获取本次调用的方法对象
 	abi, err := JSON(strings.NewReader(abiData))
 	if err != nil {
@@ -136,7 +137,6 @@ func Unpack(data []byte, methodName, abiData string) (output []*Param, err error
 	if err != nil {
 		return output, err
 	}
-
 	output = []*Param{}
 
 	for i, v := range values {
@@ -146,14 +146,13 @@ func Unpack(data []byte, methodName, abiData string) (output []*Param, err error
 			pval.Value = v.(common.Hash160Address).ToAddress().String()
 			log.Info("Unpack address", "address", pval.Value)
 		}
-
 		output = append(output, pval)
 	}
 
 	return
 }
 
-//同时支持input,output和event三种数据的unpack
+// 同时支持input,output和event三种数据的unpack
 func UnpackAllTypes(data []byte, name, abiData string) (output []*Param, err error) {
 	if len(data) == 0 {
 		log.Info("Unpack", "Data len", 0, "name", name)

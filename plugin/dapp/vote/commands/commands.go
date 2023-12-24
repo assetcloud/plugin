@@ -2,10 +2,10 @@
 package commands
 
 import (
-	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
 	"github.com/assetcloud/chain/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	"github.com/spf13/cobra"
 )
 

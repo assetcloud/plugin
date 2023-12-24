@@ -2,11 +2,13 @@ package executor
 
 import (
 	"fmt"
+	"hash"
 	"math/big"
 
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 
 	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/db/table"
 	"github.com/assetcloud/chain/types"
 	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/merkletree"
 	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
@@ -16,58 +18,89 @@ import (
 
 // TreeUpdateInfo 更新信息，用于查询
 type TreeUpdateInfo struct {
-	updateMap map[string][]byte
-	kvs       []*types.KeyValue
-	localKvs  []*types.KeyValue
+	updateMap    map[string][]byte
+	kvs          []*types.KeyValue
+	localKvs     []*types.KeyValue
+	accountTable *table.Table
 }
 
-// NewAccountTree 生成账户树，同时生成1号账户
-func NewAccountTree(localdb dbm.KV) ([]*types.KeyValue, []*types.KeyValue) {
-	var kvs []*types.KeyValue
-	//todo 从配置文件读取
-	leaf := &zt.Leaf{
-		EthAddress: "980818135352849559554652468538757099471386586455",
-		AccountId:  1,
-		ChainAddr:  "20033148478649779061292402960935477249437023394422514689332944628159941947226",
-		TokenHash:  "0",
-		PubKey: &zt.ZkPubKey{
-			X: "14100288826287343691225102305171330918997717795915902072008127148547196365751",
-			Y: "13575378421883862534829584367244516767645518094963505752293596385949094459968",
-		},
-	}
-	kv := &types.KeyValue{
-		Key:   GetAccountIdPrimaryKey(leaf.AccountId),
-		Value: types.Encode(leaf),
-	}
-	kvs = append(kvs, kv)
+type balancehistory struct {
+	before string
+	after  string
+}
 
-	kv = &types.KeyValue{
-		Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
-		Value: types.Encode(leaf),
+func getCfgFeeAddr(cfg *types.ChainConfig) (string, string) {
+	confManager := types.ConfSub(cfg, zt.Zksync)
+	ethAddr := confManager.GStr(zt.ZkCfgEthFeeAddr)
+	chainAddr := confManager.GStr(zt.ZkCfgLayer2FeeAddr)
+	if len(ethAddr) <= 0 || len(chainAddr) <= 0 {
+		panic(fmt.Sprintf("zksync not cfg init fee addr, ethAddr=%s,33Addr=%s", ethAddr, chainAddr))
 	}
-	kvs = append(kvs, kv)
+	ethAddrDecimal, _ := zt.HexAddr2Decimal(ethAddr)
+	chainAddrDecimal, _ := zt.HexAddr2Decimal(chainAddr)
+	return ethAddrDecimal, chainAddrDecimal
+}
 
-	accountTable := NewAccountTreeTable(localdb)
-	err := accountTable.Add(leaf)
-	if err != nil {
-		panic(err)
-	}
-	//localdb存入叶子，用于查询
-	localKvs, err := accountTable.Save()
-	if err != nil {
-		panic(err)
+// 由于ethAddr+chainAddr 唯一确定一个accountId,所以设置初始账户的chainAddr不相同
+func getInitAccountLeaf(ethFeeAddr, chainFeeAddr string) []*zt.Leaf {
+	zeroHash := zt.Str2Byte("0")
+	defaultAccount := &zt.Leaf{
+		EthAddress: "0",
+		AccountId:  zt.SystemDefaultAcctId,
+		ChainAddr:  "3",
+		TokenHash:  zeroHash,
 	}
 
-	merkleTree := getNewTree()
-	merkleTree.Push(getLeafHash(leaf))
+	//default system FeeAccount
+	//feeAcct需要预设置缺省tokenId=0,balance=0,为了和deposit流程保持一致,deposit都会先有token更新再有pubkey更新
+	//不然在token=null场景下设置pubkey,电路会计算出错，因为rhs部分会计算token tree part
+	//缺省电路token tree都是0,会把token=0作为一个新node计算,而预设tokenId就可以解决这个问题
+	feeAccount := &zt.Leaf{
+		EthAddress: ethFeeAddr,
+		AccountId:  zt.SystemFeeAccountId,
+		ChainAddr:  chainFeeAddr,
+		TokenHash:  zeroHash,
+		TokenIds:   []uint64{0},
+	}
+	//default NFT system account
+	NFTAccount := &zt.Leaf{
+		EthAddress: "0",
+		AccountId:  zt.SystemNFTAccountId,
+		ChainAddr:  "1",
+		TokenHash:  zeroHash,
+	}
 
+	treeToContractAccount := &zt.Leaf{
+		EthAddress: ethFeeAddr,
+		AccountId:  zt.SystemTree2ContractAcctId,
+		ChainAddr:  "2",
+		TokenHash:  zeroHash,
+	}
+	return []*zt.Leaf{defaultAccount, feeAccount, NFTAccount, treeToContractAccount}
+}
+
+// 获取系统初始root，如果未设置fee账户，缺省采用配置文件，
+func getInitTreeRoot(cfg *types.ChainConfig, ethAddrDecimal, layer2AddrDecimal string) string {
+	var feeEth, fee33 string
+	if len(ethAddrDecimal) > 0 && len(layer2AddrDecimal) > 0 {
+		feeEth, fee33 = ethAddrDecimal, layer2AddrDecimal
+	} else {
+		feeEth, fee33 = getCfgFeeAddr(cfg)
+	}
+	h := mimc.NewMiMC(zt.ZkMimcHashSeed)
+
+	leafs := getInitAccountLeaf(feeEth, fee33)
+	getInitLeafTokenHash(h, leafs)
+
+	merkleTree := getNewTreeWithHash(h)
+	for _, l := range leafs {
+		merkleTree.Push(getLeafHash(h, l))
+	}
 	tree := &zt.AccountTree{
-		Index:           1,
-		TotalIndex:      1,
-		MaxCurrentIndex: 1024,
-		SubTrees:        make([]*zt.SubTree, 0),
+		SubTrees: make([]*zt.SubTree, 0),
 	}
 
+	//叶子会按2^n合并，如果是三个leaf，就会产生2个subTree,这里当前初始只有2个leaf
 	for _, subtree := range merkleTree.GetAllSubTrees() {
 		tree.SubTrees = append(tree.SubTrees, &zt.SubTree{
 			RootHash: subtree.GetSum(),
@@ -75,45 +108,121 @@ func NewAccountTree(localdb dbm.KV) ([]*types.KeyValue, []*types.KeyValue) {
 		})
 	}
 
-	kv = &types.KeyValue{
-		Key:   GetAccountTreeKey(),
-		Value: types.Encode(tree),
-	}
-	kvs = append(kvs, kv)
-
-	return kvs, localKvs
+	return zt.Byte2Str(tree.SubTrees[len(tree.SubTrees)-1].RootHash)
 }
 
-func AddNewLeaf(statedb dbm.KV, localdb dbm.KV, info *TreeUpdateInfo, ethAddress string, tokenId uint64, amount string, chainAddr string) ([]*types.KeyValue, []*types.KeyValue, error) {
+func getInitLeafTokenHash(h hash.Hash, leafs []*zt.Leaf) {
+	for _, leaf := range leafs {
+		if len(leaf.TokenIds) > 0 {
+			if len(leaf.TokenIds) > 1 {
+				panic("init token list should only one")
+			}
+			token := &zt.TokenBalance{TokenId: leaf.TokenIds[0], Balance: "0"}
+			tokenHash := getTokenBalanceHash(h, token)
+			//leaf.tokenHash 是对所有tokenTree做的一个hash，如果只有一个节点，也是对这一个节点做hash
+			tree := getNewTreeWithHash(h)
+			tree.Push(tokenHash)
+			leaf.TokenHash = tree.Root()
+		}
+	}
+	h.Reset()
+}
+
+func NewInitAccount(ethFeeAddr, chainFeeAddr string) ([]*types.KeyValue, error) {
+	if len(ethFeeAddr) <= 0 || len(chainFeeAddr) <= 0 {
+		return nil, errors.New("zksync default fee addr(ethFeeAddr,zkChainFeeAddr) is nil")
+	}
 	var kvs []*types.KeyValue
-	var localKvs []*types.KeyValue
+	initLeafAccounts := getInitAccountLeaf(ethFeeAddr, chainFeeAddr)
 
-	if amount == "0" {
-		return kvs, localKvs, errors.New("balance is zero")
-	}
-	tree, err := getAccountTree(statedb, info)
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.getAccountTree")
-	}
+	for _, leaf := range initLeafAccounts {
+		kv := &types.KeyValue{
+			Key:   GetAccountIdPrimaryKey(leaf.AccountId),
+			Value: types.Encode(leaf),
+		}
+		kvs = append(kvs, kv)
 
-	currentTree := getNewTree()
-	subtrees := make([]*zt.SubTree, 0)
+		kv = &types.KeyValue{
+			Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
+			Value: types.Encode(leaf),
+		}
+		kvs = append(kvs, kv)
 
-	for _, subTree := range tree.GetSubTrees() {
-		err := currentTree.PushSubTree(int(subTree.GetHeight()), subTree.GetRootHash())
-		if err != nil {
-			return kvs, localKvs, errors.Wrapf(err, "pushSubTree")
+		//对有tokenIds的leaf增加到db
+		if len(leaf.TokenIds) > 0 {
+			token := &zt.TokenBalance{
+				TokenId: leaf.TokenIds[0],
+				Balance: "0",
+			}
+
+			kv = &types.KeyValue{
+				Key:   GetTokenPrimaryKey(leaf.AccountId, token.TokenId),
+				Value: types.Encode(token),
+			}
+			kvs = append(kvs, kv)
 		}
 	}
 
-	tree.Index++
-	tree.TotalIndex++
+	return kvs, nil
+}
+
+func updateTokenBalance(accountId uint64, tokenId uint64, amount string, option int32, statedb dbm.KV) (*types.KeyValue, *balancehistory, error) {
+	token, err := GetTokenByAccountIdAndTokenId(statedb, accountId, tokenId)
+	if err != nil {
+		return nil, nil, errors.Wrapf(err, "updateTokenBalance.GetTokenByAccountIdAndTokenId")
+	}
+
+	balanceInfoPtr := &balancehistory{}
+
+	if token == nil {
+		if option == zt.Sub {
+			return nil, nil, errors.Errorf("token not exist with Id=%d", tokenId)
+		} else {
+			token = &zt.TokenBalance{
+				TokenId: tokenId,
+				Balance: amount,
+			}
+			//如果NFTAccountId第一次初始化token，因为缺省初始balance为（SystemNFTTokenId+1),这里add时候默认为+2
+			if accountId == zt.SystemNFTAccountId && tokenId == zt.SystemNFTTokenId {
+				token.Balance = new(big.Int).SetUint64(zt.SystemNFTTokenId + 2).String()
+			}
+			balanceInfoPtr.before = "0"
+			balanceInfoPtr.after = token.Balance
+		}
+	} else {
+		balance, _ := new(big.Int).SetString(token.GetBalance(), 10)
+		delta, _ := new(big.Int).SetString(amount, 10)
+		balanceInfoPtr.before = token.GetBalance()
+		if option == zt.Add {
+			token.Balance = new(big.Int).Add(balance, delta).String()
+		} else {
+			if balance.Cmp(delta) < 0 {
+				return nil, nil, errors.Wrapf(types.ErrNotAllow, "amount=%d,tokenId=%d,balance=%s less sub amoumt=%s",
+					accountId, tokenId, balance, amount)
+			}
+			token.Balance = new(big.Int).Sub(balance, delta).String()
+		}
+
+		balanceInfoPtr.after = token.Balance
+	}
+
+	kv := &types.KeyValue{
+		Key:   GetTokenPrimaryKey(accountId, tokenId),
+		Value: types.Encode(token),
+	}
+
+	return kv, balanceInfoPtr, nil
+}
+
+func AddNewLeafOpt(ethAddress string, tokenId, accountId uint64, amount string, chainAddr string) []*types.KeyValue {
+	var kvs []*types.KeyValue
 
 	leaf := &zt.Leaf{
 		EthAddress: ethAddress,
-		AccountId:  tree.GetTotalIndex(),
+		AccountId:  accountId,
 		ChainAddr:  chainAddr,
 		TokenIds:   make([]uint64, 0),
+		//ProxyPubKeys: new(zt.AccountProxyPubKeys),
 	}
 
 	leaf.TokenIds = append(leaf.TokenIds, tokenId)
@@ -127,80 +236,120 @@ func AddNewLeaf(statedb dbm.KV, localdb dbm.KV, info *TreeUpdateInfo, ethAddress
 		Value: types.Encode(tokenBalance),
 	}
 	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
-
-	leaf.TokenHash, err = getTokenRootHash(statedb, leaf.AccountId, leaf.TokenIds, info)
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.getTokenRootHash")
-	}
 
 	kv = &types.KeyValue{
 		Key:   GetAccountIdPrimaryKey(leaf.AccountId),
 		Value: types.Encode(leaf),
 	}
-
 	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
 
 	kv = &types.KeyValue{
 		Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
 		Value: types.Encode(leaf),
 	}
-
 	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
 
-	currentTree.Push(getLeafHash(leaf))
-	for _, subtree := range currentTree.GetAllSubTrees() {
-		subtrees = append(subtrees, &zt.SubTree{
-			RootHash: subtree.GetSum(),
-			Height:   int32(subtree.GetHeight()),
-		})
-	}
+	return kvs
+}
 
-	tree.SubTrees = subtrees
+func updateLeafOpt(statedb dbm.KV, leaf *zt.Leaf, tokenId uint64, option int32) ([]*types.KeyValue, error) {
+	var kvs []*types.KeyValue
 
-	//到达1024以后，清空
-	if tree.Index == tree.MaxCurrentIndex {
-		root := &zt.RootInfo{
-			Height:     10,
-			StartIndex: tree.GetTotalIndex() - tree.GetIndex() + 1,
-			RootHash:   zt.Byte2Str(currentTree.Root()),
-		}
-		tree.Index = 0
-		tree.SubTrees = make([]*zt.SubTree, 0)
-
-		kv = &types.KeyValue{
-			Key:   GetRootIndexPrimaryKey(root.GetStartIndex()),
-			Value: types.Encode(root),
-		}
-		kvs = append(kvs, kv)
-		info.updateMap[string(kv.GetKey())] = kv.GetValue()
-	}
-
-	accountTable := NewAccountTreeTable(localdb)
-	err = accountTable.Add(leaf)
+	token, err := GetTokenByAccountIdAndTokenId(statedb, leaf.AccountId, tokenId)
 	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "accountTable.Add")
+		return kvs, errors.Wrapf(err, "db.getAccountTree")
 	}
-	//localdb存入叶子，用于查询
-	localKvs, err = accountTable.Save()
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.SaveAccountTreeTable")
+	if token == nil && option == zt.Add {
+		leaf.TokenIds = append(leaf.TokenIds, tokenId)
 	}
+
+	kv := &types.KeyValue{
+		Key:   GetAccountIdPrimaryKey(leaf.AccountId),
+		Value: types.Encode(leaf),
+	}
+	kvs = append(kvs, kv)
 
 	kv = &types.KeyValue{
-		Key:   GetAccountTreeKey(),
-		Value: types.Encode(tree),
+		Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
+		Value: types.Encode(leaf),
+	}
+	kvs = append(kvs, kv)
+
+	return kvs, nil
+}
+
+func applyL2AccountUpdate(accountID, tokenID uint64, amount string, option int32, statedb dbm.KV, leaf *zt.Leaf, makeEncode bool) ([]*types.KeyValue, *types.ReceiptLog, *zt.AccountTokenBalanceReceipt, error) {
+	var kvs []*types.KeyValue
+	var log *types.ReceiptLog
+	balancekv, balanceHistory, err := updateTokenBalance(accountID, tokenID, amount, option, statedb)
+	if nil != err {
+		return nil, nil, nil, err
+	}
+	kvs = append(kvs, balancekv)
+
+	updateLeafKvs, err := updateLeafOpt(statedb, leaf, tokenID, zt.Add)
+	if nil != err {
+		return nil, nil, nil, err
 	}
 
-	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
-	return kvs, localKvs, nil
+	kvs = append(kvs, updateLeafKvs...)
+
+	l2Log := &zt.AccountTokenBalanceReceipt{}
+	l2Log.EthAddress = leaf.EthAddress
+	l2Log.ChainAddr = leaf.ChainAddr
+	l2Log.TokenId = tokenID
+	l2Log.AccountId = accountID
+	l2Log.BalanceBefore = balanceHistory.before
+	l2Log.BalanceAfter = balanceHistory.after
+
+	if makeEncode {
+		log = &types.ReceiptLog{
+			Log: types.Encode(l2Log),
+		}
+	}
+
+	return kvs, log, l2Log, nil
+}
+
+func applyL2AccountCreate(accountID, tokenID uint64, amount, ethAddress, chainAddr string, statedb dbm.KV, makeEncode bool) ([]*types.KeyValue, *types.ReceiptLog, *zt.AccountTokenBalanceReceipt, error) {
+	var kvs []*types.KeyValue
+	var log *types.ReceiptLog
+	//如果NFTAccountId第一次初始化token，因为缺省初始balance为（SystemNFTTokenId+1),这里add时候默认为+2
+	if accountID == zt.SystemNFTAccountId && tokenID == zt.SystemNFTTokenId {
+		amount = new(big.Int).SetUint64(zt.SystemNFTTokenId + 2).String()
+	}
+
+	kvs = append(kvs, AddNewLeafOpt(ethAddress, tokenID, accountID, amount, chainAddr)...)
+
+	//设置新账户的ID.
+	newAccountKV := CalcNewAccountIDkv(int64(accountID))
+	kvs = append(kvs, newAccountKV)
+
+	l2Log := &zt.AccountTokenBalanceReceipt{}
+	l2Log.EthAddress = ethAddress
+	l2Log.ChainAddr = chainAddr
+	l2Log.TokenId = tokenID
+	l2Log.AccountId = accountID
+	l2Log.BalanceBefore = "0"
+	l2Log.BalanceAfter = amount
+
+	//为了避免不必要的计算，在transfer等场景中，该操作在函数外部进行
+	if makeEncode {
+		log = &types.ReceiptLog{
+			Log: types.Encode(l2Log),
+		}
+	}
+
+	return kvs, log, l2Log, nil
 }
 
 func getNewTree() *merkletree.Tree {
 	return merkletree.New(mimc.NewMiMC(zt.ZkMimcHashSeed))
+}
+
+func getNewTreeWithHash(h hash.Hash) *merkletree.Tree {
+	h.Reset()
+	return merkletree.New(h)
 }
 
 func getAccountTree(db dbm.KV, info *TreeUpdateInfo) (*zt.AccountTree, error) {
@@ -225,19 +374,7 @@ func getAccountTree(db dbm.KV, info *TreeUpdateInfo) (*zt.AccountTree, error) {
 	return &tree, nil
 }
 
-func GetLeafByAccountId(db dbm.KV, accountId uint64, info *TreeUpdateInfo) (*zt.Leaf, error) {
-	if accountId <= 0 {
-		return nil, nil
-	}
-
-	var leaf zt.Leaf
-	if val, ok := info.updateMap[string(GetAccountIdPrimaryKey(accountId))]; ok {
-		err := types.Decode(val, &leaf)
-		if err != nil {
-			return nil, err
-		}
-		return &leaf, nil
-	}
+func GetLeafByAccountId(db dbm.KV, accountId uint64) (*zt.Leaf, error) {
 	val, err := db.Get(GetAccountIdPrimaryKey(accountId))
 	if err != nil {
 		if err.Error() == types.ErrNotFound.Error() {
@@ -247,6 +384,7 @@ func GetLeafByAccountId(db dbm.KV, accountId uint64, info *TreeUpdateInfo) (*zt.
 		}
 	}
 
+	var leaf zt.Leaf
 	err = types.Decode(val, &leaf)
 	if err != nil {
 		return nil, err
@@ -256,7 +394,7 @@ func GetLeafByAccountId(db dbm.KV, accountId uint64, info *TreeUpdateInfo) (*zt.
 
 func GetLeafByEthAddress(db dbm.KV, ethAddress string) ([]*zt.Leaf, error) {
 	accountTable := NewAccountTreeTable(db)
-	rows, err := accountTable.ListIndex("eth_address", []byte(fmt.Sprintf("%s", ethAddress)), nil, 1, dbm.ListASC)
+	rows, err := accountTable.ListIndex("eth_address", []byte(fmt.Sprintf("%s", ethAddress)), nil, 1000, dbm.ListASC)
 
 	datas := make([]*zt.Leaf, 0)
 	if err != nil {
@@ -268,8 +406,8 @@ func GetLeafByEthAddress(db dbm.KV, ethAddress string) ([]*zt.Leaf, error) {
 	}
 	for _, row := range rows {
 		data := row.Data.(*zt.Leaf)
-		data.EthAddress = zt.DecimalAddr2Hex(data.GetEthAddress())
-		data.ChainAddr = zt.DecimalAddr2Hex(data.GetChainAddr())
+		data.EthAddress, _ = zt.DecimalAddr2Hex(data.GetEthAddress(), zt.EthAddrLen)
+		data.ChainAddr, _ = zt.DecimalAddr2Hex(data.GetChainAddr(), zt.BTYAddrLen)
 		datas = append(datas, data)
 	}
 	return datas, nil
@@ -277,7 +415,7 @@ func GetLeafByEthAddress(db dbm.KV, ethAddress string) ([]*zt.Leaf, error) {
 
 func GetLeafByChainAddress(db dbm.KV, chainAddr string) ([]*zt.Leaf, error) {
 	accountTable := NewAccountTreeTable(db)
-	rows, err := accountTable.ListIndex("chain_address", []byte(fmt.Sprintf("%s", chainAddr)), nil, 1, dbm.ListASC)
+	rows, err := accountTable.ListIndex("chain_address", []byte(fmt.Sprintf("%s", chainAddr)), nil, 1000, dbm.ListASC)
 
 	datas := make([]*zt.Leaf, 0)
 	if err != nil {
@@ -289,25 +427,16 @@ func GetLeafByChainAddress(db dbm.KV, chainAddr string) ([]*zt.Leaf, error) {
 	}
 	for _, row := range rows {
 		data := row.Data.(*zt.Leaf)
-		data.EthAddress = zt.DecimalAddr2Hex(data.GetEthAddress())
-		data.ChainAddr = zt.DecimalAddr2Hex(data.GetChainAddr())
+		data.EthAddress, _ = zt.DecimalAddr2Hex(data.GetEthAddress(), zt.EthAddrLen)
+		data.ChainAddr, _ = zt.DecimalAddr2Hex(data.GetChainAddr(), zt.BTYAddrLen)
 		datas = append(datas, data)
 	}
 	return datas, nil
 }
 
-func GetLeafByChainAndEthAddress(db dbm.KV, chainAddr, ethAddress string, info *TreeUpdateInfo) (*zt.Leaf, error) {
+func GetLeafByChainAndEthAddress(db dbm.KV, chainAddr, ethAddress string) (*zt.Leaf, error) {
 	if chainAddr == "" || ethAddress == "" {
 		return nil, types.ErrInvalidParam
-	}
-
-	var leaf zt.Leaf
-	if val, ok := info.updateMap[string(GetChainEthPrimaryKey(chainAddr, ethAddress))]; ok {
-		err := types.Decode(val, &leaf)
-		if err != nil {
-			return nil, err
-		}
-		return &leaf, nil
 	}
 
 	val, err := db.Get(GetChainEthPrimaryKey(chainAddr, ethAddress))
@@ -319,6 +448,7 @@ func GetLeafByChainAndEthAddress(db dbm.KV, chainAddr, ethAddress string, info *
 		}
 	}
 
+	var leaf zt.Leaf
 	err = types.Decode(val, &leaf)
 	if err != nil {
 		return nil, err
@@ -326,63 +456,7 @@ func GetLeafByChainAndEthAddress(db dbm.KV, chainAddr, ethAddress string, info *
 	return &leaf, nil
 }
 
-func GetLeavesByStartAndEndIndex(db dbm.KV, startIndex uint64, endIndex uint64, info *TreeUpdateInfo) ([]*zt.Leaf, error) {
-	leaves := make([]*zt.Leaf, 0)
-	for i := startIndex; i <= endIndex; i++ {
-		leaf, err := GetLeafByAccountId(db, i, info)
-		if err != nil {
-			return nil, err
-		}
-		leaves = append(leaves, leaf)
-	}
-	return leaves, nil
-}
-
-func GetAllRoots(db dbm.KV, endIndex uint64, info *TreeUpdateInfo) ([]*zt.RootInfo, error) {
-	roots := make([]*zt.RootInfo, 0)
-	for i := uint64(1); i <= endIndex; i++ {
-		rootInfo, err := GetRootByStartIndex(db, (i-1)*1024+1, info)
-		if err != nil {
-			return nil, err
-		}
-		roots = append(roots, rootInfo)
-	}
-	return roots, nil
-}
-
-func GetRootByStartIndex(db dbm.KV, index uint64, info *TreeUpdateInfo) (*zt.RootInfo, error) {
-	var rootInfo zt.RootInfo
-	if val, ok := info.updateMap[string(GetRootIndexPrimaryKey(index))]; ok {
-		err := types.Decode(val, &rootInfo)
-		if err != nil {
-			return nil, err
-		}
-		return &rootInfo, nil
-	}
-
-	val, err := db.Get(GetRootIndexPrimaryKey(index))
-	if err != nil {
-		return nil, err
-	}
-
-	err = types.Decode(val, &rootInfo)
-	if err != nil {
-		return nil, err
-	}
-	return &rootInfo, nil
-}
-
-func GetTokenByAccountIdAndTokenId(db dbm.KV, accountId uint64, tokenId uint64, info *TreeUpdateInfo) (*zt.TokenBalance, error) {
-
-	var token zt.TokenBalance
-	if val, ok := info.updateMap[string(GetTokenPrimaryKey(accountId, tokenId))]; ok {
-		err := types.Decode(val, &token)
-		if err != nil {
-			return nil, err
-		}
-		return &token, nil
-	}
-
+func GetTokenByAccountIdAndTokenId(db dbm.KV, accountId uint64, tokenId uint64) (*zt.TokenBalance, error) {
 	val, err := db.Get(GetTokenPrimaryKey(accountId, tokenId))
 	if err != nil {
 		if err.Error() == types.ErrNotFound.Error() {
@@ -392,6 +466,7 @@ func GetTokenByAccountIdAndTokenId(db dbm.KV, accountId uint64, tokenId uint64, 
 		}
 	}
 
+	var token zt.TokenBalance
 	err = types.Decode(val, &token)
 	if err != nil {
 		return nil, err
@@ -400,9 +475,7 @@ func GetTokenByAccountIdAndTokenId(db dbm.KV, accountId uint64, tokenId uint64, 
 }
 
 func GetTokenByAccountIdAndTokenIdInDB(db dbm.KV, accountId uint64, tokenId uint64) (*zt.TokenBalance, error) {
-
 	var token zt.TokenBalance
-
 	val, err := db.Get(GetTokenPrimaryKey(accountId, tokenId))
 	if err != nil {
 		if err.Error() == types.ErrNotFound.Error() {
@@ -419,388 +492,60 @@ func GetTokenByAccountIdAndTokenIdInDB(db dbm.KV, accountId uint64, tokenId uint
 	return &token, nil
 }
 
-// UpdateLeaf 更新叶子结点：1、如果在当前树的叶子中，直接更新  2、如果在归档的树中，需要找到归档的root，重新生成root
-func UpdateLeaf(statedb dbm.KV, localdb dbm.KV, info *TreeUpdateInfo, accountId uint64, tokenId uint64, amount string, option int32) ([]*types.KeyValue, []*types.KeyValue, error) {
-	var kvs []*types.KeyValue
-	var localKvs []*types.KeyValue
-	leaf, err := GetLeafByAccountId(statedb, accountId, info)
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.GetLeafByAccountId")
-	}
-	tree, err := getAccountTree(statedb, info)
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.getAccountTree")
-	}
-	token, err := GetTokenByAccountIdAndTokenId(statedb, accountId, tokenId, info)
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.getAccountTree")
-	}
-	if token == nil {
-		if option == zt.Sub {
-			return kvs, localKvs, errors.New("token not exist")
-		} else {
-			token = &zt.TokenBalance{
-				TokenId: tokenId,
-				Balance: amount,
-			}
-			leaf.TokenIds = append(leaf.TokenIds, tokenId)
-		}
-	} else {
-		balance, _ := new(big.Int).SetString(token.GetBalance(), 10)
-		change, _ := new(big.Int).SetString(amount, 10)
-		if option == zt.Add {
-			token.Balance = new(big.Int).Add(balance, change).String()
-		} else if option == zt.Sub {
-			token.Balance = new(big.Int).Sub(balance, change).String()
-		} else {
-			return kvs, localKvs, types.ErrNotSupport
-		}
-	}
-
-	kv := &types.KeyValue{
-		Key:   GetTokenPrimaryKey(accountId, tokenId),
-		Value: types.Encode(token),
-	}
-
-	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
-
-	leaf.TokenHash, err = getTokenRootHash(statedb, accountId, leaf.TokenIds, info)
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.getTokenRootHash")
-	}
-
-	kv = &types.KeyValue{
-		Key:   GetAccountIdPrimaryKey(leaf.AccountId),
-		Value: types.Encode(leaf),
-	}
-
-	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
-
-	kv = &types.KeyValue{
-		Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
-		Value: types.Encode(leaf),
-	}
-
-	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
-
-	//如果还没归档
-	if accountId > tree.GetTotalIndex()-tree.GetIndex() {
-		currentTree := getNewTree()
-		leaves, err := GetLeavesByStartAndEndIndex(statedb, tree.GetTotalIndex()-tree.GetIndex()+1, tree.GetTotalIndex(), info)
-		if err != nil {
-			return kvs, localKvs, errors.Wrapf(err, "db.GetLeavesByStartAndEndIndex")
-		}
-		for _, leafVal := range leaves {
-			currentTree.Push(getLeafHash(leafVal))
-		}
-
-		subtrees := make([]*zt.SubTree, 0)
-		for _, subtree := range currentTree.GetAllSubTrees() {
-			subtrees = append(subtrees, &zt.SubTree{
-				RootHash: subtree.GetSum(),
-				Height:   int32(subtree.GetHeight()),
-			})
-		}
-
-		tree.SubTrees = subtrees
-		kv = &types.KeyValue{
-			Key:   GetAccountTreeKey(),
-			Value: types.Encode(tree),
-		}
-		kvs = append(kvs, kv)
-		info.updateMap[string(kv.GetKey())] = kv.GetValue()
-	} else {
-		//找到对应的根
-		rootInfo, err := GetRootByStartIndex(statedb, (accountId-1)/1024*1024+1, info)
-		if err != nil {
-			return kvs, localKvs, errors.Wrapf(err, "db.GetRootByStartIndex")
-		}
-		leaves, err := GetLeavesByStartAndEndIndex(statedb, rootInfo.StartIndex, rootInfo.StartIndex+1023, info)
-		if err != nil {
-			return kvs, localKvs, errors.Wrapf(err, "db.GetLeavesByStartAndEndIndex")
-		}
-		currentTree := getNewTree()
-		for _, leafVal := range leaves {
-			currentTree.Push(getLeafHash(leafVal))
-		}
-
-		//生成新root
-		rootInfo.RootHash = zt.Byte2Str(currentTree.Root())
-		kv = &types.KeyValue{
-			Key:   GetRootIndexPrimaryKey(rootInfo.StartIndex),
-			Value: types.Encode(rootInfo),
-		}
-		kvs = append(kvs, kv)
-		info.updateMap[string(kv.GetKey())] = kv.GetValue()
-	}
-
-	accountTable := NewAccountTreeTable(localdb)
-	err = accountTable.Update(GetLocalChainEthPrimaryKey(leaf.GetChainAddr(), leaf.GetEthAddress()), leaf)
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "accountTable.Update")
-	}
-	//localdb更新叶子，用于查询
-	localKvs, err = accountTable.Save()
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.SaveAccountTreeTable")
-	}
-
-	kv = &types.KeyValue{
-		Key:   GetAccountTreeKey(),
-		Value: types.Encode(tree),
-	}
-
-	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
-	return kvs, localKvs, nil
-}
-
-func getLeafHash(leaf *zt.Leaf) []byte {
-	hash := mimc.NewMiMC(zt.ZkMimcHashSeed)
+func getLeafHash(h hash.Hash, leaf *zt.Leaf) []byte {
+	//h := mimc.NewMiMC(zt.ZkMimcHashSeed)
+	h.Reset()
 	accountIdBytes := new(fr.Element).SetUint64(leaf.GetAccountId()).Bytes()
-	hash.Write(accountIdBytes[:])
-	hash.Write(zt.Str2Byte(leaf.GetEthAddress()))
-	hash.Write(zt.Str2Byte(leaf.GetChainAddr()))
-	if leaf.GetPubKey() != nil {
-		hash.Write(zt.Str2Byte(leaf.GetPubKey().GetX()))
-		hash.Write(zt.Str2Byte(leaf.GetPubKey().GetY()))
-	} else {
-		hash.Write(zt.Str2Byte("0")) //X
-		hash.Write(zt.Str2Byte("0")) //Y
-	}
-	token := zt.Str2Byte(leaf.GetTokenHash())
-	hash.Write(token)
-	return hash.Sum(nil)
+	h.Write(accountIdBytes[:])
+	h.Write(zt.Str2Byte(leaf.GetEthAddress()))
+	h.Write(zt.Str2Byte(leaf.GetChainAddr()))
+
+	getLeafPubKeyHash(h, leaf.GetPubKey())
+	getLeafPubKeyHash(h, leaf.GetProxyPubKeys().GetNormal())
+	getLeafPubKeyHash(h, leaf.GetProxyPubKeys().GetSystem())
+	getLeafPubKeyHash(h, leaf.GetProxyPubKeys().GetSuper())
+
+	h.Write(leaf.GetTokenHash())
+	sum := h.Sum(nil)
+	h.Reset()
+	return sum
 }
 
-func getTokenRootHash(db dbm.KV, accountId uint64, tokenIds []uint64, info *TreeUpdateInfo) (string, error) {
-	tree := getNewTree()
-	for _, tokenId := range tokenIds {
-		token, err := GetTokenByAccountIdAndTokenId(db, accountId, tokenId, info)
-		if err != nil {
-			return "", err
-		}
-		tree.Push(getTokenBalanceHash(token))
+func getLeafPubKeyHash(h hash.Hash, pubKey *zt.ZkPubKey) {
+	if pubKey != nil {
+		h.Write(zt.Str2Byte(pubKey.GetX()))
+		h.Write(zt.Str2Byte(pubKey.GetY()))
+		return
 	}
-	return zt.Byte2Str(tree.Root()), nil
+
+	h.Write(zt.Str2Byte("0")) //X
+	h.Write(zt.Str2Byte("0")) //Y
 }
 
-func getTokenBalanceHash(token *zt.TokenBalance) []byte {
-	hash := mimc.NewMiMC(zt.ZkMimcHashSeed)
-	tokenIdBytes := new(fr.Element).SetUint64(token.GetTokenId()).Bytes()
-	hash.Write(tokenIdBytes[:])
-	hash.Write(zt.Str2Byte(token.Balance))
-	return hash.Sum(nil)
-}
-
-func getHistoryLeafHash(leaf *zt.HistoryLeaf) []byte {
-
-	hash := mimc.NewMiMC(zt.ZkMimcHashSeed)
-	accountIdBytes := new(fr.Element).SetUint64(leaf.GetAccountId()).Bytes()
-	hash.Write(accountIdBytes[:])
-	hash.Write(zt.Str2Byte(leaf.GetEthAddress()))
-	hash.Write(zt.Str2Byte(leaf.GetChainAddr()))
-	if leaf.GetPubKey() != nil {
-		hash.Write(zt.Str2Byte(leaf.GetPubKey().GetX()))
-		hash.Write(zt.Str2Byte(leaf.GetPubKey().GetY()))
-	} else {
-		hash.Write(zt.Str2Byte("0")) //X
-		hash.Write(zt.Str2Byte("0")) //Y
-	}
-
-	tokenTree := getNewTree()
-	for _, token := range leaf.Tokens {
-		tokenTree.Push(getTokenBalanceHash(token))
-	}
-	hash.Write(tokenTree.Root())
-	return hash.Sum(nil)
-}
-
-func CalLeafProof(statedb dbm.KV, leaf *zt.Leaf, info *TreeUpdateInfo) (*zt.MerkleTreeProof, error) {
-	tree, err := getAccountTree(statedb, info)
-	if err != nil {
-		return nil, errors.Wrapf(err, "db.getAccountTree")
-	}
-
-	//leaf不存在的时候，计算子树
-	if leaf == nil {
-		currentTree := getNewTree()
-		roots, err := GetAllRoots(statedb, tree.TotalIndex/1024, info)
-		if err != nil {
-			return nil, errors.Wrapf(err, "db.GetAllRoots")
-		}
-		for _, root := range roots {
-			rootHash := zt.Str2Byte(root.GetRootHash())
-			err = currentTree.PushSubTree(int(root.Height), rootHash)
-			if err != nil {
-				return nil, errors.Wrapf(err, "db.PushSubTree")
-			}
-		}
-		for _, subTree := range tree.SubTrees {
-			err = currentTree.PushSubTree(int(subTree.Height), subTree.RootHash)
-			if err != nil {
-				return nil, errors.Wrapf(err, "db.PushSubTree")
-			}
-		}
-		subTrees := currentTree.GetAllSubTrees()
-		proofSet := make([]string, len(subTrees)+1)
-		helpers := make([]string, len(subTrees))
-		proofSet[0] = "0"
-		for i := 1; i <= len(subTrees); i++ {
-			proofSet[i] = zt.Byte2Str(subTrees[len(subTrees)-i].GetSum())
-			helpers[i-1] = big.NewInt(0).String()
-		}
-		proof := &zt.MerkleTreeProof{
-			RootHash: zt.Byte2Str(currentTree.Root()),
-			ProofSet: proofSet,
-			Helpers:  helpers,
-		}
-		return proof, nil
-	}
-
-	currentTree := getNewTree()
-	err = currentTree.SetIndex(leaf.GetAccountId() - 1)
-	if err != nil {
-		return nil, errors.Wrapf(err, "merkleTree.setIndex")
-	}
-	roots, err := GetAllRoots(statedb, tree.GetTotalIndex()/1024, info)
-	if err != nil {
-		return nil, errors.Wrapf(err, "db.GetAllRoots")
-	}
-	if leaf.AccountId > tree.GetTotalIndex()-tree.GetIndex() {
-		leaves, err := GetLeavesByStartAndEndIndex(statedb, tree.GetTotalIndex()-tree.GetIndex()+1, tree.GetTotalIndex(), info)
-		if err != nil {
-			return nil, errors.Wrapf(err, "db.GetLeavesByStartAndEndIndex")
-		}
-		for _, root := range roots {
-			rootHash := zt.Str2Byte(root.GetRootHash())
-			err = currentTree.PushSubTree(int(root.Height), rootHash)
-			if err != nil {
-				return nil, errors.Wrapf(err, "db.PushSubTree")
-			}
-		}
-		for _, v := range leaves {
-			currentTree.Push(getLeafHash(v))
-		}
-	} else {
-		startIndex := (leaf.AccountId-1)/1024*1024 + 1
-		leaves, err := GetLeavesByStartAndEndIndex(statedb, startIndex, startIndex+1023, info)
-		if err != nil {
-			return nil, errors.Wrapf(err, "db.GetLeavesByStartAndEndIndex")
-		}
-		for _, root := range roots {
-			//如果需要验证的account在该root节点中，需要对所有root下的leaf的进行push
-			if startIndex == root.StartIndex {
-				for _, v := range leaves {
-					currentTree.Push(getLeafHash(v))
-				}
-			} else {
-				rootHash := zt.Str2Byte(root.GetRootHash())
-				err = currentTree.PushSubTree(int(root.Height), rootHash)
-				if err != nil {
-					return nil, errors.Wrapf(err, "db.PushSubTree")
-				}
-			}
-		}
-		for _, subTree := range tree.SubTrees {
-			err = currentTree.PushSubTree(int(subTree.Height), subTree.RootHash)
-			if err != nil {
-				return nil, errors.Wrapf(err, "db.PushSubTree")
-			}
-		}
-	}
-
-	rootHash, proofSet, proofIndex, numLeaves := currentTree.Prove()
-	helpers := make([]string, 0)
-	proofStringSet := make([]string, 0)
-	for _, v := range merkletree.GenerateProofHelper(proofSet, proofIndex, numLeaves) {
-		helpers = append(helpers, big.NewInt(int64(v)).String())
-	}
-	for _, v := range proofSet {
-		proofStringSet = append(proofStringSet, zt.Byte2Str(v))
-	}
-
-	return &zt.MerkleTreeProof{RootHash: zt.Byte2Str(rootHash), ProofSet: proofStringSet, Helpers: helpers}, nil
-}
-
-func CalTokenProof(statedb dbm.KV, leaf *zt.Leaf, token *zt.TokenBalance, info *TreeUpdateInfo) (*zt.MerkleTreeProof, error) {
-	if leaf == nil {
-		return nil, nil
-	}
-	tokens := make([]*zt.TokenBalance, 0)
-	index := 0
-	for i, v := range leaf.TokenIds {
-		if token != nil && token.TokenId == v {
-			index = i
-		}
-		tokenVal, err := GetTokenByAccountIdAndTokenId(statedb, leaf.AccountId, v, info)
-		if err != nil {
-			return nil, errors.Wrapf(err, "db.GetTokenByAccountIdAndTokenId")
-		}
-		tokens = append(tokens, tokenVal)
-	}
-	//如果存在token
-	if token != nil {
-		tree := getNewTree()
-		err := tree.SetIndex(uint64(index))
-		if err != nil {
-			return nil, errors.Wrapf(err, "tree.SetIndex")
-		}
-		for _, balance := range tokens {
-			tree.Push(getTokenBalanceHash(balance))
-		}
-		rootHash, proofSet, proofIndex, numLeaves := tree.Prove()
-		helpers := make([]string, 0)
-		proofStringSet := make([]string, 0)
-		for _, v := range merkletree.GenerateProofHelper(proofSet, proofIndex, numLeaves) {
-			helpers = append(helpers, big.NewInt(int64(v)).String())
-		}
-		for _, v := range proofSet {
-			proofStringSet = append(proofStringSet, zt.Byte2Str(v))
-		}
-		return &zt.MerkleTreeProof{RootHash: zt.Byte2Str(rootHash), ProofSet: proofStringSet, Helpers: helpers}, nil
-	} else {
-		//如果不存在token，仅返回子树
-		tree := getNewTree()
-		for _, balance := range tokens {
-			tree.Push(getTokenBalanceHash(balance))
-		}
-		subTrees := tree.GetAllSubTrees()
-		proofSet := make([]string, len(subTrees)+1)
-		helpers := make([]string, len(subTrees))
-		proofSet[0] = "0"
-		for i := 1; i <= len(subTrees); i++ {
-			proofSet[i] = zt.Byte2Str(subTrees[len(subTrees)-i].GetSum())
-			helpers[i-1] = big.NewInt(0).String()
-		}
-		proof := &zt.MerkleTreeProof{
-			RootHash: zt.Byte2Str(tree.Root()),
-			ProofSet: proofSet,
-			Helpers:  helpers,
-		}
-		return proof, nil
-	}
-
-}
-
-func UpdatePubKey(statedb dbm.KV, localdb dbm.KV, info *TreeUpdateInfo, pubKey *zt.ZkPubKey, accountId uint64) ([]*types.KeyValue, []*types.KeyValue, error) {
+func UpdatePubKey(statedb dbm.KV, localdb dbm.KV, pubKeyTy uint64, pubKey *zt.ZkPubKey, accountId uint64) ([]*types.KeyValue, []*types.KeyValue, error) {
 	var kvs []*types.KeyValue
-	var localKvs []*types.KeyValue
-	tree, err := getAccountTree(statedb, info)
+	leaf, err := GetLeafByAccountId(statedb, accountId)
 	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.getAccountTree")
-	}
-	leaf, err := GetLeafByAccountId(statedb, accountId, info)
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.GetTokenByAccountIdAndTokenId")
+		return kvs, nil, errors.Wrapf(err, "db.GetTokenByAccountIdAndTokenId")
 	}
 	if leaf == nil {
-		return kvs, localKvs, errors.New("account not exist")
+		return kvs, nil, errors.New("account not exist")
 	}
-	leaf.PubKey = pubKey
+	if nil == leaf.ProxyPubKeys {
+		leaf.ProxyPubKeys = &zt.AccountProxyPubKeys{}
+	}
+	switch pubKeyTy {
+	case 0:
+		leaf.PubKey = pubKey
+	case zt.NormalProxyPubKey:
+		leaf.ProxyPubKeys.Normal = pubKey
+	case zt.SystemProxyPubKey:
+		leaf.ProxyPubKeys.System = pubKey
+	case zt.SuperProxyPubKey:
+		leaf.ProxyPubKeys.Super = pubKey
+	default:
+		return nil, nil, errors.Wrapf(types.ErrInvalidParam, "wrong pubkey ty=%d", pubKeyTy)
+	}
 
 	kv := &types.KeyValue{
 		Key:   GetAccountIdPrimaryKey(leaf.AccountId),
@@ -808,7 +553,6 @@ func UpdatePubKey(statedb dbm.KV, localdb dbm.KV, info *TreeUpdateInfo, pubKey *
 	}
 
 	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
 
 	kv = &types.KeyValue{
 		Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
@@ -816,65 +560,6 @@ func UpdatePubKey(statedb dbm.KV, localdb dbm.KV, info *TreeUpdateInfo, pubKey *
 	}
 
 	kvs = append(kvs, kv)
-	info.updateMap[string(kv.GetKey())] = kv.GetValue()
 
-	if accountId > tree.GetTotalIndex()-tree.GetIndex() {
-		leaves, err := GetLeavesByStartAndEndIndex(statedb, tree.GetTotalIndex()-tree.GetIndex()+1, tree.GetTotalIndex(), info)
-		if err != nil {
-			return kvs, localKvs, errors.Wrapf(err, "db.GetLeavesByStartAndEndIndex")
-		}
-		currentTree := getNewTree()
-		for _, v := range leaves {
-			currentTree.Push(getLeafHash(v))
-		}
-
-		subtrees := make([]*zt.SubTree, 0)
-		for _, subtree := range currentTree.GetAllSubTrees() {
-			subtrees = append(subtrees, &zt.SubTree{
-				RootHash: subtree.GetSum(),
-				Height:   int32(subtree.GetHeight()),
-			})
-		}
-
-		tree.SubTrees = subtrees
-		kv = &types.KeyValue{
-			Key:   GetAccountTreeKey(),
-			Value: types.Encode(tree),
-		}
-		kvs = append(kvs, kv)
-		info.updateMap[string(kv.GetKey())] = kv.GetValue()
-	} else {
-		//找到对应的根
-		rootInfo, err := GetRootByStartIndex(statedb, (accountId-1)/1024*1024+1, info)
-		if err != nil {
-			return kvs, localKvs, errors.Wrapf(err, "db.GetRootByStartIndex")
-		}
-		leaves, err := GetLeavesByStartAndEndIndex(statedb, rootInfo.StartIndex, rootInfo.StartIndex+1023, info)
-		if err != nil {
-			return kvs, localKvs, errors.Wrapf(err, "db.GetLeavesByStartAndEndIndex")
-		}
-		currentTree := getNewTree()
-		for _, leafVal := range leaves {
-			currentTree.Push(getLeafHash(leafVal))
-		}
-		rootInfo.RootHash = zt.Byte2Str(currentTree.Root())
-		kv = &types.KeyValue{
-			Key:   GetRootIndexPrimaryKey(rootInfo.StartIndex),
-			Value: types.Encode(rootInfo),
-		}
-		kvs = append(kvs, kv)
-		info.updateMap[string(kv.GetKey())] = kv.GetValue()
-	}
-	accountTable := NewAccountTreeTable(localdb)
-	err = accountTable.Update(GetLocalChainEthPrimaryKey(leaf.GetChainAddr(), leaf.GetEthAddress()), leaf)
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "accountTable.Update")
-	}
-
-	//localdb更新叶子，用于查询
-	localKvs, err = accountTable.Save()
-	if err != nil {
-		return kvs, localKvs, errors.Wrapf(err, "db.SaveAccountTreeTable")
-	}
-	return kvs, localKvs, nil
+	return kvs, nil, nil
 }

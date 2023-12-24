@@ -5,8 +5,8 @@ import (
 
 	"github.com/assetcloud/chain/system/dapp"
 
-	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	"github.com/assetcloud/chain/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 )
 
 // CheckTx 实现自定义检验交易接口，供框架调用

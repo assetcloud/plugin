@@ -42,7 +42,7 @@ func getNodeID(db dbm.KV, id string) (*pt.ParaNodeIdStatus, error) {
 	return &status, err
 }
 
-//分叉之前 id是"mavl-paracros-...0x12342308b"格式，分叉以后只支持输入为去掉了mavl-paracross前缀的交易id，系统会为id加上前缀
+// 分叉之前 id是"mavl-paracros-...0x12342308b"格式，分叉以后只支持输入为去掉了mavl-paracross前缀的交易id，系统会为id加上前缀
 func getNodeIDWithFork(cfg *types.ChainConfig, db dbm.KV, title string, height int64, id string) (*pt.ParaNodeIdStatus, error) {
 	if pt.IsParaForkHeight(cfg, height, pt.ForkLoopCheckCommitTxDone) {
 		id = calcParaNodeIDKey(title, id)
@@ -70,7 +70,7 @@ func getDb(db dbm.KV, key []byte) ([]byte, error) {
 	return val, nil
 }
 
-//分叉之前 id是"mavl-paracros-...0x12342308b"格式，分叉以后只支持输入为去掉了mavl-paracross前缀的交易id，系统会为id加上前缀
+// 分叉之前 id是"mavl-paracros-...0x12342308b"格式，分叉以后只支持输入为去掉了mavl-paracross前缀的交易id，系统会为id加上前缀
 func getNodeGroupID(cfg *types.ChainConfig, db dbm.KV, title string, height int64, id string) (*pt.ParaNodeGroupStatus, error) {
 	if pt.IsParaForkHeight(cfg, height, pt.ForkLoopCheckCommitTxDone) {
 		id = calcParaNodeGroupIDKey(title, id)
@@ -396,7 +396,7 @@ func hasVoted(addrs []string, addr string) (bool, int) {
 	return hasCommited(addrs, addr)
 }
 
-//主链配置平行链停止块数， 反应到主链上为对应平行链空块间隔×停止块数，如果主链当前高度超过平行链共识高度对应主链高度后面这个主链块数就表示通过
+// 主链配置平行链停止块数， 反应到主链上为对应平行链空块间隔×停止块数，如果主链当前高度超过平行链共识高度对应主链高度后面这个主链块数就表示通过
 func (a *action) superManagerVoteProc(title string) error {
 	status, err := getNodeGroupStatus(a.db, title)
 	if err != nil {
@@ -443,7 +443,7 @@ func updateVotes(in *pt.ParaNodeVoteDetail, nodes map[string]struct{}) *pt.ParaN
 	return votes
 }
 
-//由于propasal id 和quit id分开，quit id不知道对应addr　proposal id的coinfrozen信息，需要维护一个围绕addr的数据库结构信息
+// 由于propasal id 和quit id分开，quit id不知道对应addr　proposal id的coinfrozen信息，需要维护一个围绕addr的数据库结构信息
 func (a *action) updateNodeAddrStatus(stat *pt.ParaNodeIdStatus) (*types.Receipt, error) {
 	addrStat, err := getNodeAddr(a.db, stat.Title, stat.TargetAddr)
 	if err != nil {
@@ -1013,15 +1013,15 @@ func (a *action) checkApproveOpNew(config *pt.ParaNodeGroupConfig, status *pt.Pa
 	return errors.Wrapf(types.ErrNotAllow, "from Addr=%s not applier=%s or manager", a.fromaddr, status.FromAddr)
 }
 
+// 核查approve的条件，最新的分叉版本开启了自由注册模式，只要申请者和approve者是同一个用户即可
 func (a *action) checkApproveOp(config *pt.ParaNodeGroupConfig, status *pt.ParaNodeGroupStatus) error {
 	cfg := a.api.GetConfig()
-	//开启自由注册的检查
+	//最新版本开启自由注册的检查，只要申请者和approve者是同一个用户即可
 	if cfg.IsDappFork(a.height, pt.ParaX, pt.ForkParaFreeRegister) {
 		return a.checkApproveOpNew(config, status)
 	}
-	//自由注册之前的检查
+	//自由注册之前的检查，之前曾经需要atonomy投票，然后获取投票id来审查通过
 	return a.checkApproveOpOld(config)
-
 }
 
 // NodeGroupApprove super addr approve the node group apply
@@ -1102,7 +1102,7 @@ func (a *action) nodeGroupCreate(status *pt.ParaNodeGroupStatus) (*types.Receipt
 	return receipt, nil
 }
 
-//NodeGroupConfig support super node group config
+// NodeGroupConfig support super node group config
 func (a *action) NodeGroupConfig(config *pt.ParaNodeGroupConfig) (*types.Receipt, error) {
 	cfg := a.api.GetConfig()
 	if !validTitle(cfg, config.Title) {
@@ -1141,7 +1141,7 @@ func (a *action) NodeGroupConfig(config *pt.ParaNodeGroupConfig) (*types.Receipt
 
 }
 
-//NodeConfig support super account node config
+// NodeConfig support super account node config
 func (a *action) NodeConfig(config *pt.ParaNodeAddrConfig) (*types.Receipt, error) {
 	cfg := a.api.GetConfig()
 	if !validTitle(cfg, config.Title) {

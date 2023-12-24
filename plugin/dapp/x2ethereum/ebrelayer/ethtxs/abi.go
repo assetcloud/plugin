@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-//const
+// const
 const (
 	BridgeBankABI   = "BridgeBankABI"
 	ChainBankABI    = "ChainBankABI"
@@ -15,7 +15,7 @@ const (
 	EthereumBankABI = "EthereumBankABI"
 )
 
-//LoadABI ...
+// LoadABI ...
 func LoadABI(contractName string) abi.ABI {
 	var abiJSON string
 	switch contractName {

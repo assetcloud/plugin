@@ -1,11 +1,11 @@
 package wasm
 
 import (
+	"github.com/assetcloud/chain/pluginmgr"
 	"github.com/assetcloud/plugin/plugin/dapp/zksync/commands"
 	"github.com/assetcloud/plugin/plugin/dapp/zksync/executor"
 	"github.com/assetcloud/plugin/plugin/dapp/zksync/rpc"
 	"github.com/assetcloud/plugin/plugin/dapp/zksync/types"
-	"github.com/assetcloud/chain/pluginmgr"
 )
 
 func init() {

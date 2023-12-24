@@ -3,9 +3,9 @@ package executor
 import (
 	"github.com/pkg/errors"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	dbm "github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 	opModify = 3
 )
 
-//从内存中获取bin状态的miner list
+// 从内存中获取bin状态的miner list
 func (a *action) getBindAddrs(nodes []string, statusHeight int64) (bool, map[string][]*pt.ParaBindMinerInfo, error) {
 	nodeBinders := make(map[string][]*pt.ParaBindMinerInfo)
 	var foundBinder bool

@@ -11,7 +11,7 @@ func init() {
 	register("normal", &normal{})
 }
 
-//获取配置的奖励数值
+// 获取配置的奖励数值
 func (n *normal) GetConfigReward(cfg *types.ChainConfig, height int64) (int64, int64, int64) {
 	coinReward := cfg.MGInt("mver.consensus.paracross.coinReward", height)
 	fundReward := cfg.MGInt("mver.consensus.paracross.coinDevFund", height)
@@ -28,14 +28,14 @@ func (n *normal) GetConfigReward(cfg *types.ChainConfig, height int64) (int64, i
 		fundReward *= cfg.GetCoinPrecision()
 		coinBaseReward *= cfg.GetCoinPrecision()
 	}
-	//防止coinBaseReward 设置出错场景， coinBaseReward 一定要比coinReward小
-	if coinBaseReward >= coinReward {
+	//防止coinBaseReward 设置出错场景， coinBaseReward 一定不大于coinReward,coinReward有可能为0
+	if coinBaseReward > coinReward {
 		panic("mver.consensus.paracross.coinBaseReward should < coinReward")
 	}
 	return coinReward, fundReward, coinBaseReward
 }
 
-//奖励矿工算法
+// 奖励矿工算法
 func (n *normal) RewardMiners(cfg *types.ChainConfig, coinReward int64, miners []string, height int64) ([]*pt.ParaMinerReward, int64) {
 	//找零
 	var change int64

@@ -118,7 +118,7 @@ clean: ## remove all the bins
 proto:protobuf
 
 protobuf: ## Generate protbuf file of types package
-#	@cd ${CHAIN33_PATH}/types/proto && ./create_protobuf.sh && cd ../..
+#	@cd ${CHAIN_PATH}/types/proto && ./create_protobuf.sh && cd ../..
 	@find ./plugin/dapp -maxdepth 2 -type d  -name proto -exec make -C {} \;
 
 

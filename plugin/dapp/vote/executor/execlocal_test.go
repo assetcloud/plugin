@@ -3,11 +3,11 @@ package executor
 import (
 	"testing"
 
-	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	tab "github.com/assetcloud/chain/common/db/table"
 	"github.com/assetcloud/chain/system/dapp"
 	"github.com/assetcloud/chain/types"
 	"github.com/assetcloud/chain/util"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	"github.com/stretchr/testify/require"
 )
 

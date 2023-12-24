@@ -95,7 +95,7 @@ func (p *mixPolicy) getTransferOutput(exec, symbol string, req *mixTy.DepositInf
 
 }
 
-//input = output+找零+交易费
+// input = output+找零+交易费
 func getShieldValue(inputAmounts []uint64, outAmount, change, minTxFee uint64, pointHX, pointHY string) (*mixTy.ShieldAmountRst, error) {
 	var sum uint64
 	for _, i := range inputAmounts {

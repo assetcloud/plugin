@@ -9,8 +9,6 @@ import (
 	"fmt"
 	"math/big"
 	"os"
-	"sort"
-
 	"reflect"
 
 	log "github.com/assetcloud/chain/common/log/log15"
@@ -26,14 +24,20 @@ import (
 
 var (
 	evmDebugInited = false
-	// EvmAddress 本合约地址
-	EvmAddress = ""
-	driverName = evmtypes.ExecutorName
+	// 执行器地址, 格式由evm配置的地址驱动指定
+	evmExecAddress       = ""
+	evmExecFormatAddress = ""
+	driverName           = evmtypes.ExecutorName
+	elog                 = log.New("module", "evm.executor")
 )
 
 type subConfig struct {
 	// AddressDriver address driver name, support btc/eth
 	AddressDriver string `json:"addressDriver"`
+	// PreCompileAddr key: preContractorAddress  value: real contract information
+	PreCompile   runtime.TokenContract `json:"preCompile,omitempty"`
+	UpgradeUrl   string                `json:"upgradeUrl,omitempty"`
+	NonceUpGrade bool                  `json:"nonceUpGrade,omitempty"`
 }
 
 func initEvmSubConfig(sub []byte, evmEnableHeight int64) {
@@ -56,7 +60,10 @@ func initEvmSubConfig(sub []byte, evmEnableHeight int64) {
 	if err != nil {
 		panic(fmt.Sprintf("address driver must enable before %d", evmEnableHeight))
 	}
-	common.InitEvmAddressTypeOnce(driver)
+	common.InitEvmAddressDriver(driver)
+
+	runtime.CustomizePrecompiledContracts[common.HexToAddress(runtime.TokenPrecompileAddr)] = runtime.NewTokenPrecompile(&runtime.TokenContract{SuperManager: subCfg.PreCompile.SuperManager})
+
 }
 
 // Init 初始化本合约对象
@@ -66,9 +73,13 @@ func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	initEvmSubConfig(sub, enableHeight)
 	driverName = name
 	drivers.Register(cfg, driverName, newEVMDriver, enableHeight)
-	EvmAddress = address.ExecAddress(cfg.ExecName(name))
+	// 格式化为配置地址格式
+	evmExecAddress = common.StringToAddress(address.ExecAddress(cfg.ExecName(name))).String()
+	evmExecFormatAddress = address.ToLower(evmExecAddress)
+	log.Info("evmInit", "execAddr", evmExecAddress, "formatAddr", evmExecFormatAddress)
 	// 初始化硬分叉数据
 	state.InitForkData()
+	state.InitEvmCheckData()
 	InitExecType()
 }
 
@@ -205,47 +216,8 @@ func (evm *EVMExecutor) CheckTx(tx *types.Transaction, index int) error {
 	if tx == nil {
 		return fmt.Errorf("tx empty")
 	}
-	//main chain
-	if types.IsEthSignID(tx.GetSignature().GetTy()) {
-		//获取mempool 某个地址下所有交易
-		details, err := evm.GetAPI().GetTxListByAddr(&types.ReqAddrs{Addrs: []string{tx.From()}})
-		if err != nil {
-			return err
-		}
 
-		txs := details.GetTxs()
-		txs = append(txs, &types.TransactionDetail{Tx: tx, Index: int64(index)})
-		if len(txs) > 1 {
-			sort.SliceStable(txs, func(i, j int) bool { //nonce asc
-				return txs[i].Tx.GetNonce() < txs[j].Tx.GetNonce()
-			})
-			//遇到相同的Nonce ,较低的手续费的交易将被删除
-			for i, stx := range txs {
-				if bytes.Equal(stx.Tx.Hash(), tx.Hash()) {
-					continue
-				}
-				if txs[i].GetTx().GetNonce() == tx.GetNonce() {
-					bnfee := big.NewInt(txs[i].GetTx().Fee)
-					bnfee = bnfee.Mul(bnfee, big.NewInt(110))
-					bnfee = bnfee.Div(bnfee, big.NewInt(1e2))
-					if tx.Fee < bnfee.Int64() {
-						err := fmt.Errorf("requires at least 10 percent increase in handling fee,need more:%d", bnfee.Int64()-tx.Fee)
-						log.Error("checkTxNonce", "fee err", err, "txfee", tx.Fee, "mempooltx", txs[0].GetTx().Fee)
-						return err
-					}
-					//移除手续费较低的交易
-					evm.GetAPI().RemoveTxsByHashList(&types.TxHashList{
-						Hashes: [][]byte{txs[i].GetTx().Hash()},
-					})
-					return nil
-				}
-			}
-
-		}
-
-	}
-
-	return nil
+	return state.ProcessCheck(evm.GetMainHeight(), tx.Hash())
 }
 
 // GetActionName 获取运行状态名

@@ -9,13 +9,13 @@ import (
 	"math/rand"
 	"time"
 
-	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/common/address"
 	"github.com/assetcloud/chain/common/crypto"
 	l "github.com/assetcloud/chain/common/log/log15"
 	cty "github.com/assetcloud/chain/system/dapp/coins/types"
 	"github.com/assetcloud/chain/types"
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 )
 
 var log = l.New("module", "signatory")

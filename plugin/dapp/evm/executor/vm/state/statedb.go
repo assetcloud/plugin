@@ -6,8 +6,11 @@ package state
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"strings"
+
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 
 	"github.com/assetcloud/chain/system/crypto/secp256k1eth"
 
@@ -75,21 +78,20 @@ type MemoryStateDB struct {
 // 开始执行下一个区块时（执行器框架调用setEnv设置的区块高度发生变更时），会重新创建此DB对象
 func NewMemoryStateDB(StateDB db.KV, LocalDB db.KVDB, CoinsAccount *account.DB, blockHeight int64, api client.QueueProtocolAPI) *MemoryStateDB {
 	mdb := &MemoryStateDB{
-		StateDB:      StateDB,
-		LocalDB:      LocalDB,
-		CoinsAccount: CoinsAccount,
-		evmPlatformAddr: common.GetEvmAddressDriver().PubKeyToAddr(
-			address.ExecPubKey(api.GetConfig().ExecName("evm"))),
-		accounts:    make(map[string]*ContractAccount),
-		logs:        make(map[common.Hash][]*model.ContractLog),
-		logSize:     0,
-		preimages:   make(map[common.Hash][]byte),
-		stateDirty:  make(map[string]interface{}),
-		dataDirty:   make(map[string]interface{}),
-		blockHeight: blockHeight,
-		refund:      0,
-		txIndex:     0,
-		api:         api,
+		StateDB:         StateDB,
+		LocalDB:         LocalDB,
+		CoinsAccount:    CoinsAccount,
+		evmPlatformAddr: address.ExecAddress(api.GetConfig().ExecName("evm")),
+		accounts:        make(map[string]*ContractAccount),
+		logs:            make(map[common.Hash][]*model.ContractLog),
+		logSize:         0,
+		preimages:       make(map[common.Hash][]byte),
+		stateDirty:      make(map[string]interface{}),
+		dataDirty:       make(map[string]interface{}),
+		blockHeight:     blockHeight,
+		refund:          0,
+		txIndex:         0,
+		api:             api,
 	}
 	return mdb
 }
@@ -136,11 +138,18 @@ func (mdb *MemoryStateDB) AddBalance(addr, caddr string, value uint64) {
 
 // GetBalance ...
 func (mdb *MemoryStateDB) GetBalance(addr string) uint64 {
-	ac := mdb.CoinsAccount.LoadExecAccount(addr, mdb.evmPlatformAddr)
-	return uint64(ac.Balance)
+	conf := types.ConfSub(mdb.api.GetConfig(), evmtypes.ExecutorName)
+	ethMapFromExecutor := conf.GStr("ethMapFromExecutor")
+	var ac *types.Account
+	if bytes.Equal(types.GetRealExecName([]byte(ethMapFromExecutor)), []byte("coins")) {
+		ac = mdb.CoinsAccount.LoadAccount(addr)
+	} else {
+		ac = mdb.CoinsAccount.LoadExecAccount(addr, mdb.evmPlatformAddr)
+	}
+	return uint64(ac.GetBalance())
 }
 
-//GetAccountNonce 获取普通地址下的nonce,用于兼容eth签名交易
+// GetAccountNonce 获取普通地址下的nonce,用于兼容eth签名交易
 func (mdb *MemoryStateDB) GetAccountNonce(addr string) uint64 {
 	//增加合约账户信息
 	nonceV, _ := mdb.LocalDB.Get(secp256k1eth.CaculCoinsEvmAccountKey(addr))
@@ -439,8 +448,7 @@ func (mdb *MemoryStateDB) CanTransfer(sender string, amount uint64) bool {
 	} else {
 		senderAcc = mdb.CoinsAccount.LoadExecAccount(sender, mdb.evmPlatformAddr)
 	}
-	log15.Info("CanTransfer---------------->", "balance", senderAcc.Balance, "sender", sender, "evmPlatformAddr", mdb.evmPlatformAddr,
-		"mdb.CoinsAccount", mdb.CoinsAccount)
+	log15.Info("CanTransfer", "balance", senderAcc.Balance, "sender", sender, "evmPlatformAddr", mdb.evmPlatformAddr)
 
 	return senderAcc.Balance >= int64(amount)
 }
@@ -499,11 +507,87 @@ func (mdb *MemoryStateDB) Transfer(sender, recipient string, amount uint64) bool
 		})
 	}
 
-	log15.Info("transfer successful", "paracross balance", mdb.CoinsAccount.LoadExecAccount(recipient, mdb.evmPlatformAddr).Balance,
-		"coins balance", mdb.CoinsAccount.LoadAccount(recipient).GetBalance(),
-		"mdb.CoinsAccount", mdb.CoinsAccount)
+	log15.Info("transfer successful", "recipient", recipient, "paracross balance", mdb.CoinsAccount.LoadExecAccount(recipient, mdb.evmPlatformAddr).Balance,
+		"recipient coins balance", mdb.CoinsAccount.LoadAccount(recipient).GetBalance(),
+		"sender", sender, "recipient", recipient, "amount:", amount)
 
 	return true
+}
+
+// TransferToToken evm call token
+func (mdb *MemoryStateDB) TransferToToken(from, recipient, symbol string, amount int64) (bool, error) {
+	tokenInfo, err := mdb.tokenStatus(symbol)
+	if err != nil {
+		return false, err
+	}
+	if tokenInfo.GetStatus() != 1 {
+		// 0:precreated,1:created,2:revoke
+		return false, fmt.Errorf("transfer without permission,token status:%v", tokenInfo.GetStatus())
+	}
+
+	tokendb, err := account.NewAccountDB(mdb.api.GetConfig(), "token", symbol, mdb.StateDB)
+	if err != nil {
+		return false, err
+	}
+	execer := mdb.api.GetConfig().ExecName("token")
+	execaddress := address.ExecAddress(execer)
+	if recipient == execaddress {
+		return false, errors.New("not allow")
+	}
+	receipt, err := tokendb.Transfer(from, recipient, amount)
+	if err != nil {
+		return false, err
+	}
+
+	mdb.addChange(transferChange{
+		baseChange: baseChange{},
+		amount:     amount,
+		data:       receipt.GetKV(),
+		logs:       receipt.GetLogs(),
+	})
+	return true, nil
+
+}
+
+// TokenBalance 查询token 账户下的余额
+func (mdb *MemoryStateDB) TokenBalance(caller common.Address, execer, tokensymbol string) (int64, error) {
+	tokenAccount, err := account.NewAccountDB(mdb.GetConfig(), execer, tokensymbol, mdb.StateDB)
+	if err != nil {
+		return 0, err
+	}
+	acc := tokenAccount.LoadAccount(caller.String())
+	if acc == nil {
+		return 0, nil
+	}
+	return acc.Balance, nil
+}
+
+// tokenStatus 获取token 状态信息
+func (mdb *MemoryStateDB) tokenStatus(tokensymbol string) (*tokenty.LocalToken, error) {
+	tokenPreCreatedSTONewLocal := "LODB-token-create-sto-"
+	tokenKey := []byte(fmt.Sprintf(tokenPreCreatedSTONewLocal+"%d-%s-", 1, tokensymbol))
+	values, err := mdb.LocalDB.List(tokenKey, nil, 0, 0)
+	if err != nil {
+		return nil, err
+	}
+	if len(values) == 0 || values[0] == nil || len(values[0]) == 0 {
+		return nil, types.ErrNotFound
+	}
+	var tokenInfo tokenty.LocalToken
+	err = types.Decode(values[0], &tokenInfo)
+	if err != nil {
+		return nil, err
+	}
+	return &tokenInfo, nil
+}
+
+// TokenSupply 获取token 总量
+func (mdb *MemoryStateDB) TokenSupply(tokensymbol string) (int64, error) {
+	tokenInfo, err := mdb.tokenStatus(tokensymbol)
+	if err != nil {
+		return 0, err
+	}
+	return tokenInfo.Total, nil
 }
 
 // 因为chain的限制，在执行器中转账只能在以下几个方向进行：
@@ -668,4 +752,9 @@ func (mdb *MemoryStateDB) GetBlockHeight() int64 {
 // GetConfig 获取系统配置
 func (mdb *MemoryStateDB) GetConfig() *types.ChainConfig {
 	return mdb.api.GetConfig()
+}
+
+// GetApi return QueueProtocolAPI
+func (mdb *MemoryStateDB) GetApi() client.QueueProtocolAPI {
+	return mdb.api
 }

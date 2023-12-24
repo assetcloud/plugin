@@ -11,17 +11,17 @@ import (
 	"os"
 	"strings"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/rpc/jsonclient"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/system/dapp/commands"
 	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-//ParcCmd paracross cmd register
+// ParcCmd paracross cmd register
 func ParcCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "para",
@@ -162,7 +162,7 @@ func createAssetTx(cmd *cobra.Command, isWithdraw bool) (string, error) {
 	return hex.EncodeToString(txHex), nil
 }
 
-//CreateRawTransferCmd  create raw transfer tx
+// CreateRawTransferCmd  create raw transfer tx
 func CreateRawTransferCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "transfer",
@@ -190,7 +190,7 @@ func createTransfer(cmd *cobra.Command, args []string) {
 	commands.CreateAssetTransfer(cmd, args, pt.ParaX)
 }
 
-//CreateRawTransferToExecCmd create raw transfer to exec tx
+// CreateRawTransferToExecCmd create raw transfer to exec tx
 func CreateRawTransferToExecCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "transfer_exec",
@@ -218,7 +218,7 @@ func createTransferToExec(cmd *cobra.Command, args []string) {
 	commands.CreateAssetSendToExec(cmd, args, pt.ParaX)
 }
 
-//CreateRawWithdrawCmd create raw withdraw tx
+// CreateRawWithdrawCmd create raw withdraw tx
 func CreateRawWithdrawCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "withdraw",
@@ -1007,9 +1007,9 @@ func addNodeGroupApproveCmdFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("id", "i", "", "apply id for nodegroup ")
 	_ = cmd.MarkFlagRequired("id")
 
-	cmd.Flags().StringP("autonomyId", "a", "", "autonomy approved id ")
+	cmd.Flags().StringP("autonomyId", "a", "", "optional: autonomy approved id ")
 
-	cmd.Flags().Float64P("coins", "c", 0, "coins amount to frozen, not less config")
+	cmd.Flags().Float64P("coins", "c", 0, "optional: coins amount to frozen, not less config")
 
 }
 
@@ -1191,22 +1191,24 @@ func cmtTxInfo(cmd *cobra.Command, args []string) {
 // cmtTxInfoCmd query parachain is sync
 func blsPubKeyCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "pubkey",
-		Short: "get bls pub key by secp256 prikey or current wallet bls pubkey",
+		Use:   "pub",
+		Short: "get bls pub key from secp256k1 prikey",
 		Run:   blsPubKey,
 	}
+	cmd.Flags().StringP("prikey", "p", "", "secp256k1 private hex key")
 	return cmd
 }
 
 func blsPubKey(cmd *cobra.Command, args []string) {
-	cmd.Flags().StringP("prikey", "p", "", "secp256 private key")
 
-	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	prikey, _ := cmd.Flags().GetString("prikey")
-	req := &types.ReqString{Data: prikey}
-	var res pt.BlsPubKey
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "paracross.GetParaBlsPubKey", req, &res)
-	ctx.Run()
+
+	blsPub, err := getBlsPubFromSecp256Key(prikey)
+	if prikey == "" {
+		fmt.Fprintln(os.Stderr, "must input valid secp256k1 prikey, err:"+err.Error())
+		return
+	}
+	fmt.Println("blsPub:", blsPub)
 }
 
 func consusHeight(cmd *cobra.Command, args []string) {

@@ -5,6 +5,8 @@
 package rpc
 
 import (
+	"strings"
+
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/common/address"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
@@ -28,6 +30,11 @@ func bindMiner(cfg *types.ChainConfig, param *ty.ReqBindMiner) (*ty.ReplyBindMin
 
 // CreateBindMiner 创建绑定挖矿
 func (g *channelClient) CreateBindMiner(ctx context.Context, in *ty.ReqBindMiner) (*ty.ReplyBindMiner, error) {
+	//调整十六进制地址大小写转换,如果不进行大小写转换，在TicketBind 进行action.fromaddr != tbind.ReturnAddress 地址校验的时候会返回ErrFromAddr
+	if common.IsHex(in.OriginAddr) {
+		in.OriginAddr = strings.ToLower(in.OriginAddr)
+	}
+
 	if in.BindAddr != "" {
 		err := address.CheckAddress(in.BindAddr, -1)
 		if err != nil {

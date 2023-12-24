@@ -5,8 +5,8 @@
 package rpc
 
 import (
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/rpc/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 // Jrpc paracross jrpc interface

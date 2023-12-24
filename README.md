@@ -1,24 +1,22 @@
-[![API Reference](
-https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f676f6c616e672f6764646f3f7374617475732e737667
-)](https://godoc.org/github.com/assetcloud/plugin)
+[![API Reference](https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f676f6c616e672f6764646f3f7374617475732e737667)](https://godoc.org/github.com/assetcloud/plugin)
 [![pipeline status](https://api.travis-ci.org/assetcloud/plugin.svg?branch=master)](https://travis-ci.org/assetcloud/plugin/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/assetcloud/plugin?branch=master)](https://goreportcard.com/report/github.com/assetcloud/plugin)
 [![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/assetcloud/plugin?svg=true&branch=master&passingText=Windows%20-%20OK&failingText=Windows%20-%20failed&pendingText=Windows%20-%20pending)](https://ci.appveyor.com/project/assetcloud/plugin)
 [![codecov](https://codecov.io/gh/assetcloud/plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/assetcloud/plugin)
 
-# chain 官方插件系统（v1.67.3）
+# chain 官方插件系统（v1.68.4）
 
-* chain 地址: https://github.com/assetcloud/chain
+- chain 地址: https://github.com/assetcloud/chain
+- chain 官网: https://chain.33.cn
 
 ### 环境
 
+```
+golang1.19+
 
 ```
-需要安装golang1.17 or latest
 
-```
-
-#### 支持make file的平台
+#### 支持 make file 的平台
 
 ```
 //开启mod功能
@@ -29,6 +27,7 @@ export GOPROXY=https://mirrors.aliyun.com/goproxy
 
 make
 ```
+
 就可以完成编译安装
 
 ```
@@ -40,13 +39,13 @@ make
 ```
 ./chain -f chain.toml
 ```
-注意，默认配置会连接chain 测试网络
+
+注意，默认配置会连接 chain 测试网络
 
 ## 注意:
 
-使用mod管理依赖包，主要就是翻墙问题
+使用 mod 管理依赖包，主要就是翻墙问题
 为了解决包依赖翻墙下载问题，我们提供了阿里云代理。
-
 
 ## 贡献代码：
 
@@ -55,14 +54,15 @@ make
 
 #### 准备阶段:
 
-* 首先点击 右上角的 fork 图标， 把chain fork 到自己的分支 比如我的是 vipwzw/plugin
-* `git clone https://github.com/vipwzw/plugin.git $GOPATH/src/github.com/assetcloud/plugin`
+- 首先点击 右上角的 fork 图标， 把 chain fork 到自己的分支 比如我的是 vipwzw/plugin
+- `git clone https://github.com/vipwzw/plugin.git $GOPATH/src/github.com/assetcloud/plugin`
 
 ```
 注意：这里要 clone 到 $GOPATH/src/github.com/assetcloud/plugin, 否则go 包路径会找不到
 ```
 
 clone 完成后，执行
+
 ```
 make addupstream
 ```
@@ -72,16 +72,19 @@ make addupstream
 ```
 make branch b=branch_dev_name
 ```
+
 #### 提交代码
 
 ```
 make push b=branch_dev_name m="hello world"
 ```
-如果m不设置，那么不会执行 git commit 的命令
+
+如果 m 不设置，那么不会执行 git commit 的命令
 
 #### 测试代码
-类似plugin/dapp/relay,在cmd目录下编写自己插件的Makefile和build.sh
-在build目录下写testcase和相关的Dockerfile和docker-compose配置文件,
-testcase的规则参考plugin/dapp/testcase_compose_rule.md
 
-用户可以在travis自己工程里面设置自己plugin的DAPP变量，如DAPP设置为relay，则travis里面run relay的testcase
+类似 plugin/dapp/relay,在 cmd 目录下编写自己插件的 Makefile 和 build.sh
+在 build 目录下写 testcase 和相关的 Dockerfile 和 docker-compose 配置文件,
+testcase 的规则参考 plugin/dapp/testcase_compose_rule.md
+
+用户可以在 travis 自己工程里面设置自己 plugin 的 DAPP 变量，如 DAPP 设置为 relay，则 travis 里面 run relay 的 testcase

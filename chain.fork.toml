@@ -25,6 +25,8 @@ ForkTicketFundAddrV1=3350000
 ForkRootHash=4500000
 #地址key格式化, 主要针对eth地址
 ForkFormatAddressKey=0
+ForkCheckEthTxSort=0
+ForkProxyExec=0
 
 [fork.sub.none]
 ForkUseTimeDelay=0
@@ -78,6 +80,13 @@ ForkEVMFrozen=1300000
 ForkEVMYoloV1=9500000
 # EVM合约支持交易组
 ForkEVMTxGroup=0
+# EVM兼容base58及16进制地址混合调用处理
+ForkEVMMixAddress=0
+# EVM gas 计算调整
+ForkIntrinsicGas=0
+ForkEVMAddressInit=0
+ForkEvmExecNonce=0
+
 
 [fork.sub.evmxgo]
 Enable=0
@@ -94,6 +103,26 @@ ForkParamV6 = 0
 ForkParamV7 = 0
 ForkParamV8 = 0
 ForkParamV9 = 0
+ForkParamV10 = 0
+ForkParamV11 = 0
+ForkParamV12 = 0
+ForkParamV13 = 0
+ForkParamV14 = 0
+ForkParamV15 = 0
+ForkParamV16 = 0
+ForkParamV17 = 0
+ForkParamV18 = 0
+ForkParamV19 = 0
+ForkParamV20 = 0
+ForkParamV21 = 0
+ForkParamV22 = 0
+ForkParamV23 = 0
+ForkParamV24 = 0
+ForkParamV25 = 0
+ForkParamV26 = 0
+ForkParamV27 = 0
+ForkParamV28 = 0
+ForkParamV29 = 0
 
 [fork.sub.game]
 Enable=0
@@ -180,6 +209,8 @@ ForkBadTokenSymbol=184000
 ForkTokenPrice=560000
 ForkTokenSymbolWithNumber=1298600
 ForkTokenCheck=1600000
+# 增加Erc20合约对token 合约的支持
+ForkTokenEvm=0
 
 [fork.sub.trade]
 Enable=100899

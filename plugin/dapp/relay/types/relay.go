@@ -14,8 +14,8 @@ import (
 // RelayX name for executor
 var RelayX = "relay"
 
-//var tlog = log.New("module", name)
-//log for relay
+// var tlog = log.New("module", name)
+// log for relay
 const (
 	TyLogRelayCreate       = 350
 	TyLogRelayRevokeCreate = 351
@@ -54,12 +54,12 @@ func init() {
 	types.RegExec(RelayX, InitExecutor)
 }
 
-//InitFork ...
+// InitFork ...
 func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(RelayX, "Enable", 0)
 }
 
-//InitExecutor ...
+// InitExecutor ...
 func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(RelayX, NewType(cfg))
 }

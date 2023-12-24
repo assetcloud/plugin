@@ -16,7 +16,7 @@ pipeline {
         gitlabBuilds(builds: ['check'])
         checkoutToSubdirectory "src/github.com/assetcloud/plugin"
     }
-
+    tools {go 'go1.19'}
     stages {
         stage('deploy') {
             steps {

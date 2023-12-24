@@ -31,7 +31,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//EvmCmd 是Evm命令行入口
+// EvmCmd 是Evm命令行入口
 func EvmCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "evm",
@@ -259,6 +259,7 @@ func addCreateContractFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("alias", "s", "", "human readable contract alias name(optional)")
 
 	cmd.Flags().StringP("parameter", "p", "", "(optional)parameter for constructor and should be input as constructor(xxx,xxx,xxx)")
+
 }
 
 func createContract(cmd *cobra.Command, args []string) {

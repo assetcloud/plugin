@@ -3,10 +3,10 @@ package executor
 import (
 	"strings"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/common"
 	dbm "github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 )
@@ -173,7 +173,7 @@ func (a *action) supervisionNodeGroupCreate(title, targetAddrs string) (*types.R
 	return receipt, nil
 }
 
-//由于propasal id 和quit id分开，quit id不知道对应addr　proposal id的coinfrozen信息，需要维护一个围绕addr的数据库结构信息
+// 由于propasal id 和quit id分开，quit id不知道对应addr　proposal id的coinfrozen信息，需要维护一个围绕addr的数据库结构信息
 func (a *action) updateSupervisionNodeAddrStatus(stat *pt.ParaNodeGroupStatus) (*types.Receipt, error) {
 	addrStat, err := getNodeAddr(a.db, stat.Title, stat.TargetAddrs)
 	if err != nil {

@@ -16,7 +16,7 @@ NODE3="$buildpath""_parachain3_1"
 
 NODE4="$buildpath""_parachain4_1"
 
-CHAIN33_CLI="chain-cli"
+CHAIN_CLI="chain-cli"
 containers=("${NODE1}" "${NODE2}" "${NODE3}" "${NODE4}")
 ## global config ###
 sedfix=""
@@ -43,7 +43,7 @@ function para_set_toml() {
 
     sed -i $sedfix 's/^Title.*/Title="user.p.'''"$paraName"'''."/g' "${1}"
     sed -i $sedfix 's/^startHeight=.*/startHeight='''"$mainStartHeight"'''/g' "${1}"
-    sed -i $sedfix 's/^ParaRemoteGrpcClient=.*/ParaRemoteGrpcClient='''"$ParaRemoteGrpcClient"'''/g' "${1}"
+    sed -i $sedfix 's/^mainChainGrpcAddr=.*/mainChainGrpcAddr='''"$mainChainGrpcAddr"'''/g' "${1}"
     sed -i $sedfix 's/^mainLoopCheckCommitTxDoneForkHeight=.*/mainLoopCheckCommitTxDoneForkHeight='''"$mainLoopCheckCommitTxDoneForkHeight"'''/g' "${1}"
 
     # rpc
@@ -73,26 +73,26 @@ function para_import_wallet() {
     local key=$2
     local port=$1
     echo "=========== # save seed to wallet ============="
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" seed save -p 1314fuzamei -s "tortoise main civil member grace happy century convince father cage beach hip maid merry rib"
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" seed save -p 1314fuzamei -s "tortoise main civil member grace happy century convince father cage beach hip maid merry rib"
 
     echo "=========== # unlock wallet ============="
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" wallet unlock -p 1314fuzamei -t 0
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" wallet unlock -p 1314fuzamei -t 0
 
     echo "=========== # import private key ============="
     echo "key: ${key}"
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" account import_key -k "${key}" -l "paraAuthAccount"
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" account import_key -k "${key}" -l "paraAuthAccount"
 
     echo "=========== # close auto mining ============="
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" wallet auto_mine -f 0
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" wallet auto_mine -f 0
 
     echo "=========== # wallet status ============="
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" wallet status
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" wallet status
 }
 
 function para_unlock_wallet() {
     for ((i = 0; i < ${#authPort[@]}; i++)); do
         echo "=========== # para unlock wallet ${authPort[$i]}============="
-        ./$CHAIN33_CLI --rpc_laddr "http://localhost:${authPort[$i]}" wallet unlock -p 1314fuzamei -t 0
+        ./$CHAIN_CLI --rpc_laddr "http://localhost:${authPort[$i]}" wallet unlock -p 1314fuzamei -t 0
     done
 
 }

@@ -19,7 +19,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-//PrepareTestEnv ...
+// PrepareTestEnv ...
 func PrepareTestEnv() (*ethinterface.SimExtend, *ethtxs.DeployPara) {
 	genesiskey, _ := crypto.GenerateKey()
 	alloc := make(core.GenesisAlloc)
@@ -61,7 +61,7 @@ func PrepareTestEnv() (*ethinterface.SimExtend, *ethtxs.DeployPara) {
 	return sim, para
 }
 
-//DeployContracts ...
+// DeployContracts ...
 func DeployContracts() (*ethtxs.DeployPara, *ethinterface.SimExtend, *ethtxs.X2EthContracts, *ethtxs.X2EthDeployInfo, error) {
 	ctx := context.Background()
 	sim, para := PrepareTestEnv()
@@ -90,7 +90,7 @@ func DeployContracts() (*ethtxs.DeployPara, *ethinterface.SimExtend, *ethtxs.X2E
 	return para, sim, x2EthContracts, x2EthDeployInfo, nil
 }
 
-//DeployValset : 部署Valset
+// DeployValset : 部署Valset
 func DeployValset(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer common.Address, operator common.Address, initValidators []common.Address, initPowers []*big.Int) (*generated.Valset, *ethtxs.DeployResult, error) {
 	auth, err := ethtxs.PrepareAuth(client, privateKey, deployer)
 	if nil != err {
@@ -111,7 +111,7 @@ func DeployValset(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKe
 	return valset, deployResult, nil
 }
 
-//DeployChainBridge : 部署ChainBridge
+// DeployChainBridge : 部署ChainBridge
 func DeployChainBridge(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer common.Address, operator, valset common.Address) (*generated.ChainBridge, *ethtxs.DeployResult, error) {
 	auth, err := ethtxs.PrepareAuth(client, privateKey, deployer)
 	if nil != err {
@@ -131,7 +131,7 @@ func DeployChainBridge(client ethinterface.EthClientSpec, privateKey *ecdsa.Priv
 	return chainBridge, deployResult, nil
 }
 
-//DeployOracle : 部署Oracle
+// DeployOracle : 部署Oracle
 func DeployOracle(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer, operator, valset, chainBridge common.Address) (*generated.Oracle, *ethtxs.DeployResult, error) {
 	auth, err := ethtxs.PrepareAuth(client, privateKey, deployer)
 	if nil != err {
@@ -151,7 +151,7 @@ func DeployOracle(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKe
 	return oracle, deployResult, nil
 }
 
-//DeployBridgeBank : 部署BridgeBank
+// DeployBridgeBank : 部署BridgeBank
 func DeployBridgeBank(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer, operator, oracle, chainBridge common.Address) (*generated.BridgeBank, *ethtxs.DeployResult, error) {
 	auth, err := ethtxs.PrepareAuth(client, privateKey, deployer)
 	if nil != err {
@@ -171,7 +171,7 @@ func DeployBridgeBank(client ethinterface.EthClientSpec, privateKey *ecdsa.Priva
 	return bridgeBank, deployResult, nil
 }
 
-//DeployBridgeRegistry : 部署BridgeRegistry
+// DeployBridgeRegistry : 部署BridgeRegistry
 func DeployBridgeRegistry(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer, chainBridgeAddr, bridgeBankAddr, oracleAddr, valsetAddr common.Address) (*generated.BridgeRegistry, *ethtxs.DeployResult, error) {
 	auth, err := ethtxs.PrepareAuth(client, privateKey, deployer)
 	if nil != err {
@@ -191,7 +191,7 @@ func DeployBridgeRegistry(client ethinterface.EthClientSpec, privateKey *ecdsa.P
 	return bridgeRegistry, deployResult, nil
 }
 
-//DeployAndInit ...
+// DeployAndInit ...
 func DeployAndInit(client ethinterface.EthClientSpec, para *ethtxs.DeployPara) (*ethtxs.X2EthContracts, *ethtxs.X2EthDeployInfo, error) {
 	x2EthContracts := &ethtxs.X2EthContracts{}
 	deployInfo := &ethtxs.X2EthDeployInfo{}

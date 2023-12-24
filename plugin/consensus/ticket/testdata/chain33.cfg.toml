@@ -1,6 +1,6 @@
-Title="local"
-TestNet=true
-FixTime=false
+Title = "local"
+TestNet = true
+FixTime = false
 
 [crypto]
 [log]
@@ -25,49 +25,49 @@ callerFile = false
 callerFunction = false
 
 [blockchain]
-defCacheSize=128
-maxFetchBlockNum=128
-timeoutSeconds=5
-batchBlockNum=128
-driver="memdb"
-dbPath="datadir"
-dbCache=64
-isStrongConsistency=false
-singleMode=true
-batchsync=false
-isRecordBlockSequence=true
-isParaChain=false
-enableTxQuickIndex=false
+defCacheSize = 128
+maxFetchBlockNum = 128
+timeoutSeconds = 5
+batchBlockNum = 128
+driver = "memdb"
+dbPath = "datadir"
+dbCache = 64
+isStrongConsistency = false
+singleMode = true
+batchsync = false
+isRecordBlockSequence = true
+isParaChain = false
+enableTxQuickIndex = false
 
 [p2p]
-types=["dht"]
-enable=false
-msgCacheSize=10240
-driver="memdb"
-dbPath="datadir/addrbook"
-dbCache=4
-grpcLogFile="grpc33.log"
+types = ["dht"]
+enable = false
+msgCacheSize = 10240
+driver = "memdb"
+dbPath = "datadir/addrbook"
+dbCache = 4
+grpcLogFile = "grpc33.log"
 
 [rpc]
-jrpcBindAddr="localhost:0"
-grpcBindAddr="localhost:0"
-whitelist=["127.0.0.1"]
-jrpcFuncWhitelist=["*"]
-grpcFuncWhitelist=["*"]
+jrpcBindAddr = "localhost:0"
+grpcBindAddr = "localhost:0"
+whitelist = ["127.0.0.1"]
+jrpcFuncWhitelist = ["*"]
+grpcFuncWhitelist = ["*"]
 
 [mempool]
-name="timeline"
-poolCacheSize=10240
-minTxFeeRate=100000
-maxTxNumPerAccount=10000
+name = "timeline"
+poolCacheSize = 10240
+minTxFeeRate = 100000
+maxTxNumPerAccount = 10000
 
 [consensus]
-name="ticket"
-minerstart=true
-genesisBlockTime=1514533394
-genesis="14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
-minerExecs=["ticket", "autonomy"]
-enableBestBlockCmp=true
+name = "ticket"
+minerstart = true
+genesisBlockTime = 1514533394
+genesis = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+minerExecs = ["ticket", "autonomy"]
+enableBestBlockCmp = true
 
 [mver.consensus]
 fundKeyAddr = "1BQXS6TxaYYG5mADaWij4AxhZZUTpw95a5"
@@ -97,87 +97,87 @@ targetTimespan = 2304
 targetTimePerBlock = 16
 
 [mver.consensus.ticket.ForkChainParamV1]
-targetTimespan = 288 #only for test
+targetTimespan = 288   #only for test
 targetTimePerBlock = 2
 
 [consensus.sub.solo]
-genesis="14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
-genesisBlockTime=1514533394
-waitTxMs=10
+genesis = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+genesisBlockTime = 1514533394
+waitTxMs = 10
 
 [consensus.sub.ticket]
-genesisBlockTime=1514533394
+genesisBlockTime = 1514533394
 [[consensus.sub.ticket.genesis]]
-minerAddr="12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"
-returnAddr="14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
-count=3000
+minerAddr = "12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"
+returnAddr = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+count = 3000
 
 [[consensus.sub.ticket.genesis]]
-minerAddr="1PUiGcbsccfxW3zuvHXZBJfznziph5miAo"
-returnAddr="1EbDHAXpoiewjPLX9uqoz38HsKqMXayZrF"
-count=100
+minerAddr = "1PUiGcbsccfxW3zuvHXZBJfznziph5miAo"
+returnAddr = "1EbDHAXpoiewjPLX9uqoz38HsKqMXayZrF"
+count = 100
 
 [[consensus.sub.ticket.genesis]]
-minerAddr="1EDnnePAZN48aC2hiTDzhkczfF39g1pZZX"
-returnAddr="1KcCVZLSQYRUwE5EXTsAoQs9LuJW6xwfQa"
-count=100
+minerAddr = "1EDnnePAZN48aC2hiTDzhkczfF39g1pZZX"
+returnAddr = "1KcCVZLSQYRUwE5EXTsAoQs9LuJW6xwfQa"
+count = 100
 
 [store]
-name="mavl"
-driver="memdb"
-dbPath="datadir/mavltree"
-dbCache=128
+name = "mavl"
+driver = "memdb"
+dbPath = "datadir/mavltree"
+dbCache = 128
 
 [store.sub.mavl]
-enableMavlPrefix=false
-enableMVCC=false
+enableMavlPrefix = false
+enableMVCC = false
 
 [wallet]
-minFee=100000
-driver="memdb"
-dbPath="wallet"
-dbCache=16
-signType="secp256k1"
+minFee = 100000
+driver = "memdb"
+dbPath = "wallet"
+dbCache = 16
+signType = "secp256k1"
 
 [wallet.sub.ticket]
-minerdisable=false
-minerwhitelist=["*"]
-minerWaitTime="1s"
+minerdisable = false
+minerwhitelist = ["*"]
+minerWaitTime = "1s"
 
 [exec]
-enableStat=false
-enableMVCC=false
-alias=["token1:token","token2:token","token3:token"]
+enableStat = false
+enableMVCC = false
+alias = ["token1:token", "token2:token", "token3:token"]
 
 [exec.sub.token]
-saveTokenTxList=true
+saveTokenTxList = true
 tokenApprs = [
-	"1Bsg9j6gW83sShoee1fZAt9TkUjcrCgA9S",
-	"1Q8hGLfoGe63efeWa8fJ4Pnukhkngt6poK",
-	"1LY8GFia5EiyoTodMLfkB5PHNNpXRqxhyB",
-	"1GCzJDS6HbgTQ2emade7mEJGGWFfA15pS9",
-	"1JYB8sxi4He5pZWHCd3Zi2nypQ4JMB6AxN",
-	"12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv",
+  "1Bsg9j6gW83sShoee1fZAt9TkUjcrCgA9S",
+  "1Q8hGLfoGe63efeWa8fJ4Pnukhkngt6poK",
+  "1LY8GFia5EiyoTodMLfkB5PHNNpXRqxhyB",
+  "1GCzJDS6HbgTQ2emade7mEJGGWFfA15pS9",
+  "1JYB8sxi4He5pZWHCd3Zi2nypQ4JMB6AxN",
+  "12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv",
 ]
 
 [exec.sub.relay]
-genesis="14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+genesis = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
 
 [exec.sub.cert]
 # 是否启用证书验证和签名
-enable=false
+enable = false
 # 加密文件路径
-cryptoPath="authdir/crypto"
+cryptoPath = "authdir/crypto"
 # 带证书签名类型，支持"auth_ecdsa", "auth_sm2"
-signType="auth_ecdsa"
+signType = "auth_ecdsa"
 
 [exec.sub.manage]
-superManager=[
-    "1Bsg9j6gW83sShoee1fZAt9TkUjcrCgA9S",
-    "12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv",
-    "1Q8hGLfoGe63efeWa8fJ4Pnukhkngt6poK"
+superManager = [
+  "1Bsg9j6gW83sShoee1fZAt9TkUjcrCgA9S",
+  "12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv",
+  "1Q8hGLfoGe63efeWa8fJ4Pnukhkngt6poK",
 ]
 
 [exec.sub.autonomy]
-total="16htvcBNSEA7fZhAdLJphDwQRQJaHpyHTp"
-useBalance=false
+total = "16htvcBNSEA7fZhAdLJphDwQRQJaHpyHTp"
+useBalance = false

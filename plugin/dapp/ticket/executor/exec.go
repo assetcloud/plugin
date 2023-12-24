@@ -40,7 +40,7 @@ func (t *Ticket) Exec_Tclose(payload *ty.TicketClose, tx *types.Transaction, ind
 	return actiondb.TicketClose(payload)
 }
 
-//Exec_Miner exec miner
+// Exec_Miner exec miner
 func (t *Ticket) Exec_Miner(payload *ty.TicketMiner, tx *types.Transaction, index int) (*types.Receipt, error) {
 	actiondb := NewAction(t, tx)
 	return actiondb.TicketMiner(payload, index)

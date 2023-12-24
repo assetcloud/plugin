@@ -7,10 +7,10 @@ package executor
 import (
 	"encoding/hex"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/client"
 	dbm "github.com/assetcloud/chain/common/db"
 	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 func getTitle(db dbm.KV, key []byte) (*pt.ParacrossStatus, error) {
@@ -54,7 +54,7 @@ func saveTitleHeight(db dbm.KV, key []byte, heightStatus types.Message /* height
 	return db.Set(key, val)
 }
 
-//GetBlock get block detail by block hash
+// GetBlock get block detail by block hash
 func GetBlock(api client.QueueProtocolAPI, blockHash []byte) (*types.BlockDetail, error) {
 	blockDetails, err := api.GetBlockByHashes(&types.ReqHashes{Hashes: [][]byte{blockHash}})
 	if err != nil {
@@ -83,17 +83,27 @@ func getBlockHash(api client.QueueProtocolAPI, height int64) (*types.ReplyHash, 
 	return hash, nil
 }
 
-func getBlockInfo(api client.QueueProtocolAPI, height int64) (*types.Block, error) {
-	blockDetails, err := api.GetBlocks(&types.ReqBlocks{Start: height, End: height})
+func getBlockByHeight(api client.QueueProtocolAPI, height int64, withDetail bool) (*types.BlockDetail, error) {
+
+	blockDetails, err := api.GetBlocks(&types.ReqBlocks{Start: height, End: height, IsDetail: withDetail})
 	if err != nil {
-		clog.Error("paracross.Commit getBlockInfo", "height", height, "err", err.Error())
+		clog.Error("getBlockByHeight", "height", height, "err", err.Error())
 		return nil, err
 	}
 	if 1 != int64(len(blockDetails.Items)) {
-		clog.Error("paracross.Commit getBlockInfo count")
+		clog.Error("getBlockByHeight count err", "height", height)
 		return nil, types.ErrInvalidParam
 	}
-	return blockDetails.Items[0].Block, nil
+
+	return blockDetails.Items[0], nil
+}
+
+func getBlockInfo(api client.QueueProtocolAPI, height int64) (*types.Block, error) {
+	detail, err := getBlockByHeight(api, height, false)
+	if err != nil {
+		clog.Error("paracross.Commit getBlockInfo", "height", height, "err", err.Error())
+	}
+	return detail.Block, nil
 }
 
 func isNotFound(err error) bool {
@@ -103,7 +113,7 @@ func isNotFound(err error) bool {
 	return false
 }
 
-//GetTx get tx by tx hash
+// GetTx get tx by tx hash
 func GetTx(api client.QueueProtocolAPI, txHash []byte) (*types.TransactionDetail, error) {
 	txs, err := api.GetTransactionByHash(&types.ReqHashes{Hashes: [][]byte{txHash}})
 	if err != nil {

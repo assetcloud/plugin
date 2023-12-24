@@ -21,12 +21,12 @@ import (
 const CECBLOCKSIZE = 32
 
 /*
- 从secp256k1根私钥创建支票需要的私钥和公钥
- payPrivKey = rootPrivKey *G_X25519 这样很难泄露rootPrivKey
+从secp256k1根私钥创建支票需要的私钥和公钥
+payPrivKey = rootPrivKey *G_X25519 这样很难泄露rootPrivKey
 
- 支票花费key:  payPrivKey
- 支票收款key： ReceiveKey= hash(payPrivKey)  --或者*G的X坐标值, 看哪个电路少？
- DH加解密key: encryptPubKey= payPrivKey *G_X25519, 也是很安全的，只是电路里面目前不支持x25519
+支票花费key:  payPrivKey
+支票收款key： ReceiveKey= hash(payPrivKey)  --或者*G的X坐标值, 看哪个电路少？
+DH加解密key: encryptPubKey= payPrivKey *G_X25519, 也是很安全的，只是电路里面目前不支持x25519
 */
 func newPrivacyKey(rootPrivKey []byte) *mixTy.AccountPrivacyKey {
 	ecdh := X25519()
@@ -54,9 +54,9 @@ func newPrivacyKey(rootPrivKey []byte) *mixTy.AccountPrivacyKey {
 	return privacy
 }
 
-//CEC加密需要保证明文是秘钥的倍数，如果不是，则需要填充明文，在解密时候把填充物去掉
-//填充算法有pkcs5,pkcs7, 比如Pkcs5的思想填充的值为填充的长度，比如加密he,不足8
-//则填充为he666666, 解密后直接算最后一个值为6，把解密值的后6个Byte去掉即可
+// CEC加密需要保证明文是秘钥的倍数，如果不是，则需要填充明文，在解密时候把填充物去掉
+// 填充算法有pkcs5,pkcs7, 比如Pkcs5的思想填充的值为填充的长度，比如加密he,不足8
+// 则填充为he666666, 解密后直接算最后一个值为6，把解密值的后6个Byte去掉即可
 func pKCS5Padding(plainText []byte, blockSize int) []byte {
 	if blockSize < CECBLOCKSIZE {
 		blockSize = CECBLOCKSIZE

@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	exchangetypes "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 	rpctypes "github.com/assetcloud/chain/rpc/types"
+	exchangetypes "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 )
 
 /*

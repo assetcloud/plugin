@@ -17,12 +17,12 @@ func init() {
 	types.RegExec(DPosX, InitExecutor)
 }
 
-//InitFork ...
+// InitFork ...
 func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(DPosX, "Enable", 0)
 }
 
-//InitExecutor ...
+// InitExecutor ...
 func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(DPosX, NewType(cfg))
 }

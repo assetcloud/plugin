@@ -17,7 +17,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 )
 
-//EthTxStatus ...
+// EthTxStatus ...
 type EthTxStatus int32
 
 type nonceMutex struct {
@@ -27,18 +27,18 @@ type nonceMutex struct {
 
 var addr2Nonce = make(map[common.Address]nonceMutex)
 
-//String ...
+// String ...
 func (ethTxStatus EthTxStatus) String() string {
 	return [...]string{"Fail", "Success", "Pending"}[ethTxStatus]
 }
 
-//const
+// const
 const (
 	PendingDuration4TxExeuction = 300
 	EthTxPending                = EthTxStatus(2)
 )
 
-//SignClaim4Eth ...
+// SignClaim4Eth ...
 func SignClaim4Eth(hash common.Hash, privateKey *ecdsa.PrivateKey) ([]byte, error) {
 	rawSignature, _ := prefixMessage(hash, privateKey)
 	signature := hexutil.Bytes(rawSignature)
@@ -91,7 +91,7 @@ func revokeNonce(sender common.Address) (*big.Int, error) {
 	return nil, errors.New("address doesn't exist tx")
 }
 
-//PrepareAuth ...
+// PrepareAuth ...
 func PrepareAuth(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, transactor common.Address) (*bind.TransactOpts, error) {
 	if nil == privateKey || nil == client {
 		txslog.Error("PrepareAuth", "nil input parameter", "client", client, "privateKey", privateKey)
@@ -137,7 +137,7 @@ func waitEthTxFinished(client ethinterface.EthClientSpec, txhash common.Hash, tx
 	}
 }
 
-//GetEthTxStatus ...
+// GetEthTxStatus ...
 func GetEthTxStatus(client ethinterface.EthClientSpec, txhash common.Hash) string {
 	receipt, err := client.TransactionReceipt(context.Background(), txhash)
 	if nil != err {

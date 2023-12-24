@@ -9,7 +9,7 @@ import (
 	wcom "github.com/assetcloud/chain/wallet/common"
 )
 
-//newStore new storage
+// newStore new storage
 func newStore(db db.DB) *ticketStore {
 	return &ticketStore{Store: wcom.NewStore(db)}
 }

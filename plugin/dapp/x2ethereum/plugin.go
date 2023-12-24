@@ -1,11 +1,11 @@
 package x2ethereum
 
 import (
+	"github.com/assetcloud/chain/pluginmgr"
 	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/commands"
 	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/executor"
 	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/rpc"
 	x2ethereumtypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
-	"github.com/assetcloud/chain/pluginmgr"
 )
 
 /*

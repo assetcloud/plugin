@@ -1,7 +1,7 @@
 title = "relayd"
 
 trace = false
-Tick33 =60
+Tick33 = 60
 TickBTC = 30
 firstBtcHeight = 10
 # 0：btcd ; 1:btcdweb
@@ -62,4 +62,3 @@ compress = true
 callerFile = false
 # 是否打印调用方法
 callerFunction = false
-

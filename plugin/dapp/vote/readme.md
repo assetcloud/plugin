@@ -1,19 +1,20 @@
-
 ## 投票合约
+
 基于区块链，公开透明的投票系统
 
-
 ### 交易功能
+
 以下功能需要创建交易，并在链上执行
 
 #### 创建投票组(CreateGroup)
 
 - 设定投票组名称，管理员和组成员
 - 默认创建者为管理员
-- 可设定组成员的投票权重，默认都为1
-- 投票组ID在交易执行后自动生成
+- 可设定组成员的投票权重，默认都为 1
+- 投票组 ID 在交易执行后自动生成
 
 ##### 交易请求
+
 ```proto
 
 //创建投票组
@@ -33,6 +34,7 @@ message GroupMember {
 ```
 
 ##### 交易回执
+
 ```proto
 
 // 投票组信息
@@ -49,9 +51,10 @@ message GroupInfo {
 }
 
 ```
+
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain.CreateTransaction
+- 创建交易通用 json rpc 接口，Chain.CreateTransaction
 - actionName: CreateGroup
 
 ```bash
@@ -59,9 +62,11 @@ curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actio
 ```
 
 #### 更新投票组(UpdateGroup)
-指定投票组ID，并由管理员添加或删除组成员、管理员
+
+指定投票组 ID，并由管理员添加或删除组成员、管理员
 
 ##### 交易请求
+
 ```proto
 message UpdateGroup {
     string   groupID                = 1; //投票组ID
@@ -77,7 +82,9 @@ message GroupMember {
     string nickName   = 3; //群昵称
 }
 ```
+
 ##### 交易回执
+
 ```proto
 
 // 投票组信息
@@ -97,7 +104,7 @@ message GroupInfo {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain.CreateTransaction
+- 创建交易通用 json rpc 接口，Chain.CreateTransaction
 - actionName: UpdateGroup
 
 ```bash
@@ -105,12 +112,14 @@ curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actio
 ```
 
 #### 创建投票(CreateVote)
+
 - 由管理员发起
-- 设定投票名称，投票选项，关联投票组ID
+- 设定投票名称，投票选项，关联投票组 ID
 - 关联投票组，即只有这些投票组的成员进行投票
-- 投票ID在交易执行后生成
+- 投票 ID 在交易执行后生成
 
 ##### 交易请求
+
 ```proto
 
 // 创建投票交易，请求结构
@@ -126,6 +135,7 @@ message CreateVote {
 ```
 
 ##### 交易回执
+
 ```proto
 
 //投票信息
@@ -152,7 +162,7 @@ message VoteOption {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain.CreateTransaction
+- 创建交易通用 json rpc 接口，Chain.CreateTransaction
 - actionName: CreateVote
 
 ```bash
@@ -160,11 +170,13 @@ curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actio
 ```
 
 #### 提交投票(CommitVote)
+
 - 投票组成员发起投票交易
-- 指定投票ID，投票选项
+- 指定投票 ID，投票选项
 - 投票选项使用数组下标标识，而不是选项内容
 
 ##### 交易请求
+
 ```proto
 
 // 创建提交投票交易，请求结构
@@ -176,6 +188,7 @@ message CommitVote {
 ```
 
 ##### 交易回执
+
 ```proto
 
 //投票信息
@@ -188,7 +201,7 @@ message CommitInfo {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain.CreateTransaction
+- 创建交易通用 json rpc 接口，Chain.CreateTransaction
 - actionName: CommitVote
 
 ```bash
@@ -197,9 +210,11 @@ curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actio
 ```
 
 #### 关闭投票(CloseVote)
+
 - 由管理员发起，将指定投票关闭
 
 ##### 交易请求
+
 ```proto
 
 message CloseVote {
@@ -209,6 +224,7 @@ message CloseVote {
 ```
 
 ##### 交易回执
+
 ```proto
 
 message VoteInfo {
@@ -229,7 +245,7 @@ message VoteInfo {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain.CreateTransaction
+- 创建交易通用 json rpc 接口，Chain.CreateTransaction
 - actionName: CloseVote
 
 ```bash
@@ -237,9 +253,11 @@ curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actio
 ```
 
 #### 更新用户信息(UpdateMember)
+
 - 目前仅支持用户更新名称信息
 
 ##### 交易请求
+
 ```proto
 
 message UpdateMember {
@@ -249,6 +267,7 @@ message UpdateMember {
 ```
 
 ##### 交易回执
+
 ```proto
 
 message MemberInfo {
@@ -260,21 +279,23 @@ message MemberInfo {
 
 ##### 创建交易示例
 
-- 创建交易通用json rpc接口，Chain.CreateTransaction
+- 创建交易通用 json rpc 接口，Chain.CreateTransaction
 - actionName: UpdateMember
 
 ```bash
  curl -kd  '{"method":"Chain.CreateTransaction","params":[{"execer":"vote","actionName":"UpdateMember","payload":{"name":"name1"}}],"id":0}' http://localhost:8801
 ```
 
-
 ### 查询功能
+
 以下功能为本地查询，无需创建交易
 
 #### 获取组信息(GetGroups)
-根据投票组ID查询组信息，支持多个同时查询
+
+根据投票组 ID 查询组信息，支持多个同时查询
 
 ##### 请求结构
+
 ```proto
 message ReqStrings {
     repeated string items = 1; //投票组ID列表
@@ -288,9 +309,10 @@ message GroupInfos {
     repeated GroupInfo groupList = 1; //投票组信息列表
 }
 ```
+
 ##### 示例
 
-- 通用查询json rpc接口，Chain.Query
+- 通用查询 json rpc 接口，Chain.Query
 - funcName: GetGroups
 
 ```bash
@@ -298,9 +320,11 @@ curl -ksd '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"GetGro
 ```
 
 #### 获取投票信息(GetVotes)
-根据投票ID查询投票信息，支持多个同时查询
+
+根据投票 ID 查询投票信息，支持多个同时查询
 
 ##### 请求结构
+
 ```proto
 message ReqStrings {
     repeated string items = 1; //投票ID列表
@@ -308,6 +332,7 @@ message ReqStrings {
 ```
 
 ##### 响应结构
+
 ```proto
 message ReplyVoteList {
     repeated VoteInfo voteList         = 1; //投票列表
@@ -317,7 +342,7 @@ message ReplyVoteList {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain.Query
+- 通用查询 json rpc 接口，Chain.Query
 - funcName: GetVotes
 
 ```bash
@@ -325,9 +350,11 @@ curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"GetVot
 ```
 
 #### 获取成员信息(GetMembers)
+
 根据用户地址，获取用户信息，支持多个同时查询
 
 ##### 请求结构
+
 ```proto
 message ReqStrings {
     repeated string items = 1; //用户地址列表
@@ -335,6 +362,7 @@ message ReqStrings {
 ```
 
 ##### 响应结构
+
 ```proto
 
 message MemberInfos {
@@ -350,17 +378,20 @@ message MemberInfo {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain.Query
+- 通用查询 json rpc 接口，Chain.Query
 - funcName: GetMembers
 -
+
 ```bash
 curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"GetMembers","payload":{"items":["1BQXS6TxaYYG5mADaWij4AxhZZUTpw95a5"]}}],"id":0}' http://localhost:8801
 ```
 
 #### 获取投票组列表(ListGroup)
+
 全局投票组有序列表
 
 ##### 请求结构
+
 ```proto
 //列表请求结构
 message ReqListItem {
@@ -371,6 +402,7 @@ message ReqListItem {
 ```
 
 ##### 响应结构
+
 ```proto
 message GroupInfos {
     repeated GroupInfo groupList = 1; //投票组信息列表
@@ -379,7 +411,7 @@ message GroupInfos {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain.Query
+- 通用查询 json rpc 接口，Chain.Query
 - funcName: ListGroup
 
 ```bash
@@ -387,11 +419,13 @@ curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"ListGr
 ```
 
 #### 获取投票列表(ListVote)
+
 - 获取全局投票列表
-- 可指定groupID，获取指定组的投票列表
-- 可指定投票状态进行分页查找, status 0表示不做状态区分
+- 可指定 groupID，获取指定组的投票列表
+- 可指定投票状态进行分页查找, status 0 表示不做状态区分
 
 ##### 请求结构
+
 ```proto
 //列表请求结构
 message ReqListVote {
@@ -407,8 +441,8 @@ message ReqListItem {
 }
 ```
 
-
 ##### 响应结构
+
 ```proto
 message ReplyVoteList {
     repeated VoteInfo voteList         = 1; //投票列表
@@ -418,7 +452,7 @@ message ReplyVoteList {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain.Query
+- 通用查询 json rpc 接口，Chain.Query
 - funcName: ListVote
 
 ```bash
@@ -426,6 +460,7 @@ curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"ListVo
 ```
 
 #### 获取用户列表(ListMember)
+
 全局用户有序列表
 
 ##### 请求结构
@@ -440,6 +475,7 @@ message ReqListItem {
 ```
 
 ##### 响应结构
+
 ```proto
 message MemberInfos {
     repeated MemberInfo memberList = 1; //投票组成员信息列表
@@ -448,7 +484,7 @@ message MemberInfos {
 
 ##### 示例
 
-- 通用查询json rpc接口，Chain.Query
+- 通用查询 json rpc 接口，Chain.Query
 - funcName: ListMember
 
 ```bash
@@ -456,31 +492,29 @@ curl -kd  '{"method":"Chain.Query","params":[{"execer":"vote","funcName":"ListMe
 ```
 
 #### 错误码表
+
 发送交易和查询等接口可能返回的错误
 
-|名称 |含义
-|---|---|
-errEmptyName|       名称为空
-errInvalidMemberWeights | 非法投票权重
-errDuplicateMember      | 投票组成员重复
-errDuplicateAdmin       | 投票组管理员重复
-errInvalidVoteTime      | 非法投票时间
-errInvalidVoteOption    | 非法投票选项
-errVoteNotExist         | 投票不存在
-errGroupNotExist        | 投票组不存在
-errStateDBGet           | 状态数据获取错误
-errInvalidVoteID        | 非法投票ID
-errInvalidGroupID       | 非法投票组ID
-errInvalidOptionIndex   | 非法投票索引
-errAddrAlreadyVoted     | 已完成投票
-errVoteAlreadyFinished  | 投票已结束
-errVoteNotStarted       | 投票未开始
-errVoteAlreadyClosed    | 投票已关闭
-errAddrPermissionDenied | 地址没有权限
-
-
-
+| 名称                    | 含义             |
+| ----------------------- | ---------------- |
+| errEmptyName            | 名称为空         |
+| errInvalidMemberWeights | 非法投票权重     |
+| errDuplicateMember      | 投票组成员重复   |
+| errDuplicateAdmin       | 投票组管理员重复 |
+| errInvalidVoteTime      | 非法投票时间     |
+| errInvalidVoteOption    | 非法投票选项     |
+| errVoteNotExist         | 投票不存在       |
+| errGroupNotExist        | 投票组不存在     |
+| errStateDBGet           | 状态数据获取错误 |
+| errInvalidVoteID        | 非法投票 ID      |
+| errInvalidGroupID       | 非法投票组 ID    |
+| errInvalidOptionIndex   | 非法投票索引     |
+| errAddrAlreadyVoted     | 已完成投票       |
+| errVoteAlreadyFinished  | 投票已结束       |
+| errVoteNotStarted       | 投票未开始       |
+| errVoteAlreadyClosed    | 投票已关闭       |
+| errAddrPermissionDenied | 地址没有权限     |
 
 #### 其他
 
-[投票合约proto源文件](proto/vote.proto)
+[投票合约 proto 源文件](proto/vote.proto)
