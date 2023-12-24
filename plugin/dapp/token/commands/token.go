@@ -10,14 +10,14 @@ import (
 	"os"
 	"strings"
 
-	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
+	cmdtypes "github.com/33cn/chain33/system/dapp/commands/types"
 	"github.com/pkg/errors"
 
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
-	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/common/commands"
+	tokenty "github.com/33cn/plugin/plugin/dapp/token/types"
 	"github.com/spf13/cobra"
 )
 
@@ -168,7 +168,7 @@ func getPreCreatedTokens(cmd *cobra.Command, args []string) {
 		return
 	}
 	var res tokenty.ReplyTokens
-	err = rpc.Call("Chain.Query", params, &res)
+	err = rpc.Call("Chain33.Query", params, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -221,7 +221,7 @@ func getFinishCreatedTokens(cmd *cobra.Command, args []string) {
 		return
 	}
 	var res tokenty.ReplyTokens
-	err = rpc.Call("Chain.Query", params, &res)
+	err = rpc.Call("Chain33.Query", params, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -284,7 +284,7 @@ func tokenAssets(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res tokenty.ReplyAccountTokenAssets
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 	ctx.SetResultCbExt(parseTokenAssetsRes)
 	ctx.RunExt(cfg)
 }
@@ -628,7 +628,7 @@ func getTokenLogs(cmd *cobra.Command, args []string) {
 		return
 	}
 	var res tokenty.ReplyTokenLogs
-	err = rpc.Call("Chain.Query", params, &res)
+	err = rpc.Call("Chain33.Query", params, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -681,7 +681,7 @@ func getToken(cmd *cobra.Command, args []string) {
 	}
 
 	var res tokenty.LocalToken
-	err = rpc.Call("Chain.Query", params, &res)
+	err = rpc.Call("Chain33.Query", params, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -746,6 +746,6 @@ func queryTx(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res types.ReplyTxInfos
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 	ctx.Run()
 }

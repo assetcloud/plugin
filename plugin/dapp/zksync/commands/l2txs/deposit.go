@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 )
 
 func sendDepositTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deposit",
-		Short: "send deposit tx to chain",
+		Short: "send deposit tx to chain33",
 		Run:   sendDeposit,
 	}
 	sendDepositFlags(cmd)
@@ -27,8 +27,8 @@ func sendDepositFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("amount")
 	cmd.Flags().StringP("ethAddr", "e", "", "from eth addr")
 	_ = cmd.MarkFlagRequired("ethAddr")
-	cmd.Flags().StringP("chainAddr", "a", "", "to chain addr")
-	_ = cmd.MarkFlagRequired("chainAddr")
+	cmd.Flags().StringP("chain33Addr", "a", "", "to chain33 addr")
+	_ = cmd.MarkFlagRequired("chain33Addr")
 
 	cmd.Flags().StringP("key", "k", "", "private key")
 	_ = cmd.MarkFlagRequired("key")
@@ -40,7 +40,7 @@ func sendDeposit(cmd *cobra.Command, args []string) {
 	queueId, _ := cmd.Flags().GetInt64("queueId")
 	amount, _ := cmd.Flags().GetString("amount")
 	ethAddress, _ := cmd.Flags().GetString("ethAddr")
-	chainAddr, _ := cmd.Flags().GetString("chainAddr")
+	chain33Addr, _ := cmd.Flags().GetString("chain33Addr")
 	privateKey, _ := cmd.Flags().GetString("key")
 	paraName, _ := cmd.Flags().GetString("paraName")
 
@@ -48,7 +48,7 @@ func sendDeposit(cmd *cobra.Command, args []string) {
 		TokenId:      tokenId,
 		Amount:       amount,
 		EthAddress:   ethAddress,
-		ChainAddr:    chainAddr,
+		Chain33Addr:  chain33Addr,
 		L1PriorityId: queueId,
 	}
 
@@ -59,9 +59,9 @@ func sendDeposit(cmd *cobra.Command, args []string) {
 		},
 	}
 
-	tx, err := createChainTx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
+	tx, err := createChain33Tx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
 	if nil != err {
-		fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
+		fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
 		return
 	}
 	sendTx(rpcLaddr, tx)
@@ -70,7 +70,7 @@ func sendDeposit(cmd *cobra.Command, args []string) {
 func batchSendDepositTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "batchdeposit",
-		Short: "send deposit tx to chain batch",
+		Short: "send deposit tx to chain33 batch",
 		Run:   batchSendDeposit,
 	}
 	batchSendDepositFlags(cmd)
@@ -88,8 +88,8 @@ func batchSendDepositFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("amount")
 	cmd.Flags().StringP("ethAddr", "e", "", "from eth addr")
 	_ = cmd.MarkFlagRequired("ethAddr")
-	cmd.Flags().StringP("chainAddr", "a", "", "to chain addr")
-	_ = cmd.MarkFlagRequired("chainAddr")
+	cmd.Flags().StringP("chain33Addr", "a", "", "to chain33 addr")
+	_ = cmd.MarkFlagRequired("chain33Addr")
 
 	cmd.Flags().StringP("key", "k", "", "private key")
 	_ = cmd.MarkFlagRequired("key")
@@ -102,7 +102,7 @@ func batchSendDeposit(cmd *cobra.Command, args []string) {
 	queueId, _ := cmd.Flags().GetInt64("queueId")
 	amount, _ := cmd.Flags().GetString("amount")
 	ethAddress, _ := cmd.Flags().GetString("ethAddr")
-	chainAddr, _ := cmd.Flags().GetString("chainAddr")
+	chain33Addr, _ := cmd.Flags().GetString("chain33Addr")
 	privateKey, _ := cmd.Flags().GetString("key")
 	paraName, _ := cmd.Flags().GetString("paraName")
 
@@ -110,7 +110,7 @@ func batchSendDeposit(cmd *cobra.Command, args []string) {
 		TokenId:      tokenId,
 		Amount:       amount,
 		EthAddress:   ethAddress,
-		ChainAddr:    chainAddr,
+		Chain33Addr:  chain33Addr,
 		L1PriorityId: queueId,
 	}
 
@@ -122,9 +122,9 @@ func batchSendDeposit(cmd *cobra.Command, args []string) {
 	}
 
 	for i := uint64(0); i < count; i++ {
-		tx, err := createChainTx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
+			fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)
@@ -134,7 +134,7 @@ func batchSendDeposit(cmd *cobra.Command, args []string) {
 func sendManyDepositTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deposit_many",
-		Short: "send many deposit tx to chain",
+		Short: "send many deposit tx to chain33",
 		Run:   sendManyDeposit,
 	}
 	sendManyDepositFlags(cmd)
@@ -150,8 +150,8 @@ func sendManyDepositFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("amount")
 	cmd.Flags().StringP("ethAddr", "e", "", "from eth addr")
 	_ = cmd.MarkFlagRequired("ethAddr")
-	cmd.Flags().StringP("chainAddrs", "a", "", "to chain addrs, use ',' separate")
-	_ = cmd.MarkFlagRequired("chainAddrs")
+	cmd.Flags().StringP("chain33Addrs", "a", "", "to chain33 addrs, use ',' separate")
+	_ = cmd.MarkFlagRequired("chain33Addrs")
 	cmd.Flags().StringP("key", "k", "", "private key")
 	_ = cmd.MarkFlagRequired("key")
 }
@@ -162,18 +162,18 @@ func sendManyDeposit(cmd *cobra.Command, args []string) {
 	queueId, _ := cmd.Flags().GetInt64("queueId")
 	amount, _ := cmd.Flags().GetString("amount")
 	ethAddress, _ := cmd.Flags().GetString("ethAddr")
-	chainAddrs, _ := cmd.Flags().GetString("chainAddrs")
+	chain33Addrs, _ := cmd.Flags().GetString("chain33Addrs")
 	privateKey, _ := cmd.Flags().GetString("key")
 	paraName, _ := cmd.Flags().GetString("paraName")
 
-	toChainAddrs := strings.Split(chainAddrs, ",")
+	toChain33Addrs := strings.Split(chain33Addrs, ",")
 
-	for i := 0; i < len(toChainAddrs); i++ {
+	for i := 0; i < len(toChain33Addrs); i++ {
 		deposit := &zksyncTypes.ZkDeposit{
 			TokenId:      tokenId,
 			Amount:       amount,
 			EthAddress:   ethAddress,
-			ChainAddr:    toChainAddrs[i],
+			Chain33Addr:  toChain33Addrs[i],
 			L1PriorityId: queueId,
 		}
 		queueId++
@@ -185,9 +185,9 @@ func sendManyDeposit(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChainTx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
+			fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)

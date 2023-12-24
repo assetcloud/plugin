@@ -5,7 +5,7 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 // ExecDelLocal_Transfer delete  transfer of local exec

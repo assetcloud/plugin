@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	pkt "github.com/assetcloud/plugin/plugin/dapp/pokerbull/types"
+	"github.com/33cn/chain33/types"
+	pkt "github.com/33cn/plugin/plugin/dapp/pokerbull/types"
 )
 
 // Query_QueryGameListByIDs 根据id列表查询游戏

@@ -20,25 +20,25 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/assetcloud/chain/common/address"
+	"github.com/33cn/chain33/common/address"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
 )
 
 var clog = log.New("module", "execs.ticket")
 var driverName = "ticket"
 
 // Init initial
-func Init(name string, cfg *types.ChainConfig, sub []byte) {
+func Init(name string, cfg *types.Chain33Config, sub []byte) {
 	drivers.Register(cfg, GetName(), newTicket, cfg.GetDappFork(driverName, "Enable"))
 	drivers.RegisterKVExpiredChecker(ty.TicketX, expiredKVChecker)
 	InitExecType()
 }
 
-// InitExecType ...
+//InitExecType ...
 func InitExecType() {
 	ety := types.LoadExecutorType(driverName)
 	ety.InitFuncList(types.ListMethod(&Ticket{}))

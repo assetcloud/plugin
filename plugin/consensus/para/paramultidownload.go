@@ -12,8 +12,8 @@ import (
 
 	"strings"
 
-	"github.com/assetcloud/chain/rpc/grpcclient"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/rpc/grpcclient"
+	"github.com/33cn/chain33/types"
 )
 
 const (
@@ -28,7 +28,7 @@ const (
 
 type connectCli struct {
 	ip        string
-	conn      types.ChainClient
+	conn      types.Chain33Client
 	downTimes int64
 	timeout   uint32
 }
@@ -142,7 +142,7 @@ func (m *multiDldClient) testConn(conn *connectCli, inv *inventory) {
 
 func (m *multiDldClient) getConns(inv *inventory) error {
 	cfg := m.paraClient.GetAPI().GetConfig()
-	paraRemoteGrpcIps := types.Conf(cfg, "config.consensus.sub.para").GStr("ParaRemoteGrpcClient")
+	paraRemoteGrpcIps := cfg.GetModuleConfig().RPC.ParaChain.MainChainGrpcAddr
 	ips := strings.Split(paraRemoteGrpcIps, ",")
 	var conns []*connectCli
 	for _, ip := range ips {
@@ -403,7 +403,7 @@ func (d *downloadJob) checkDownLoadRate() {
 
 }
 
-func requestMainBlocks(cfg *types.ChainConfig, inv *inventory) (*types.ParaTxDetails, error) {
+func requestMainBlocks(cfg *types.Chain33Config, inv *inventory) (*types.ParaTxDetails, error) {
 	req := &types.ReqParaTxByTitle{IsSeq: false, Start: inv.curHeight, End: inv.end, Title: cfg.GetTitle()}
 	txs, err := inv.connCli.conn.GetParaTxByTitle(context.Background(), req)
 	if err != nil {
@@ -421,7 +421,7 @@ func requestMainBlocks(cfg *types.ChainConfig, inv *inventory) (*types.ParaTxDet
 	return validMainBlocks(txs), nil
 }
 
-func requestMainBlockWithTime(cfg *types.ChainConfig, inv *inventory) *types.ParaTxDetails {
+func requestMainBlockWithTime(cfg *types.Chain33Config, inv *inventory) *types.ParaTxDetails {
 	retCh := make(chan *types.ParaTxDetails, 1)
 	go func() {
 		tx, err := requestMainBlocks(cfg, inv)

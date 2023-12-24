@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 )
 
@@ -58,7 +58,7 @@ func getProof2Queue(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ProofId2QueueIdData
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -92,7 +92,7 @@ func getTxProof(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.OperationInfo
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -126,7 +126,7 @@ func getTxProofByHeight(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -180,7 +180,7 @@ func getProofByHeights(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryProofResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -205,7 +205,7 @@ func getLastCommitProof(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&types.ReqNil{})
 
 	var resp zt.CommitProofState
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -232,7 +232,7 @@ func getLastCommitProof(cmd *cobra.Command, args []string) {
 //	params.Payload = types.MustPBToJSON(&zt.ZkChainTitle{ChainTitleId: chainTitleId})
 //
 //	var resp zt.LastOnChainProof
-//	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+//	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 //	ctx.Run()
 //}
 //
@@ -256,7 +256,7 @@ func getLastCommitProof(cmd *cobra.Command, args []string) {
 //	params.Payload = types.MustPBToJSON(&types.ReqNil{})
 //
 //	var resp zt.ZkChainTitleList
-//	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+//	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 //	ctx.Run()
 //}
 
@@ -291,7 +291,7 @@ func getZkCommitProof(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.QueryProofInfo
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -307,30 +307,30 @@ func getFirstRootHashCmd() *cobra.Command {
 
 func getFirstRootHashFlag(cmd *cobra.Command) {
 	cmd.Flags().StringP("ethAddr", "e", "", "optional eth fee addr, hex format default from config")
-	cmd.Flags().StringP("chainAddr", "c", "", "optional layer2 fee addr, hex format,default from config")
+	cmd.Flags().StringP("chain33Addr", "c", "", "optional layer2 fee addr, hex format,default from config")
 }
 
 func getFirstRootHash(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	eth, _ := cmd.Flags().GetString("ethAddr")
-	chain, _ := cmd.Flags().GetString("chainAddr")
+	chain33, _ := cmd.Flags().GetString("chain33Addr")
 
 	var params rpctypes.Query4Jrpc
 	params.Execer = zt.Zksync
 	req := &types.ReqAddrs{}
-	if (len(eth) == 0 && len(chain) != 0) || (len(eth) == 0 && len(chain) != 0) {
+	if (len(eth) == 0 && len(chain33) != 0) || (len(eth) == 0 && len(chain33) != 0) {
 		fmt.Fprintln(os.Stderr, "eth or layer2 addr nil")
 		return
 	}
-	if len(eth) > 0 && len(chain) > 0 {
-		req = &types.ReqAddrs{Addrs: []string{eth, chain}}
+	if len(eth) > 0 && len(chain33) > 0 {
+		req = &types.ReqAddrs{Addrs: []string{eth, chain33}}
 	}
 
 	params.FuncName = "GetTreeInitRoot"
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp types.ReplyString
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -378,51 +378,53 @@ func getZkCommitProofList(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkCommitProof
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
-//	func getProofWitnessCmd() *cobra.Command {
-//		cmd := &cobra.Command{
-//			Use:   "witness",
-//			Short: "get account's proof witness at current height for specific token",
-//			Run:   getProofWitness,
-//		}
-//		getProofWitnessFlag(cmd)
-//		return cmd
+//
+//func getProofWitnessCmd() *cobra.Command {
+//	cmd := &cobra.Command{
+//		Use:   "witness",
+//		Short: "get account's proof witness at current height for specific token",
+//		Run:   getProofWitness,
+//	}
+//	getProofWitnessFlag(cmd)
+//	return cmd
+//}
+//
+//func getProofWitnessFlag(cmd *cobra.Command) {
+//	cmd.Flags().Uint64P("account", "a", 0, "account id")
+//	cmd.MarkFlagRequired("account")
+//	cmd.Flags().Uint64P("token", "t", 0, "token id")
+//	cmd.MarkFlagRequired("token")
+//	cmd.Flags().Uint64P("chainTitleId", "n", 0, "chain title id")
+//
+//}
+//
+//func getProofWitness(cmd *cobra.Command, args []string) {
+//	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
+//	account, _ := cmd.Flags().GetUint64("account")
+//	token, _ := cmd.Flags().GetUint64("token")
+//	chainTitleId, _ := cmd.Flags().GetUint64("chainTitleId")
+//
+//	var params rpctypes.Query4Jrpc
+//
+//	params.Execer = zt.Zksync
+//	req := &zt.ZkReqExistenceProof{
+//		AccountId:    account,
+//		TokenId:      token,
+//		ChainTitleId: chainTitleId,
 //	}
 //
-//	func getProofWitnessFlag(cmd *cobra.Command) {
-//		cmd.Flags().Uint64P("account", "a", 0, "account id")
-//		cmd.MarkFlagRequired("account")
-//		cmd.Flags().Uint64P("token", "t", 0, "token id")
-//		cmd.MarkFlagRequired("token")
-//		cmd.Flags().Uint64P("chainTitleId", "n", 0, "chain title id")
+//	params.FuncName = "GetCurrentProof"
+//	params.Payload = types.MustPBToJSON(req)
 //
-// }
+//	var resp zt.ZkProofWitness
+//	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+//	ctx.Run()
+//}
 //
-//	func getProofWitness(cmd *cobra.Command, args []string) {
-//		rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-//		account, _ := cmd.Flags().GetUint64("account")
-//		token, _ := cmd.Flags().GetUint64("token")
-//		chainTitleId, _ := cmd.Flags().GetUint64("chainTitleId")
-//
-//		var params rpctypes.Query4Jrpc
-//
-//		params.Execer = zt.Zksync
-//		req := &zt.ZkReqExistenceProof{
-//			AccountId:    account,
-//			TokenId:      token,
-//			ChainTitleId: chainTitleId,
-//		}
-//
-//		params.FuncName = "GetCurrentProof"
-//		params.Payload = types.MustPBToJSON(req)
-//
-//		var resp zt.ZkProofWitness
-//		ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
-//		ctx.Run()
-//	}
 func getExistProofCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "exist",
@@ -461,7 +463,7 @@ func getExist(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkProofWitness
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -486,7 +488,7 @@ func getLastOnChainCommitProof(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&types.ReqNil{})
 
 	var resp zt.LastOnChainProof
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -523,6 +525,6 @@ func buildTree(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp types.ReplyString
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }

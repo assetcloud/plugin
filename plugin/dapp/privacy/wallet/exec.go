@@ -5,8 +5,8 @@
 package wallet
 
 import (
-	"github.com/assetcloud/chain/types"
-	privacytypes "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
+	"github.com/33cn/chain33/types"
+	privacytypes "github.com/33cn/plugin/plugin/dapp/privacy/types"
 )
 
 func (policy *privacyPolicy) On_ShowPrivacyAccountSpend(req *privacytypes.ReqPrivBal4AddrToken) (types.Message, error) {

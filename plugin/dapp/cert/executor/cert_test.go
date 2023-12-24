@@ -5,23 +5,23 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/client"
-	apimock "github.com/assetcloud/chain/client/mocks"
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	dbm "github.com/assetcloud/chain/common/db"
-	_ "github.com/assetcloud/chain/system"
-	"github.com/assetcloud/chain/system/dapp"
-	pty "github.com/assetcloud/chain/system/dapp/manage/types"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	_ "github.com/assetcloud/plugin/plugin/crypto/init"
-	"github.com/assetcloud/plugin/plugin/dapp/cert/authority"
-	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/utils"
-	ct "github.com/assetcloud/plugin/plugin/dapp/cert/types"
-	pkt "github.com/assetcloud/plugin/plugin/dapp/collateralize/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/client"
+	apimock "github.com/33cn/chain33/client/mocks"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	dbm "github.com/33cn/chain33/common/db"
+	_ "github.com/33cn/chain33/system"
+	"github.com/33cn/chain33/system/dapp"
+	pty "github.com/33cn/chain33/system/dapp/manage/types"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	_ "github.com/33cn/plugin/plugin/crypto/init"
+	"github.com/33cn/plugin/plugin/dapp/cert/authority"
+	"github.com/33cn/plugin/plugin/dapp/cert/authority/utils"
+	ct "github.com/33cn/plugin/plugin/dapp/cert/types"
+	pkt "github.com/33cn/plugin/plugin/dapp/collateralize/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -34,7 +34,7 @@ type execEnv struct {
 	api         client.QueueProtocolAPI
 	db          dbm.KV
 	execAddr    string
-	cfg         *types.ChainConfig
+	cfg         *types.Chain33Config
 	ldb         dbm.DB
 	user        *authority.User
 }
@@ -75,8 +75,8 @@ func manageKeySet(key string, value string, db dbm.KV) {
 }
 
 func initEnv() (*execEnv, error) {
-	cfg := types.NewChainConfig(types.ReadFile("./test/chain.auth.test.toml"))
-	cfg.SetTitleOnlyForTest("chain")
+	cfg := types.NewChain33Config(types.ReadFile("./test/chain33.auth.test.toml"))
+	cfg.SetTitleOnlyForTest("chain33")
 
 	sub := cfg.GetSubConfig()
 	var subcfg ct.Authority

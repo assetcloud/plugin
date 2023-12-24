@@ -20,7 +20,7 @@ function get_docker_addr() {
     echo "${dockerAddr}"
 }
 
-# chain 区块等待 $1:cli 路径  $2:等待高度
+# chain33 区块等待 $1:cli 路径  $2:等待高度
 function block_wait() {
     set +x
     local CLI=${1}
@@ -45,7 +45,7 @@ function block_wait() {
 
     count=$((count + 1))
     set -x
-    echo -e "${GRE}chain wait new block $count s, cur height=$expect,old=$cur_height${NOC}"
+    echo -e "${GRE}chain33 wait new block $count s, cur height=$expect,old=$cur_height${NOC}"
 }
 
 # 检查交易是否执行成功 $1:cli 路径  $2:交易hash
@@ -74,7 +74,7 @@ function check_tx() {
         sleep 1
 
         if [[ ${count} -ge 100 ]]; then
-            echo "chain query tx for too long"
+            echo "chain33 query tx for too long"
             break
         fi
     done
@@ -142,17 +142,17 @@ function import_addr() {
     local label="$2"
     local addr="$3"
     # shellcheck disable=SC2154
-    result=$(${ChainCli} account import_key -k "${key}" -l "${label}")
+    result=$(${Chain33Cli} account import_key -k "${key}" -l "${label}")
     check_addr "${result}" "${addr}"
 
     if [ "$#" -eq 4 ]; then
         # shellcheck disable=SC2154
-        hash=$(${ChainCli} send coins transfer -a "$4" -n test -t "${addr}" -k "${minerAddr}")
-        check_tx "${ChainCli}" "${hash}"
+        hash=$(${Chain33Cli} send coins transfer -a "$4" -n test -t "${addr}" -k "${minerAddr}")
+        check_tx "${Chain33Cli}" "${hash}"
     fi
 }
 
-function InitChainAccount() {
+function InitChain33Account() {
     # shellcheck disable=SC2154
     {
         import_addr "${propKey}" "prop" "${propAddr}" 1000
@@ -160,9 +160,9 @@ function InitChainAccount() {
         import_addr "${votePrKey3}" "vote3" "${voteAddr3}" 100
         import_addr "${changeKey}" "changeTest" "${changeAddr}" 10
     }
-    autonomyAddr=$(${ChainCli} exec addr -e autonomy)
-    hash=$(${ChainCli} send coins transfer -a 900 -n test -t "${autonomyAddr}" -k "${propKey}")
-    check_tx "${ChainCli}" "${hash}"
+    autonomyAddr=$(${Chain33Cli} exec addr -e autonomy)
+    hash=$(${Chain33Cli} send coins transfer -a 900 -n test -t "${autonomyAddr}" -k "${propKey}")
+    check_tx "${Chain33Cli}" "${hash}"
 
     local count=0
     # shellcheck disable=SC2154

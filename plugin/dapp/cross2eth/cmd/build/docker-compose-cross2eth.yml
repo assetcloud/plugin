@@ -1,38 +1,12 @@
-version: "3"
+version: '3'
 
 services:
   ganachetesteth:
-    entrypoint:
-      [
-        "node",
-        "/app/ganache-core.docker.cli.js",
-        "-a",
-        "30",
-        "-b",
-        "2",
-        "--debug",
-        "-m",
-        "coast bar giraffe art venue decide symbol law visual crater vital fold",
-        "-e",
-        "1000",
-      ]
+    entrypoint: ["node", "/app/ganache-core.docker.cli.js", "-a", "30", "-b", "2", "--debug", "-m", "coast bar giraffe art venue decide symbol law visual crater vital fold", "-e", "1000"]
     image: trufflesuite/ganache-cli:latest
 
   ganachetestbsc:
-    entrypoint:
-      [
-        "node",
-        "/app/ganache-core.docker.cli.js",
-        "-a",
-        "30",
-        "-b",
-        "2",
-        "--debug",
-        "-m",
-        "coast bar giraffe art venue decide symbol law visual crater vital fold",
-        "-e",
-        "1000",
-      ]
+    entrypoint: [ "node", "/app/ganache-core.docker.cli.js", "-a", "30", "-b", "2", "--debug", "-m", "coast bar giraffe art venue decide symbol law visual crater vital fold", "-e", "1000" ]
     image: trufflesuite/ganache-cli:latest
 
   ebrelayerproxy:
@@ -40,7 +14,7 @@ services:
       context: .
       dockerfile: Dockerfile-cross2eth
     ports:
-      #     - host port : container port
+#     - host port : container port
       - 6064:6060
 
   ebrelayera:
@@ -71,39 +45,39 @@ services:
     ports:
       - 6063:6060
 
-  chain:
+  chain33:
     entrypoint: /root/entrypoint.sh
     environment:
-      PARAFILE: "/root/chain.para33.toml"
+      PARAFILE: "/root/chain33.para33.toml"
     expose:
       - "8802"
 
   chain32:
     entrypoint: /root/entrypoint.sh
     environment:
-      PARAFILE: "/root/chain.para32.toml"
+      PARAFILE: "/root/chain33.para32.toml"
 
   chain31:
     entrypoint: /root/entrypoint.sh
     environment:
-      PARAFILE: "/root/chain.para31.toml"
+      PARAFILE: "/root/chain33.para31.toml"
 
   chain30:
     entrypoint: /root/entrypoint.sh
     environment:
-      PARAFILE: "/root/chain.para30.toml"
+      PARAFILE: "/root/chain33.para30.toml"
     expose:
       - "8802"
 
   chain29:
     entrypoint: /root/entrypoint.sh
     environment:
-      PARAFILE: "/root/chain.para29.toml"
+      PARAFILE: "/root/chain33.para29.toml"
 
   nginx:
     image: nginx:latest
     depends_on:
-      - chain
+      - chain33
       - chain30
       - chain29
     volumes:

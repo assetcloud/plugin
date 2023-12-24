@@ -1,4 +1,4 @@
-package chain
+package chain33
 
 import (
 	"context"
@@ -12,32 +12,32 @@ import (
 	"sync/atomic"
 	"time"
 
-	chainEvmCommon "github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	chain33EvmCommon "github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
 
-	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
 
-	"github.com/assetcloud/chain/common"
-	chainCrypto "github.com/assetcloud/chain/common/crypto"
-	dbm "github.com/assetcloud/chain/common/db"
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	chainTypes "github.com/assetcloud/chain/types"
-	syncTx "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain/transceiver/sync"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/33cn/chain33/common"
+	chain33Crypto "github.com/33cn/chain33/common/crypto"
+	dbm "github.com/33cn/chain33/common/db"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	chain33Types "github.com/33cn/chain33/types"
+	syncTx "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33/transceiver/sync"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-var relayerLog = log.New("module", "chain_relayer")
+var relayerLog = log.New("module", "chain33_relayer")
 
-// Relayer4Chain ...
-type Relayer4Chain struct {
+//Relayer4Chain33 ...
+type Relayer4Chain33 struct {
 	syncEvmTxLogs       *syncTx.EVMTxLogs
 	rpcLaddr            string //用户向指定的blockchain节点进行rpc调用
-	chainRpcUrls        []string
+	chain33RpcUrls      []string
 	chainName           string //用来区别主链中继还是平行链，主链为空，平行链则是user.p.xxx.
 	chainID             int32
 	fetchHeightPeriodMs int64
@@ -45,8 +45,8 @@ type Relayer4Chain struct {
 	lastHeight4Tx       int64 //等待被处理的具有相应的交易回执的高度
 	matDegree           int32 //成熟度         heightSync2App    matDegress   height
 
-	privateKey4Chain           chainCrypto.PrivKey
-	privateKey4Chain_ecdsa     *ecdsa.PrivateKey
+	privateKey4Chain33         chain33Crypto.PrivKey
+	privateKey4Chain33_ecdsa   *ecdsa.PrivateKey
 	ctx                        context.Context
 	rwLock                     sync.RWMutex
 	unlockChan                 chan int
@@ -59,20 +59,20 @@ type Relayer4Chain struct {
 	ethBridgeClaimChan        <-chan *ebTypes.EthBridgeClaim
 	txRelayAckRecvChan        <-chan *ebTypes.TxRelayAck
 	txRelayAckSendChan        map[string]chan<- *ebTypes.TxRelayAck
-	chainMsgChan              map[string]chan<- *events.ChainMsg
+	chain33MsgChan            map[string]chan<- *events.Chain33Msg
 	bridgeRegistryAddr        string
 	oracleAddr                string
 	bridgeBankAddr            string
 	mulSignAddr               string
 	deployResult              *X2EthDeployResult
 	symbol2Addr               map[string]string
-	bridgeSymbol2EthChainName map[string]string //在chain上发行的跨链token的名称到以太坊链的名称映射
+	bridgeSymbol2EthChainName map[string]string //在chain33上发行的跨链token的名称到以太坊链的名称映射
 	processWithDraw           bool
 	delayedSend               bool
 	delayedSendTime           int64
 }
 
-type ChainStartPara struct {
+type Chain33StartPara struct {
 	ChainName          string
 	Ctx                context.Context
 	SyncTxConfig       *ebTypes.SyncTxConfig
@@ -81,18 +81,18 @@ type ChainStartPara struct {
 	EthBridgeClaimChan <-chan *ebTypes.EthBridgeClaim
 	TxRelayAckRecvChan <-chan *ebTypes.TxRelayAck
 	TxRelayAckSendChan map[string]chan<- *ebTypes.TxRelayAck
-	ChainMsgChan       map[string]chan<- *events.ChainMsg
+	Chain33MsgChan     map[string]chan<- *events.Chain33Msg
 	ChainID            int32
 	ProcessWithDraw    bool
 	DelayedSend        bool
 	DelayedSendTime    int64
 }
 
-// StartChainRelayer : initializes a relayer which witnesses events on the chain network and relays them to Ethereum
-func StartChainRelayer(startPara *ChainStartPara) *Relayer4Chain {
-	chainRelayer := &Relayer4Chain{
-		rpcLaddr:                startPara.SyncTxConfig.ChainHost,
-		chainRpcUrls:            startPara.SyncTxConfig.ChainRpcUrls,
+// StartChain33Relayer : initializes a relayer which witnesses events on the chain33 network and relays them to Ethereum
+func StartChain33Relayer(startPara *Chain33StartPara) *Relayer4Chain33 {
+	chain33Relayer := &Relayer4Chain33{
+		rpcLaddr:                startPara.SyncTxConfig.Chain33Host,
+		chain33RpcUrls:          startPara.SyncTxConfig.Chain33RpcUrls,
 		chainName:               startPara.ChainName,
 		chainID:                 startPara.ChainID,
 		fetchHeightPeriodMs:     startPara.SyncTxConfig.FetchHeightPeriodMs,
@@ -103,7 +103,7 @@ func StartChainRelayer(startPara *ChainStartPara) *Relayer4Chain {
 		ethBridgeClaimChan:      startPara.EthBridgeClaimChan,
 		txRelayAckRecvChan:      startPara.TxRelayAckRecvChan,
 		txRelayAckSendChan:      startPara.TxRelayAckSendChan,
-		chainMsgChan:            startPara.ChainMsgChan,
+		chain33MsgChan:          startPara.Chain33MsgChan,
 		totalTx4RelayEth2chai33: 0,
 		symbol2Addr:             make(map[string]string),
 		processWithDraw:         startPara.ProcessWithDraw,
@@ -112,7 +112,7 @@ func StartChainRelayer(startPara *ChainStartPara) *Relayer4Chain {
 	}
 
 	syncCfg := &ebTypes.SyncTxReceiptConfig{
-		ChainHost:         startPara.SyncTxConfig.ChainHost,
+		Chain33Host:       startPara.SyncTxConfig.Chain33Host,
 		PushHost:          startPara.SyncTxConfig.PushHost,
 		PushName:          startPara.SyncTxConfig.PushName,
 		PushBind:          startPara.SyncTxConfig.PushBind,
@@ -122,90 +122,90 @@ func StartChainRelayer(startPara *ChainStartPara) *Relayer4Chain {
 		KeepAliveDuration: startPara.SyncTxConfig.KeepAliveDuration,
 	}
 
-	registrAddrInDB, err := chainRelayer.getBridgeRegistryAddr()
+	registrAddrInDB, err := chain33Relayer.getBridgeRegistryAddr()
 	//如果输入的registry地址非空，且和数据库保存地址不一致，则直接使用输入注册地址
-	if chainRelayer.bridgeRegistryAddr != "" && nil == err && registrAddrInDB != chainRelayer.bridgeRegistryAddr {
-		relayerLog.Error("StartChainRelayer", "BridgeRegistry is setted already with value", registrAddrInDB,
+	if chain33Relayer.bridgeRegistryAddr != "" && nil == err && registrAddrInDB != chain33Relayer.bridgeRegistryAddr {
+		relayerLog.Error("StartChain33Relayer", "BridgeRegistry is setted already with value", registrAddrInDB,
 			"but now setting to", startPara.BridgeRegistryAddr)
-		_ = chainRelayer.setBridgeRegistryAddr(startPara.BridgeRegistryAddr)
+		_ = chain33Relayer.setBridgeRegistryAddr(startPara.BridgeRegistryAddr)
 	} else if startPara.BridgeRegistryAddr == "" && registrAddrInDB != "" {
 		//输入地址为空，且数据库中保存地址不为空，则直接使用数据库中的地址
-		chainRelayer.bridgeRegistryAddr = registrAddrInDB
+		chain33Relayer.bridgeRegistryAddr = registrAddrInDB
 	}
-	chainRelayer.totalTx4RelayEth2chai33 = chainRelayer.getTotalTxAmount()
-	if 0 == chainRelayer.totalTx4RelayEth2chai33 {
-		statics := &ebTypes.Ethereum2ChainStatics{}
-		data := chainTypes.Encode(statics)
-		err := chainRelayer.setLastestRelay2ChainTxStatics(0, int32(events.ClaimTypeLock), data)
+	chain33Relayer.totalTx4RelayEth2chai33 = chain33Relayer.getTotalTxAmount()
+	if 0 == chain33Relayer.totalTx4RelayEth2chai33 {
+		statics := &ebTypes.Ethereum2Chain33Statics{}
+		data := chain33Types.Encode(statics)
+		err := chain33Relayer.setLastestRelay2Chain33TxStatics(0, int32(events.ClaimTypeLock), data)
 		if err != nil {
-			relayerLog.Error("StartChainRelayer", "setLastestRelay2ChainTxStatics ClaimTypeLock error", err.Error())
+			relayerLog.Error("StartChain33Relayer", "setLastestRelay2Chain33TxStatics ClaimTypeLock error", err.Error())
 		}
-		err = chainRelayer.setLastestRelay2ChainTxStatics(0, int32(events.ClaimTypeBurn), data)
+		err = chain33Relayer.setLastestRelay2Chain33TxStatics(0, int32(events.ClaimTypeBurn), data)
 		if err != nil {
-			relayerLog.Error("StartChainRelayer", "setLastestRelay2ChainTxStatics ClaimTypeBurn error", err.Error())
+			relayerLog.Error("StartChain33Relayer", "setLastestRelay2Chain33TxStatics ClaimTypeBurn error", err.Error())
 		}
 	}
 
-	go chainRelayer.syncProc(syncCfg)
-	return chainRelayer
+	go chain33Relayer.syncProc(syncCfg)
+	return chain33Relayer
 }
 
-func (chainRelayer *Relayer4Chain) syncProc(syncCfg *ebTypes.SyncTxReceiptConfig) {
-	_, _ = fmt.Fprintln(os.Stdout, "Pls unlock or import private key for Chain relayer")
-	<-chainRelayer.unlockChan
-	_, _ = fmt.Fprintln(os.Stdout, "Chain relayer starts to run...")
-	if err := chainRelayer.RestoreTokenAddress(); nil != err {
+func (chain33Relayer *Relayer4Chain33) syncProc(syncCfg *ebTypes.SyncTxReceiptConfig) {
+	_, _ = fmt.Fprintln(os.Stdout, "Pls unlock or import private key for Chain33 relayer")
+	<-chain33Relayer.unlockChan
+	_, _ = fmt.Fprintln(os.Stdout, "Chain33 relayer starts to run...")
+	if err := chain33Relayer.RestoreTokenAddress(); nil != err {
 		relayerLog.Info("Failed to RestoreTokenAddress")
 		return
 	}
-	setChainID(chainRelayer.chainID)
+	setChainID(chain33Relayer.chainID)
 	//如果该中继器的bridgeRegistryAddr为空，就说明合约未部署，需要等待部署成功之后再继续
-	if "" == chainRelayer.bridgeRegistryAddr {
-		chaintxLog.Debug("bridgeRegistryAddr empty")
-		<-chainRelayer.unlockChan
+	if "" == chain33Relayer.bridgeRegistryAddr {
+		chain33txLog.Debug("bridgeRegistryAddr empty")
+		<-chain33Relayer.unlockChan
 	}
 	//如果oracleAddr为空，则通过bridgeRegistry合约进行查询
-	if "" != chainRelayer.bridgeRegistryAddr && "" == chainRelayer.oracleAddr {
-		oracleAddr, bridgeBankAddr := recoverContractAddrFromRegistry(chainRelayer.bridgeRegistryAddr, chainRelayer.rpcLaddr)
+	if "" != chain33Relayer.bridgeRegistryAddr && "" == chain33Relayer.oracleAddr {
+		oracleAddr, bridgeBankAddr := recoverContractAddrFromRegistry(chain33Relayer.bridgeRegistryAddr, chain33Relayer.rpcLaddr)
 		if "" == oracleAddr || "" == bridgeBankAddr {
 			panic("Failed to recoverContractAddrFromRegistry")
 		}
-		chainRelayer.oracleAddr = oracleAddr
-		chainRelayer.bridgeBankAddr = bridgeBankAddr
-		chaintxLog.Debug("recoverContractAddrFromRegistry", "bridgeRegistryAddr", chainRelayer.bridgeRegistryAddr,
-			"oracleAddr", chainRelayer.oracleAddr, "bridgeBankAddr", chainRelayer.bridgeBankAddr)
+		chain33Relayer.oracleAddr = oracleAddr
+		chain33Relayer.bridgeBankAddr = bridgeBankAddr
+		chain33txLog.Debug("recoverContractAddrFromRegistry", "bridgeRegistryAddr", chain33Relayer.bridgeRegistryAddr,
+			"oracleAddr", chain33Relayer.oracleAddr, "bridgeBankAddr", chain33Relayer.bridgeBankAddr)
 	}
 
-	syncCfg.Contracts = append(syncCfg.Contracts, chainRelayer.bridgeBankAddr)
-	chainRelayer.syncEvmTxLogs = syncTx.StartSyncEvmTxLogs(syncCfg, chainRelayer.db)
-	chainRelayer.lastHeight4Tx = chainRelayer.loadLastSyncHeight()
-	chainRelayer.mulSignAddr = chainRelayer.getMultiSignAddress()
-	chainRelayer.bridgeSymbol2EthChainName = chainRelayer.restoreSymbol2chainName()
-	chainRelayer.prePareSubscribeEvent()
-	timer := time.NewTicker(time.Duration(chainRelayer.fetchHeightPeriodMs) * time.Millisecond)
+	syncCfg.Contracts = append(syncCfg.Contracts, chain33Relayer.bridgeBankAddr)
+	chain33Relayer.syncEvmTxLogs = syncTx.StartSyncEvmTxLogs(syncCfg, chain33Relayer.db)
+	chain33Relayer.lastHeight4Tx = chain33Relayer.loadLastSyncHeight()
+	chain33Relayer.mulSignAddr = chain33Relayer.getMultiSignAddress()
+	chain33Relayer.bridgeSymbol2EthChainName = chain33Relayer.restoreSymbol2chainName()
+	chain33Relayer.prePareSubscribeEvent()
+	timer := time.NewTicker(time.Duration(chain33Relayer.fetchHeightPeriodMs) * time.Millisecond)
 	for {
 		select {
 		case <-timer.C:
-			height := chainRelayer.getCurrentHeight()
+			height := chain33Relayer.getCurrentHeight()
 			relayerLog.Debug("syncProc", "getCurrentHeight", height)
-			chainRelayer.onNewHeightProc(height)
+			chain33Relayer.onNewHeightProc(height)
 
-		case <-chainRelayer.ctx.Done():
+		case <-chain33Relayer.ctx.Done():
 			timer.Stop()
 			return
 
-		case ethBridgeClaim := <-chainRelayer.ethBridgeClaimChan:
-			chainRelayer.relayLockBurnToChain(ethBridgeClaim)
+		case ethBridgeClaim := <-chain33Relayer.ethBridgeClaimChan:
+			chain33Relayer.relayLockBurnToChain33(ethBridgeClaim)
 
-		case txRelayAck := <-chainRelayer.txRelayAckRecvChan:
-			chainRelayer.procTxRelayAck(txRelayAck)
+		case txRelayAck := <-chain33Relayer.txRelayAckRecvChan:
+			chain33Relayer.procTxRelayAck(txRelayAck)
 		}
 	}
 }
 
-func (chainRelayer *Relayer4Chain) getCurrentHeight() int64 {
+func (chain33Relayer *Relayer4Chain33) getCurrentHeight() int64 {
 	var res rpctypes.Header
-	ctx := jsonclient.NewRPCCtx(chainRelayer.rpcLaddr, "Chain.GetLastHeader", nil, &res)
+	ctx := jsonclient.NewRPCCtx(chain33Relayer.rpcLaddr, "Chain33.GetLastHeader", nil, &res)
 	_, err := ctx.RunResult()
 	if nil != err {
 		relayerLog.Error("getCurrentHeight", "Failede due to:", err.Error())
@@ -213,20 +213,20 @@ func (chainRelayer *Relayer4Chain) getCurrentHeight() int64 {
 	return res.Height
 }
 
-func (chainRelayer *Relayer4Chain) onNewHeightProc(currentHeight int64) {
+func (chain33Relayer *Relayer4Chain33) onNewHeightProc(currentHeight int64) {
 	//检查已经提交的交易结果
-	chainRelayer.updateTxStatus()
-	chainRelayer.checkTxRelay2Ethereum()
+	chain33Relayer.updateTxStatus()
+	chain33Relayer.checkTxRelay2Ethereum()
 
 	//未达到足够的成熟度，不进行处理
 	//  +++++++++||++++++++++++||++++++++++||
 	//           ^             ^           ^
 	// lastHeight4Tx    matDegress   currentHeight
-	for chainRelayer.lastHeight4Tx+int64(chainRelayer.matDegree)+1 <= currentHeight {
-		relayerLog.Info("onNewHeightProc", "currHeight", currentHeight, "lastHeight4Tx", chainRelayer.lastHeight4Tx)
+	for chain33Relayer.lastHeight4Tx+int64(chain33Relayer.matDegree)+1 <= currentHeight {
+		relayerLog.Info("onNewHeightProc", "currHeight", currentHeight, "lastHeight4Tx", chain33Relayer.lastHeight4Tx)
 
-		lastHeight4Tx := chainRelayer.lastHeight4Tx
-		txLogs, err := chainRelayer.syncEvmTxLogs.GetNextValidEvmTxLogs(lastHeight4Tx)
+		lastHeight4Tx := chain33Relayer.lastHeight4Tx
+		txLogs, err := chain33Relayer.syncEvmTxLogs.GetNextValidEvmTxLogs(lastHeight4Tx)
 		if nil == txLogs || nil != err {
 			if err != nil {
 				relayerLog.Error("onNewHeightProc", "Failed to GetNextValidTxReceipts due to:", err.Error())
@@ -246,141 +246,141 @@ func (chainRelayer *Relayer4Chain) onNewHeightProc(currentHeight int64) {
 			}
 
 			var evmAction evmtypes.EVMContractAction
-			err := chainTypes.Decode(tx.Payload, &evmAction)
+			err := chain33Types.Decode(tx.Payload, &evmAction)
 			if nil != err {
 				relayerLog.Error("onNewHeightProc", "Failed to decode action for tx with hash", common.ToHex(tx.Hash()))
 				continue
 			}
 
 			//确认监听的合约地址
-			if evmAction.ContractAddr != chainRelayer.bridgeBankAddr {
+			if evmAction.ContractAddr != chain33Relayer.bridgeBankAddr {
 				relayerLog.Error("onNewHeightProc received logs not from bridgeBank", "evmAction.ContractAddr", evmAction.ContractAddr)
 				continue
 			}
 
 			for _, evmlog := range txAndLog.LogsPerTx.Logs {
-				var evmEventType events.ChainEvmEvent
-				if chainRelayer.bridgeBankEventBurnSig == common.ToHex(evmlog.Topic[0]) {
-					evmEventType = events.ChainEventLogBurn
-				} else if chainRelayer.bridgeBankEventLockSig == common.ToHex(evmlog.Topic[0]) {
-					evmEventType = events.ChainEventLogLock
-				} else if chainRelayer.bridgeBankEventWithdrawSig == common.ToHex(evmlog.Topic[0]) {
-					evmEventType = events.ChainEventLogWithdraw
+				var evmEventType events.Chain33EvmEvent
+				if chain33Relayer.bridgeBankEventBurnSig == common.ToHex(evmlog.Topic[0]) {
+					evmEventType = events.Chain33EventLogBurn
+				} else if chain33Relayer.bridgeBankEventLockSig == common.ToHex(evmlog.Topic[0]) {
+					evmEventType = events.Chain33EventLogLock
+				} else if chain33Relayer.bridgeBankEventWithdrawSig == common.ToHex(evmlog.Topic[0]) {
+					evmEventType = events.Chain33EventLogWithdraw
 				} else {
 					continue
 				}
 
-				if evmEventType == events.ChainEventLogWithdraw && !chainRelayer.processWithDraw {
+				if evmEventType == events.Chain33EventLogWithdraw && !chain33Relayer.processWithDraw {
 					//代理提币消息只由代理提币节点处理
 					continue
 				}
-				if evmEventType != events.ChainEventLogWithdraw && chainRelayer.processWithDraw {
+				if evmEventType != events.Chain33EventLogWithdraw && chain33Relayer.processWithDraw {
 					//lock和burn消息消息只由普通中继节点处理
 					continue
 				}
 
-				if err := chainRelayer.handleBurnLockWithdrawEvent(evmEventType, evmlog.Data, tx.Hash()); nil != err {
+				if err := chain33Relayer.handleBurnLockWithdrawEvent(evmEventType, evmlog.Data, tx.Hash()); nil != err {
 					relayerLog.Error("onNewHeightProc", "Failed to handleBurnLockWithdrawEvent due to:%s", err.Error())
 				}
 
 			}
 		}
-		chainRelayer.lastHeight4Tx = txLogs.Height
-		chainRelayer.setLastSyncHeight(chainRelayer.lastHeight4Tx)
+		chain33Relayer.lastHeight4Tx = txLogs.Height
+		chain33Relayer.setLastSyncHeight(chain33Relayer.lastHeight4Tx)
 	}
 }
 
-// handleBurnLockMsg : parse event data as a ChainMsg, package it into a ProphecyClaim, then relay tx to the Ethereum Network
-func (chainRelayer *Relayer4Chain) handleBurnLockWithdrawEvent(evmEventType events.ChainEvmEvent, data []byte, chainTxHash []byte) error {
-	txHashStr := common.ToHex(chainTxHash)
+// handleBurnLockMsg : parse event data as a Chain33Msg, package it into a ProphecyClaim, then relay tx to the Ethereum Network
+func (chain33Relayer *Relayer4Chain33) handleBurnLockWithdrawEvent(evmEventType events.Chain33EvmEvent, data []byte, chain33TxHash []byte) error {
+	txHashStr := common.ToHex(chain33TxHash)
 	relayerLog.Info("handleBurnLockWithdrawEvent", "Received tx with hash", txHashStr)
 
 	// 删除已发送校验, 如果ethereum端发生交易后没有打包, 可重新再发生
-	//if chainRelayer.checkTxProcessed(txHashStr) {
+	//if chain33Relayer.checkTxProcessed(txHashStr) {
 	//	relayerLog.Info("handleBurnLockWithdrawEvent", "Tx has been already Processed with hash:", txHashStr)
 	//	return nil
 	//}
 
-	// Parse the witnessed event's data into a new ChainMsg
-	chainMsg, err := events.ParseBurnLock4chain(evmEventType, data, chainRelayer.bridgeBankAbi, chainTxHash)
+	// Parse the witnessed event's data into a new Chain33Msg
+	chain33Msg, err := events.ParseBurnLock4chain33(evmEventType, data, chain33Relayer.bridgeBankAbi, chain33TxHash)
 	if nil != err {
 		return err
 	}
-	fdIndex := chainRelayer.getFdTx2EthTotalAmount() + 1
-	chainMsg.ForwardTimes = 1
-	chainMsg.ForwardIndex = fdIndex
+	fdIndex := chain33Relayer.getFdTx2EthTotalAmount() + 1
+	chain33Msg.ForwardTimes = 1
+	chain33Msg.ForwardIndex = fdIndex
 
-	relayerLog.Info("handleBurnLockWithdrawEvent", "Going to send chainMsg.ClaimType", chainMsg.ClaimType.String())
+	relayerLog.Info("handleBurnLockWithdrawEvent", "Going to send chain33Msg.ClaimType", chain33Msg.ClaimType.String())
 
 	var chainName string
 	//specical process: withdraw YCC　only to bsc
-	if events.ChainEventLogWithdraw == evmEventType && "YCC" == chainMsg.Symbol {
+	if events.Chain33EventLogWithdraw == evmEventType && "YCC" == chain33Msg.Symbol {
 		chainName = ebTypes.BinanceChainName
 	} else {
 		ok := false
-		chainName, ok = chainRelayer.bridgeSymbol2EthChainName[chainMsg.Symbol]
+		chainName, ok = chain33Relayer.bridgeSymbol2EthChainName[chain33Msg.Symbol]
 		if !ok {
-			relayerLog.Error("handleBurnLockWithdrawEvent", "No bridgeSymbol2EthChainName", chainMsg.Symbol)
+			relayerLog.Error("handleBurnLockWithdrawEvent", "No bridgeSymbol2EthChainName", chain33Msg.Symbol)
 			return errors.New("ErrNoEthChainName4BridgeSymbol")
 		}
 	}
 
-	channel, ok := chainRelayer.chainMsgChan[chainName]
+	channel, ok := chain33Relayer.chain33MsgChan[chainName]
 	if !ok {
 		relayerLog.Error("handleBurnLockWithdrawEvent", "No bridgeSymbol2EthChainName", chainName)
-		return errors.New("ErrNoChainMsgChan4EthChainName")
+		return errors.New("ErrNoChain33MsgChan4EthChainName")
 	}
 
-	_ = chainRelayer.updateFdTx2EthTotalAmount(fdIndex)
-	txRelayConfirm4Chain := &ebTypes.TxRelayConfirm4Chain{
+	_ = chain33Relayer.updateFdTx2EthTotalAmount(fdIndex)
+	txRelayConfirm4Chain33 := &ebTypes.TxRelayConfirm4Chain33{
 		EventType:   int32(evmEventType),
 		Data:        data,
 		FdTimes:     1,
 		FdIndex:     fdIndex,
 		ToChainName: chainName,
-		TxHash:      chainTxHash,
+		TxHash:      chain33TxHash,
 		Resend:      false,
 	}
 
-	if chainRelayer.delayedSend {
-		go chainRelayer.delayedSendTxs(chainName, chainMsg, chainTxHash, txRelayConfirm4Chain)
+	if chain33Relayer.delayedSend {
+		go chain33Relayer.delayedSendTxs(chainName, chain33Msg, chain33TxHash, txRelayConfirm4Chain33)
 	} else {
-		channel <- chainMsg
-		//relaychainToEthereumCheckPonit 1:send chainMsg to ethereum relay service
-		relayerLog.Info("handleBurnLockWithdrawEvent::relaychainToEthereumCheckPonit_1", "chainTxHash", txHashStr, "ForwardIndex", chainMsg.ForwardIndex, "FdTimes", 1)
-		err = chainRelayer.setChainTxIsRelayedUnconfirm(txHashStr, fdIndex, txRelayConfirm4Chain)
+		channel <- chain33Msg
+		//relaychain33ToEthereumCheckPonit 1:send chain33Msg to ethereum relay service
+		relayerLog.Info("handleBurnLockWithdrawEvent::relaychain33ToEthereumCheckPonit_1", "chain33TxHash", txHashStr, "ForwardIndex", chain33Msg.ForwardIndex, "FdTimes", 1)
+		err = chain33Relayer.setChain33TxIsRelayedUnconfirm(txHashStr, fdIndex, txRelayConfirm4Chain33)
 	}
 
 	return err
 }
 
-func (chainRelayer *Relayer4Chain) delayedSendTxs(chainName string, chainMsg *events.ChainMsg, chainTxHash []byte, txRelayConfirm4Chain *ebTypes.TxRelayConfirm4Chain) {
-	delayedSendTime := time.Duration(chainRelayer.delayedSendTime) * time.Millisecond
-	relayerLog.Debug("delayedSendTxs", "setEthTxWaitingForSend chainTxHash", common.ToHex(chainTxHash))
+func (chain33Relayer *Relayer4Chain33) delayedSendTxs(chainName string, chain33Msg *events.Chain33Msg, chain33TxHash []byte, txRelayConfirm4Chain33 *ebTypes.TxRelayConfirm4Chain33) {
+	delayedSendTime := time.Duration(chain33Relayer.delayedSendTime) * time.Millisecond
+	relayerLog.Debug("delayedSendTxs", "setEthTxWaitingForSend chain33TxHash", common.ToHex(chain33TxHash))
 	time.Sleep(delayedSendTime)
-	channel, ok := chainRelayer.chainMsgChan[chainName]
+	channel, ok := chain33Relayer.chain33MsgChan[chainName]
 	if !ok {
 		relayerLog.Error("handleBurnLockWithdrawEvent", "No bridgeSymbol2EthChainName", chainName)
 		return
 	}
 
-	channel <- chainMsg
+	channel <- chain33Msg
 
-	//relaychainToEthereumCheckPonit 1:send chainMsg to ethereum relay service
-	relayerLog.Info("handleBurnLockWithdrawEvent::relaychainToEthereumCheckPonit_1", "chainTxHash", common.ToHex(chainTxHash), "ForwardIndex", chainMsg.ForwardIndex, "FdTimes", 1)
-	_ = chainRelayer.setChainTxIsRelayedUnconfirm(common.ToHex(chainTxHash), txRelayConfirm4Chain.FdIndex, txRelayConfirm4Chain)
+	//relaychain33ToEthereumCheckPonit 1:send chain33Msg to ethereum relay service
+	relayerLog.Info("handleBurnLockWithdrawEvent::relaychain33ToEthereumCheckPonit_1", "chain33TxHash", common.ToHex(chain33TxHash), "ForwardIndex", chain33Msg.ForwardIndex, "FdTimes", 1)
+	_ = chain33Relayer.setChain33TxIsRelayedUnconfirm(common.ToHex(chain33TxHash), txRelayConfirm4Chain33.FdIndex, txRelayConfirm4Chain33)
 }
 
-func (chainRelayer *Relayer4Chain) ResendChainEvent(height int64) (err error) {
-	txLogs, err := chainRelayer.syncEvmTxLogs.GetNextValidEvmTxLogs(height)
+func (chain33Relayer *Relayer4Chain33) ResendChain33Event(height int64) (err error) {
+	txLogs, err := chain33Relayer.syncEvmTxLogs.GetNextValidEvmTxLogs(height)
 	if nil == txLogs || nil != err {
 		if err != nil {
-			relayerLog.Error("ResendChainEvent", "Failed to GetNextValidTxReceipts due to:", err.Error())
+			relayerLog.Error("ResendChain33Event", "Failed to GetNextValidTxReceipts due to:", err.Error())
 			return err
 		}
 		return nil
 	}
-	relayerLog.Debug("ResendChainEvent", "lastHeight4Tx", chainRelayer.lastHeight4Tx, "valid tx receipt with height:", txLogs.Height)
+	relayerLog.Debug("ResendChain33Event", "lastHeight4Tx", chain33Relayer.lastHeight4Tx, "valid tx receipt with height:", txLogs.Height)
 
 	txAndLogs := txLogs.TxAndLogs
 	for _, txAndLog := range txAndLogs {
@@ -388,45 +388,45 @@ func (chainRelayer *Relayer4Chain) ResendChainEvent(height int64) (err error) {
 
 		//确认订阅的evm交易类型和合约地址
 		if !strings.Contains(string(tx.Execer), "evm") {
-			relayerLog.Error("ResendChainEvent received logs not from evm tx", "tx.Execer", string(tx.Execer))
+			relayerLog.Error("ResendChain33Event received logs not from evm tx", "tx.Execer", string(tx.Execer))
 			continue
 		}
 
 		var evmAction evmtypes.EVMContractAction
-		err := chainTypes.Decode(tx.Payload, &evmAction)
+		err := chain33Types.Decode(tx.Payload, &evmAction)
 		if nil != err {
-			relayerLog.Error("ResendChainEvent", "Failed to decode action for tx with hash", common.ToHex(tx.Hash()))
+			relayerLog.Error("ResendChain33Event", "Failed to decode action for tx with hash", common.ToHex(tx.Hash()))
 			continue
 		}
 
 		//确认监听的合约地址
-		if evmAction.ContractAddr != chainRelayer.bridgeBankAddr {
-			relayerLog.Error("ResendChainEvent received logs not from bridgeBank", "evmAction.ContractAddr", evmAction.ContractAddr)
+		if evmAction.ContractAddr != chain33Relayer.bridgeBankAddr {
+			relayerLog.Error("ResendChain33Event received logs not from bridgeBank", "evmAction.ContractAddr", evmAction.ContractAddr)
 			continue
 		}
 
 		for _, evmlog := range txAndLog.LogsPerTx.Logs {
-			var evmEventType events.ChainEvmEvent
-			if chainRelayer.bridgeBankEventBurnSig == common.ToHex(evmlog.Topic[0]) {
-				evmEventType = events.ChainEventLogBurn
-			} else if chainRelayer.bridgeBankEventLockSig == common.ToHex(evmlog.Topic[0]) {
-				evmEventType = events.ChainEventLogLock
-			} else if chainRelayer.bridgeBankEventWithdrawSig == common.ToHex(evmlog.Topic[0]) {
-				evmEventType = events.ChainEventLogWithdraw
+			var evmEventType events.Chain33EvmEvent
+			if chain33Relayer.bridgeBankEventBurnSig == common.ToHex(evmlog.Topic[0]) {
+				evmEventType = events.Chain33EventLogBurn
+			} else if chain33Relayer.bridgeBankEventLockSig == common.ToHex(evmlog.Topic[0]) {
+				evmEventType = events.Chain33EventLogLock
+			} else if chain33Relayer.bridgeBankEventWithdrawSig == common.ToHex(evmlog.Topic[0]) {
+				evmEventType = events.Chain33EventLogWithdraw
 			} else {
 				continue
 			}
 
-			if evmEventType == events.ChainEventLogWithdraw && !chainRelayer.processWithDraw {
+			if evmEventType == events.Chain33EventLogWithdraw && !chain33Relayer.processWithDraw {
 				//代理提币消息只由代理提币节点处理
 				continue
 			}
-			if evmEventType != events.ChainEventLogWithdraw && chainRelayer.processWithDraw {
+			if evmEventType != events.Chain33EventLogWithdraw && chain33Relayer.processWithDraw {
 				//lock和burn消息消息只由普通中继节点处理
 				continue
 			}
 
-			if err := chainRelayer.handleBurnLockWithdrawEvent(evmEventType, evmlog.Data, tx.Hash()); nil != err {
+			if err := chain33Relayer.handleBurnLockWithdrawEvent(evmEventType, evmlog.Data, tx.Hash()); nil != err {
 				return err
 			}
 		}
@@ -435,20 +435,20 @@ func (chainRelayer *Relayer4Chain) ResendChainEvent(height int64) (err error) {
 	return nil
 }
 
-func (chainRelayer *Relayer4Chain) checkIsResendEthClaim(claim *ebTypes.EthBridgeClaim) bool {
+func (chain33Relayer *Relayer4Chain33) checkIsResendEthClaim(claim *ebTypes.EthBridgeClaim) bool {
 	if claim.ForwardTimes <= 1 {
 		return false
 	}
 	ethTxHash := claim.EthTxHash
 	relayerLog.Info("checkIsResendEthClaim", "Received the same EthBridgeClaim more than once with times", claim.ForwardTimes, "tx hash string", ethTxHash)
-	relayTxDetail, _ := chainRelayer.getEthTxRelayAlreadyInfo(ethTxHash)
+	relayTxDetail, _ := chain33Relayer.getEthTxRelayAlreadyInfo(ethTxHash)
 	if nil == relayTxDetail {
 		relayerLog.Info("checkIsResendEthClaim::haven't relay yet")
 		return false
 	}
 
 	//if relay already, just ack it
-	chainRelayer.txRelayAckSendChan[claim.ChainName] <- &ebTypes.TxRelayAck{
+	chain33Relayer.txRelayAckSendChan[claim.ChainName] <- &ebTypes.TxRelayAck{
 		TxHash:  ethTxHash,
 		FdIndex: claim.ForwardIndex,
 	}
@@ -456,9 +456,9 @@ func (chainRelayer *Relayer4Chain) checkIsResendEthClaim(claim *ebTypes.EthBridg
 	return true
 }
 
-func (chainRelayer *Relayer4Chain) relayLockBurnToChain(claim *ebTypes.EthBridgeClaim) {
-	relayerLog.Debug("relayLockBurnToChain", "new EthBridgeClaim received", claim)
-	if chainRelayer.checkIsResendEthClaim(claim) {
+func (chain33Relayer *Relayer4Chain33) relayLockBurnToChain33(claim *ebTypes.EthBridgeClaim) {
+	relayerLog.Debug("relayLockBurnToChain33", "new EthBridgeClaim received", claim)
+	if chain33Relayer.checkIsResendEthClaim(claim) {
 		return
 	}
 
@@ -466,10 +466,10 @@ func (chainRelayer *Relayer4Chain) relayLockBurnToChain(claim *ebTypes.EthBridge
 	bigAmount := big.NewInt(0)
 	bigAmount.SetString(claim.Amount, 10)
 	amountBytes := bigAmount.Bytes()
-	claimID := crypto.Keccak256Hash(nonceBytes, []byte(claim.EthereumSender), []byte(claim.ChainReceiver), []byte(claim.Symbol), amountBytes)
+	claimID := crypto.Keccak256Hash(nonceBytes, []byte(claim.EthereumSender), []byte(claim.Chain33Receiver), []byte(claim.Symbol), amountBytes)
 
 	// Sign the hash using the active validator's private key
-	signature, err := utils.SignClaim4Evm(claimID, chainRelayer.privateKey4Chain_ecdsa)
+	signature, err := utils.SignClaim4Evm(claimID, chain33Relayer.privateKey4Chain33_ecdsa)
 	if nil != err {
 		panic("SignClaim4Evm due to" + err.Error())
 	}
@@ -479,43 +479,43 @@ func (chainRelayer *Relayer4Chain) relayLockBurnToChain(claim *ebTypes.EthBridge
 	if int32(events.ClaimTypeBurn) == claim.ClaimType {
 		//burn 分支
 		if ebTypes.SYMBOL_BTY == claim.Symbol {
-			tokenAddr = ebTypes.BTYAddrChain
+			tokenAddr = ebTypes.BTYAddrChain33
 		} else {
-			tokenAddr = getLockedTokenAddress(chainRelayer.bridgeBankAddr, claim.Symbol, chainRelayer.rpcLaddr)
+			tokenAddr = getLockedTokenAddress(chain33Relayer.bridgeBankAddr, claim.Symbol, chain33Relayer.rpcLaddr)
 			if "" == tokenAddr {
-				relayerLog.Error("relayLockBurnToChain", "No locked token address created for symbol", claim.Symbol)
+				relayerLog.Error("relayLockBurnToChain33", "No locked token address created for symbol", claim.Symbol)
 				return
 			}
 		}
 	} else {
 		//lock 分支
-		if _, ok := chainRelayer.bridgeSymbol2EthChainName[claim.Symbol]; !ok {
-			chainRelayer.bridgeSymbol2EthChainName[claim.Symbol] = claim.ChainName
-			chainRelayer.storeSymbol2chainName(chainRelayer.bridgeSymbol2EthChainName)
+		if _, ok := chain33Relayer.bridgeSymbol2EthChainName[claim.Symbol]; !ok {
+			chain33Relayer.bridgeSymbol2EthChainName[claim.Symbol] = claim.ChainName
+			chain33Relayer.storeSymbol2chainName(chain33Relayer.bridgeSymbol2EthChainName)
 		}
 		//如果是代理打币节点，则只收集symbol和chain name相关信息
-		if chainRelayer.processWithDraw {
+		if chain33Relayer.processWithDraw {
 			return
 		}
 
 		var exist bool
-		tokenAddr, exist = chainRelayer.symbol2Addr[claim.Symbol]
+		tokenAddr, exist = chain33Relayer.symbol2Addr[claim.Symbol]
 		if !exist {
-			tokenAddr = getBridgeToken2address(chainRelayer.bridgeBankAddr, claim.Symbol, chainRelayer.rpcLaddr)
+			tokenAddr = getBridgeToken2address(chain33Relayer.bridgeBankAddr, claim.Symbol, chain33Relayer.rpcLaddr)
 			if "" == tokenAddr {
-				relayerLog.Error("relayLockBurnToChain", "No bridge token address created for symbol", claim.Symbol)
+				relayerLog.Error("relayLockBurnToChain33", "No bridge token address created for symbol", claim.Symbol)
 				return
 			}
-			relayerLog.Info("relayLockBurnToChain", "Succeed to get bridge token address for symbol", claim.Symbol,
+			relayerLog.Info("relayLockBurnToChain33", "Succeed to get bridge token address for symbol", claim.Symbol,
 				"address", tokenAddr)
 
 			token2set := &ebTypes.TokenAddress{
 				Address:   tokenAddr,
 				Symbol:    claim.Symbol,
-				ChainName: ebTypes.ChainBlockChainName,
+				ChainName: ebTypes.Chain33BlockChainName,
 			}
-			if err := chainRelayer.SetTokenAddress(token2set); nil != err {
-				relayerLog.Info("relayLockBurnToChain", "Failed to SetTokenAddress due to", err.Error())
+			if err := chain33Relayer.SetTokenAddress(token2set); nil != err {
+				relayerLog.Info("relayLockBurnToChain33", "Failed to SetTokenAddress due to", err.Error())
 			}
 		}
 	}
@@ -544,26 +544,26 @@ func (chainRelayer *Relayer4Chain) relayLockBurnToChain(claim *ebTypes.EthBridge
 	parameter := fmt.Sprintf("newOracleClaim(%d, %s, %s, %s, %s, %s, %s, %s)",
 		claim.ClaimType,
 		claim.EthereumSender,
-		claim.ChainReceiver,
+		claim.Chain33Receiver,
 		tokenAddr,
 		claim.Symbol,
 		claim.Amount,
 		claimID.String(),
 		common.ToHex(signature))
-	relayerLog.Info("relayLockBurnToChain", "parameter", parameter)
+	relayerLog.Info("relayLockBurnToChain33", "parameter", parameter)
 
-	txhash, err := relayEvmTx2Chain(chainRelayer.privateKey4Chain, claim, parameter, chainRelayer.oracleAddr, chainRelayer.chainName, chainRelayer.chainRpcUrls)
+	txhash, err := relayEvmTx2Chain33(chain33Relayer.privateKey4Chain33, claim, parameter, chain33Relayer.oracleAddr, chain33Relayer.chainName, chain33Relayer.chain33RpcUrls)
 	if err != nil {
-		relayerLog.Error("relayLockBurnToChain", "Failed to RelayEvmTx2Chain due to:", err.Error(), "EthereumTxhash", claim.EthTxHash)
+		relayerLog.Error("relayLockBurnToChain33", "Failed to RelayEvmTx2Chain33 due to:", err.Error(), "EthereumTxhash", claim.EthTxHash)
 		return
 	}
 
-	chainRelayer.txRelayAckSendChan[claim.ChainName] <- &ebTypes.TxRelayAck{
+	chain33Relayer.txRelayAckSendChan[claim.ChainName] <- &ebTypes.TxRelayAck{
 		TxHash:  claim.EthTxHash,
 		FdIndex: claim.ForwardIndex,
 	}
-	//relayEthereum2chainCheckPonit 2:send ack
-	relayerLog.Info("relayLockBurnToChain::relayEthereum2chainCheckPonit_2::sendAck", "ethTxhash", claim.EthTxHash, "ForwardIndex", claim.ForwardIndex, "FdTimes", claim.ForwardTimes)
+	//relayEthereum2chain33CheckPonit 2:send ack
+	relayerLog.Info("relayLockBurnToChain33::relayEthereum2chain33CheckPonit_2::sendAck", "ethTxhash", claim.EthTxHash, "ForwardIndex", claim.ForwardIndex, "FdTimes", claim.ForwardTimes)
 
 	relayTxDetail := &ebTypes.RelayTxDetail{
 		ClaimType:      claim.ClaimType,
@@ -571,83 +571,83 @@ func (chainRelayer *Relayer4Chain) relayLockBurnToChain(claim *ebTypes.EthBridge
 		Txhash:         txhash,
 	}
 
-	//set flag to indicate that the eth tx has been relayed to chain
-	if err = chainRelayer.setEthTxRelayAlreadyInfo(claim.EthTxHash, relayTxDetail); nil != err {
-		relayerLog.Error("relayLockBurnToChain", "Failed to setTxRelayAlreadyInfo due to:", err.Error())
+	//set flag to indicate that the eth tx has been relayed to chain33
+	if err = chain33Relayer.setEthTxRelayAlreadyInfo(claim.EthTxHash, relayTxDetail); nil != err {
+		relayerLog.Error("relayLockBurnToChain33", "Failed to setTxRelayAlreadyInfo due to:", err.Error())
 		return
 	}
-	//relayEthereum2chainCheckPonit 3:setFalgRelayFinish
-	relayerLog.Info("relayLockBurnToChain::relayEthereum2chainCheckPonit_3::setFalgRelayFinish", "ethTxhash", claim.EthTxHash, "ForwardIndex", claim.ForwardIndex, "FdTimes", claim.ForwardTimes)
+	//relayEthereum2chain33CheckPonit 3:setFalgRelayFinish
+	relayerLog.Info("relayLockBurnToChain33::relayEthereum2chain33CheckPonit_3::setFalgRelayFinish", "ethTxhash", claim.EthTxHash, "ForwardIndex", claim.ForwardIndex, "FdTimes", claim.ForwardTimes)
 
 	//第一个有效的index从１开始，方便list
-	txIndex := atomic.AddInt64(&chainRelayer.totalTx4RelayEth2chai33, 1)
-	if err = chainRelayer.updateTotalTxAmount2Eth(txIndex); nil != err {
-		relayerLog.Error("relayLockBurnToChain", "Failed to updateTotalTxAmount2Eth due to:", err.Error())
+	txIndex := atomic.AddInt64(&chain33Relayer.totalTx4RelayEth2chai33, 1)
+	if err = chain33Relayer.updateTotalTxAmount2Eth(txIndex); nil != err {
+		relayerLog.Error("relayLockBurnToChain33", "Failed to updateTotalTxAmount2Eth due to:", err.Error())
 		return
 	}
 
-	statics := &ebTypes.Ethereum2ChainStatics{
-		ChainTxstatus:  ebTypes.Tx_Status_Pending,
-		ChainTxhash:    txhash,
-		EthereumTxhash: claim.EthTxHash,
-		BurnLock:       claim.ClaimType,
-		EthereumSender: claim.EthereumSender,
-		ChainReceiver:  claim.ChainReceiver,
-		Symbol:         claim.Symbol,
-		Amount:         claim.Amount,
-		Nonce:          claim.Nonce,
-		TxIndex:        txIndex,
-		OperationType:  operationType,
+	statics := &ebTypes.Ethereum2Chain33Statics{
+		Chain33Txstatus: ebTypes.Tx_Status_Pending,
+		Chain33Txhash:   txhash,
+		EthereumTxhash:  claim.EthTxHash,
+		BurnLock:        claim.ClaimType,
+		EthereumSender:  claim.EthereumSender,
+		Chain33Receiver: claim.Chain33Receiver,
+		Symbol:          claim.Symbol,
+		Amount:          claim.Amount,
+		Nonce:           claim.Nonce,
+		TxIndex:         txIndex,
+		OperationType:   operationType,
 	}
-	data := chainTypes.Encode(statics)
-	if err = chainRelayer.setLastestRelay2ChainTxStatics(txIndex, claim.ClaimType, data); nil != err {
-		relayerLog.Error("relayLockBurnToChain", "Failed to setLastestRelay2ChainTxStatics due to:", err.Error())
+	data := chain33Types.Encode(statics)
+	if err = chain33Relayer.setLastestRelay2Chain33TxStatics(txIndex, claim.ClaimType, data); nil != err {
+		relayerLog.Error("relayLockBurnToChain33", "Failed to setLastestRelay2Chain33TxStatics due to:", err.Error())
 		return
 	}
-	relayerLog.Info("relayLockBurnToChain::successful",
+	relayerLog.Info("relayLockBurnToChain33::successful",
 		"txIndex", txIndex,
-		"ChainTxhash", txhash,
+		"Chain33Txhash", txhash,
 		"EthereumTxhash", claim.EthTxHash,
 		"type", operationType,
 		"Symbol", claim.Symbol,
 		"Amount", claim.Amount,
 		"EthereumSender", claim.EthereumSender,
-		"ChainReceiver", claim.ChainReceiver)
+		"Chain33Receiver", claim.Chain33Receiver)
 }
 
-func (chainRelayer *Relayer4Chain) BurnAsyncFromChain(ownerPrivateKey, tokenAddr, ethereumReceiver, amount string) (string, error) {
+func (chain33Relayer *Relayer4Chain33) BurnAsyncFromChain33(ownerPrivateKey, tokenAddr, ethereumReceiver, amount string) (string, error) {
 	bn := big.NewInt(1)
 	bn, _ = bn.SetString(utils.TrimZeroAndDot(amount), 10)
-	return burnAsync(ownerPrivateKey, tokenAddr, ethereumReceiver, bn.Int64(), chainRelayer.bridgeBankAddr, chainRelayer.chainName, chainRelayer.rpcLaddr)
+	return burnAsync(ownerPrivateKey, tokenAddr, ethereumReceiver, bn.Int64(), chain33Relayer.bridgeBankAddr, chain33Relayer.chainName, chain33Relayer.rpcLaddr)
 }
 
-func (chainRelayer *Relayer4Chain) LockBTYAssetAsync(ownerPrivateKey, ethereumReceiver, amount string) (string, error) {
+func (chain33Relayer *Relayer4Chain33) LockBTYAssetAsync(ownerPrivateKey, ethereumReceiver, amount string) (string, error) {
 	bn := big.NewInt(1)
 	bn, _ = bn.SetString(utils.TrimZeroAndDot(amount), 10)
-	return lockAsync(ownerPrivateKey, ethereumReceiver, bn.Int64(), chainRelayer.bridgeBankAddr, chainRelayer.chainName, chainRelayer.rpcLaddr)
+	return lockAsync(ownerPrivateKey, ethereumReceiver, bn.Int64(), chain33Relayer.bridgeBankAddr, chain33Relayer.chainName, chain33Relayer.rpcLaddr)
 }
 
-// ShowBridgeRegistryAddr ...
-func (chainRelayer *Relayer4Chain) ShowBridgeRegistryAddr() (string, error) {
-	if "" == chainRelayer.bridgeRegistryAddr {
+//ShowBridgeRegistryAddr ...
+func (chain33Relayer *Relayer4Chain33) ShowBridgeRegistryAddr() (string, error) {
+	if "" == chain33Relayer.bridgeRegistryAddr {
 		return "", errors.New("the relayer is not started yet")
 	}
 
-	return chainRelayer.bridgeRegistryAddr, nil
+	return chain33Relayer.bridgeRegistryAddr, nil
 }
 
-func (chainRelayer *Relayer4Chain) ShowStatics(request *ebTypes.TokenStaticsRequest) (*ebTypes.TokenStaticsResponse, error) {
+func (chain33Relayer *Relayer4Chain33) ShowStatics(request *ebTypes.TokenStaticsRequest) (*ebTypes.TokenStaticsResponse, error) {
 	res := &ebTypes.TokenStaticsResponse{}
 
-	datas, err := chainRelayer.getStatics(request.Operation, request.TxIndex, request.Count)
+	datas, err := chain33Relayer.getStatics(request.Operation, request.TxIndex, request.Count)
 	if nil != err {
 		return nil, err
 	}
 	//todo:完善分页显示功能
 	for _, data := range datas {
-		var statics ebTypes.Ethereum2ChainStatics
-		_ = chainTypes.Decode(data, &statics)
-		if request.Status != 0 && ebTypes.Tx_Status_Map[request.Status] != statics.ChainTxstatus {
+		var statics ebTypes.Ethereum2Chain33Statics
+		_ = chain33Types.Decode(data, &statics)
+		if request.Status != 0 && ebTypes.Tx_Status_Map[request.Status] != statics.Chain33Txstatus {
 			continue
 		}
 		if len(request.Symbol) > 0 && request.Symbol != statics.Symbol {
@@ -658,136 +658,136 @@ func (chainRelayer *Relayer4Chain) ShowStatics(request *ebTypes.TokenStaticsRequ
 	return res, nil
 }
 
-func (chainRelayer *Relayer4Chain) updateTxStatus() {
-	chainRelayer.updateSingleTxStatus(events.ClaimTypeBurn)
-	chainRelayer.updateSingleTxStatus(events.ClaimTypeLock)
+func (chain33Relayer *Relayer4Chain33) updateTxStatus() {
+	chain33Relayer.updateSingleTxStatus(events.ClaimTypeBurn)
+	chain33Relayer.updateSingleTxStatus(events.ClaimTypeLock)
 }
 
-// 该函数用于定期检查是否有需要重新发送给以太坊协成的chain事件信息,用于产生relay event
-func (chainRelayer *Relayer4Chain) checkTxRelay2Ethereum() {
-	txInfos, err := chainRelayer.getAllTxsUnconfirm()
+// 该函数用于定期检查是否有需要重新发送给以太坊协成的chain33事件信息,用于产生relay event
+func (chain33Relayer *Relayer4Chain33) checkTxRelay2Ethereum() {
+	txInfos, err := chain33Relayer.getAllTxsUnconfirm()
 	if err != nil {
-		relayerLog.Error("chainRelayer::checkTxRelay2Ethereum", "Failed to getAllTxsUnconfirm due to", err.Error())
+		relayerLog.Error("chain33Relayer::checkTxRelay2Ethereum", "Failed to getAllTxsUnconfirm due to", err.Error())
 		return
 	}
 	if 0 == len(txInfos) {
 		return
 	}
 	for _, txInfo := range txInfos {
-		txHashStr := chainEvmCommon.Bytes2Hex(txInfo.TxHash)
+		txHashStr := chain33EvmCommon.Bytes2Hex(txInfo.TxHash)
 
 		if !txInfo.Resend {
 			//为了防止转发出去的消息之后，下一个区块时间马上到来，首次转发的消息需要至少等一个区块间隔之后才会进行转发
 			txInfo.Resend = true
-			err = chainRelayer.setChainTxIsRelayedUnconfirm(txHashStr, txInfo.FdIndex, txInfo)
+			err = chain33Relayer.setChain33TxIsRelayedUnconfirm(txHashStr, txInfo.FdIndex, txInfo)
 			if nil != err {
-				relayerLog.Error("chainRelayer::checkTxRelay2Ethereum", "Failed to SetTxIsRelayedconfirm due to", err.Error())
+				relayerLog.Error("chain33Relayer::checkTxRelay2Ethereum", "Failed to SetTxIsRelayedconfirm due to", err.Error())
 				return
 			}
 			continue
 		}
 
-		chainMsg, err := events.ParseBurnLock4chain(events.ChainEvmEvent(txInfo.EventType), txInfo.Data, chainRelayer.bridgeBankAbi, txInfo.TxHash)
+		chain33Msg, err := events.ParseBurnLock4chain33(events.Chain33EvmEvent(txInfo.EventType), txInfo.Data, chain33Relayer.bridgeBankAbi, txInfo.TxHash)
 		if nil != err {
-			relayerLog.Error("chainRelayer::checkTxRelay2Ethereum", "Failed to ParseBurnLock4chain due to", err.Error())
+			relayerLog.Error("chain33Relayer::checkTxRelay2Ethereum", "Failed to ParseBurnLock4chain33 due to", err.Error())
 			return
 		}
 		txInfo.FdTimes = txInfo.FdTimes + 1
-		chainMsg.ForwardTimes = txInfo.FdTimes
-		chainMsg.ForwardIndex = txInfo.FdIndex
+		chain33Msg.ForwardTimes = txInfo.FdTimes
+		chain33Msg.ForwardIndex = txInfo.FdIndex
 
-		channel, ok := chainRelayer.chainMsgChan[txInfo.ToChainName]
+		channel, ok := chain33Relayer.chain33MsgChan[txInfo.ToChainName]
 		if !ok {
-			relayerLog.Error("chainRelayer::checkTxRelay2Ethereum", "No chainMsgChan for ethereum chain with name", txInfo.ToChainName)
+			relayerLog.Error("chain33Relayer::checkTxRelay2Ethereum", "No chain33MsgChan for ethereum chain with name", txInfo.ToChainName)
 			return
 		}
-		channel <- chainMsg
+		channel <- chain33Msg
 
-		//relaychainToEthereumCheckPonit 5: checkTxRelay2Ethereum
-		relayerLog.Info("chainRelayer::relaychainToEthereumCheckPonit_5::checkTxRelay2Ethereum", "chainTxHash", txHashStr, "ForwardIndex", chainMsg.ForwardIndex, "FdTimes", chainMsg.ForwardTimes)
-		err = chainRelayer.setChainTxIsRelayedUnconfirm(txHashStr, txInfo.FdIndex, txInfo)
+		//relaychain33ToEthereumCheckPonit 5: checkTxRelay2Ethereum
+		relayerLog.Info("chain33Relayer::relaychain33ToEthereumCheckPonit_5::checkTxRelay2Ethereum", "chain33TxHash", txHashStr, "ForwardIndex", chain33Msg.ForwardIndex, "FdTimes", chain33Msg.ForwardTimes)
+		err = chain33Relayer.setChain33TxIsRelayedUnconfirm(txHashStr, txInfo.FdIndex, txInfo)
 		if nil != err {
-			relayerLog.Error("chainRelayer::checkTxRelay2Ethereum", "Failed to SetTxIsRelayedconfirm due to", err.Error())
+			relayerLog.Error("chain33Relayer::checkTxRelay2Ethereum", "Failed to SetTxIsRelayedconfirm due to", err.Error())
 			return
 		}
 	}
 }
 
-// 用于chain的事件信息被中继之后的ack信息，重置标志位
-func (chainRelayer *Relayer4Chain) procTxRelayAck(ack *ebTypes.TxRelayAck) {
+//用于chain33的事件信息被中继之后的ack信息，重置标志位
+func (chain33Relayer *Relayer4Chain33) procTxRelayAck(ack *ebTypes.TxRelayAck) {
 	//reset with another key to exclude from the check list to resend the same message
-	if err := chainRelayer.resetKeyChainTxRelayedAlready(ack.TxHash); nil != err {
-		relayerLog.Error("chainRelayer::procTxRelayAck", "Failed to resetKeyTxRelayedAlready due to:", err.Error())
+	if err := chain33Relayer.resetKeyChain33TxRelayedAlready(ack.TxHash); nil != err {
+		relayerLog.Error("chain33Relayer::procTxRelayAck", "Failed to resetKeyTxRelayedAlready due to:", err.Error())
 		return
 	}
-	//relaychainToEthereumCheckPonit 4: recv ack from ethereum relay service
-	relayerLog.Info("chainRelayer::procTxRelayAck::relaychainToEthereumCheckPonit_4", "chainTxHash", ack.TxHash, "ForwardIndex", ack.FdIndex)
+	//relaychain33ToEthereumCheckPonit 4: recv ack from ethereum relay service
+	relayerLog.Info("chain33Relayer::procTxRelayAck::relaychain33ToEthereumCheckPonit_4", "chain33TxHash", ack.TxHash, "ForwardIndex", ack.FdIndex)
 }
 
-func (chainRelayer *Relayer4Chain) updateSingleTxStatus(claimType events.ClaimType) {
-	txIndex := chainRelayer.getChainUpdateTxIndex(claimType)
-	datas, _ := chainRelayer.getStatics(int32(claimType), txIndex, 0)
+func (chain33Relayer *Relayer4Chain33) updateSingleTxStatus(claimType events.ClaimType) {
+	txIndex := chain33Relayer.getChain33UpdateTxIndex(claimType)
+	datas, _ := chain33Relayer.getStatics(int32(claimType), txIndex, 0)
 	if nil == datas {
 		return
 	}
 	for _, data := range datas {
-		var statics ebTypes.Ethereum2ChainStatics
-		_ = chainTypes.Decode(data, &statics)
-		result := GetTxStatusByHashesRpc(statics.ChainTxhash, chainRelayer.rpcLaddr)
+		var statics ebTypes.Ethereum2Chain33Statics
+		_ = chain33Types.Decode(data, &statics)
+		result := GetTxStatusByHashesRpc(statics.Chain33Txhash, chain33Relayer.rpcLaddr)
 		//当前处理机制比较简单，如果发现该笔交易未执行，就不再产寻后续交易的回执
-		if ebTypes.Invalid_ChainTx_Status == result {
-			relayerLog.Debug("chainRelayer::updateSingleTxStatus", "no receipt for tx index", statics.TxIndex)
+		if ebTypes.Invalid_Chain33Tx_Status == result {
+			relayerLog.Debug("chain33Relayer::updateSingleTxStatus", "no receipt for tx index", statics.TxIndex)
 			break
 		}
 		status := ebTypes.Tx_Status_Success
-		if result != chainTypes.ExecOk {
+		if result != chain33Types.ExecOk {
 			status = ebTypes.Tx_Status_Failed
 		}
-		statics.ChainTxstatus = status
-		dataNew := chainTypes.Encode(&statics)
-		_ = chainRelayer.setLastestRelay2ChainTxStatics(statics.TxIndex, int32(claimType), dataNew)
-		_ = chainRelayer.setChainUpdateTxIndex(statics.TxIndex, claimType)
-		relayerLog.Debug("updateSingleTxStatus", "TxIndex", statics.TxIndex, "operationType", statics.OperationType, "txHash", statics.ChainTxhash, "updated status", status)
+		statics.Chain33Txstatus = status
+		dataNew := chain33Types.Encode(&statics)
+		_ = chain33Relayer.setLastestRelay2Chain33TxStatics(statics.TxIndex, int32(claimType), dataNew)
+		_ = chain33Relayer.setChain33UpdateTxIndex(statics.TxIndex, claimType)
+		relayerLog.Debug("updateSingleTxStatus", "TxIndex", statics.TxIndex, "operationType", statics.OperationType, "txHash", statics.Chain33Txhash, "updated status", status)
 	}
 }
 
-func (chainRelayer *Relayer4Chain) SetupMulSign(setupMulSign *ebTypes.SetupMulSign) (string, error) {
-	if "" == chainRelayer.mulSignAddr {
+func (chain33Relayer *Relayer4Chain33) SetupMulSign(setupMulSign *ebTypes.SetupMulSign) (string, error) {
+	if "" == chain33Relayer.mulSignAddr {
 		return "", ebTypes.ErrMulSignNotDeployed
 	}
 
-	return setupMultiSign(setupMulSign.OperatorPrivateKey, chainRelayer.mulSignAddr, chainRelayer.chainName, chainRelayer.rpcLaddr, setupMulSign.Owners)
+	return setupMultiSign(setupMulSign.OperatorPrivateKey, chain33Relayer.mulSignAddr, chain33Relayer.chainName, chain33Relayer.rpcLaddr, setupMulSign.Owners)
 }
 
-func (chainRelayer *Relayer4Chain) SafeTransfer(para *ebTypes.SafeTransfer) (string, error) {
-	if "" == chainRelayer.mulSignAddr {
+func (chain33Relayer *Relayer4Chain33) SafeTransfer(para *ebTypes.SafeTransfer) (string, error) {
+	if "" == chain33Relayer.mulSignAddr {
 		return "", ebTypes.ErrMulSignNotDeployed
 	}
 
-	return safeTransfer(para.OwnerPrivateKeys[0], chainRelayer.mulSignAddr, chainRelayer.chainName,
-		chainRelayer.rpcLaddr, para.To, para.Token, para.OwnerPrivateKeys, para.Amount)
+	return safeTransfer(para.OwnerPrivateKeys[0], chain33Relayer.mulSignAddr, chain33Relayer.chainName,
+		chain33Relayer.rpcLaddr, para.To, para.Token, para.OwnerPrivateKeys, para.Amount)
 }
 
-func (chainRelayer *Relayer4Chain) SetMultiSignAddr(address string) {
-	chainRelayer.rwLock.Lock()
-	chainRelayer.mulSignAddr = address
-	chainRelayer.rwLock.Unlock()
+func (chain33Relayer *Relayer4Chain33) SetMultiSignAddr(address string) {
+	chain33Relayer.rwLock.Lock()
+	chain33Relayer.mulSignAddr = address
+	chain33Relayer.rwLock.Unlock()
 
-	chainRelayer.setMultiSignAddress(address)
+	chain33Relayer.setMultiSignAddress(address)
 }
 
-func (chainRelayer *Relayer4Chain) GetMultiSignAddr() string {
-	return chainRelayer.getMultiSignAddress()
+func (chain33Relayer *Relayer4Chain33) GetMultiSignAddr() string {
+	return chain33Relayer.getMultiSignAddress()
 }
 
-func (chainRelayer *Relayer4Chain) WithdrawFromChain(ownerPrivateKey, tokenAddr, ethereumReceiver, amount string) (string, error) {
+func (chain33Relayer *Relayer4Chain33) WithdrawFromChain33(ownerPrivateKey, tokenAddr, ethereumReceiver, amount string) (string, error) {
 	bn := big.NewInt(1)
 	bn, _ = bn.SetString(utils.TrimZeroAndDot(amount), 10)
-	return withdrawAsync(ownerPrivateKey, tokenAddr, ethereumReceiver, bn.Int64(), chainRelayer.bridgeBankAddr, chainRelayer.chainName, chainRelayer.rpcLaddr)
+	return withdrawAsync(ownerPrivateKey, tokenAddr, ethereumReceiver, bn.Int64(), chain33Relayer.bridgeBankAddr, chain33Relayer.chainName, chain33Relayer.rpcLaddr)
 }
 
-func (chainRelayer *Relayer4Chain) BurnWithIncreaseAsyncFromChain(ownerPrivateKey, tokenAddr, ethereumReceiver, amount string) (string, error) {
+func (chain33Relayer *Relayer4Chain33) BurnWithIncreaseAsyncFromChain33(ownerPrivateKey, tokenAddr, ethereumReceiver, amount string) (string, error) {
 	bn := big.NewInt(1)
 	bn, _ = bn.SetString(utils.TrimZeroAndDot(amount), 10)
-	return burnWithIncreaseAsync(ownerPrivateKey, tokenAddr, ethereumReceiver, bn.Int64(), chainRelayer.bridgeBankAddr, chainRelayer.chainName, chainRelayer.rpcLaddr)
+	return burnWithIncreaseAsync(ownerPrivateKey, tokenAddr, ethereumReceiver, bn.Int64(), chain33Relayer.bridgeBankAddr, chain33Relayer.chainName, chain33Relayer.rpcLaddr)
 }

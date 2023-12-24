@@ -27,8 +27,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/common"
-	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/33cn/chain33/common"
+	dbm "github.com/33cn/chain33/common/db"
 )
 
 func init() {

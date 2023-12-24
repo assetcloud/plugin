@@ -8,9 +8,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	bw "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	bw "github.com/33cn/plugin/plugin/dapp/blackwhite/types"
 )
 
 // Jrpc json rpc struct

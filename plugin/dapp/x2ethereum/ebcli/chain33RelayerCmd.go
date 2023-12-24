@@ -3,17 +3,17 @@ package main
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	"github.com/spf13/cobra"
 )
 
-// ChainRelayerCmd RelayerCmd command func
-func ChainRelayerCmd() *cobra.Command {
+//Chain33RelayerCmd RelayerCmd command func
+func Chain33RelayerCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "chain ",
-		Short: "Chain relayer ",
+		Use:   "chain33 ",
+		Short: "Chain33 relayer ",
 		Args:  cobra.MinimumNArgs(1),
 	}
 
@@ -26,7 +26,7 @@ func ChainRelayerCmd() *cobra.Command {
 	return cmd
 }
 
-// ImportPrivateKeyCmd SetPwdCmd set password
+//ImportPrivateKeyCmd SetPwdCmd set password
 func ImportPrivateKeyCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "import_privatekey",
@@ -50,11 +50,11 @@ func importPrivatekey(cmd *cobra.Command, args []string) {
 	}
 
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ImportChainRelayerPrivateKey", importKeyReq, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ImportChain33RelayerPrivateKey", importKeyReq, &res)
 	ctx.Run()
 }
 
-// ShowValidatorAddrCmd ...
+//ShowValidatorAddrCmd ...
 func ShowValidatorAddrCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show_validator",
@@ -67,25 +67,25 @@ func ShowValidatorAddrCmd() *cobra.Command {
 func showValidatorAddr(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowChainRelayerValidator", nil, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowChain33RelayerValidator", nil, &res)
 	ctx.Run()
 }
 
-// ShowTxsHashCmd ...
+//ShowTxsHashCmd ...
 func ShowTxsHashCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show_txhashes",
 		Short: "show me the tx hashes",
-		Run:   showChainRelayer2EthTxs,
+		Run:   showChain33Relayer2EthTxs,
 	}
 	return cmd
 }
 
-func showChainRelayer2EthTxs(cmd *cobra.Command, args []string) {
+func showChain33Relayer2EthTxs(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 
 	var res ebTypes.Txhashes
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowChainRelayer2EthTxs", nil, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowChain33Relayer2EthTxs", nil, &res)
 	if _, err := ctx.RunResult(); nil != err {
 		errInfo := err.Error()
 		fmt.Println("errinfo:" + errInfo)

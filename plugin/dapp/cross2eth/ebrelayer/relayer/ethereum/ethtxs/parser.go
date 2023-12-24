@@ -6,13 +6,13 @@ package ethtxs
 //      Parses structs containing event information into
 //      unsigned transactions for validators to sign, then
 //      relays the data packets as transactions on the
-//      chain Bridge.
+//      chain33 Bridge.
 // --------------------------------------------------------
 
 import (
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 )
 
 // LogLockToEthBridgeClaim : parses and packages a LockEvent struct with a validator address in an EthBridgeClaim msg
@@ -22,8 +22,8 @@ func LogLockToEthBridgeClaim(event *events.LockEvent, ethereumChainID int64, bri
 		return nil, ebrelayerTypes.ErrEmptyAddress
 	}
 
-	chainReceiver := new(address.Address)
-	chainReceiver.SetBytes(recipient)
+	chain33Receiver := new(address.Address)
+	chain33Receiver.SetBytes(recipient)
 
 	witnessClaim := &ebrelayerTypes.EthBridgeClaim{}
 	witnessClaim.EthereumChainID = ethereumChainID
@@ -32,7 +32,7 @@ func LogLockToEthBridgeClaim(event *events.LockEvent, ethereumChainID int64, bri
 	witnessClaim.TokenAddr = event.Token.String()
 	witnessClaim.Symbol = event.Symbol
 	witnessClaim.EthereumSender = event.From.String()
-	witnessClaim.ChainReceiver = chainReceiver.String()
+	witnessClaim.Chain33Receiver = chain33Receiver.String()
 	witnessClaim.Amount = event.Value.String()
 
 	witnessClaim.ClaimType = int32(events.ClaimTypeLock)
@@ -43,15 +43,15 @@ func LogLockToEthBridgeClaim(event *events.LockEvent, ethereumChainID int64, bri
 	return witnessClaim, nil
 }
 
-// LogBurnToEthBridgeClaim ...
+//LogBurnToEthBridgeClaim ...
 func LogBurnToEthBridgeClaim(event *events.BurnEvent, ethereumChainID int64, bridgeBrankAddr, ethTxHash string, decimal int64) (*ebrelayerTypes.EthBridgeClaim, error) {
-	recipient := event.ChainReceiver
+	recipient := event.Chain33Receiver
 	if 0 == len(recipient) {
 		return nil, ebrelayerTypes.ErrEmptyAddress
 	}
 
-	chainReceiver := new(address.Address)
-	chainReceiver.SetBytes(recipient)
+	chain33Receiver := new(address.Address)
+	chain33Receiver.SetBytes(recipient)
 
 	witnessClaim := &ebrelayerTypes.EthBridgeClaim{}
 	witnessClaim.EthereumChainID = ethereumChainID
@@ -60,7 +60,7 @@ func LogBurnToEthBridgeClaim(event *events.BurnEvent, ethereumChainID int64, bri
 	witnessClaim.TokenAddr = event.Token.String()
 	witnessClaim.Symbol = event.Symbol
 	witnessClaim.EthereumSender = event.OwnerFrom.String()
-	witnessClaim.ChainReceiver = chainReceiver.String()
+	witnessClaim.Chain33Receiver = chain33Receiver.String()
 	witnessClaim.Amount = event.Amount.String()
 	witnessClaim.ClaimType = int32(events.ClaimTypeBurn)
 	witnessClaim.ChainName = ""
@@ -70,22 +70,22 @@ func LogBurnToEthBridgeClaim(event *events.BurnEvent, ethereumChainID int64, bri
 	return witnessClaim, nil
 }
 
-// ChainMsgToProphecyClaim : parses event data from a ChainMsg, packaging it as a ProphecyClaim
-func ChainMsgToProphecyClaim(msg events.ChainMsg) ProphecyClaim {
+// Chain33MsgToProphecyClaim : parses event data from a Chain33Msg, packaging it as a ProphecyClaim
+func Chain33MsgToProphecyClaim(msg events.Chain33Msg) ProphecyClaim {
 	claimType := msg.ClaimType
-	chainSender := msg.ChainSender
+	chain33Sender := msg.Chain33Sender
 	ethereumReceiver := msg.EthereumReceiver
 	symbol := msg.Symbol
 	amount := msg.Amount
 
 	prophecyClaim := ProphecyClaim{
 		ClaimType:        claimType,
-		ChainSender:      chainSender.Bytes(),
+		Chain33Sender:    chain33Sender.Bytes(),
 		EthereumReceiver: ethereumReceiver,
 		//TokenContractAddress: tokenContractAddress,
-		Symbol:      symbol,
-		Amount:      amount,
-		ChainTxHash: msg.TxHash,
+		Symbol:        symbol,
+		Amount:        amount,
+		Chain33TxHash: msg.TxHash,
 	}
 
 	return prophecyClaim

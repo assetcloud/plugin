@@ -15,11 +15,11 @@ import (
 
 	"strings"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/token/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/token/types"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 )
@@ -32,8 +32,8 @@ var (
 var (
 	mainNetgrpcAddr = "localhost:8802"
 	ParaNetgrpcAddr = "localhost:8902"
-	mainClient      types.ChainClient
-	paraClient      types.ChainClient
+	mainClient      types.Chain33Client
+	paraClient      types.Chain33Client
 	r               *rand.Rand
 
 	ErrTest = errors.New("ErrTest")
@@ -50,7 +50,7 @@ const (
 	fee = 1e6
 )
 
-// for token
+//for token
 var (
 	tokenName   = "NEW"
 	tokenSym    = "NEW"
@@ -83,13 +83,13 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	mainClient = types.NewChainClient(conn)
+	mainClient = types.NewChain33Client(conn)
 
 	conn, err = grpc.Dial(ParaNetgrpcAddr, grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
-	paraClient = types.NewChainClient(conn)
+	paraClient = types.NewChain33Client(conn)
 
 	r = rand.New(rand.NewSource(time.Now().UnixNano()))
 	addrexec = address.ExecAddress("user.p.guodun.token")
@@ -436,7 +436,7 @@ func getprivkey(key string) crypto.PrivKey {
 }
 
 func TestToken_validSymbolWithHeight(t *testing.T) {
-	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
+	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
 	cfg.SetDappFork(pty.TokenX, pty.ForkBadTokenSymbolX, 184000)
 	cfg.SetDappFork(pty.TokenX, pty.ForkTokenSymbolWithNumberX, 1298600)
 	forkBadTokenSymbol := cfg.GetDappFork(pty.TokenX, pty.ForkBadTokenSymbolX)

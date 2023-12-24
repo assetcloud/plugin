@@ -5,9 +5,9 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common/db/table"
-	"github.com/assetcloud/chain/types"
-	gty "github.com/assetcloud/plugin/plugin/dapp/guess/types"
+	"github.com/33cn/chain33/common/db/table"
+	"github.com/33cn/chain33/types"
+	gty "github.com/33cn/plugin/plugin/dapp/guess/types"
 )
 
 func (g *Guess) getUserBet(log *gty.ReceiptGuessGame) (userBet *gty.UserBet) {

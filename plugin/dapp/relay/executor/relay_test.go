@@ -7,19 +7,19 @@ package executor
 import (
 	"testing"
 
-	apimock "github.com/assetcloud/chain/client/mocks"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/common/db/mocks"
-	"github.com/assetcloud/chain/types"
-	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
+	apimock "github.com/33cn/chain33/client/mocks"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/common/db/mocks"
+	"github.com/33cn/chain33/types"
+	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 
-	_ "github.com/assetcloud/chain/system"
+	_ "github.com/33cn/chain33/system"
 )
 
-var chainTestCfg = types.NewChainConfig(types.GetDefaultCfgstring())
+var chainTestCfg = types.NewChain33Config(types.GetDefaultCfgstring())
 
 func init() {
 	Init(ty.RelayX, chainTestCfg, nil)
@@ -120,7 +120,7 @@ func (s *suiteRelay) testExecDelLocal(tx *types.Transaction, receipt *types.Rece
 	s.Subset(set.KV, kv)
 }
 
-// create sell
+//create sell
 func (s *suiteRelay) TestExec_1() {
 	order := &ty.RelayCreate{
 		Operation:       ty.RelayOrderSell,
@@ -167,7 +167,7 @@ func (s *suiteRelay) TestExec_1() {
 
 }
 
-// accept
+//accept
 func (s *suiteRelay) TestExec_2() {
 	order := &ty.RelayAccept{
 		OrderId: s.orderID,
@@ -204,7 +204,7 @@ func (s *suiteRelay) TestExec_2() {
 
 }
 
-// confirm
+//confirm
 func (s *suiteRelay) TestExec_3() {
 
 	order := &ty.RelayConfirmTx{
@@ -438,7 +438,7 @@ func (s *suiteBtcHeader) testExecBtcHeadDelLocal(tx *types.Transaction, receipt 
 	s.Subset(set.KV, kv)
 }
 
-// rcv btchead
+//rcv btchead
 func (s *suiteBtcHeader) TestSaveBtcHead_1() {
 	head0 := &ty.BtcHeader{
 		Hash:          "5e7d9c599cd040ec2ba53f4dee28028710be8c135e779f65c56feadaae34c3f2",

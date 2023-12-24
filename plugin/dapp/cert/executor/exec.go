@@ -1,11 +1,11 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common/address"
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/cert/authority"
-	ct "github.com/assetcloud/plugin/plugin/dapp/cert/types"
+	"github.com/33cn/chain33/common/address"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/cert/authority"
+	ct "github.com/33cn/plugin/plugin/dapp/cert/types"
 )
 
 func CertUserStoreKey(addr string) (key []byte) {

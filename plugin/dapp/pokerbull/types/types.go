@@ -7,7 +7,7 @@ package types
 import (
 	"reflect"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 func init() {
@@ -18,12 +18,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(PokerBullX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(PokerBullX, NewType(cfg))
 }
 
@@ -33,7 +33,7 @@ type PokerBullType struct {
 }
 
 // NewType 创建pokerbull执行器类型
-func NewType(cfg *types.ChainConfig) *PokerBullType {
+func NewType(cfg *types.Chain33Config) *PokerBullType {
 	c := &PokerBullType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

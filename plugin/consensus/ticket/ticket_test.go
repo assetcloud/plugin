@@ -10,23 +10,23 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/common/crypto"
-	vrf "github.com/assetcloud/chain/common/vrf/secp256k1"
-	"github.com/assetcloud/chain/queue"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	"github.com/assetcloud/chain/util/testnode"
-	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/common/crypto"
+	vrf "github.com/33cn/chain33/common/vrf/secp256k1"
+	"github.com/33cn/chain33/queue"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	"github.com/33cn/chain33/util/testnode"
+	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
 	secp256k1 "github.com/btcsuite/btcd/btcec"
 	"github.com/stretchr/testify/assert"
 
-	apimocks "github.com/assetcloud/chain/client/mocks"
-	"github.com/assetcloud/chain/common/merkle"
-	_ "github.com/assetcloud/chain/system"
-	drivers "github.com/assetcloud/chain/system/consensus"
-	_ "github.com/assetcloud/plugin/plugin/dapp/init"
-	_ "github.com/assetcloud/plugin/plugin/store/init"
+	apimocks "github.com/33cn/chain33/client/mocks"
+	"github.com/33cn/chain33/common/merkle"
+	_ "github.com/33cn/chain33/system"
+	drivers "github.com/33cn/chain33/system/consensus"
+	_ "github.com/33cn/plugin/plugin/dapp/init"
+	_ "github.com/33cn/plugin/plugin/store/init"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -35,7 +35,7 @@ func TestTicket(t *testing.T) {
 }
 
 func testTicket(t *testing.T) {
-	mock33 := testnode.New("testdata/chain.cfg.toml", nil)
+	mock33 := testnode.New("testdata/chain33.cfg.toml", nil)
 	defer mock33.Close()
 	cfg := mock33.GetClient().GetConfig()
 	mock33.Listen()
@@ -117,7 +117,7 @@ func testTicket(t *testing.T) {
 	assert.Equal(t, isbestBlock, false)
 }
 
-func createBindMiner(cfg *types.ChainConfig, t *testing.T, m, r string, priv crypto.PrivKey) *types.Transaction {
+func createBindMiner(cfg *types.Chain33Config, t *testing.T, m, r string, priv crypto.PrivKey) *types.Transaction {
 	ety := types.LoadExecutorType("ticket")
 	tx, err := ety.Create("Tbind", &ty.TicketBind{MinerAddress: m, ReturnAddress: r})
 	assert.Nil(t, err)
@@ -184,7 +184,7 @@ func Test_genPrivHash(t *testing.T) {
 }
 
 func Test_getNextRequiredDifficulty(t *testing.T) {
-	cfg := types.NewChainConfig(types.ReadFile("testdata/chain.cfg.toml"))
+	cfg := types.NewChain33Config(types.ReadFile("testdata/chain33.cfg.toml"))
 
 	api := new(apimocks.QueueProtocolAPI)
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)

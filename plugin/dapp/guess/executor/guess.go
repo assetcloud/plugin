@@ -5,10 +5,10 @@
 package executor
 
 import (
-	log "github.com/assetcloud/chain/common/log/log15"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	gty "github.com/assetcloud/plugin/plugin/dapp/guess/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	gty "github.com/33cn/plugin/plugin/dapp/guess/types"
 )
 
 var logger = log.New("module", "execs.guess")
@@ -16,7 +16,7 @@ var logger = log.New("module", "execs.guess")
 var driverName = gty.GuessX
 
 // Init Guess
-func Init(name string, cfg *types.ChainConfig, sub []byte) {
+func Init(name string, cfg *types.Chain33Config, sub []byte) {
 	driverName := GetName()
 	if name != driverName {
 		panic("system dapp can't be rename")

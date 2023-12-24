@@ -5,10 +5,10 @@
 package pokerbull
 
 import (
-	"github.com/assetcloud/chain/pluginmgr"
-	"github.com/assetcloud/plugin/plugin/dapp/pokerbull/cmd"
-	"github.com/assetcloud/plugin/plugin/dapp/pokerbull/executor"
-	"github.com/assetcloud/plugin/plugin/dapp/pokerbull/types"
+	"github.com/33cn/chain33/pluginmgr"
+	"github.com/33cn/plugin/plugin/dapp/pokerbull/cmd"
+	"github.com/33cn/plugin/plugin/dapp/pokerbull/executor"
+	"github.com/33cn/plugin/plugin/dapp/pokerbull/types"
 )
 
 func init() {

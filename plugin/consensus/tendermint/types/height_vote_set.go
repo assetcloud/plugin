@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	tmtypes "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
+	tmtypes "github.com/33cn/plugin/plugin/dapp/valnode/types"
 )
 
 // RoundVoteSet ...

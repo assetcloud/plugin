@@ -7,22 +7,22 @@ package testnode
 import (
 	"testing"
 
-	"github.com/assetcloud/chain/util/testnode"
-	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
-	ticketwallet "github.com/assetcloud/plugin/plugin/dapp/ticket/wallet"
+	"github.com/33cn/chain33/util/testnode"
+	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	ticketwallet "github.com/33cn/plugin/plugin/dapp/ticket/wallet"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	_ "github.com/assetcloud/chain/system"
-	"github.com/assetcloud/chain/types"
-	_ "github.com/assetcloud/plugin/plugin"
+	_ "github.com/33cn/chain33/system"
+	"github.com/33cn/chain33/types"
+	_ "github.com/33cn/plugin/plugin"
 )
 
 func TestWalletTicket(t *testing.T) {
 	minerAddr := "12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"
 	t.Log("Begin wallet ticket test")
 
-	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
 	cfg.GetModuleConfig().Consensus.Name = "ticket"
 	mock33 := testnode.NewWithConfig(cfg, nil)
 	defer mock33.Close()

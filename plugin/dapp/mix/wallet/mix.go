@@ -12,15 +12,15 @@ import (
 
 	"github.com/consensys/gnark/backend/groth16"
 
-	"github.com/assetcloud/chain/system/dapp"
+	"github.com/33cn/chain33/system/dapp"
 	"github.com/pkg/errors"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/types"
 
-	wcom "github.com/assetcloud/chain/wallet/common"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	wcom "github.com/33cn/chain33/wallet/common"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 )
 
 func (p *mixPolicy) getPrivKeyByAddr(addr string) (crypto.PrivKey, error) {
@@ -92,7 +92,7 @@ func (p *mixPolicy) savePrivacyPair(addr string) (*mixTy.WalletAddrPrivacy, erro
 	return &mixTy.WalletAddrPrivacy{Privacy: newPrivacy, Addr: addr}, nil
 }
 
-// 查询钱包里面所有的地址对应的PrivacyKeys
+//查询钱包里面所有的地址对应的PrivacyKeys
 func (p *mixPolicy) getWalletPrivacyKeys() ([]*mixTy.WalletAddrPrivacy, error) {
 	//通过Account前缀查找获取钱包中的所有账户信息
 	WalletAccStores, err := p.store.GetAccountByPrefix("Account")
@@ -146,7 +146,7 @@ func (p *mixPolicy) tryRescanNotes() error {
 	return nil
 }
 
-// 从localdb中把Mix合约的交易按升序都获取出来依次处理
+//从localdb中把Mix合约的交易按升序都获取出来依次处理
 func (p *mixPolicy) rescanNotes() {
 	var txInfo mixTy.LocalMixTx
 	i := 0

@@ -5,10 +5,10 @@
 package gas
 
 import (
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/mm"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/model"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/params"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/mm"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/model"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/params"
 )
 
 // 本文件中定义各种操作中需要花费的Gas逻辑

@@ -7,9 +7,9 @@ package tendermint
 import (
 	"fmt"
 
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/types"
-	tmtypes "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/types"
+	tmtypes "github.com/33cn/plugin/plugin/dapp/valnode/types"
 	"github.com/golang/protobuf/proto"
 )
 

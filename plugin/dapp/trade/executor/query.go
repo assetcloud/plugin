@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
 )
 
 // 目前设计trade 的query， 有两个部分的大分类
@@ -89,7 +89,7 @@ func (t *trade) GetOnesOrderWithStatus(req *pty.ReqAddrAssets) (types.Message, e
 	return t.toTradeOrders(rows)
 }
 
-func fmtReply(cfg *types.ChainConfig, order *pty.LocalOrder) *pty.ReplyTradeOrder {
+func fmtReply(cfg *types.Chain33Config, order *pty.LocalOrder) *pty.ReplyTradeOrder {
 	priceExec := order.PriceExec
 	priceSymbol := order.PriceSymbol
 	if priceExec == "" {

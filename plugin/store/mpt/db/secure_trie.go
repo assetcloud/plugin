@@ -23,7 +23,7 @@ package mpt
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/common"
+	"github.com/33cn/chain33/common"
 )
 
 const (

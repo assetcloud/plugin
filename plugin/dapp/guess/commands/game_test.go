@@ -13,29 +13,29 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/blockchain"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/common/limits"
-	"github.com/assetcloud/chain/common/log"
-	"github.com/assetcloud/chain/executor"
-	"github.com/assetcloud/chain/mempool"
-	"github.com/assetcloud/chain/p2p"
-	"github.com/assetcloud/chain/queue"
-	"github.com/assetcloud/chain/rpc"
-	"github.com/assetcloud/chain/store"
-	"github.com/assetcloud/chain/system/consensus/solo"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
+	"github.com/33cn/chain33/blockchain"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/common/limits"
+	"github.com/33cn/chain33/common/log"
+	"github.com/33cn/chain33/executor"
+	"github.com/33cn/chain33/mempool"
+	"github.com/33cn/chain33/p2p"
+	"github.com/33cn/chain33/queue"
+	"github.com/33cn/chain33/rpc"
+	"github.com/33cn/chain33/store"
+	"github.com/33cn/chain33/system/consensus/solo"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 
-	_ "github.com/assetcloud/chain/system"
-	_ "github.com/assetcloud/plugin/plugin/store/init"
+	_ "github.com/33cn/chain33/system"
+	_ "github.com/33cn/plugin/plugin/store/init"
 
-	cty "github.com/assetcloud/chain/system/dapp/coins/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/norm/types"
+	cty "github.com/33cn/chain33/system/dapp/coins/types"
+	pty "github.com/33cn/plugin/plugin/dapp/norm/types"
 )
 
 var (
@@ -54,7 +54,7 @@ FixTime=false
 loglevel = "info"
 logConsoleLevel = "info"
 # 日志文件名，可带目录，所有生成的日志文件都放到此目录下
-logFile = "logs/chain.log"
+logFile = "logs/chain33.log"
 # 单个日志文件的最大值（单位：兆）
 maxFileSize = 300
 # 最多保存的历史日志文件个数
@@ -283,7 +283,7 @@ var (
 
 	loopCount = 1
 	conn      *grpc.ClientConn
-	c         types.ChainClient
+	c         types.Chain33Client
 	adminPriv = "CC38546E9E659D15E6B4893F0AB32A06D103931A8230B0BDE71459D2B27D6944"
 	adminAddr = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
 
@@ -318,15 +318,15 @@ func Init() {
 	fmt.Println("=======Init Data1!=======")
 	os.RemoveAll("datadir")
 	os.RemoveAll("wallet")
-	os.Remove("chain.test.toml")
+	os.Remove("chain33.test.toml")
 
-	ioutil.WriteFile("chain.test.toml", []byte(config), 0664)
+	ioutil.WriteFile("chain33.test.toml", []byte(config), 0664)
 }
 
 func clearTestData() {
 	fmt.Println("=======start clear test data!=======")
 
-	os.Remove("chain.test.toml")
+	os.Remove("chain33.test.toml")
 	os.RemoveAll("wallet")
 	err := os.RemoveAll("datadir")
 	if err != nil {
@@ -425,27 +425,27 @@ func testGuessImp(t *testing.T) {
 func initEnvGuess() (queue.Queue, *blockchain.BlockChain, queue.Module, queue.Module, *executor.Executor, queue.Module, queue.Module, *cobra.Command) {
 	flag.Parse()
 
-	chainCfg := types.NewChainConfig(types.ReadFile("chain.test.toml"))
+	chain33Cfg := types.NewChain33Config(types.ReadFile("chain33.test.toml"))
 	var q = queue.New("channel")
-	q.SetConfig(chainCfg)
-	cfg := chainCfg.GetModuleConfig()
+	q.SetConfig(chain33Cfg)
+	cfg := chain33Cfg.GetModuleConfig()
 	cfg.Log.LogFile = ""
-	sub := chainCfg.GetSubConfig()
-	chain := blockchain.New(chainCfg)
+	sub := chain33Cfg.GetSubConfig()
+	chain := blockchain.New(chain33Cfg)
 	chain.SetQueueClient(q.Client())
 
-	exec := executor.New(chainCfg)
+	exec := executor.New(chain33Cfg)
 	exec.SetQueueClient(q.Client())
-	chainCfg.SetMinFee(0)
-	s := store.New(chainCfg)
+	chain33Cfg.SetMinFee(0)
+	s := store.New(chain33Cfg)
 	s.SetQueueClient(q.Client())
 
 	cs := solo.New(cfg.Consensus, sub.Consensus["solo"])
 	cs.SetQueueClient(q.Client())
 
-	mem := mempool.New(chainCfg)
+	mem := mempool.New(chain33Cfg)
 	mem.SetQueueClient(q.Client())
-	network := p2p.NewP2PMgr(chainCfg)
+	network := p2p.NewP2PMgr(chain33Cfg)
 
 	network.SetQueueClient(q.Client())
 
@@ -469,7 +469,7 @@ func createConn() error {
 		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
-	c = types.NewChainClient(conn)
+	c = types.NewChain33Client(conn)
 	return nil
 }
 
@@ -505,7 +505,7 @@ func getprivkey(key string) crypto.PrivKey {
 	return priv
 }
 
-func prepareTxList(cfg *types.ChainConfig) *types.Transaction {
+func prepareTxList(cfg *types.Chain33Config) *types.Transaction {
 	var key string
 	var value string
 	var i int
@@ -523,7 +523,7 @@ func prepareTxList(cfg *types.ChainConfig) *types.Transaction {
 	return tx
 }
 
-func NormPut(cfg *types.ChainConfig) {
+func NormPut(cfg *types.Chain33Config) {
 	tx := prepareTxList(cfg)
 
 	reply, err := c.SendTransaction(context.Background(), tx)
@@ -537,7 +537,7 @@ func NormPut(cfg *types.ChainConfig) {
 	}
 }
 
-func sendTransferTx(cfg *types.ChainConfig, fromKey, to string, amount int64) bool {
+func sendTransferTx(cfg *types.Chain33Config, fromKey, to string, amount int64) bool {
 	signer := util.HexToPrivkey(fromKey)
 	var tx *types.Transaction
 	transfer := &cty.CoinsAction{}
@@ -571,7 +571,7 @@ func sendTransferTx(cfg *types.ChainConfig, fromKey, to string, amount int64) bo
 	return true
 }
 
-func sendTransferToExecTx(cfg *types.ChainConfig, fromKey, execName string, amount int64) bool {
+func sendTransferToExecTx(cfg *types.Chain33Config, fromKey, execName string, amount int64) bool {
 	signer := util.HexToPrivkey(fromKey)
 	var tx *types.Transaction
 	transfer := &cty.CoinsAction{}
@@ -610,14 +610,14 @@ func sendTransferToExecTx(cfg *types.ChainConfig, fromKey, execName string, amou
 
 func testCmd(cmd *cobra.Command) {
 	var rootCmd = &cobra.Command{
-		Use:   "chain-cli",
-		Short: "chain client tools",
+		Use:   "chain33-cli",
+		Short: "chain33 client tools",
 	}
 
-	chainCfg := types.NewChainConfig(types.ReadFile("chain.test.toml"))
-	types.SetCliSysParam(chainCfg.GetTitle(), chainCfg)
+	chain33Cfg := types.NewChain33Config(types.ReadFile("chain33.test.toml"))
+	types.SetCliSysParam(chain33Cfg.GetTitle(), chain33Cfg)
 
-	rootCmd.PersistentFlags().String("title", chainCfg.GetTitle(), "get title name")
+	rootCmd.PersistentFlags().String("title", chain33Cfg.GetTitle(), "get title name")
 
 	rootCmd.PersistentFlags().String("rpc_laddr", "http://"+grpcURL, "http url")
 	rootCmd.AddCommand(cmd)

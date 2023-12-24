@@ -3,10 +3,10 @@ op := "start"
 
 .PHONY: docker-compose help
 
-docker-compose: ## build docker-compose for chain run
+docker-compose: ## build docker-compose for chain33 run
 	@./docker-compose.sh $(op)
 
-docker-compose-down: ## build docker-compose for chain run
+docker-compose-down: ## build docker-compose for chain33 run
 	@cd temp ;docker-compose down;cd ..
 
 help: ## Display this help screen

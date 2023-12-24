@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"strings"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/types"
 )
 
 /*
@@ -62,12 +62,12 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(RollupX, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(RollupX, NewType(cfg))
 }
 
@@ -75,7 +75,7 @@ type rollupType struct {
 	types.ExecTypeBase
 }
 
-func NewType(cfg *types.ChainConfig) *rollupType {
+func NewType(cfg *types.Chain33Config) *rollupType {
 	c := &rollupType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

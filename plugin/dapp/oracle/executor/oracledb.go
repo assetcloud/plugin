@@ -9,12 +9,12 @@ package executor
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/common/db/table"
+	"github.com/33cn/chain33/common/db/table"
 
-	"github.com/assetcloud/chain/common"
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/types"
-	oty "github.com/assetcloud/plugin/plugin/dapp/oracle/types"
+	"github.com/33cn/chain33/common"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/types"
+	oty "github.com/33cn/plugin/plugin/dapp/oracle/types"
 )
 
 // operation key manage need define

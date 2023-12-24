@@ -5,8 +5,8 @@
 package rpc
 
 import (
-	"github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/rpc/types"
+	"github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/rpc/types"
 )
 
 var log = log15.New("module", "token.rpc")

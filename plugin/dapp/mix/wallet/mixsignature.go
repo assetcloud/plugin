@@ -13,11 +13,11 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
 
-	"github.com/assetcloud/chain/types"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	"github.com/33cn/chain33/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 )
 
 const (

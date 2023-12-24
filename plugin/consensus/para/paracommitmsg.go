@@ -9,7 +9,7 @@ import (
 	"encoding/hex"
 	"time"
 
-	"github.com/assetcloud/chain/common/address"
+	"github.com/33cn/chain33/common/address"
 
 	"strings"
 
@@ -22,11 +22,11 @@ import (
 
 	"bytes"
 
-	paracross "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/types"
+	paracross "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 	"github.com/pkg/errors"
 )
 
@@ -63,6 +63,7 @@ type commitMsgClient struct {
 	checkTxCommitTimes   int32
 	selfConsEnableList   []*paraSelfConsEnable //适配在自共识合约配置前有自共识的平行链项目，fork之后，采用合约配置
 	privateKey           crypto.PrivKey
+	addressId            int32
 	quit                 chan struct{}
 	mutex                sync.Mutex
 }
@@ -490,7 +491,7 @@ func (client *commitMsgClient) createCommitMsgTxs(notifications []*pt.ParacrossC
 func (client *commitMsgClient) getTxsGroup(txsArr *types.Transactions) (*types.Transaction, error) {
 	if len(txsArr.Txs) < 2 {
 		tx := txsArr.Txs[0]
-		tx.Sign(types.EncodeSignID(types.SECP256K1, address.GetDefaultAddressID()), client.privateKey)
+		tx.Sign(types.EncodeSignID(types.SECP256K1, client.addressId), client.privateKey)
 		return tx, nil
 	}
 	cfg := client.paraClient.GetAPI().GetConfig()
@@ -505,7 +506,7 @@ func (client *commitMsgClient) getTxsGroup(txsArr *types.Transactions) (*types.T
 		return nil, err
 	}
 	for i := range group.Txs {
-		group.SignN(i, types.EncodeSignID(types.SECP256K1, address.GetDefaultAddressID()), client.privateKey)
+		group.SignN(i, types.EncodeSignID(types.SECP256K1, client.addressId), client.privateKey)
 	}
 
 	newtx := group.Tx()
@@ -561,7 +562,7 @@ func (client *commitMsgClient) singleCalcTx(notify *pt.ParacrossCommitAction, fe
 		plog.Error("para get commit tx", "block height", notify.Status.Height)
 		return nil, err
 	}
-	tx.Sign(types.EncodeSignID(types.SECP256K1, address.GetDefaultAddressID()), client.privateKey)
+	tx.Sign(types.EncodeSignID(types.SECP256K1, client.addressId), client.privateKey)
 	return tx, nil
 
 }
@@ -731,7 +732,7 @@ func (client *commitMsgClient) getNodeStatus(start, end int64) ([]*pt.ParacrossN
 	//3,如果形如xxoxx的块排列，x代表commit空块，o代表实际的块，即只要不全部是commit块，也要全部打包一起发出去
 	//如果=0 意味着全部是paracross commit tx，延迟发送
 	if needSentTxs == 0 && len(ret) < int(types.MaxTxGroupSize) {
-		plog.Debug("para commitmsg all self-consensus commit tx,send delay", "start", start, "end", end)
+		plog.Info("para commit tx are all self-consensus tx,postpone send ", "start", start, "end", end)
 		return nil, nil
 	}
 
@@ -1053,6 +1054,13 @@ func (client *commitMsgClient) fetchPriKey() error {
 
 	client.privateKey = priKey
 	client.paraClient.blsSignCli.setBlsPriKey(priKey.Bytes())
+
+  addressId, err := address.GetAddressType(client.authAccount)
+  if err != nil {
+    client.addressId = address.GetDefaultAddressID()
+  } else {
+    client.addressId = addressId
+  }
 
 	return nil
 }

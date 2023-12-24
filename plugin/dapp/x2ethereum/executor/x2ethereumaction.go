@@ -4,12 +4,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/client"
-	"github.com/assetcloud/chain/common/address"
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/types"
-	x2eTy "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/client"
+	"github.com/33cn/chain33/common/address"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/types"
+	x2eTy "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
 	"github.com/pkg/errors"
 )
 
@@ -34,9 +34,9 @@ func newAction(a *x2ethereum, tx *types.Transaction, index int32) *action {
 		a.GetBlockTime(), a.GetHeight(), index, address.ExecAddress(string(tx.Execer)), NewOracle(a.GetStateDB(), x2eTy.DefaultConsensusNeeded)}
 }
 
-// ethereum ---> chain
+// ethereum ---> chain33
 // lock
-func (a *action) procEth2Chain_lock(ethBridgeClaim *x2eTy.Eth2Chain) (*types.Receipt, error) {
+func (a *action) procEth2Chain33_lock(ethBridgeClaim *x2eTy.Eth2Chain33) (*types.Receipt, error) {
 	ethBridgeClaim.IssuerDotSymbol = strings.ToLower(ethBridgeClaim.IssuerDotSymbol)
 
 	receipt, err := a.checkConsensusThreshold()
@@ -74,7 +74,7 @@ func (a *action) procEth2Chain_lock(ethBridgeClaim *x2eTy.Eth2Chain) (*types.Rec
 		// 这里为了区分相同tokensymbol不同tokenAddress做了级联处理
 		accDB, err := account.NewAccountDB(a.api.GetConfig(), x2eTy.X2ethereumX, strings.ToLower(ethBridgeClaim.IssuerDotSymbol+ethBridgeClaim.TokenContractAddress), a.db)
 		if err != nil {
-			return nil, errors.Wrapf(err, "relay procMsgEth2Chain,exec=%s,sym=%s", x2eTy.X2ethereumX, ethBridgeClaim.IssuerDotSymbol)
+			return nil, errors.Wrapf(err, "relay procMsgEth2Chain33,exec=%s,sym=%s", x2eTy.X2ethereumX, ethBridgeClaim.IssuerDotSymbol)
 		}
 
 		r, err := a.oracle.ProcessSuccessfulClaimForLock(status.FinalClaim, a.execaddr, accDB)
@@ -87,15 +87,15 @@ func (a *action) procEth2Chain_lock(ethBridgeClaim *x2eTy.Eth2Chain) (*types.Rec
 		//记录成功lock的日志
 		msgEthBridgeClaimBytes := types.Encode(ethBridgeClaim)
 
-		receipt.KV = append(receipt.KV, &types.KeyValue{Key: x2eTy.CalEth2ChainPrefix(), Value: msgEthBridgeClaimBytes})
+		receipt.KV = append(receipt.KV, &types.KeyValue{Key: x2eTy.CalEth2Chain33Prefix(), Value: msgEthBridgeClaimBytes})
 
-		execlog := &types.ReceiptLog{Ty: x2eTy.TyEth2ChainLog, Log: types.Encode(&x2eTy.ReceiptEth2Chain{
+		execlog := &types.ReceiptLog{Ty: x2eTy.TyEth2Chain33Log, Log: types.Encode(&x2eTy.ReceiptEth2Chain33{
 			EthereumChainID:       ethBridgeClaim.EthereumChainID,
 			BridgeContractAddress: ethBridgeClaim.BridgeContractAddress,
 			Nonce:                 ethBridgeClaim.Nonce,
 			IssuerDotSymbol:       ethBridgeClaim.IssuerDotSymbol,
 			EthereumSender:        ethBridgeClaim.EthereumSender,
-			ChainReceiver:         ethBridgeClaim.ChainReceiver,
+			Chain33Receiver:       ethBridgeClaim.Chain33Receiver,
 			ValidatorAddress:      ethBridgeClaim.ValidatorAddress,
 			Amount:                ethBridgeClaim.Amount,
 			ClaimType:             ethBridgeClaim.ClaimType,
@@ -113,9 +113,9 @@ func (a *action) procEth2Chain_lock(ethBridgeClaim *x2eTy.Eth2Chain) (*types.Rec
 	return receipt, nil
 }
 
-// chain -> ethereum
-// 返还在chain上生成的erc20代币
-func (a *action) procChainToEth_burn(msgBurn *x2eTy.ChainToEth) (*types.Receipt, error) {
+// chain33 -> ethereum
+// 返还在chain33上生成的erc20代币
+func (a *action) procChain33ToEth_burn(msgBurn *x2eTy.Chain33ToEth) (*types.Receipt, error) {
 	receipt, err := a.checkConsensusThreshold()
 	if err != nil {
 		return nil, err
@@ -133,8 +133,8 @@ func (a *action) procChainToEth_burn(msgBurn *x2eTy.ChainToEth) (*types.Receipt,
 	receipt.KV = append(receipt.KV, r.KV...)
 	receipt.Logs = append(receipt.Logs, r.Logs...)
 
-	execlog := &types.ReceiptLog{Ty: x2eTy.TyWithdrawChainLog, Log: types.Encode(&x2eTy.ReceiptChainToEth{
-		ChainSender:      a.fromaddr,
+	execlog := &types.ReceiptLog{Ty: x2eTy.TyWithdrawChain33Log, Log: types.Encode(&x2eTy.ReceiptChain33ToEth{
+		Chain33Sender:    a.fromaddr,
 		EthereumReceiver: msgBurn.EthereumReceiver,
 		Amount:           msgBurn.Amount,
 		IssuerDotSymbol:  msgBurn.IssuerDotSymbol,
@@ -145,13 +145,13 @@ func (a *action) procChainToEth_burn(msgBurn *x2eTy.ChainToEth) (*types.Receipt,
 
 	msgBurnBytes := types.Encode(msgBurn)
 
-	receipt.KV = append(receipt.KV, &types.KeyValue{Key: x2eTy.CalWithdrawChainPrefix(), Value: msgBurnBytes})
+	receipt.KV = append(receipt.KV, &types.KeyValue{Key: x2eTy.CalWithdrawChain33Prefix(), Value: msgBurnBytes})
 
 	receipt.Ty = types.ExecOk
 	return receipt, nil
 }
 
-func (a *action) procChainToEth_lock(msgLock *x2eTy.ChainToEth) (*types.Receipt, error) {
+func (a *action) procChain33ToEth_lock(msgLock *x2eTy.Chain33ToEth) (*types.Receipt, error) {
 	receipt, err := a.checkConsensusThreshold()
 	if err != nil {
 		return nil, err
@@ -176,8 +176,8 @@ func (a *action) procChainToEth_lock(msgLock *x2eTy.ChainToEth) (*types.Receipt,
 	receipt.KV = append(receipt.KV, r.KV...)
 	receipt.Logs = append(receipt.Logs, r.Logs...)
 
-	execlog := &types.ReceiptLog{Ty: x2eTy.TyChainToEthLog, Log: types.Encode(&x2eTy.ReceiptChainToEth{
-		ChainSender:      a.fromaddr,
+	execlog := &types.ReceiptLog{Ty: x2eTy.TyChain33ToEthLog, Log: types.Encode(&x2eTy.ReceiptChain33ToEth{
+		Chain33Sender:    a.fromaddr,
 		EthereumReceiver: msgLock.EthereumReceiver,
 		Amount:           msgLock.Amount,
 		IssuerDotSymbol:  msgLock.IssuerDotSymbol,
@@ -188,15 +188,15 @@ func (a *action) procChainToEth_lock(msgLock *x2eTy.ChainToEth) (*types.Receipt,
 
 	msgLockBytes := types.Encode(msgLock)
 
-	receipt.KV = append(receipt.KV, &types.KeyValue{Key: x2eTy.CalChainToEthPrefix(), Value: msgLockBytes})
+	receipt.KV = append(receipt.KV, &types.KeyValue{Key: x2eTy.CalChain33ToEthPrefix(), Value: msgLockBytes})
 
 	receipt.Ty = types.ExecOk
 	return receipt, nil
 }
 
-// ethereum -> chain
+// ethereum -> chain33
 // burn
-func (a *action) procEth2Chain_burn(withdrawEth *x2eTy.Eth2Chain) (*types.Receipt, error) {
+func (a *action) procEth2Chain33_burn(withdrawEth *x2eTy.Eth2Chain33) (*types.Receipt, error) {
 	elog.Info("procWithdrawEth", "receive a procWithdrawEth tx", "start")
 
 	receipt, err := a.checkConsensusThreshold()
@@ -254,13 +254,13 @@ func (a *action) procEth2Chain_burn(withdrawEth *x2eTy.Eth2Chain) (*types.Receip
 
 		receipt.KV = append(receipt.KV, &types.KeyValue{Key: x2eTy.CalWithdrawEthPrefix(), Value: msgWithdrawEthBytes})
 
-		execlog := &types.ReceiptLog{Ty: x2eTy.TyWithdrawEthLog, Log: types.Encode(&x2eTy.ReceiptEth2Chain{
+		execlog := &types.ReceiptLog{Ty: x2eTy.TyWithdrawEthLog, Log: types.Encode(&x2eTy.ReceiptEth2Chain33{
 			EthereumChainID:       withdrawEth.EthereumChainID,
 			BridgeContractAddress: withdrawEth.BridgeContractAddress,
 			Nonce:                 withdrawEth.Nonce,
 			IssuerDotSymbol:       withdrawEth.IssuerDotSymbol,
 			EthereumSender:        withdrawEth.EthereumSender,
-			ChainReceiver:         withdrawEth.ChainReceiver,
+			Chain33Receiver:       withdrawEth.Chain33Receiver,
 			ValidatorAddress:      withdrawEth.ValidatorAddress,
 			Amount:                withdrawEth.Amount,
 			ClaimType:             withdrawEth.ClaimType,
@@ -351,9 +351,9 @@ func (a *action) procMsgWithDrawFromExec(msgWithdrawFromExec *types.AssetsWithdr
 	return receipt, nil
 }
 
-// 需要一笔交易来注册validator
-// 这里注册的validator的power之和可能不为1，需要在内部进行加权
-// 返回的回执中，KV包含所有validator的power值，Log中包含本次注册的validator的power值
+//需要一笔交易来注册validator
+//这里注册的validator的power之和可能不为1，需要在内部进行加权
+//返回的回执中，KV包含所有validator的power值，Log中包含本次注册的validator的power值
 func (a *action) procAddValidator(msgAddValidator *x2eTy.MsgValidator) (*types.Receipt, error) {
 	elog.Info("procAddValidator", "start", msgAddValidator)
 

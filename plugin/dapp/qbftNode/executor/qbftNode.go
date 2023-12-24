@@ -7,16 +7,16 @@ package executor
 import (
 	"fmt"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
 )
 
 var clog = log.New("module", "execs.qbftNode")
 var driverName = "qbftNode"
 
 // Init method
-func Init(name string, cfg *types.ChainConfig, sub []byte) {
+func Init(name string, cfg *types.Chain33Config, sub []byte) {
 	clog.Debug("register qbftNode execer")
 	drivers.Register(cfg, GetName(), newQbftNode, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()

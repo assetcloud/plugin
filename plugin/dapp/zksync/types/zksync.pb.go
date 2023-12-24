@@ -8,7 +8,7 @@ package types
 
 import (
 	context "context"
-	types "github.com/assetcloud/chain/types"
+	types "github.com/33cn/chain33/types"
 	grpc "google.golang.org/grpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -597,7 +597,7 @@ type Leaf struct {
 	AccountId    uint64               `protobuf:"varint,1,opt,name=accountId,proto3" json:"accountId,omitempty"`      //accountId其实就是叶子的totalIndex
 	EthAddress   string               `protobuf:"bytes,2,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`     //账户对应的以太坊地址
 	PubKey       *ZkPubKey            `protobuf:"bytes,3,opt,name=pubKey,proto3" json:"pubKey,omitempty"`             //eddsa公钥，用于验证身份
-	ChainAddr  string               `protobuf:"bytes,4,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"`   //chain地址
+	Chain33Addr  string               `protobuf:"bytes,4,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"`   //chain33地址
 	TokenHash    []byte               `protobuf:"bytes,5,opt,name=tokenHash,proto3" json:"tokenHash,omitempty"`       //叶子下token的hash
 	TokenIds     []uint64             `protobuf:"varint,6,rep,packed,name=tokenIds,proto3" json:"tokenIds,omitempty"` //叶子下拥有的tokenId
 	ProxyPubKeys *AccountProxyPubKeys `protobuf:"bytes,7,opt,name=proxyPubKeys,proto3" json:"proxyPubKeys,omitempty"` //eddsa代理公钥，用于验证代理者的身份
@@ -657,9 +657,9 @@ func (x *Leaf) GetPubKey() *ZkPubKey {
 	return nil
 }
 
-func (x *Leaf) GetChainAddr() string {
+func (x *Leaf) GetChain33Addr() string {
 	if x != nil {
-		return x.ChainAddr
+		return x.Chain33Addr
 	}
 	return ""
 }
@@ -700,7 +700,7 @@ type HistoryLeaf struct {
 	AccountId    uint64               `protobuf:"varint,1,opt,name=accountId,proto3" json:"accountId,omitempty"`      //accountId其实就是叶子的totalIndex
 	EthAddress   string               `protobuf:"bytes,2,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`     //账户对应的以太坊地址
 	PubKey       *ZkPubKey            `protobuf:"bytes,3,opt,name=pubKey,proto3" json:"pubKey,omitempty"`             //eddsa公钥，用于验证身份
-	ChainAddr  string               `protobuf:"bytes,4,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"`   //chain地址
+	Chain33Addr  string               `protobuf:"bytes,4,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"`   //chain33地址
 	TokenHash    string               `protobuf:"bytes,5,opt,name=tokenHash,proto3" json:"tokenHash,omitempty"`       //叶子下token的hash
 	Tokens       []*TokenBalance      `protobuf:"bytes,6,rep,name=tokens,proto3" json:"tokens,omitempty"`             //叶子下拥有的token
 	ProofId      uint64               `protobuf:"varint,7,opt,name=proofId,proto3" json:"proofId,omitempty"`          //账户状态所在的proofId
@@ -760,9 +760,9 @@ func (x *HistoryLeaf) GetPubKey() *ZkPubKey {
 	return nil
 }
 
-func (x *HistoryLeaf) GetChainAddr() string {
+func (x *HistoryLeaf) GetChain33Addr() string {
 	if x != nil {
-		return x.ChainAddr
+		return x.Chain33Addr
 	}
 	return ""
 }
@@ -921,7 +921,7 @@ type ZkDeposit struct {
 	TokenId      uint64       `protobuf:"varint,1,opt,name=tokenId,proto3" json:"tokenId,omitempty"`
 	Amount       string       `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"`
 	EthAddress   string       `protobuf:"bytes,3,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`
-	ChainAddr  string       `protobuf:"bytes,4,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"`
+	Chain33Addr  string       `protobuf:"bytes,4,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"`
 	L1PriorityId int64        `protobuf:"varint,5,opt,name=l1PriorityId,proto3" json:"l1PriorityId,omitempty"` //需要在合约保证id连续
 	Signature    *ZkSignature `protobuf:"bytes,6,opt,name=signature,proto3" json:"signature,omitempty"`
 }
@@ -979,9 +979,9 @@ func (x *ZkDeposit) GetEthAddress() string {
 	return ""
 }
 
-func (x *ZkDeposit) GetChainAddr() string {
+func (x *ZkDeposit) GetChain33Addr() string {
 	if x != nil {
-		return x.ChainAddr
+		return x.Chain33Addr
 	}
 	return ""
 }
@@ -1071,7 +1071,7 @@ func (x *ZkWithdraw) GetSignature() *ZkSignature {
 	return nil
 }
 
-//从chain合约提款到二层
+//从chain33合约提款到二层
 type ZkContractToTree struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1167,7 +1167,7 @@ func (x *ZkContractToTree) GetFromExec() string {
 	return ""
 }
 
-//从二层铸造到chain合约
+//从二层铸造到chain33合约
 type ZkTreeToContract struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3004,9 +3004,9 @@ type ZkQueryReq struct {
 	BlockHeight       uint64 `protobuf:"varint,2,opt,name=blockHeight,proto3" json:"blockHeight,omitempty"`
 	TxIndex           uint32 `protobuf:"varint,3,opt,name=txIndex,proto3" json:"txIndex,omitempty"`
 	EthAddress        string `protobuf:"bytes,4,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`
-	ChainAddr       string `protobuf:"bytes,5,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"`
+	Chain33Addr       string `protobuf:"bytes,5,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"`
 	TokenSymbol       string `protobuf:"bytes,6,opt,name=tokenSymbol,proto3" json:"tokenSymbol,omitempty"`
-	ChainWalletAddr string `protobuf:"bytes,7,opt,name=chainWalletAddr,proto3" json:"chainWalletAddr,omitempty"`
+	Chain33WalletAddr string `protobuf:"bytes,7,opt,name=chain33WalletAddr,proto3" json:"chain33WalletAddr,omitempty"`
 	TokenId           uint64 `protobuf:"varint,8,opt,name=tokenId,proto3" json:"tokenId,omitempty"`
 	TxHash            string `protobuf:"bytes,9,opt,name=txHash,proto3" json:"txHash,omitempty"`
 	ProofId           uint64 `protobuf:"varint,10,opt,name=proofId,proto3" json:"proofId,omitempty"`
@@ -3074,9 +3074,9 @@ func (x *ZkQueryReq) GetEthAddress() string {
 	return ""
 }
 
-func (x *ZkQueryReq) GetChainAddr() string {
+func (x *ZkQueryReq) GetChain33Addr() string {
 	if x != nil {
-		return x.ChainAddr
+		return x.Chain33Addr
 	}
 	return ""
 }
@@ -3088,9 +3088,9 @@ func (x *ZkQueryReq) GetTokenSymbol() string {
 	return ""
 }
 
-func (x *ZkQueryReq) GetChainWalletAddr() string {
+func (x *ZkQueryReq) GetChain33WalletAddr() string {
 	if x != nil {
-		return x.ChainWalletAddr
+		return x.Chain33WalletAddr
 	}
 	return ""
 }

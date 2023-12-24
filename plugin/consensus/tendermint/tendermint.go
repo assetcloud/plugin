@@ -12,16 +12,16 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/assetcloud/chain/common/crypto"
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/queue"
-	drivers "github.com/assetcloud/chain/system/consensus"
-	cty "github.com/assetcloud/chain/system/dapp/coins/types"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	ttypes "github.com/assetcloud/plugin/plugin/consensus/tendermint/types"
-	tmtypes "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
+	"github.com/33cn/chain33/common/crypto"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/queue"
+	drivers "github.com/33cn/chain33/system/consensus"
+	cty "github.com/33cn/chain33/system/dapp/coins/types"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	ttypes "github.com/33cn/plugin/plugin/consensus/tendermint/types"
+	tmtypes "github.com/33cn/plugin/plugin/dapp/valnode/types"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -239,7 +239,9 @@ func (client *Client) GenesisState() *State {
 // Close TODO:may need optimize
 func (client *Client) Close() {
 	client.BaseClient.Close()
-	client.node.Stop()
+	if client.node != nil {
+		client.node.Stop()
+	}
 	client.stopC <- struct{}{}
 	tendermintlog.Info("consensus tendermint closed")
 }
@@ -640,15 +642,22 @@ func (client *Client) LoadProposalBlock(height int64) *tmtypes.TendermintBlock {
 // Query_IsHealthy query whether consensus is sync
 func (client *Client) Query_IsHealthy(req *types.ReqNil) (types.Message, error) {
 	isHealthy := false
-	if client.IsCaughtUp() && client.GetCurrentHeight() <= client.csState.GetRoundState().Height+1 {
-		isHealthy = true
+	if client.IsCaughtUp() {
+		rs := client.csState.QueryRoundState()
+		if rs != nil && client.GetCurrentHeight() <= rs.Height+1 {
+			isHealthy = true
+		}
 	}
 	return &tmtypes.IsHealthy{IsHealthy: isHealthy}, nil
 }
 
 // Query_NodeInfo query validator node info
 func (client *Client) Query_NodeInfo(req *types.ReqNil) (types.Message, error) {
-	vals := client.csState.GetRoundState().Validators.Validators
+	rs := client.csState.QueryRoundState()
+	if rs == nil {
+		return nil, ttypes.ErrConsensusQuery
+	}
+	vals := rs.Validators.Validators
 	nodes := make([]*tmtypes.ValNodeInfo, 0)
 	for _, val := range vals {
 		if val == nil {

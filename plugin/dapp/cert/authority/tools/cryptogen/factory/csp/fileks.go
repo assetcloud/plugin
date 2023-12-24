@@ -15,9 +15,9 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/tools/cryptogen/factory/utils"
-	auth "github.com/assetcloud/plugin/plugin/dapp/cert/authority/utils"
-	log "github.com/assetcloud/chain/common/log/log15"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/plugin/plugin/dapp/cert/authority/tools/cryptogen/factory/utils"
+	auth "github.com/33cn/plugin/plugin/dapp/cert/authority/utils"
 )
 
 var logger = log.New("module", "tools")

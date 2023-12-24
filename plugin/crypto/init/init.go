@@ -1,5 +1,5 @@
 package init
 
 import (
-	_ "github.com/assetcloud/plugin/plugin/crypto/bls" //auto gen
+	_ "github.com/33cn/plugin/plugin/crypto/bls" //auto gen
 )

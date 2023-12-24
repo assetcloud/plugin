@@ -1,7 +1,7 @@
 package events
 
 import (
-	log "github.com/assetcloud/chain/common/log/log15"
+	log "github.com/33cn/chain33/common/log/log15"
 )
 
 type ClaimType int32
@@ -17,11 +17,11 @@ const (
 )
 
 const (
-	// Unsupported : unsupported Chain or Ethereum event
+	// Unsupported : unsupported Chain33 or Ethereum event
 	Unsupported Event = iota
 	// LogLockFromETH : Ethereum event 'LogLock'
 	LogLockFromETH
-	// LogBurnFromETH : Ethereum event 'LogChainTokenBurn'
+	// LogBurnFromETH : Ethereum event 'LogChain33TokenBurn'
 	LogBurnFromETH
 	// LogProphecyProcessed : Ethereum event LogProphecyProcessed
 	LogProphecyProcessed
@@ -29,7 +29,7 @@ const (
 
 // 此处的名字命令不能随意改动，需要与合约event中的命名完全一致
 func (d Event) String() string {
-	return [...]string{"unknown-LOG", "LogLock", "LogChainTokenBurn", "LogProphecyProcessed"}[d]
+	return [...]string{"unknown-LOG", "LogLock", "LogChain33TokenBurn", "LogProphecyProcessed"}[d]
 }
 
 func (d ClaimType) String() string {

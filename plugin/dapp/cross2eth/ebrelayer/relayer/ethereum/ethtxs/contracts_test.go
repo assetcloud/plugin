@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -24,7 +24,7 @@ import (
 )
 
 var (
-	chainAddr = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+	chain33Addr = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
 )
 
 type suiteContracts struct {
@@ -66,13 +66,13 @@ func (c *suiteContracts) Test_IsActiveValidator() {
 
 func (c *suiteContracts) Test_IsProphecyPending() {
 	claimID := crypto.Keccak256Hash(big.NewInt(50).Bytes())
-	bret, err := IsProphecyPending(claimID, c.para.InitValidators[0], c.x2EthContracts.ChainBridge)
+	bret, err := IsProphecyPending(claimID, c.para.InitValidators[0], c.x2EthContracts.Chain33Bridge)
 	require.Nil(c.T(), err)
 	assert.Equal(c.T(), bret, false)
 }
 
 func (c *suiteContracts) Test_LogLockToEthBridgeClaim() {
-	to := common.FromHex(chainAddr)
+	to := common.FromHex(chain33Addr)
 	event := &events.LockEvent{
 		From:   c.para.InitValidators[0],
 		To:     to,
@@ -89,7 +89,7 @@ func (c *suiteContracts) Test_LogLockToEthBridgeClaim() {
 	assert.Equal(c.T(), witnessClaim.TokenAddr, EthNullAddr)
 	assert.Equal(c.T(), witnessClaim.Symbol, event.Symbol)
 	assert.Equal(c.T(), witnessClaim.EthereumSender, event.From.String())
-	//assert.Equal(c.T(), witnessClaim.ChainReceiver, string(event.To))
+	//assert.Equal(c.T(), witnessClaim.Chain33Receiver, string(event.To))
 	assert.Equal(c.T(), witnessClaim.Amount, "1000000000000")
 	assert.Equal(c.T(), witnessClaim.Nonce, event.Nonce.Int64())
 	assert.Equal(c.T(), witnessClaim.Decimal, int64(18))
@@ -101,14 +101,14 @@ func (c *suiteContracts) Test_LogLockToEthBridgeClaim() {
 }
 
 func (c *suiteContracts) Test_LogBurnToEthBridgeClaim() {
-	to := common.FromHex(chainAddr)
+	to := common.FromHex(chain33Addr)
 	event := &events.BurnEvent{
-		OwnerFrom:     c.para.InitValidators[0],
-		ChainReceiver: to,
-		Token:         common.HexToAddress(EthNullAddr),
-		Symbol:        "bty",
-		Amount:        big.NewInt(100),
-		Nonce:         big.NewInt(2),
+		OwnerFrom:       c.para.InitValidators[0],
+		Chain33Receiver: to,
+		Token:           common.HexToAddress(EthNullAddr),
+		Symbol:          "bty",
+		Amount:          big.NewInt(100),
+		Nonce:           big.NewInt(2),
 	}
 	witnessClaim, err := LogBurnToEthBridgeClaim(event, 1, c.x2EthDeployInfo.BridgeBank.Address.String(), "", 8)
 	require.Nil(c.T(), err)
@@ -118,7 +118,7 @@ func (c *suiteContracts) Test_LogBurnToEthBridgeClaim() {
 	assert.Equal(c.T(), witnessClaim.TokenAddr, EthNullAddr)
 	assert.Equal(c.T(), witnessClaim.Symbol, event.Symbol)
 	assert.Equal(c.T(), witnessClaim.EthereumSender, event.OwnerFrom.String())
-	//assert.Equal(c.T(), witnessClaim.ChainReceiver, string(event.ChainReceiver))
+	//assert.Equal(c.T(), witnessClaim.Chain33Receiver, string(event.Chain33Receiver))
 	assert.Equal(c.T(), witnessClaim.Amount, "100")
 	assert.Equal(c.T(), witnessClaim.Nonce, event.Nonce.Int64())
 	assert.Equal(c.T(), witnessClaim.Decimal, int64(8))

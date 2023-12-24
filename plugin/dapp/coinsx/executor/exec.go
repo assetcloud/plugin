@@ -7,12 +7,12 @@ package executor
 import (
 	"encoding/hex"
 
-	"github.com/assetcloud/chain/common/address"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common/address"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
 	"github.com/pkg/errors"
 
-	coinTy "github.com/assetcloud/plugin/plugin/dapp/coinsx/types"
+	coinTy "github.com/33cn/plugin/plugin/dapp/coinsx/types"
 )
 
 // Exec_Transfer transfer of exec

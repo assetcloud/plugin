@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	ttypes "github.com/assetcloud/chain/types"
+	ttypes "github.com/33cn/chain33/types"
 	"github.com/coreos/etcd/etcdserver/etcdserverpb"
 	"github.com/coreos/etcd/pkg/pbutil"
 	"github.com/coreos/etcd/pkg/types"

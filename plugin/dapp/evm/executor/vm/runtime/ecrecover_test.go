@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto"
+	"github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto"
 )
 
 // "input" is (hash, v, r, s), each 32 bytes
@@ -38,7 +38,7 @@ func TestEcrecoverSignTypedMessage(t *testing.T) {
 
 	//privateKeyStr := "0xcc38546e9e659d15e6b4893f0ab32a06d103931a8230b0bde71459d2b27d6944"
 	//var driver secp256k1.Driver
-	//privateKeySli, err := chainCommon.FromHex(privateKeyStr)
+	//privateKeySli, err := chain33Common.FromHex(privateKeyStr)
 	//if nil != err {
 	//	panic(err.Error())
 	//

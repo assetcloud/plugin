@@ -1,12 +1,12 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/common/address"
-	log "github.com/assetcloud/chain/common/log/log15"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	evmxgotypes "github.com/assetcloud/plugin/plugin/dapp/evmxgo/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/common/address"
+	log "github.com/33cn/chain33/common/log/log15"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	evmxgotypes "github.com/33cn/plugin/plugin/dapp/evmxgo/types"
 )
 
 /*
@@ -35,7 +35,7 @@ type subConfig struct {
 var subCfg subConfig
 
 // Init register dapp
-func Init(name string, cfg *types.ChainConfig, sub []byte) {
+func Init(name string, cfg *types.Chain33Config, sub []byte) {
 	if sub != nil {
 		types.MustDecode(sub, &subCfg)
 	}

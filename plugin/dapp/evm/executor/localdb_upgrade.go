@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	dbm "github.com/assetcloud/chain/common/db"
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/rpc/grpcclient"
-	"github.com/assetcloud/chain/system/crypto/secp256k1eth"
-	"github.com/assetcloud/chain/types"
+	dbm "github.com/33cn/chain33/common/db"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/rpc/grpcclient"
+	"github.com/33cn/chain33/system/crypto/secp256k1eth"
+	"github.com/33cn/chain33/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
 )
@@ -163,7 +163,7 @@ func (evm *EVMExecutor) updateEvmNonce(addr string, evmLocalNonce, cacuNonce int
 	return kvs, printLog
 }
 
-func getAllTxByAddr(addr string, gcli types.ChainClient, evm *EVMExecutor) ([]*types.Transaction, error) {
+func getAllTxByAddr(addr string, gcli types.Chain33Client, evm *EVMExecutor) ([]*types.Transaction, error) {
 	prefix := types.CalcTxAddrDirHashKey(addr, 1, "")
 	infos, err := evm.GetLocalDB().List(prefix, nil, 0, 1)
 	if err != nil {

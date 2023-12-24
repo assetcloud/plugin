@@ -4,31 +4,31 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/assetcloud/chain/system/crypto/secp256k1"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4chain/generated"
-	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	localUtils "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
-	"github.com/assetcloud/plugin/plugin/dapp/dex/utils"
-	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/chain33/system/crypto/secp256k1"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4chain33/generated"
+	erc20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	localUtils "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/33cn/plugin/plugin/dapp/dex/utils"
+	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
 	"github.com/spf13/cobra"
 )
 
 /*
-./boss4x chain offline create_erc20 -s YCC -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -o 1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ --chainID 33
-./boss4x chain offline send -f deployErc20YCCChain.txt
+./boss4x chain33 offline create_erc20 -s YCC -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -o 1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ --chainID 33
+./boss4x chain33 offline send -f deployErc20YCCChain33.txt
 
-./boss4x chain offline approve_erc20 -a 330000000000 -s 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -c 1998HqVnt4JUirhC9KL5V71xYU8cFRn82c -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae  --chainID 33
-./boss4x chain offline send -f approve_erc20.txt
+./boss4x chain33 offline approve_erc20 -a 330000000000 -s 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -c 1998HqVnt4JUirhC9KL5V71xYU8cFRn82c -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae  --chainID 33
+./boss4x chain33 offline send -f approve_erc20.txt
 
-./boss4x chain offline create_add_lock_list -c 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -t 1998HqVnt4JUirhC9KL5V71xYU8cFRn82c --chainID 33 -s YCC
-./boss4x chain offline send -f create_add_lock_list.txt
+./boss4x chain33 offline create_add_lock_list -c 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -t 1998HqVnt4JUirhC9KL5V71xYU8cFRn82c --chainID 33 -s YCC
+./boss4x chain33 offline send -f create_add_lock_list.txt
 
-./boss4x chain offline create_bridge_token -c 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -s YCC --chainID 33
-./boss4x chain offline send -f create_bridge_token.txt
-${ChainCli} evm abi call -a "${chainBridgeBank}" -c "${chainDeployAddr}" -b "getToken2address(YCC)"
-./chain-cli evm abi call -a 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -c 1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ -b 'getToken2address(YCC)'
+./boss4x chain33 offline create_bridge_token -c 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -s YCC --chainID 33
+./boss4x chain33 offline send -f create_bridge_token.txt
+${Chain33Cli} evm abi call -a "${chain33BridgeBank}" -c "${chain33DeployAddr}" -b "getToken2address(YCC)"
+./chain33-cli evm abi call -a 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -c 1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ -b 'getToken2address(YCC)'
 */
 
 func CreateERC20Cmd() *cobra.Command {
@@ -41,7 +41,7 @@ func CreateERC20Cmd() *cobra.Command {
 	return cmd
 }
 
-// CreateERC20Flags ...
+//CreateERC20Flags ...
 func CreateERC20Flags(cmd *cobra.Command) {
 	cmd.Flags().StringP("key", "k", "", "the deployer private key")
 	_ = cmd.MarkFlagRequired("key")
@@ -79,7 +79,7 @@ func CreateERC20(cmd *cobra.Command, _ []string) {
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	Erc20Tx := &utils.ChainOfflineTx{
+	Erc20Tx := &utils.Chain33OfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -93,10 +93,10 @@ func CreateERC20(cmd *cobra.Command, _ []string) {
 	}
 	fmt.Println(string(data))
 
-	var txs []*utils.ChainOfflineTx
+	var txs []*utils.Chain33OfflineTx
 	txs = append(txs, Erc20Tx)
 
-	fileName := fmt.Sprintf("deployErc20%sChain.txt", symbol)
+	fileName := fmt.Sprintf("deployErc20%sChain33.txt", symbol)
 	fmt.Printf("Write all the txs to file:   %s \n", fileName)
 	utils.WriteToFileInJson(fileName, txs)
 }
@@ -178,7 +178,7 @@ func AddToken2LockList(cmd *cobra.Command, _ []string) {
 func CreateNewBridgeTokenCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create_bridge_token",
-		Short: "create new token as ethereum asset on chain, and it's should be done by operator",
+		Short: "create new token as ethereum asset on chain33, and it's should be done by operator",
 		Run:   CreateNewBridgeToken, //配置账户
 	}
 	addCreateNewBridgeTokenFlags(cmd)
@@ -212,7 +212,7 @@ func CreateNewBridgeToken(cmd *cobra.Command, _ []string) {
 func SetWithdrawProxyCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set_withdraw_proxy",
-		Short: "set withdraw proxy on chain, and it's should be done by operator",
+		Short: "set withdraw proxy on chain33, and it's should be done by operator",
 		Run:   SetWithdrawProxy,
 	}
 	addSetWithdrawProxyFlags(cmd)
@@ -246,7 +246,7 @@ func SetWithdrawProxy(cmd *cobra.Command, _ []string) {
 func withdrawFromEvmCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "withdraw",
-		Short: "withdraw asset from chain evm, including approve and burn txs",
+		Short: "withdraw asset from chain33 evm, including approve and burn txs",
 		Run:   withdrawFromEvm,
 	}
 	addWithdrawFromEvmFlags(cmd)
@@ -256,7 +256,7 @@ func withdrawFromEvmCmd() *cobra.Command {
 func addWithdrawFromEvmFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("contract", "c", "", "contract address of bridgeBank")
 	_ = cmd.MarkFlagRequired("contract")
-	cmd.Flags().StringP("key", "k", "", "owner private key for chain")
+	cmd.Flags().StringP("key", "k", "", "owner private key for chain33")
 	_ = cmd.MarkFlagRequired("key")
 	cmd.Flags().StringP("token", "t", "", "token address")
 	_ = cmd.MarkFlagRequired("token")
@@ -273,7 +273,7 @@ func withdrawFromEvm(cmd *cobra.Command, _ []string) {
 	receiver, _ := cmd.Flags().GetString("receiver")
 	contract, _ := cmd.Flags().GetString("contract")
 
-	para := ebTypes.BurnFromChain{
+	para := ebTypes.BurnFromChain33{
 		OwnerKey:         key,
 		TokenAddr:        tokenAddr,
 		Amount:           localUtils.ToWei(amount, 8).String(),
@@ -293,7 +293,7 @@ func withdrawFromEvm(cmd *cobra.Command, _ []string) {
 		fmt.Println("approve", "Failed to callContractAndSign")
 		return
 	}
-	var txs []*utils.ChainOfflineTx
+	var txs []*utils.Chain33OfflineTx
 	txs = append(txs, tx)
 
 	//2构建withdraw Tx
@@ -315,7 +315,7 @@ func withdrawFromEvm(cmd *cobra.Command, _ []string) {
 	utils.WriteToFileInJson(fileName, txs)
 }
 
-func callContractAndSign(cmd *cobra.Command, para []byte, contractAddr, name string) *utils.ChainOfflineTx {
+func callContractAndSign(cmd *cobra.Command, para []byte, contractAddr, name string) *utils.Chain33OfflineTx {
 	Tx, err := createOfflineTx(getTxInfo(cmd), para, contractAddr, name, 0)
 	if nil != err {
 		fmt.Println("CallContractAndSign", "Failed", err.Error(), "name", name)

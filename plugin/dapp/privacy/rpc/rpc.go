@@ -8,9 +8,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/privacy/types"
 	"golang.org/x/net/context"
 )
 

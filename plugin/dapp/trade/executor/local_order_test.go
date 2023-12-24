@@ -3,12 +3,12 @@ package executor
 import (
 	"testing"
 
-	"github.com/assetcloud/chain/system/dapp"
-	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
+	"github.com/33cn/chain33/system/dapp"
+	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
 
-	//"github.com/assetcloud/chain/common/db"
-	//"github.com/assetcloud/chain/common/db/table"
-	"github.com/assetcloud/chain/util"
+	//"github.com/33cn/chain33/common/db"
+	//"github.com/33cn/chain33/common/db/table"
+	"github.com/33cn/chain33/util"
 	"github.com/stretchr/testify/assert"
 )
 

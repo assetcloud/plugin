@@ -5,9 +5,9 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/cakeToken"
-	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
-	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
+	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/cakeToken"
+	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
+	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"

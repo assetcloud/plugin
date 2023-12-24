@@ -3166,11 +3166,11 @@ func (_BridgeToken *BridgeTokenFilterer) ParseTransfer(log types.Log) (*BridgeTo
 	return event, nil
 }
 
-// ChainBankABI is the input ABI used to generate the binding from.
-const ChainBankABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_to\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"LogLock\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"LogUnlock\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"}],\"name\":\"getLockedTokenAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"getofflineSaveCfg\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"highThreshold\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"lockNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lockedFunds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"lowThreshold\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"offlineSave\",\"outputs\":[{\"internalType\":\"addresspayable\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"offlineSaveCfgs\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_threshold\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_percents\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"tokenAllow2Lock\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
+// Chain33BankABI is the input ABI used to generate the binding from.
+const Chain33BankABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_to\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_nonce\",\"type\":\"uint256\"}],\"name\":\"LogLock\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"LogUnlock\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"}],\"name\":\"getLockedTokenAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"getofflineSaveCfg\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"highThreshold\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"lockNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lockedFunds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"lowThreshold\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"offlineSave\",\"outputs\":[{\"internalType\":\"addresspayable\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"offlineSaveCfgs\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_threshold\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_percents\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"tokenAllow2Lock\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
-// ChainBankFuncSigs maps the 4-byte function signature to its string representation.
-var ChainBankFuncSigs = map[string]string{
+// Chain33BankFuncSigs maps the 4-byte function signature to its string representation.
+var Chain33BankFuncSigs = map[string]string{
 	"0a1f9b66": "getLockedTokenAddress(string)",
 	"d2168d20": "getofflineSaveCfg(address)",
 	"9eadc7cc": "highThreshold()",
@@ -3182,121 +3182,121 @@ var ChainBankFuncSigs = map[string]string{
 	"7056c493": "tokenAllow2Lock(bytes32)",
 }
 
-// ChainBankBin is the compiled bytecode used for deploying new contracts.
-var ChainBankBin = "0x60806040526005805460ff1916811761ff00191661500017905534801561002557600080fd5b5060006001556105f28061003a6000396000f3fe608060405234801561001057600080fd5b50600436106100935760003560e01c8063b5a9096e11610066578063b5a9096e14610253578063b86247d71461026d578063d1d008ae14610293578063d2168d201461029b578063fad60627146102dc57610093565b80630a1f9b66146100985780634e25d1521461015a5780637056c493146102185780639eadc7cc14610235575b600080fd5b61013e600480360360208110156100ae57600080fd5b8101906020810181356401000000008111156100c957600080fd5b8201836020820111156100db57600080fd5b803590602001918460018302840111640100000000831117156100fd57600080fd5b91908080601f0160208091040260200160405190810160405280939291908181526020018383808284376000920191909152509295506102e4945050505050565b604080516001600160a01b039092168252519081900360200190f35b6101806004803603602081101561017057600080fd5b50356001600160a01b0316610372565b604080516001600160a01b038616815290810183905260ff8216606082015260806020808301828152865192840192909252855160a084019187019080838360005b838110156101da5781810151838201526020016101c2565b50505050905090810190601f1680156102075780820380516001836020036101000a031916815260200191505b509550505050505060405180910390f35b61013e6004803603602081101561022e57600080fd5b5035610436565b61023d610451565b6040805160ff9092168252519081900360200190f35b61025b61045f565b60408051918252519081900360200190f35b61025b6004803603602081101561028357600080fd5b50356001600160a01b0316610465565b61023d610477565b6102c1600480360360208110156102b157600080fd5b50356001600160a01b0316610480565b6040805192835260ff90911660208301528051918290030190f35b61013e61057a565b600080826040516020018082805190602001908083835b6020831061031a5780518252601f1990920191602091820191016102fb565b51815160209384036101000a60001901801990921691161790526040805192909401828103601f1901835284528151918101919091206000908152600390915291909120546001600160a01b03169695505050505050565b6004602090815260009182526040918290208054600180830180548651600261010094831615949094026000190190911692909204601f81018690048602830186019096528582526001600160a01b0390921694929390929083018282801561041c5780601f106103f15761010080835404028352916020019161041c565b820191906000526020600020905b8154815290600101906020018083116103ff57829003601f168201915b50505050600283015460039093015491929160ff16905084565b6003602052600090815260409020546001600160a01b031681565b600554610100900460ff1681565b60015481565b60026020526000908152604090205481565b60055460ff1681565b60008061048b610589565b6001600160a01b03848116600090815260046020908152604091829020825160808101845281549094168452600180820180548551600261010094831615949094026000190190911692909204601f81018590048502830185019095528482529193858401939192918301828280156105455780601f1061051a57610100808354040283529160200191610545565b820191906000526020600020905b81548152906001019060200180831161052857829003601f168201915b50505091835250506002820154602082015260039091015460ff16604091820152810151606090910151909350915050915091565b6000546001600160a01b031681565b604051806080016040528060006001600160a01b031681526020016060815260200160008152602001600060ff168152509056fea265627a7a723158201b5ff6e599060dbf4fb6a97ecb3aef18a581f63d93986079e57d58473336cd7064736f6c63430005100032"
+// Chain33BankBin is the compiled bytecode used for deploying new contracts.
+var Chain33BankBin = "0x60806040526005805460ff1916811761ff00191661500017905534801561002557600080fd5b5060006001556105f28061003a6000396000f3fe608060405234801561001057600080fd5b50600436106100935760003560e01c8063b5a9096e11610066578063b5a9096e14610253578063b86247d71461026d578063d1d008ae14610293578063d2168d201461029b578063fad60627146102dc57610093565b80630a1f9b66146100985780634e25d1521461015a5780637056c493146102185780639eadc7cc14610235575b600080fd5b61013e600480360360208110156100ae57600080fd5b8101906020810181356401000000008111156100c957600080fd5b8201836020820111156100db57600080fd5b803590602001918460018302840111640100000000831117156100fd57600080fd5b91908080601f0160208091040260200160405190810160405280939291908181526020018383808284376000920191909152509295506102e4945050505050565b604080516001600160a01b039092168252519081900360200190f35b6101806004803603602081101561017057600080fd5b50356001600160a01b0316610372565b604080516001600160a01b038616815290810183905260ff8216606082015260806020808301828152865192840192909252855160a084019187019080838360005b838110156101da5781810151838201526020016101c2565b50505050905090810190601f1680156102075780820380516001836020036101000a031916815260200191505b509550505050505060405180910390f35b61013e6004803603602081101561022e57600080fd5b5035610436565b61023d610451565b6040805160ff9092168252519081900360200190f35b61025b61045f565b60408051918252519081900360200190f35b61025b6004803603602081101561028357600080fd5b50356001600160a01b0316610465565b61023d610477565b6102c1600480360360208110156102b157600080fd5b50356001600160a01b0316610480565b6040805192835260ff90911660208301528051918290030190f35b61013e61057a565b600080826040516020018082805190602001908083835b6020831061031a5780518252601f1990920191602091820191016102fb565b51815160209384036101000a60001901801990921691161790526040805192909401828103601f1901835284528151918101919091206000908152600390915291909120546001600160a01b03169695505050505050565b6004602090815260009182526040918290208054600180830180548651600261010094831615949094026000190190911692909204601f81018690048602830186019096528582526001600160a01b0390921694929390929083018282801561041c5780601f106103f15761010080835404028352916020019161041c565b820191906000526020600020905b8154815290600101906020018083116103ff57829003601f168201915b50505050600283015460039093015491929160ff16905084565b6003602052600090815260409020546001600160a01b031681565b600554610100900460ff1681565b60015481565b60026020526000908152604090205481565b60055460ff1681565b60008061048b610589565b6001600160a01b03848116600090815260046020908152604091829020825160808101845281549094168452600180820180548551600261010094831615949094026000190190911692909204601f81018590048502830185019095528482529193858401939192918301828280156105455780601f1061051a57610100808354040283529160200191610545565b820191906000526020600020905b81548152906001019060200180831161052857829003601f168201915b50505091835250506002820154602082015260039091015460ff16604091820152810151606090910151909350915050915091565b6000546001600160a01b031681565b604051806080016040528060006001600160a01b031681526020016060815260200160008152602001600060ff168152509056fea265627a7a723158201b5ff6e599060dbf4fb6a97ecb3aef18a581f63d93986079e57d58473336cd7064736f6c63430005100032"
 
-// DeployChainBank deploys a new Ethereum contract, binding an instance of ChainBank to it.
-func DeployChainBank(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *ChainBank, error) {
-	parsed, err := abi.JSON(strings.NewReader(ChainBankABI))
+// DeployChain33Bank deploys a new Ethereum contract, binding an instance of Chain33Bank to it.
+func DeployChain33Bank(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Chain33Bank, error) {
+	parsed, err := abi.JSON(strings.NewReader(Chain33BankABI))
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
 
-	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(ChainBankBin), backend)
+	address, tx, contract, err := bind.DeployContract(auth, parsed, common.FromHex(Chain33BankBin), backend)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	return address, tx, &ChainBank{ChainBankCaller: ChainBankCaller{contract: contract}, ChainBankTransactor: ChainBankTransactor{contract: contract}, ChainBankFilterer: ChainBankFilterer{contract: contract}}, nil
+	return address, tx, &Chain33Bank{Chain33BankCaller: Chain33BankCaller{contract: contract}, Chain33BankTransactor: Chain33BankTransactor{contract: contract}, Chain33BankFilterer: Chain33BankFilterer{contract: contract}}, nil
 }
 
-// ChainBank is an auto generated Go binding around an Ethereum contract.
-type ChainBank struct {
-	ChainBankCaller     // Read-only binding to the contract
-	ChainBankTransactor // Write-only binding to the contract
-	ChainBankFilterer   // Log filterer for contract events
+// Chain33Bank is an auto generated Go binding around an Ethereum contract.
+type Chain33Bank struct {
+	Chain33BankCaller     // Read-only binding to the contract
+	Chain33BankTransactor // Write-only binding to the contract
+	Chain33BankFilterer   // Log filterer for contract events
 }
 
-// ChainBankCaller is an auto generated read-only Go binding around an Ethereum contract.
-type ChainBankCaller struct {
+// Chain33BankCaller is an auto generated read-only Go binding around an Ethereum contract.
+type Chain33BankCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// ChainBankTransactor is an auto generated write-only Go binding around an Ethereum contract.
-type ChainBankTransactor struct {
+// Chain33BankTransactor is an auto generated write-only Go binding around an Ethereum contract.
+type Chain33BankTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// ChainBankFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
-type ChainBankFilterer struct {
+// Chain33BankFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
+type Chain33BankFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// ChainBankSession is an auto generated Go binding around an Ethereum contract,
+// Chain33BankSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
-type ChainBankSession struct {
-	Contract     *ChainBank      // Generic contract binding to set the session for
+type Chain33BankSession struct {
+	Contract     *Chain33Bank      // Generic contract binding to set the session for
 	CallOpts     bind.CallOpts     // Call options to use throughout this session
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// ChainBankCallerSession is an auto generated read-only Go binding around an Ethereum contract,
+// Chain33BankCallerSession is an auto generated read-only Go binding around an Ethereum contract,
 // with pre-set call options.
-type ChainBankCallerSession struct {
-	Contract *ChainBankCaller // Generic contract caller binding to set the session for
+type Chain33BankCallerSession struct {
+	Contract *Chain33BankCaller // Generic contract caller binding to set the session for
 	CallOpts bind.CallOpts      // Call options to use throughout this session
 }
 
-// ChainBankTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
+// Chain33BankTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
 // with pre-set transact options.
-type ChainBankTransactorSession struct {
-	Contract     *ChainBankTransactor // Generic contract transactor binding to set the session for
+type Chain33BankTransactorSession struct {
+	Contract     *Chain33BankTransactor // Generic contract transactor binding to set the session for
 	TransactOpts bind.TransactOpts      // Transaction auth options to use throughout this session
 }
 
-// ChainBankRaw is an auto generated low-level Go binding around an Ethereum contract.
-type ChainBankRaw struct {
-	Contract *ChainBank // Generic contract binding to access the raw methods on
+// Chain33BankRaw is an auto generated low-level Go binding around an Ethereum contract.
+type Chain33BankRaw struct {
+	Contract *Chain33Bank // Generic contract binding to access the raw methods on
 }
 
-// ChainBankCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
-type ChainBankCallerRaw struct {
-	Contract *ChainBankCaller // Generic read-only contract binding to access the raw methods on
+// Chain33BankCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
+type Chain33BankCallerRaw struct {
+	Contract *Chain33BankCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// ChainBankTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
-type ChainBankTransactorRaw struct {
-	Contract *ChainBankTransactor // Generic write-only contract binding to access the raw methods on
+// Chain33BankTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
+type Chain33BankTransactorRaw struct {
+	Contract *Chain33BankTransactor // Generic write-only contract binding to access the raw methods on
 }
 
-// NewChainBank creates a new instance of ChainBank, bound to a specific deployed contract.
-func NewChainBank(address common.Address, backend bind.ContractBackend) (*ChainBank, error) {
-	contract, err := bindChainBank(address, backend, backend, backend)
+// NewChain33Bank creates a new instance of Chain33Bank, bound to a specific deployed contract.
+func NewChain33Bank(address common.Address, backend bind.ContractBackend) (*Chain33Bank, error) {
+	contract, err := bindChain33Bank(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &ChainBank{ChainBankCaller: ChainBankCaller{contract: contract}, ChainBankTransactor: ChainBankTransactor{contract: contract}, ChainBankFilterer: ChainBankFilterer{contract: contract}}, nil
+	return &Chain33Bank{Chain33BankCaller: Chain33BankCaller{contract: contract}, Chain33BankTransactor: Chain33BankTransactor{contract: contract}, Chain33BankFilterer: Chain33BankFilterer{contract: contract}}, nil
 }
 
-// NewChainBankCaller creates a new read-only instance of ChainBank, bound to a specific deployed contract.
-func NewChainBankCaller(address common.Address, caller bind.ContractCaller) (*ChainBankCaller, error) {
-	contract, err := bindChainBank(address, caller, nil, nil)
+// NewChain33BankCaller creates a new read-only instance of Chain33Bank, bound to a specific deployed contract.
+func NewChain33BankCaller(address common.Address, caller bind.ContractCaller) (*Chain33BankCaller, error) {
+	contract, err := bindChain33Bank(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &ChainBankCaller{contract: contract}, nil
+	return &Chain33BankCaller{contract: contract}, nil
 }
 
-// NewChainBankTransactor creates a new write-only instance of ChainBank, bound to a specific deployed contract.
-func NewChainBankTransactor(address common.Address, transactor bind.ContractTransactor) (*ChainBankTransactor, error) {
-	contract, err := bindChainBank(address, nil, transactor, nil)
+// NewChain33BankTransactor creates a new write-only instance of Chain33Bank, bound to a specific deployed contract.
+func NewChain33BankTransactor(address common.Address, transactor bind.ContractTransactor) (*Chain33BankTransactor, error) {
+	contract, err := bindChain33Bank(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &ChainBankTransactor{contract: contract}, nil
+	return &Chain33BankTransactor{contract: contract}, nil
 }
 
-// NewChainBankFilterer creates a new log filterer instance of ChainBank, bound to a specific deployed contract.
-func NewChainBankFilterer(address common.Address, filterer bind.ContractFilterer) (*ChainBankFilterer, error) {
-	contract, err := bindChainBank(address, nil, nil, filterer)
+// NewChain33BankFilterer creates a new log filterer instance of Chain33Bank, bound to a specific deployed contract.
+func NewChain33BankFilterer(address common.Address, filterer bind.ContractFilterer) (*Chain33BankFilterer, error) {
+	contract, err := bindChain33Bank(address, nil, nil, filterer)
 	if err != nil {
 		return nil, err
 	}
-	return &ChainBankFilterer{contract: contract}, nil
+	return &Chain33BankFilterer{contract: contract}, nil
 }
 
-// bindChainBank binds a generic wrapper to an already deployed contract.
-func bindChainBank(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(ChainBankABI))
+// bindChain33Bank binds a generic wrapper to an already deployed contract.
+func bindChain33Bank(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	parsed, err := abi.JSON(strings.NewReader(Chain33BankABI))
 	if err != nil {
 		return nil, err
 	}
@@ -3307,46 +3307,46 @@ func bindChainBank(address common.Address, caller bind.ContractCaller, transacto
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ChainBank *ChainBankRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _ChainBank.Contract.ChainBankCaller.contract.Call(opts, result, method, params...)
+func (_Chain33Bank *Chain33BankRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _Chain33Bank.Contract.Chain33BankCaller.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_ChainBank *ChainBankRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _ChainBank.Contract.ChainBankTransactor.contract.Transfer(opts)
+func (_Chain33Bank *Chain33BankRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Chain33Bank.Contract.Chain33BankTransactor.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_ChainBank *ChainBankRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _ChainBank.Contract.ChainBankTransactor.contract.Transact(opts, method, params...)
+func (_Chain33Bank *Chain33BankRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _Chain33Bank.Contract.Chain33BankTransactor.contract.Transact(opts, method, params...)
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ChainBank *ChainBankCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _ChainBank.Contract.contract.Call(opts, result, method, params...)
+func (_Chain33Bank *Chain33BankCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _Chain33Bank.Contract.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_ChainBank *ChainBankTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _ChainBank.Contract.contract.Transfer(opts)
+func (_Chain33Bank *Chain33BankTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Chain33Bank.Contract.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_ChainBank *ChainBankTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _ChainBank.Contract.contract.Transact(opts, method, params...)
+func (_Chain33Bank *Chain33BankTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _Chain33Bank.Contract.contract.Transact(opts, method, params...)
 }
 
 // GetLockedTokenAddress is a free data retrieval call binding the contract method 0x0a1f9b66.
 //
 // Solidity: function getLockedTokenAddress(string _symbol) view returns(address)
-func (_ChainBank *ChainBankCaller) GetLockedTokenAddress(opts *bind.CallOpts, _symbol string) (common.Address, error) {
+func (_Chain33Bank *Chain33BankCaller) GetLockedTokenAddress(opts *bind.CallOpts, _symbol string) (common.Address, error) {
 	var out []interface{}
-	err := _ChainBank.contract.Call(opts, &out, "getLockedTokenAddress", _symbol)
+	err := _Chain33Bank.contract.Call(opts, &out, "getLockedTokenAddress", _symbol)
 
 	if err != nil {
 		return *new(common.Address), err
@@ -3361,23 +3361,23 @@ func (_ChainBank *ChainBankCaller) GetLockedTokenAddress(opts *bind.CallOpts, _s
 // GetLockedTokenAddress is a free data retrieval call binding the contract method 0x0a1f9b66.
 //
 // Solidity: function getLockedTokenAddress(string _symbol) view returns(address)
-func (_ChainBank *ChainBankSession) GetLockedTokenAddress(_symbol string) (common.Address, error) {
-	return _ChainBank.Contract.GetLockedTokenAddress(&_ChainBank.CallOpts, _symbol)
+func (_Chain33Bank *Chain33BankSession) GetLockedTokenAddress(_symbol string) (common.Address, error) {
+	return _Chain33Bank.Contract.GetLockedTokenAddress(&_Chain33Bank.CallOpts, _symbol)
 }
 
 // GetLockedTokenAddress is a free data retrieval call binding the contract method 0x0a1f9b66.
 //
 // Solidity: function getLockedTokenAddress(string _symbol) view returns(address)
-func (_ChainBank *ChainBankCallerSession) GetLockedTokenAddress(_symbol string) (common.Address, error) {
-	return _ChainBank.Contract.GetLockedTokenAddress(&_ChainBank.CallOpts, _symbol)
+func (_Chain33Bank *Chain33BankCallerSession) GetLockedTokenAddress(_symbol string) (common.Address, error) {
+	return _Chain33Bank.Contract.GetLockedTokenAddress(&_Chain33Bank.CallOpts, _symbol)
 }
 
 // GetofflineSaveCfg is a free data retrieval call binding the contract method 0xd2168d20.
 //
 // Solidity: function getofflineSaveCfg(address _token) view returns(uint256, uint8)
-func (_ChainBank *ChainBankCaller) GetofflineSaveCfg(opts *bind.CallOpts, _token common.Address) (*big.Int, uint8, error) {
+func (_Chain33Bank *Chain33BankCaller) GetofflineSaveCfg(opts *bind.CallOpts, _token common.Address) (*big.Int, uint8, error) {
 	var out []interface{}
-	err := _ChainBank.contract.Call(opts, &out, "getofflineSaveCfg", _token)
+	err := _Chain33Bank.contract.Call(opts, &out, "getofflineSaveCfg", _token)
 
 	if err != nil {
 		return *new(*big.Int), *new(uint8), err
@@ -3393,23 +3393,23 @@ func (_ChainBank *ChainBankCaller) GetofflineSaveCfg(opts *bind.CallOpts, _token
 // GetofflineSaveCfg is a free data retrieval call binding the contract method 0xd2168d20.
 //
 // Solidity: function getofflineSaveCfg(address _token) view returns(uint256, uint8)
-func (_ChainBank *ChainBankSession) GetofflineSaveCfg(_token common.Address) (*big.Int, uint8, error) {
-	return _ChainBank.Contract.GetofflineSaveCfg(&_ChainBank.CallOpts, _token)
+func (_Chain33Bank *Chain33BankSession) GetofflineSaveCfg(_token common.Address) (*big.Int, uint8, error) {
+	return _Chain33Bank.Contract.GetofflineSaveCfg(&_Chain33Bank.CallOpts, _token)
 }
 
 // GetofflineSaveCfg is a free data retrieval call binding the contract method 0xd2168d20.
 //
 // Solidity: function getofflineSaveCfg(address _token) view returns(uint256, uint8)
-func (_ChainBank *ChainBankCallerSession) GetofflineSaveCfg(_token common.Address) (*big.Int, uint8, error) {
-	return _ChainBank.Contract.GetofflineSaveCfg(&_ChainBank.CallOpts, _token)
+func (_Chain33Bank *Chain33BankCallerSession) GetofflineSaveCfg(_token common.Address) (*big.Int, uint8, error) {
+	return _Chain33Bank.Contract.GetofflineSaveCfg(&_Chain33Bank.CallOpts, _token)
 }
 
 // HighThreshold is a free data retrieval call binding the contract method 0x9eadc7cc.
 //
 // Solidity: function highThreshold() view returns(uint8)
-func (_ChainBank *ChainBankCaller) HighThreshold(opts *bind.CallOpts) (uint8, error) {
+func (_Chain33Bank *Chain33BankCaller) HighThreshold(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _ChainBank.contract.Call(opts, &out, "highThreshold")
+	err := _Chain33Bank.contract.Call(opts, &out, "highThreshold")
 
 	if err != nil {
 		return *new(uint8), err
@@ -3424,23 +3424,23 @@ func (_ChainBank *ChainBankCaller) HighThreshold(opts *bind.CallOpts) (uint8, er
 // HighThreshold is a free data retrieval call binding the contract method 0x9eadc7cc.
 //
 // Solidity: function highThreshold() view returns(uint8)
-func (_ChainBank *ChainBankSession) HighThreshold() (uint8, error) {
-	return _ChainBank.Contract.HighThreshold(&_ChainBank.CallOpts)
+func (_Chain33Bank *Chain33BankSession) HighThreshold() (uint8, error) {
+	return _Chain33Bank.Contract.HighThreshold(&_Chain33Bank.CallOpts)
 }
 
 // HighThreshold is a free data retrieval call binding the contract method 0x9eadc7cc.
 //
 // Solidity: function highThreshold() view returns(uint8)
-func (_ChainBank *ChainBankCallerSession) HighThreshold() (uint8, error) {
-	return _ChainBank.Contract.HighThreshold(&_ChainBank.CallOpts)
+func (_Chain33Bank *Chain33BankCallerSession) HighThreshold() (uint8, error) {
+	return _Chain33Bank.Contract.HighThreshold(&_Chain33Bank.CallOpts)
 }
 
 // LockNonce is a free data retrieval call binding the contract method 0xb5a9096e.
 //
 // Solidity: function lockNonce() view returns(uint256)
-func (_ChainBank *ChainBankCaller) LockNonce(opts *bind.CallOpts) (*big.Int, error) {
+func (_Chain33Bank *Chain33BankCaller) LockNonce(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _ChainBank.contract.Call(opts, &out, "lockNonce")
+	err := _Chain33Bank.contract.Call(opts, &out, "lockNonce")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -3455,23 +3455,23 @@ func (_ChainBank *ChainBankCaller) LockNonce(opts *bind.CallOpts) (*big.Int, err
 // LockNonce is a free data retrieval call binding the contract method 0xb5a9096e.
 //
 // Solidity: function lockNonce() view returns(uint256)
-func (_ChainBank *ChainBankSession) LockNonce() (*big.Int, error) {
-	return _ChainBank.Contract.LockNonce(&_ChainBank.CallOpts)
+func (_Chain33Bank *Chain33BankSession) LockNonce() (*big.Int, error) {
+	return _Chain33Bank.Contract.LockNonce(&_Chain33Bank.CallOpts)
 }
 
 // LockNonce is a free data retrieval call binding the contract method 0xb5a9096e.
 //
 // Solidity: function lockNonce() view returns(uint256)
-func (_ChainBank *ChainBankCallerSession) LockNonce() (*big.Int, error) {
-	return _ChainBank.Contract.LockNonce(&_ChainBank.CallOpts)
+func (_Chain33Bank *Chain33BankCallerSession) LockNonce() (*big.Int, error) {
+	return _Chain33Bank.Contract.LockNonce(&_Chain33Bank.CallOpts)
 }
 
 // LockedFunds is a free data retrieval call binding the contract method 0xb86247d7.
 //
 // Solidity: function lockedFunds(address ) view returns(uint256)
-func (_ChainBank *ChainBankCaller) LockedFunds(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
+func (_Chain33Bank *Chain33BankCaller) LockedFunds(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
 	var out []interface{}
-	err := _ChainBank.contract.Call(opts, &out, "lockedFunds", arg0)
+	err := _Chain33Bank.contract.Call(opts, &out, "lockedFunds", arg0)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -3486,23 +3486,23 @@ func (_ChainBank *ChainBankCaller) LockedFunds(opts *bind.CallOpts, arg0 common.
 // LockedFunds is a free data retrieval call binding the contract method 0xb86247d7.
 //
 // Solidity: function lockedFunds(address ) view returns(uint256)
-func (_ChainBank *ChainBankSession) LockedFunds(arg0 common.Address) (*big.Int, error) {
-	return _ChainBank.Contract.LockedFunds(&_ChainBank.CallOpts, arg0)
+func (_Chain33Bank *Chain33BankSession) LockedFunds(arg0 common.Address) (*big.Int, error) {
+	return _Chain33Bank.Contract.LockedFunds(&_Chain33Bank.CallOpts, arg0)
 }
 
 // LockedFunds is a free data retrieval call binding the contract method 0xb86247d7.
 //
 // Solidity: function lockedFunds(address ) view returns(uint256)
-func (_ChainBank *ChainBankCallerSession) LockedFunds(arg0 common.Address) (*big.Int, error) {
-	return _ChainBank.Contract.LockedFunds(&_ChainBank.CallOpts, arg0)
+func (_Chain33Bank *Chain33BankCallerSession) LockedFunds(arg0 common.Address) (*big.Int, error) {
+	return _Chain33Bank.Contract.LockedFunds(&_Chain33Bank.CallOpts, arg0)
 }
 
 // LowThreshold is a free data retrieval call binding the contract method 0xd1d008ae.
 //
 // Solidity: function lowThreshold() view returns(uint8)
-func (_ChainBank *ChainBankCaller) LowThreshold(opts *bind.CallOpts) (uint8, error) {
+func (_Chain33Bank *Chain33BankCaller) LowThreshold(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _ChainBank.contract.Call(opts, &out, "lowThreshold")
+	err := _Chain33Bank.contract.Call(opts, &out, "lowThreshold")
 
 	if err != nil {
 		return *new(uint8), err
@@ -3517,23 +3517,23 @@ func (_ChainBank *ChainBankCaller) LowThreshold(opts *bind.CallOpts) (uint8, err
 // LowThreshold is a free data retrieval call binding the contract method 0xd1d008ae.
 //
 // Solidity: function lowThreshold() view returns(uint8)
-func (_ChainBank *ChainBankSession) LowThreshold() (uint8, error) {
-	return _ChainBank.Contract.LowThreshold(&_ChainBank.CallOpts)
+func (_Chain33Bank *Chain33BankSession) LowThreshold() (uint8, error) {
+	return _Chain33Bank.Contract.LowThreshold(&_Chain33Bank.CallOpts)
 }
 
 // LowThreshold is a free data retrieval call binding the contract method 0xd1d008ae.
 //
 // Solidity: function lowThreshold() view returns(uint8)
-func (_ChainBank *ChainBankCallerSession) LowThreshold() (uint8, error) {
-	return _ChainBank.Contract.LowThreshold(&_ChainBank.CallOpts)
+func (_Chain33Bank *Chain33BankCallerSession) LowThreshold() (uint8, error) {
+	return _Chain33Bank.Contract.LowThreshold(&_Chain33Bank.CallOpts)
 }
 
 // OfflineSave is a free data retrieval call binding the contract method 0xfad60627.
 //
 // Solidity: function offlineSave() view returns(address)
-func (_ChainBank *ChainBankCaller) OfflineSave(opts *bind.CallOpts) (common.Address, error) {
+func (_Chain33Bank *Chain33BankCaller) OfflineSave(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _ChainBank.contract.Call(opts, &out, "offlineSave")
+	err := _Chain33Bank.contract.Call(opts, &out, "offlineSave")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -3548,28 +3548,28 @@ func (_ChainBank *ChainBankCaller) OfflineSave(opts *bind.CallOpts) (common.Addr
 // OfflineSave is a free data retrieval call binding the contract method 0xfad60627.
 //
 // Solidity: function offlineSave() view returns(address)
-func (_ChainBank *ChainBankSession) OfflineSave() (common.Address, error) {
-	return _ChainBank.Contract.OfflineSave(&_ChainBank.CallOpts)
+func (_Chain33Bank *Chain33BankSession) OfflineSave() (common.Address, error) {
+	return _Chain33Bank.Contract.OfflineSave(&_Chain33Bank.CallOpts)
 }
 
 // OfflineSave is a free data retrieval call binding the contract method 0xfad60627.
 //
 // Solidity: function offlineSave() view returns(address)
-func (_ChainBank *ChainBankCallerSession) OfflineSave() (common.Address, error) {
-	return _ChainBank.Contract.OfflineSave(&_ChainBank.CallOpts)
+func (_Chain33Bank *Chain33BankCallerSession) OfflineSave() (common.Address, error) {
+	return _Chain33Bank.Contract.OfflineSave(&_Chain33Bank.CallOpts)
 }
 
 // OfflineSaveCfgs is a free data retrieval call binding the contract method 0x4e25d152.
 //
 // Solidity: function offlineSaveCfgs(address ) view returns(address token, string symbol, uint256 _threshold, uint8 _percents)
-func (_ChainBank *ChainBankCaller) OfflineSaveCfgs(opts *bind.CallOpts, arg0 common.Address) (struct {
+func (_Chain33Bank *Chain33BankCaller) OfflineSaveCfgs(opts *bind.CallOpts, arg0 common.Address) (struct {
 	Token     common.Address
 	Symbol    string
 	Threshold *big.Int
 	Percents  uint8
 }, error) {
 	var out []interface{}
-	err := _ChainBank.contract.Call(opts, &out, "offlineSaveCfgs", arg0)
+	err := _Chain33Bank.contract.Call(opts, &out, "offlineSaveCfgs", arg0)
 
 	outstruct := new(struct {
 		Token     common.Address
@@ -3593,33 +3593,33 @@ func (_ChainBank *ChainBankCaller) OfflineSaveCfgs(opts *bind.CallOpts, arg0 com
 // OfflineSaveCfgs is a free data retrieval call binding the contract method 0x4e25d152.
 //
 // Solidity: function offlineSaveCfgs(address ) view returns(address token, string symbol, uint256 _threshold, uint8 _percents)
-func (_ChainBank *ChainBankSession) OfflineSaveCfgs(arg0 common.Address) (struct {
+func (_Chain33Bank *Chain33BankSession) OfflineSaveCfgs(arg0 common.Address) (struct {
 	Token     common.Address
 	Symbol    string
 	Threshold *big.Int
 	Percents  uint8
 }, error) {
-	return _ChainBank.Contract.OfflineSaveCfgs(&_ChainBank.CallOpts, arg0)
+	return _Chain33Bank.Contract.OfflineSaveCfgs(&_Chain33Bank.CallOpts, arg0)
 }
 
 // OfflineSaveCfgs is a free data retrieval call binding the contract method 0x4e25d152.
 //
 // Solidity: function offlineSaveCfgs(address ) view returns(address token, string symbol, uint256 _threshold, uint8 _percents)
-func (_ChainBank *ChainBankCallerSession) OfflineSaveCfgs(arg0 common.Address) (struct {
+func (_Chain33Bank *Chain33BankCallerSession) OfflineSaveCfgs(arg0 common.Address) (struct {
 	Token     common.Address
 	Symbol    string
 	Threshold *big.Int
 	Percents  uint8
 }, error) {
-	return _ChainBank.Contract.OfflineSaveCfgs(&_ChainBank.CallOpts, arg0)
+	return _Chain33Bank.Contract.OfflineSaveCfgs(&_Chain33Bank.CallOpts, arg0)
 }
 
 // TokenAllow2Lock is a free data retrieval call binding the contract method 0x7056c493.
 //
 // Solidity: function tokenAllow2Lock(bytes32 ) view returns(address)
-func (_ChainBank *ChainBankCaller) TokenAllow2Lock(opts *bind.CallOpts, arg0 [32]byte) (common.Address, error) {
+func (_Chain33Bank *Chain33BankCaller) TokenAllow2Lock(opts *bind.CallOpts, arg0 [32]byte) (common.Address, error) {
 	var out []interface{}
-	err := _ChainBank.contract.Call(opts, &out, "tokenAllow2Lock", arg0)
+	err := _Chain33Bank.contract.Call(opts, &out, "tokenAllow2Lock", arg0)
 
 	if err != nil {
 		return *new(common.Address), err
@@ -3634,20 +3634,20 @@ func (_ChainBank *ChainBankCaller) TokenAllow2Lock(opts *bind.CallOpts, arg0 [32
 // TokenAllow2Lock is a free data retrieval call binding the contract method 0x7056c493.
 //
 // Solidity: function tokenAllow2Lock(bytes32 ) view returns(address)
-func (_ChainBank *ChainBankSession) TokenAllow2Lock(arg0 [32]byte) (common.Address, error) {
-	return _ChainBank.Contract.TokenAllow2Lock(&_ChainBank.CallOpts, arg0)
+func (_Chain33Bank *Chain33BankSession) TokenAllow2Lock(arg0 [32]byte) (common.Address, error) {
+	return _Chain33Bank.Contract.TokenAllow2Lock(&_Chain33Bank.CallOpts, arg0)
 }
 
 // TokenAllow2Lock is a free data retrieval call binding the contract method 0x7056c493.
 //
 // Solidity: function tokenAllow2Lock(bytes32 ) view returns(address)
-func (_ChainBank *ChainBankCallerSession) TokenAllow2Lock(arg0 [32]byte) (common.Address, error) {
-	return _ChainBank.Contract.TokenAllow2Lock(&_ChainBank.CallOpts, arg0)
+func (_Chain33Bank *Chain33BankCallerSession) TokenAllow2Lock(arg0 [32]byte) (common.Address, error) {
+	return _Chain33Bank.Contract.TokenAllow2Lock(&_Chain33Bank.CallOpts, arg0)
 }
 
-// ChainBankLogLockIterator is returned from FilterLogLock and is used to iterate over the raw logs and unpacked data for LogLock events raised by the ChainBank contract.
-type ChainBankLogLockIterator struct {
-	Event *ChainBankLogLock // Event containing the contract specifics and raw log
+// Chain33BankLogLockIterator is returned from FilterLogLock and is used to iterate over the raw logs and unpacked data for LogLock events raised by the Chain33Bank contract.
+type Chain33BankLogLockIterator struct {
+	Event *Chain33BankLogLock // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -3661,7 +3661,7 @@ type ChainBankLogLockIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ChainBankLogLockIterator) Next() bool {
+func (it *Chain33BankLogLockIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -3670,7 +3670,7 @@ func (it *ChainBankLogLockIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ChainBankLogLock)
+			it.Event = new(Chain33BankLogLock)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -3685,7 +3685,7 @@ func (it *ChainBankLogLockIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ChainBankLogLock)
+		it.Event = new(Chain33BankLogLock)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -3701,19 +3701,19 @@ func (it *ChainBankLogLockIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ChainBankLogLockIterator) Error() error {
+func (it *Chain33BankLogLockIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ChainBankLogLockIterator) Close() error {
+func (it *Chain33BankLogLockIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ChainBankLogLock represents a LogLock event raised by the ChainBank contract.
-type ChainBankLogLock struct {
+// Chain33BankLogLock represents a LogLock event raised by the Chain33Bank contract.
+type Chain33BankLogLock struct {
 	From   common.Address
 	To     []byte
 	Token  common.Address
@@ -3726,21 +3726,21 @@ type ChainBankLogLock struct {
 // FilterLogLock is a free log retrieval operation binding the contract event 0x374449c83a37309524754bbdfc5b8306d3694b5d14609b8fbb1b50cc5c0319a7.
 //
 // Solidity: event LogLock(address _from, bytes _to, address _token, string _symbol, uint256 _value, uint256 _nonce)
-func (_ChainBank *ChainBankFilterer) FilterLogLock(opts *bind.FilterOpts) (*ChainBankLogLockIterator, error) {
+func (_Chain33Bank *Chain33BankFilterer) FilterLogLock(opts *bind.FilterOpts) (*Chain33BankLogLockIterator, error) {
 
-	logs, sub, err := _ChainBank.contract.FilterLogs(opts, "LogLock")
+	logs, sub, err := _Chain33Bank.contract.FilterLogs(opts, "LogLock")
 	if err != nil {
 		return nil, err
 	}
-	return &ChainBankLogLockIterator{contract: _ChainBank.contract, event: "LogLock", logs: logs, sub: sub}, nil
+	return &Chain33BankLogLockIterator{contract: _Chain33Bank.contract, event: "LogLock", logs: logs, sub: sub}, nil
 }
 
 // WatchLogLock is a free log subscription operation binding the contract event 0x374449c83a37309524754bbdfc5b8306d3694b5d14609b8fbb1b50cc5c0319a7.
 //
 // Solidity: event LogLock(address _from, bytes _to, address _token, string _symbol, uint256 _value, uint256 _nonce)
-func (_ChainBank *ChainBankFilterer) WatchLogLock(opts *bind.WatchOpts, sink chan<- *ChainBankLogLock) (event.Subscription, error) {
+func (_Chain33Bank *Chain33BankFilterer) WatchLogLock(opts *bind.WatchOpts, sink chan<- *Chain33BankLogLock) (event.Subscription, error) {
 
-	logs, sub, err := _ChainBank.contract.WatchLogs(opts, "LogLock")
+	logs, sub, err := _Chain33Bank.contract.WatchLogs(opts, "LogLock")
 	if err != nil {
 		return nil, err
 	}
@@ -3750,8 +3750,8 @@ func (_ChainBank *ChainBankFilterer) WatchLogLock(opts *bind.WatchOpts, sink cha
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ChainBankLogLock)
-				if err := _ChainBank.contract.UnpackLog(event, "LogLock", log); err != nil {
+				event := new(Chain33BankLogLock)
+				if err := _Chain33Bank.contract.UnpackLog(event, "LogLock", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -3775,18 +3775,18 @@ func (_ChainBank *ChainBankFilterer) WatchLogLock(opts *bind.WatchOpts, sink cha
 // ParseLogLock is a log parse operation binding the contract event 0x374449c83a37309524754bbdfc5b8306d3694b5d14609b8fbb1b50cc5c0319a7.
 //
 // Solidity: event LogLock(address _from, bytes _to, address _token, string _symbol, uint256 _value, uint256 _nonce)
-func (_ChainBank *ChainBankFilterer) ParseLogLock(log types.Log) (*ChainBankLogLock, error) {
-	event := new(ChainBankLogLock)
-	if err := _ChainBank.contract.UnpackLog(event, "LogLock", log); err != nil {
+func (_Chain33Bank *Chain33BankFilterer) ParseLogLock(log types.Log) (*Chain33BankLogLock, error) {
+	event := new(Chain33BankLogLock)
+	if err := _Chain33Bank.contract.UnpackLog(event, "LogLock", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// ChainBankLogUnlockIterator is returned from FilterLogUnlock and is used to iterate over the raw logs and unpacked data for LogUnlock events raised by the ChainBank contract.
-type ChainBankLogUnlockIterator struct {
-	Event *ChainBankLogUnlock // Event containing the contract specifics and raw log
+// Chain33BankLogUnlockIterator is returned from FilterLogUnlock and is used to iterate over the raw logs and unpacked data for LogUnlock events raised by the Chain33Bank contract.
+type Chain33BankLogUnlockIterator struct {
+	Event *Chain33BankLogUnlock // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -3800,7 +3800,7 @@ type ChainBankLogUnlockIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *ChainBankLogUnlockIterator) Next() bool {
+func (it *Chain33BankLogUnlockIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -3809,7 +3809,7 @@ func (it *ChainBankLogUnlockIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(ChainBankLogUnlock)
+			it.Event = new(Chain33BankLogUnlock)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -3824,7 +3824,7 @@ func (it *ChainBankLogUnlockIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(ChainBankLogUnlock)
+		it.Event = new(Chain33BankLogUnlock)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -3840,19 +3840,19 @@ func (it *ChainBankLogUnlockIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *ChainBankLogUnlockIterator) Error() error {
+func (it *Chain33BankLogUnlockIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *ChainBankLogUnlockIterator) Close() error {
+func (it *Chain33BankLogUnlockIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// ChainBankLogUnlock represents a LogUnlock event raised by the ChainBank contract.
-type ChainBankLogUnlock struct {
+// Chain33BankLogUnlock represents a LogUnlock event raised by the Chain33Bank contract.
+type Chain33BankLogUnlock struct {
 	To     common.Address
 	Token  common.Address
 	Symbol string
@@ -3863,21 +3863,21 @@ type ChainBankLogUnlock struct {
 // FilterLogUnlock is a free log retrieval operation binding the contract event 0x802cd873de701272ec903860b690986bd460b5bcd57e30ac1fdfdeece10528ac.
 //
 // Solidity: event LogUnlock(address _to, address _token, string _symbol, uint256 _value)
-func (_ChainBank *ChainBankFilterer) FilterLogUnlock(opts *bind.FilterOpts) (*ChainBankLogUnlockIterator, error) {
+func (_Chain33Bank *Chain33BankFilterer) FilterLogUnlock(opts *bind.FilterOpts) (*Chain33BankLogUnlockIterator, error) {
 
-	logs, sub, err := _ChainBank.contract.FilterLogs(opts, "LogUnlock")
+	logs, sub, err := _Chain33Bank.contract.FilterLogs(opts, "LogUnlock")
 	if err != nil {
 		return nil, err
 	}
-	return &ChainBankLogUnlockIterator{contract: _ChainBank.contract, event: "LogUnlock", logs: logs, sub: sub}, nil
+	return &Chain33BankLogUnlockIterator{contract: _Chain33Bank.contract, event: "LogUnlock", logs: logs, sub: sub}, nil
 }
 
 // WatchLogUnlock is a free log subscription operation binding the contract event 0x802cd873de701272ec903860b690986bd460b5bcd57e30ac1fdfdeece10528ac.
 //
 // Solidity: event LogUnlock(address _to, address _token, string _symbol, uint256 _value)
-func (_ChainBank *ChainBankFilterer) WatchLogUnlock(opts *bind.WatchOpts, sink chan<- *ChainBankLogUnlock) (event.Subscription, error) {
+func (_Chain33Bank *Chain33BankFilterer) WatchLogUnlock(opts *bind.WatchOpts, sink chan<- *Chain33BankLogUnlock) (event.Subscription, error) {
 
-	logs, sub, err := _ChainBank.contract.WatchLogs(opts, "LogUnlock")
+	logs, sub, err := _Chain33Bank.contract.WatchLogs(opts, "LogUnlock")
 	if err != nil {
 		return nil, err
 	}
@@ -3887,8 +3887,8 @@ func (_ChainBank *ChainBankFilterer) WatchLogUnlock(opts *bind.WatchOpts, sink c
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(ChainBankLogUnlock)
-				if err := _ChainBank.contract.UnpackLog(event, "LogUnlock", log); err != nil {
+				event := new(Chain33BankLogUnlock)
+				if err := _Chain33Bank.contract.UnpackLog(event, "LogUnlock", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -3912,9 +3912,9 @@ func (_ChainBank *ChainBankFilterer) WatchLogUnlock(opts *bind.WatchOpts, sink c
 // ParseLogUnlock is a log parse operation binding the contract event 0x802cd873de701272ec903860b690986bd460b5bcd57e30ac1fdfdeece10528ac.
 //
 // Solidity: event LogUnlock(address _to, address _token, string _symbol, uint256 _value)
-func (_ChainBank *ChainBankFilterer) ParseLogUnlock(log types.Log) (*ChainBankLogUnlock, error) {
-	event := new(ChainBankLogUnlock)
-	if err := _ChainBank.contract.UnpackLog(event, "LogUnlock", log); err != nil {
+func (_Chain33Bank *Chain33BankFilterer) ParseLogUnlock(log types.Log) (*Chain33BankLogUnlock, error) {
+	event := new(Chain33BankLogUnlock)
+	if err := _Chain33Bank.contract.UnpackLog(event, "LogUnlock", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
@@ -8355,7 +8355,7 @@ func (_EthereumBank *EthereumBankFilterer) ParseLogNewBridgeToken(log types.Log)
 }
 
 // EthereumBridgeABI is the input ABI used to generate the binding from.
-const EthereumBridgeABI = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_valset\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_bridgeBank\",\"type\":\"address\"}],\"name\":\"LogBridgeBankSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_prophecyID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"enumEthereumBridge.ClaimType\",\"name\":\"_claimType\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_ethereumSender\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"addresspayable\",\"name\":\"_chainReceiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_validatorAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_tokenAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"LogNewProphecyClaim\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_oracle\",\"type\":\"address\"}],\"name\":\"LogOracleSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"enumEthereumBridge.ClaimType\",\"name\":\"_claimType\",\"type\":\"uint8\"}],\"name\":\"LogProphecyCompleted\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"bridgeBank\",\"outputs\":[{\"internalType\":\"contractBridgeBank\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"}],\"name\":\"completeClaim\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"hasBridgeBank\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"hasOracle\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"}],\"name\":\"isProphecyClaimActive\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"}],\"name\":\"isProphecyClaimValidatorActive\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_claimType\",\"type\":\"uint8\"}],\"name\":\"isValidClaimType\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"operator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"oracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"prophecyClaimCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"prophecyClaims\",\"outputs\":[{\"internalType\":\"enumEthereumBridge.ClaimType\",\"name\":\"claimType\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"ethereumSender\",\"type\":\"bytes\"},{\"internalType\":\"addresspayable\",\"name\":\"chainReceiver\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"originalValidator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"enumEthereumBridge.Status\",\"name\":\"status\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_bridgeBank\",\"type\":\"address\"}],\"name\":\"setBridgeBank\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"_claimType\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_ethereumSender\",\"type\":\"bytes\"},{\"internalType\":\"addresspayable\",\"name\":\"_chainReceiver\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_originalValidator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenAddress\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"setNewProphecyClaim\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oracle\",\"type\":\"address\"}],\"name\":\"setOracle\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"valset\",\"outputs\":[{\"internalType\":\"contractValset\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
+const EthereumBridgeABI = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_valset\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_bridgeBank\",\"type\":\"address\"}],\"name\":\"LogBridgeBankSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_prophecyID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"enumEthereumBridge.ClaimType\",\"name\":\"_claimType\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_ethereumSender\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"addresspayable\",\"name\":\"_chain33Receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_validatorAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_tokenAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"LogNewProphecyClaim\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_oracle\",\"type\":\"address\"}],\"name\":\"LogOracleSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"enumEthereumBridge.ClaimType\",\"name\":\"_claimType\",\"type\":\"uint8\"}],\"name\":\"LogProphecyCompleted\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"bridgeBank\",\"outputs\":[{\"internalType\":\"contractBridgeBank\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"}],\"name\":\"completeClaim\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"hasBridgeBank\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"hasOracle\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"}],\"name\":\"isProphecyClaimActive\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"}],\"name\":\"isProphecyClaimValidatorActive\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"_claimType\",\"type\":\"uint8\"}],\"name\":\"isValidClaimType\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"operator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"oracle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"prophecyClaimCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"prophecyClaims\",\"outputs\":[{\"internalType\":\"enumEthereumBridge.ClaimType\",\"name\":\"claimType\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"ethereumSender\",\"type\":\"bytes\"},{\"internalType\":\"addresspayable\",\"name\":\"chain33Receiver\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"originalValidator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"enumEthereumBridge.Status\",\"name\":\"status\",\"type\":\"uint8\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"_bridgeBank\",\"type\":\"address\"}],\"name\":\"setBridgeBank\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"_claimType\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_ethereumSender\",\"type\":\"bytes\"},{\"internalType\":\"addresspayable\",\"name\":\"_chain33Receiver\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_originalValidator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenAddress\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"setNewProphecyClaim\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oracle\",\"type\":\"address\"}],\"name\":\"setOracle\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"valset\",\"outputs\":[{\"internalType\":\"contractValset\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
 // EthereumBridgeFuncSigs maps the 4-byte function signature to its string representation.
 var EthereumBridgeFuncSigs = map[string]string{
@@ -8816,11 +8816,11 @@ func (_EthereumBridge *EthereumBridgeCallerSession) ProphecyClaimCount() (*big.I
 
 // ProphecyClaims is a free data retrieval call binding the contract method 0xb47010f6.
 //
-// Solidity: function prophecyClaims(bytes32 ) view returns(uint8 claimType, bytes ethereumSender, address chainReceiver, address originalValidator, address tokenAddress, string symbol, uint256 amount, uint8 status)
+// Solidity: function prophecyClaims(bytes32 ) view returns(uint8 claimType, bytes ethereumSender, address chain33Receiver, address originalValidator, address tokenAddress, string symbol, uint256 amount, uint8 status)
 func (_EthereumBridge *EthereumBridgeCaller) ProphecyClaims(opts *bind.CallOpts, arg0 [32]byte) (struct {
 	ClaimType         uint8
 	EthereumSender    []byte
-	ChainReceiver   common.Address
+	Chain33Receiver   common.Address
 	OriginalValidator common.Address
 	TokenAddress      common.Address
 	Symbol            string
@@ -8833,7 +8833,7 @@ func (_EthereumBridge *EthereumBridgeCaller) ProphecyClaims(opts *bind.CallOpts,
 	outstruct := new(struct {
 		ClaimType         uint8
 		EthereumSender    []byte
-		ChainReceiver   common.Address
+		Chain33Receiver   common.Address
 		OriginalValidator common.Address
 		TokenAddress      common.Address
 		Symbol            string
@@ -8846,7 +8846,7 @@ func (_EthereumBridge *EthereumBridgeCaller) ProphecyClaims(opts *bind.CallOpts,
 
 	outstruct.ClaimType = *abi.ConvertType(out[0], new(uint8)).(*uint8)
 	outstruct.EthereumSender = *abi.ConvertType(out[1], new([]byte)).(*[]byte)
-	outstruct.ChainReceiver = *abi.ConvertType(out[2], new(common.Address)).(*common.Address)
+	outstruct.Chain33Receiver = *abi.ConvertType(out[2], new(common.Address)).(*common.Address)
 	outstruct.OriginalValidator = *abi.ConvertType(out[3], new(common.Address)).(*common.Address)
 	outstruct.TokenAddress = *abi.ConvertType(out[4], new(common.Address)).(*common.Address)
 	outstruct.Symbol = *abi.ConvertType(out[5], new(string)).(*string)
@@ -8859,11 +8859,11 @@ func (_EthereumBridge *EthereumBridgeCaller) ProphecyClaims(opts *bind.CallOpts,
 
 // ProphecyClaims is a free data retrieval call binding the contract method 0xb47010f6.
 //
-// Solidity: function prophecyClaims(bytes32 ) view returns(uint8 claimType, bytes ethereumSender, address chainReceiver, address originalValidator, address tokenAddress, string symbol, uint256 amount, uint8 status)
+// Solidity: function prophecyClaims(bytes32 ) view returns(uint8 claimType, bytes ethereumSender, address chain33Receiver, address originalValidator, address tokenAddress, string symbol, uint256 amount, uint8 status)
 func (_EthereumBridge *EthereumBridgeSession) ProphecyClaims(arg0 [32]byte) (struct {
 	ClaimType         uint8
 	EthereumSender    []byte
-	ChainReceiver   common.Address
+	Chain33Receiver   common.Address
 	OriginalValidator common.Address
 	TokenAddress      common.Address
 	Symbol            string
@@ -8875,11 +8875,11 @@ func (_EthereumBridge *EthereumBridgeSession) ProphecyClaims(arg0 [32]byte) (str
 
 // ProphecyClaims is a free data retrieval call binding the contract method 0xb47010f6.
 //
-// Solidity: function prophecyClaims(bytes32 ) view returns(uint8 claimType, bytes ethereumSender, address chainReceiver, address originalValidator, address tokenAddress, string symbol, uint256 amount, uint8 status)
+// Solidity: function prophecyClaims(bytes32 ) view returns(uint8 claimType, bytes ethereumSender, address chain33Receiver, address originalValidator, address tokenAddress, string symbol, uint256 amount, uint8 status)
 func (_EthereumBridge *EthereumBridgeCallerSession) ProphecyClaims(arg0 [32]byte) (struct {
 	ClaimType         uint8
 	EthereumSender    []byte
-	ChainReceiver   common.Address
+	Chain33Receiver   common.Address
 	OriginalValidator common.Address
 	TokenAddress      common.Address
 	Symbol            string
@@ -8964,23 +8964,23 @@ func (_EthereumBridge *EthereumBridgeTransactorSession) SetBridgeBank(_bridgeBan
 
 // SetNewProphecyClaim is a paid mutator transaction binding the contract method 0x74c9c3e2.
 //
-// Solidity: function setNewProphecyClaim(bytes32 _claimID, uint8 _claimType, bytes _ethereumSender, address _chainReceiver, address _originalValidator, address _tokenAddress, string _symbol, uint256 _amount) returns()
-func (_EthereumBridge *EthereumBridgeTransactor) SetNewProphecyClaim(opts *bind.TransactOpts, _claimID [32]byte, _claimType uint8, _ethereumSender []byte, _chainReceiver common.Address, _originalValidator common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int) (*types.Transaction, error) {
-	return _EthereumBridge.contract.Transact(opts, "setNewProphecyClaim", _claimID, _claimType, _ethereumSender, _chainReceiver, _originalValidator, _tokenAddress, _symbol, _amount)
+// Solidity: function setNewProphecyClaim(bytes32 _claimID, uint8 _claimType, bytes _ethereumSender, address _chain33Receiver, address _originalValidator, address _tokenAddress, string _symbol, uint256 _amount) returns()
+func (_EthereumBridge *EthereumBridgeTransactor) SetNewProphecyClaim(opts *bind.TransactOpts, _claimID [32]byte, _claimType uint8, _ethereumSender []byte, _chain33Receiver common.Address, _originalValidator common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int) (*types.Transaction, error) {
+	return _EthereumBridge.contract.Transact(opts, "setNewProphecyClaim", _claimID, _claimType, _ethereumSender, _chain33Receiver, _originalValidator, _tokenAddress, _symbol, _amount)
 }
 
 // SetNewProphecyClaim is a paid mutator transaction binding the contract method 0x74c9c3e2.
 //
-// Solidity: function setNewProphecyClaim(bytes32 _claimID, uint8 _claimType, bytes _ethereumSender, address _chainReceiver, address _originalValidator, address _tokenAddress, string _symbol, uint256 _amount) returns()
-func (_EthereumBridge *EthereumBridgeSession) SetNewProphecyClaim(_claimID [32]byte, _claimType uint8, _ethereumSender []byte, _chainReceiver common.Address, _originalValidator common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int) (*types.Transaction, error) {
-	return _EthereumBridge.Contract.SetNewProphecyClaim(&_EthereumBridge.TransactOpts, _claimID, _claimType, _ethereumSender, _chainReceiver, _originalValidator, _tokenAddress, _symbol, _amount)
+// Solidity: function setNewProphecyClaim(bytes32 _claimID, uint8 _claimType, bytes _ethereumSender, address _chain33Receiver, address _originalValidator, address _tokenAddress, string _symbol, uint256 _amount) returns()
+func (_EthereumBridge *EthereumBridgeSession) SetNewProphecyClaim(_claimID [32]byte, _claimType uint8, _ethereumSender []byte, _chain33Receiver common.Address, _originalValidator common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int) (*types.Transaction, error) {
+	return _EthereumBridge.Contract.SetNewProphecyClaim(&_EthereumBridge.TransactOpts, _claimID, _claimType, _ethereumSender, _chain33Receiver, _originalValidator, _tokenAddress, _symbol, _amount)
 }
 
 // SetNewProphecyClaim is a paid mutator transaction binding the contract method 0x74c9c3e2.
 //
-// Solidity: function setNewProphecyClaim(bytes32 _claimID, uint8 _claimType, bytes _ethereumSender, address _chainReceiver, address _originalValidator, address _tokenAddress, string _symbol, uint256 _amount) returns()
-func (_EthereumBridge *EthereumBridgeTransactorSession) SetNewProphecyClaim(_claimID [32]byte, _claimType uint8, _ethereumSender []byte, _chainReceiver common.Address, _originalValidator common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int) (*types.Transaction, error) {
-	return _EthereumBridge.Contract.SetNewProphecyClaim(&_EthereumBridge.TransactOpts, _claimID, _claimType, _ethereumSender, _chainReceiver, _originalValidator, _tokenAddress, _symbol, _amount)
+// Solidity: function setNewProphecyClaim(bytes32 _claimID, uint8 _claimType, bytes _ethereumSender, address _chain33Receiver, address _originalValidator, address _tokenAddress, string _symbol, uint256 _amount) returns()
+func (_EthereumBridge *EthereumBridgeTransactorSession) SetNewProphecyClaim(_claimID [32]byte, _claimType uint8, _ethereumSender []byte, _chain33Receiver common.Address, _originalValidator common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int) (*types.Transaction, error) {
+	return _EthereumBridge.Contract.SetNewProphecyClaim(&_EthereumBridge.TransactOpts, _claimID, _claimType, _ethereumSender, _chain33Receiver, _originalValidator, _tokenAddress, _symbol, _amount)
 }
 
 // SetOracle is a paid mutator transaction binding the contract method 0x7adbf973.
@@ -9210,7 +9210,7 @@ type EthereumBridgeLogNewProphecyClaim struct {
 	ProphecyID       *big.Int
 	ClaimType        uint8
 	EthereumSender   []byte
-	ChainReceiver  common.Address
+	Chain33Receiver  common.Address
 	ValidatorAddress common.Address
 	TokenAddress     common.Address
 	Symbol           string
@@ -9220,7 +9220,7 @@ type EthereumBridgeLogNewProphecyClaim struct {
 
 // FilterLogNewProphecyClaim is a free log retrieval operation binding the contract event 0x4c4b04a2b190e6bb01b6243f150fc76174861acd19cf98841801baaff5262dd8.
 //
-// Solidity: event LogNewProphecyClaim(uint256 _prophecyID, uint8 _claimType, bytes _ethereumSender, address _chainReceiver, address _validatorAddress, address _tokenAddress, string _symbol, uint256 _amount)
+// Solidity: event LogNewProphecyClaim(uint256 _prophecyID, uint8 _claimType, bytes _ethereumSender, address _chain33Receiver, address _validatorAddress, address _tokenAddress, string _symbol, uint256 _amount)
 func (_EthereumBridge *EthereumBridgeFilterer) FilterLogNewProphecyClaim(opts *bind.FilterOpts) (*EthereumBridgeLogNewProphecyClaimIterator, error) {
 
 	logs, sub, err := _EthereumBridge.contract.FilterLogs(opts, "LogNewProphecyClaim")
@@ -9232,7 +9232,7 @@ func (_EthereumBridge *EthereumBridgeFilterer) FilterLogNewProphecyClaim(opts *b
 
 // WatchLogNewProphecyClaim is a free log subscription operation binding the contract event 0x4c4b04a2b190e6bb01b6243f150fc76174861acd19cf98841801baaff5262dd8.
 //
-// Solidity: event LogNewProphecyClaim(uint256 _prophecyID, uint8 _claimType, bytes _ethereumSender, address _chainReceiver, address _validatorAddress, address _tokenAddress, string _symbol, uint256 _amount)
+// Solidity: event LogNewProphecyClaim(uint256 _prophecyID, uint8 _claimType, bytes _ethereumSender, address _chain33Receiver, address _validatorAddress, address _tokenAddress, string _symbol, uint256 _amount)
 func (_EthereumBridge *EthereumBridgeFilterer) WatchLogNewProphecyClaim(opts *bind.WatchOpts, sink chan<- *EthereumBridgeLogNewProphecyClaim) (event.Subscription, error) {
 
 	logs, sub, err := _EthereumBridge.contract.WatchLogs(opts, "LogNewProphecyClaim")
@@ -9269,7 +9269,7 @@ func (_EthereumBridge *EthereumBridgeFilterer) WatchLogNewProphecyClaim(opts *bi
 
 // ParseLogNewProphecyClaim is a log parse operation binding the contract event 0x4c4b04a2b190e6bb01b6243f150fc76174861acd19cf98841801baaff5262dd8.
 //
-// Solidity: event LogNewProphecyClaim(uint256 _prophecyID, uint8 _claimType, bytes _ethereumSender, address _chainReceiver, address _validatorAddress, address _tokenAddress, string _symbol, uint256 _amount)
+// Solidity: event LogNewProphecyClaim(uint256 _prophecyID, uint8 _claimType, bytes _ethereumSender, address _chain33Receiver, address _validatorAddress, address _tokenAddress, string _symbol, uint256 _amount)
 func (_EthereumBridge *EthereumBridgeFilterer) ParseLogNewProphecyClaim(log types.Log) (*EthereumBridgeLogNewProphecyClaim, error) {
 	event := new(EthereumBridgeLogNewProphecyClaim)
 	if err := _EthereumBridge.contract.UnpackLog(event, "LogNewProphecyClaim", log); err != nil {
@@ -10681,7 +10681,7 @@ func (_MinterRole *MinterRoleFilterer) ParseMinterRemoved(log types.Log) (*Minte
 }
 
 // OracleABI is the input ABI used to generate the binding from.
-const OracleABI = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_valset\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_ethereumBridge\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_validatorAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"}],\"name\":\"LogNewOracleClaim\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_weightedSignedPower\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_weightedTotalPower\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_submitter\",\"type\":\"address\"}],\"name\":\"LogProphecyProcessed\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"}],\"name\":\"checkBridgeProphecy\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"ethereumBridge\",\"outputs\":[{\"internalType\":\"contractEthereumBridge\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"hasMadeClaim\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"enumOracle.ClaimType\",\"name\":\"_claimType\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_ethereumSender\",\"type\":\"bytes\"},{\"internalType\":\"addresspayable\",\"name\":\"_chainReceiver\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenAddress\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"}],\"name\":\"newOracleClaim\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"operator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"oracleClaimValidators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"valset\",\"outputs\":[{\"internalType\":\"contractValset\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
+const OracleABI = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_operator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_valset\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_ethereumBridge\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_validatorAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"}],\"name\":\"LogNewOracleClaim\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_weightedSignedPower\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_weightedTotalPower\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_submitter\",\"type\":\"address\"}],\"name\":\"LogProphecyProcessed\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"}],\"name\":\"checkBridgeProphecy\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"ethereumBridge\",\"outputs\":[{\"internalType\":\"contractEthereumBridge\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"hasMadeClaim\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"enumOracle.ClaimType\",\"name\":\"_claimType\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"_ethereumSender\",\"type\":\"bytes\"},{\"internalType\":\"addresspayable\",\"name\":\"_chain33Receiver\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_tokenAddress\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"_claimID\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"}],\"name\":\"newOracleClaim\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"operator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"oracleClaimValidators\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"valset\",\"outputs\":[{\"internalType\":\"contractValset\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
 // OracleFuncSigs maps the 4-byte function signature to its string representation.
 var OracleFuncSigs = map[string]string{
@@ -11043,23 +11043,23 @@ func (_Oracle *OracleCallerSession) Valset() (common.Address, error) {
 
 // NewOracleClaim is a paid mutator transaction binding the contract method 0x6894dc6f.
 //
-// Solidity: function newOracleClaim(uint8 _claimType, bytes _ethereumSender, address _chainReceiver, address _tokenAddress, string _symbol, uint256 _amount, bytes32 _claimID, bytes _signature) returns()
-func (_Oracle *OracleTransactor) NewOracleClaim(opts *bind.TransactOpts, _claimType uint8, _ethereumSender []byte, _chainReceiver common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int, _claimID [32]byte, _signature []byte) (*types.Transaction, error) {
-	return _Oracle.contract.Transact(opts, "newOracleClaim", _claimType, _ethereumSender, _chainReceiver, _tokenAddress, _symbol, _amount, _claimID, _signature)
+// Solidity: function newOracleClaim(uint8 _claimType, bytes _ethereumSender, address _chain33Receiver, address _tokenAddress, string _symbol, uint256 _amount, bytes32 _claimID, bytes _signature) returns()
+func (_Oracle *OracleTransactor) NewOracleClaim(opts *bind.TransactOpts, _claimType uint8, _ethereumSender []byte, _chain33Receiver common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int, _claimID [32]byte, _signature []byte) (*types.Transaction, error) {
+	return _Oracle.contract.Transact(opts, "newOracleClaim", _claimType, _ethereumSender, _chain33Receiver, _tokenAddress, _symbol, _amount, _claimID, _signature)
 }
 
 // NewOracleClaim is a paid mutator transaction binding the contract method 0x6894dc6f.
 //
-// Solidity: function newOracleClaim(uint8 _claimType, bytes _ethereumSender, address _chainReceiver, address _tokenAddress, string _symbol, uint256 _amount, bytes32 _claimID, bytes _signature) returns()
-func (_Oracle *OracleSession) NewOracleClaim(_claimType uint8, _ethereumSender []byte, _chainReceiver common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int, _claimID [32]byte, _signature []byte) (*types.Transaction, error) {
-	return _Oracle.Contract.NewOracleClaim(&_Oracle.TransactOpts, _claimType, _ethereumSender, _chainReceiver, _tokenAddress, _symbol, _amount, _claimID, _signature)
+// Solidity: function newOracleClaim(uint8 _claimType, bytes _ethereumSender, address _chain33Receiver, address _tokenAddress, string _symbol, uint256 _amount, bytes32 _claimID, bytes _signature) returns()
+func (_Oracle *OracleSession) NewOracleClaim(_claimType uint8, _ethereumSender []byte, _chain33Receiver common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int, _claimID [32]byte, _signature []byte) (*types.Transaction, error) {
+	return _Oracle.Contract.NewOracleClaim(&_Oracle.TransactOpts, _claimType, _ethereumSender, _chain33Receiver, _tokenAddress, _symbol, _amount, _claimID, _signature)
 }
 
 // NewOracleClaim is a paid mutator transaction binding the contract method 0x6894dc6f.
 //
-// Solidity: function newOracleClaim(uint8 _claimType, bytes _ethereumSender, address _chainReceiver, address _tokenAddress, string _symbol, uint256 _amount, bytes32 _claimID, bytes _signature) returns()
-func (_Oracle *OracleTransactorSession) NewOracleClaim(_claimType uint8, _ethereumSender []byte, _chainReceiver common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int, _claimID [32]byte, _signature []byte) (*types.Transaction, error) {
-	return _Oracle.Contract.NewOracleClaim(&_Oracle.TransactOpts, _claimType, _ethereumSender, _chainReceiver, _tokenAddress, _symbol, _amount, _claimID, _signature)
+// Solidity: function newOracleClaim(uint8 _claimType, bytes _ethereumSender, address _chain33Receiver, address _tokenAddress, string _symbol, uint256 _amount, bytes32 _claimID, bytes _signature) returns()
+func (_Oracle *OracleTransactorSession) NewOracleClaim(_claimType uint8, _ethereumSender []byte, _chain33Receiver common.Address, _tokenAddress common.Address, _symbol string, _amount *big.Int, _claimID [32]byte, _signature []byte) (*types.Transaction, error) {
+	return _Oracle.Contract.NewOracleClaim(&_Oracle.TransactOpts, _claimType, _ethereumSender, _chain33Receiver, _tokenAddress, _symbol, _amount, _claimID, _signature)
 }
 
 // OracleLogNewOracleClaimIterator is returned from FilterLogNewOracleClaim and is used to iterate over the raw logs and unpacked data for LogNewOracleClaim events raised by the Oracle contract.

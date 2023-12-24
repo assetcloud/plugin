@@ -1,10 +1,10 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	ptypes "github.com/assetcloud/plugin/plugin/dapp/js/types"
-	"github.com/assetcloud/plugin/plugin/dapp/js/types/jsproto"
+	"github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	ptypes "github.com/33cn/plugin/plugin/dapp/js/types"
+	"github.com/33cn/plugin/plugin/dapp/js/types/jsproto"
 )
 
 func (c *js) userExecName(name string, local bool) string {

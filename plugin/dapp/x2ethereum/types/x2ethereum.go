@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"reflect"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/types"
 )
 
 /*
@@ -19,10 +19,10 @@ var (
 	X2ethereumX = "x2ethereum"
 	//定义actionMap
 	actionMap = map[string]int32{
-		NameEth2ChainAction:             TyEth2ChainAction,
+		NameEth2Chain33Action:           TyEth2Chain33Action,
 		NameWithdrawEthAction:           TyWithdrawEthAction,
-		NameWithdrawChainAction:         TyWithdrawChainAction,
-		NameChainToEthAction:            TyChainToEthAction,
+		NameWithdrawChain33Action:       TyWithdrawChain33Action,
+		NameChain33ToEthAction:          TyChain33ToEthAction,
 		NameAddValidatorAction:          TyAddValidatorAction,
 		NameRemoveValidatorAction:       TyRemoveValidatorAction,
 		NameModifyPowerAction:           TyModifyPowerAction,
@@ -33,10 +33,10 @@ var (
 	}
 	//定义log的id和具体log类型及名称，填入具体自定义log类型
 	logMap = map[int64]*types.LogInfo{
-		TyEth2ChainLog:             {Ty: reflect.TypeOf(ReceiptEth2Chain{}), Name: "LogEth2Chain"},
-		TyWithdrawEthLog:           {Ty: reflect.TypeOf(ReceiptEth2Chain{}), Name: "LogWithdrawEth"},
-		TyWithdrawChainLog:         {Ty: reflect.TypeOf(ReceiptChainToEth{}), Name: "LogWithdrawChain"},
-		TyChainToEthLog:            {Ty: reflect.TypeOf(ReceiptChainToEth{}), Name: "LogChainToEth"},
+		TyEth2Chain33Log:           {Ty: reflect.TypeOf(ReceiptEth2Chain33{}), Name: "LogEth2Chain33"},
+		TyWithdrawEthLog:           {Ty: reflect.TypeOf(ReceiptEth2Chain33{}), Name: "LogWithdrawEth"},
+		TyWithdrawChain33Log:       {Ty: reflect.TypeOf(ReceiptChain33ToEth{}), Name: "LogWithdrawChain33"},
+		TyChain33ToEthLog:          {Ty: reflect.TypeOf(ReceiptChain33ToEth{}), Name: "LogChain33ToEth"},
 		TyAddValidatorLog:          {Ty: reflect.TypeOf(ReceiptValidator{}), Name: "LogAddValidator"},
 		TyRemoveValidatorLog:       {Ty: reflect.TypeOf(ReceiptValidator{}), Name: "LogRemoveValidator"},
 		TyModifyPowerLog:           {Ty: reflect.TypeOf(ReceiptValidator{}), Name: "LogModifyPower"},
@@ -58,29 +58,29 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(X2ethereumX, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(X2ethereumX, NewType(cfg))
 }
 
-// X2ethereumType ...
+//X2ethereumType ...
 type X2ethereumType struct {
 	types.ExecTypeBase
 }
 
-// NewType ...
-func NewType(cfg *types.ChainConfig) *X2ethereumType {
+//NewType ...
+func NewType(cfg *types.Chain33Config) *X2ethereumType {
 	c := &X2ethereumType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)
 	return c
 }
 
-// GetName ...
+//GetName ...
 func (x *X2ethereumType) GetName() string {
 	return X2ethereumX
 }
@@ -113,14 +113,14 @@ func (x X2ethereumType) ActionName(tx *types.Transaction) string {
 
 // GetActionName get action name
 func (action *X2EthereumAction) GetActionName() string {
-	if action.Ty == TyEth2ChainAction && action.GetEth2ChainLock() != nil {
-		return "Eth2ChainLock"
-	} else if action.Ty == TyWithdrawEthAction && action.GetEth2ChainBurn() != nil {
-		return "Eth2ChainBurn"
-	} else if action.Ty == TyWithdrawChainAction && action.GetChainToEthBurn() != nil {
-		return "ChainToEthBurn"
-	} else if action.Ty == TyChainToEthAction && action.GetChainToEthLock() != nil {
-		return "ChainToEthLock"
+	if action.Ty == TyEth2Chain33Action && action.GetEth2Chain33Lock() != nil {
+		return "Eth2Chain33Lock"
+	} else if action.Ty == TyWithdrawEthAction && action.GetEth2Chain33Burn() != nil {
+		return "Eth2Chain33Burn"
+	} else if action.Ty == TyWithdrawChain33Action && action.GetChain33ToEthBurn() != nil {
+		return "Chain33ToEthBurn"
+	} else if action.Ty == TyChain33ToEthAction && action.GetChain33ToEthLock() != nil {
+		return "Chain33ToEthLock"
 	} else if action.Ty == TyAddValidatorAction && action.GetAddValidator() != nil {
 		return "AddValidator"
 	} else if action.Ty == TyRemoveValidatorAction && action.GetRemoveValidator() != nil {

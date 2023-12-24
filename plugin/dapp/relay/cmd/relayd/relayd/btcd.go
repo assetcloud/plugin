@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/common/merkle"
-	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/common/merkle"
+	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/rpcclient"

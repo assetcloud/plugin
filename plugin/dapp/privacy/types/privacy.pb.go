@@ -11,7 +11,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 
-	types "github.com/assetcloud/chain/types"
+	types "github.com/33cn/chain33/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

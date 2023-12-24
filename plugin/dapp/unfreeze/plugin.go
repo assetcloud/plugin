@@ -5,12 +5,12 @@
 package unfreeze
 
 import (
-	"github.com/assetcloud/chain/pluginmgr"
-	_ "github.com/assetcloud/plugin/plugin/dapp/unfreeze/autotest" // register autotest package
-	"github.com/assetcloud/plugin/plugin/dapp/unfreeze/commands"
-	"github.com/assetcloud/plugin/plugin/dapp/unfreeze/executor"
-	"github.com/assetcloud/plugin/plugin/dapp/unfreeze/rpc"
-	uf "github.com/assetcloud/plugin/plugin/dapp/unfreeze/types"
+	"github.com/33cn/chain33/pluginmgr"
+	_ "github.com/33cn/plugin/plugin/dapp/unfreeze/autotest" // register autotest package
+	"github.com/33cn/plugin/plugin/dapp/unfreeze/commands"
+	"github.com/33cn/plugin/plugin/dapp/unfreeze/executor"
+	"github.com/33cn/plugin/plugin/dapp/unfreeze/rpc"
+	uf "github.com/33cn/plugin/plugin/dapp/unfreeze/types"
 )
 
 func init() {

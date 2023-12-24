@@ -3,11 +3,11 @@ package executor
 import (
 	"testing"
 
-	"github.com/assetcloud/chain/client/mocks"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	paratypes "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
-	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
+	"github.com/33cn/chain33/client/mocks"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	paratypes "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
@@ -39,7 +39,7 @@ func TestRollup_Query_GetRollupStatus(t *testing.T) {
 	defer util.CloseTestDB(dir, state)
 	api := &mocks.QueueProtocolAPI{}
 	r.SetAPI(api)
-	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
 	api.On("GetConfig").Return(cfg)
 	r.SetStateDB(state)
 	title := "user.p.test"
@@ -62,7 +62,7 @@ func TestRollup_Query_GetCommitRoundInfo(t *testing.T) {
 	defer util.CloseTestDB(dir, state)
 	api := &mocks.QueueProtocolAPI{}
 	r.SetAPI(api)
-	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
 	api.On("GetConfig").Return(cfg)
 	r.SetStateDB(state)
 	title := "user.p.test"

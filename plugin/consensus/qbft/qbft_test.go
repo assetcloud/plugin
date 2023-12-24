@@ -8,24 +8,24 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	mty "github.com/assetcloud/chain/system/dapp/manage/types"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	"github.com/assetcloud/chain/util/testnode"
-	vty "github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	mty "github.com/33cn/chain33/system/dapp/manage/types"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	"github.com/33cn/chain33/util/testnode"
+	vty "github.com/33cn/plugin/plugin/dapp/qbftNode/types"
 	"github.com/stretchr/testify/assert"
 
 	//加载系统内置store, 不要依赖plugin
-	_ "github.com/assetcloud/chain/system"
-	_ "github.com/assetcloud/chain/system/dapp/init"
-	_ "github.com/assetcloud/chain/system/mempool/init"
-	_ "github.com/assetcloud/chain/system/store/init"
-	_ "github.com/assetcloud/plugin/plugin/dapp/init"
-	_ "github.com/assetcloud/plugin/plugin/store/init"
+	_ "github.com/33cn/chain33/system"
+	_ "github.com/33cn/chain33/system/dapp/init"
+	_ "github.com/33cn/chain33/system/mempool/init"
+	_ "github.com/33cn/chain33/system/store/init"
+	_ "github.com/33cn/plugin/plugin/dapp/init"
+	_ "github.com/33cn/plugin/plugin/store/init"
 )
 
 var quitC chan struct{}
@@ -36,7 +36,7 @@ func init() {
 
 // 执行： go test -cover
 func TestQbft(t *testing.T) {
-	mock33 := testnode.New("chain.qbft.toml", nil)
+	mock33 := testnode.New("chain33.qbft.toml", nil)
 	cfg := mock33.GetClient().GetConfig()
 	mock33.Listen()
 	t.Log(mock33.GetGenesisAddress())
@@ -67,7 +67,7 @@ func TestQbft(t *testing.T) {
 }
 
 func startNode(t *testing.T) {
-	cfg2 := types.NewChainConfig(types.ReadFile("chain.qbft.toml"))
+	cfg2 := types.NewChain33Config(types.ReadFile("chain33.qbft.toml"))
 	sub := cfg2.GetSubConfig()
 	qcfg, err := types.ModifySubConfig(sub.Consensus["qbft"], "privFile", "priv_validator_1.json")
 	assert.Nil(t, err)
@@ -135,7 +135,7 @@ func getprivkey(key string) crypto.PrivKey {
 	return priv
 }
 
-func testQuery(t *testing.T, mock *testnode.ChainMock) {
+func testQuery(t *testing.T, mock *testnode.Chain33Mock) {
 	var flag bool
 	err := mock.GetJSONC().Call("qbftNode.IsSync", &types.ReqNil{}, &flag)
 	assert.Nil(t, err)
@@ -146,7 +146,7 @@ func testQuery(t *testing.T, mock *testnode.ChainMock) {
 		Execer:   vty.QbftNodeX,
 		FuncName: "GetCurrentState",
 	}
-	err = mock.GetJSONC().Call("Chain.Query", query, &qstate)
+	err = mock.GetJSONC().Call("Chain33.Query", query, &qstate)
 	assert.Nil(t, err)
 	assert.Len(t, qstate.Validators.Validators, 3)
 

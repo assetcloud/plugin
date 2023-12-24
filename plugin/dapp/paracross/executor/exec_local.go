@@ -9,13 +9,13 @@ import (
 	"encoding/hex"
 	"math/big"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 )
 
-// ExecLocal_Commit commit tx local db process
+//ExecLocal_Commit commit tx local db process
 func (e *Paracross) ExecLocal_Commit(payload *pt.ParacrossCommitAction, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	var set types.LocalDBSet
 	cfg := e.GetAPI().GetConfig()
@@ -56,7 +56,7 @@ func (e *Paracross) ExecLocal_Commit(payload *pt.ParacrossCommitAction, tx *type
 	return &set, nil
 }
 
-// ExecLocal_NodeConfig node config add process
+//ExecLocal_NodeConfig node config add process
 func (e *Paracross) ExecLocal_NodeConfig(payload *pt.ParaNodeAddrConfig, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	var set types.LocalDBSet
 	cfg := e.GetAPI().GetConfig()
@@ -105,7 +105,7 @@ func (e *Paracross) ExecLocal_NodeConfig(payload *pt.ParaNodeAddrConfig, tx *typ
 	return &set, nil
 }
 
-// ExecLocal_NodeGroupConfig node group config add process
+//ExecLocal_NodeGroupConfig node group config add process
 func (e *Paracross) ExecLocal_NodeGroupConfig(payload *pt.ParaNodeGroupConfig, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	var set types.LocalDBSet
 	for _, log := range receiptData.Logs {
@@ -162,7 +162,7 @@ func (e *Paracross) ExecLocal_SupervisionNodeConfig(payload *pt.ParaNodeGroupCon
 	return &set, nil
 }
 
-// ExecLocal_AssetTransfer asset transfer local proc
+//ExecLocal_AssetTransfer asset transfer local proc
 func (e *Paracross) ExecLocal_AssetTransfer(payload *types.AssetsTransfer, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	var set types.LocalDBSet
 
@@ -181,12 +181,12 @@ func (e *Paracross) ExecLocal_AssetTransfer(payload *types.AssetsTransfer, tx *t
 	return &set, nil
 }
 
-// ExecLocal_AssetWithdraw asset withdraw process
+//ExecLocal_AssetWithdraw asset withdraw process
 func (e *Paracross) ExecLocal_AssetWithdraw(payload *types.AssetsWithdraw, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	return nil, nil
 }
 
-// ExecLocal_CrossAssetTransfer asset transfer local proc
+//ExecLocal_CrossAssetTransfer asset transfer local proc
 func (e *Paracross) ExecLocal_CrossAssetTransfer(payload *pt.CrossAssetTransfer, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	var set types.LocalDBSet
 	cfg := e.GetAPI().GetConfig()
@@ -213,7 +213,7 @@ func (e *Paracross) ExecLocal_CrossAssetTransfer(payload *pt.CrossAssetTransfer,
 	return &set, nil
 }
 
-func setMinerTxResult(cfg *types.ChainConfig, payload *pt.ParacrossMinerAction, txs []*types.Transaction, receipts []*types.ReceiptData) error {
+func setMinerTxResult(cfg *types.Chain33Config, payload *pt.ParacrossMinerAction, txs []*types.Transaction, receipts []*types.ReceiptData) error {
 	isCommitTx := make(map[string]bool)
 	var curTxHashs, paraTxHashs, crossTxHashs [][]byte
 	for _, tx := range txs {
@@ -250,9 +250,9 @@ func setMinerTxResult(cfg *types.ChainConfig, payload *pt.ParacrossMinerAction, 
 	return nil
 }
 
-// 带版本号编码的bitmap，版本号占4bit位，除去版本号位，最高位为跨链交易个数，后面的则是交易结果bitmap
-// 比如00011110， 版本号为0001,1110的最高位1索引为3，代表后面3个交易，三个交易110代表第0个交易是失败的，其余的是ok的
-// 如果没有数量表示，在所有跨链交易都是失败的时候，返回的是个空值,无法区分是失败还是无交易
+//带版本号编码的bitmap，版本号占4bit位，除去版本号位，最高位为跨链交易个数，后面的则是交易结果bitmap
+//比如00011110， 版本号为0001,1110的最高位1索引为3，代表后面3个交易，三个交易110代表第0个交易是失败的，其余的是ok的
+//如果没有数量表示，在所有跨链交易都是失败的时候，返回的是个空值,无法区分是失败还是无交易
 func getCrossAssetTxBitMap(crossAssetTxHashs, allTxHashs [][]byte, receipts []*types.ReceiptData) string {
 	rst := pt.ParaCrossStatusBitMapVer1
 	if len(crossAssetTxHashs) > 0 {
@@ -265,7 +265,7 @@ func getCrossAssetTxBitMap(crossAssetTxHashs, allTxHashs [][]byte, receipts []*t
 	return rst
 }
 
-func setMinerTxResultFork(cfg *types.ChainConfig, status *pt.ParacrossNodeStatus, txs []*types.Transaction, receipts []*types.ReceiptData) error {
+func setMinerTxResultFork(cfg *types.Chain33Config, status *pt.ParacrossNodeStatus, txs []*types.Transaction, receipts []*types.ReceiptData) error {
 	isCommitTx := make(map[string]bool)
 	var allTxHashs [][]byte
 	for _, tx := range txs {
@@ -315,7 +315,7 @@ func setMinerTxResultFork(cfg *types.ChainConfig, status *pt.ParacrossNodeStatus
 	return nil
 }
 
-// ExecLocal_Miner miner tx local db process
+//ExecLocal_Miner miner tx local db process
 func (e *Paracross) ExecLocal_Miner(payload *pt.ParacrossMinerAction, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	if index != 0 {
 		return nil, pt.ErrParaMinerBaseIndex
@@ -350,17 +350,17 @@ func (e *Paracross) ExecLocal_Transfer(payload *types.AssetsTransfer, tx *types.
 	return nil, nil
 }
 
-// ExecLocal_Withdraw asset withdraw local db process
+//ExecLocal_Withdraw asset withdraw local db process
 func (e *Paracross) ExecLocal_Withdraw(payload *types.AssetsWithdraw, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	return nil, nil
 }
 
-// ExecLocal_TransferToExec transfer asset to exec local db process
+//ExecLocal_TransferToExec transfer asset to exec local db process
 func (e *Paracross) ExecLocal_TransferToExec(payload *types.AssetsTransferToExec, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	return nil, nil
 }
 
-// ExecLocal_SelfStageConfig transfer asset to exec local db process
+//ExecLocal_SelfStageConfig transfer asset to exec local db process
 func (e *Paracross) ExecLocal_SelfStageConfig(payload *pt.ParaStageConfig, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	return e.execAutoLocalStage(tx, receiptData, index)
 }

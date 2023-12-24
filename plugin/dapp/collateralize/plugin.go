@@ -5,10 +5,10 @@
 package collateralize
 
 import (
-	"github.com/assetcloud/plugin/plugin/dapp/collateralize/commands"
-	"github.com/assetcloud/plugin/plugin/dapp/collateralize/executor"
-	"github.com/assetcloud/plugin/plugin/dapp/collateralize/types"
-	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/33cn/chain33/pluginmgr"
+	"github.com/33cn/plugin/plugin/dapp/collateralize/commands"
+	"github.com/33cn/plugin/plugin/dapp/collateralize/executor"
+	"github.com/33cn/plugin/plugin/dapp/collateralize/types"
 )
 
 func init() {

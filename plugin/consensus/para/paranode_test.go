@@ -7,11 +7,11 @@ package para
 import (
 	"testing"
 
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
 
-	_ "github.com/assetcloud/plugin/plugin/dapp/init" //dapp init
-	node "github.com/assetcloud/plugin/plugin/dapp/paracross/testnode"
+	_ "github.com/33cn/plugin/plugin/dapp/init" //dapp init
+	node "github.com/33cn/plugin/plugin/dapp/paracross/testnode"
 	"github.com/stretchr/testify/assert"
 )
 

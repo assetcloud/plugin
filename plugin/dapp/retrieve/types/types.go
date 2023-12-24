@@ -7,8 +7,8 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/types"
 )
 
 func init() {
@@ -18,14 +18,14 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(RetrieveX, "Enable", 0)
 	cfg.RegisterDappFork(RetrieveX, ForkRetriveX, 0)
 	cfg.RegisterDappFork(RetrieveX, ForkRetriveAssetX, 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(RetrieveX, NewType(cfg))
 }
 
@@ -35,7 +35,7 @@ type RetrieveType struct {
 }
 
 // NewType for retrieve
-func NewType(cfg *types.ChainConfig) *RetrieveType {
+func NewType(cfg *types.Chain33Config) *RetrieveType {
 	c := &RetrieveType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

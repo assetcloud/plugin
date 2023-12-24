@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-/root/chain -f "$PARAFILE"
+/root/chain33 -f "$PARAFILE"

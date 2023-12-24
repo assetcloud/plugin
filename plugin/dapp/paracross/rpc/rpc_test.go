@@ -10,11 +10,11 @@ package rpc
 import (
 	"testing"
 
-	"github.com/assetcloud/chain/client"
-	"github.com/assetcloud/chain/client/mocks"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	ptestNode "github.com/assetcloud/plugin/plugin/dapp/paracross/testnode"
+	"github.com/33cn/chain33/client"
+	"github.com/33cn/chain33/client/mocks"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	ptestNode "github.com/33cn/plugin/plugin/dapp/paracross/testnode"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"golang.org/x/net/context"
@@ -31,7 +31,7 @@ func newJrpc(api client.QueueProtocolAPI) *Jrpc {
 }
 
 func TestChannelClient_IsSync(t *testing.T) {
-	cfg := types.NewChainConfig(ptestNode.DefaultConfig)
+	cfg := types.NewChain33Config(ptestNode.DefaultConfig)
 	api := new(mocks.QueueProtocolAPI)
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	client := newGrpc(api)

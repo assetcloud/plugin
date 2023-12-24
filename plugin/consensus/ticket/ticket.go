@@ -10,26 +10,25 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/system/address/eth"
 	"math/big"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/system/address/eth"
-
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/common/difficulty"
-	"github.com/assetcloud/chain/common/log/log15"
-	vrf "github.com/assetcloud/chain/common/vrf/secp256k1"
-	"github.com/assetcloud/chain/queue"
-	drivers "github.com/assetcloud/chain/system/consensus"
-	driver "github.com/assetcloud/chain/system/dapp"
-	cty "github.com/assetcloud/chain/system/dapp/coins/types"
-	"github.com/assetcloud/chain/types"
-	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/common/difficulty"
+	"github.com/33cn/chain33/common/log/log15"
+	vrf "github.com/33cn/chain33/common/vrf/secp256k1"
+	"github.com/33cn/chain33/queue"
+	drivers "github.com/33cn/chain33/system/consensus"
+	driver "github.com/33cn/chain33/system/dapp"
+	cty "github.com/33cn/chain33/system/dapp/coins/types"
+	"github.com/33cn/chain33/types"
+	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
 	secp256k1 "github.com/btcsuite/btcd/btcec"
 	"github.com/golang/protobuf/proto"
 )
@@ -128,8 +127,8 @@ func (client *Client) CreateGenesisTx() (ret []*types.Transaction) {
 	return ret
 }
 
-// 316190000 coins
-func createTicket(cfg *types.ChainConfig, minerAddr, returnAddr string, count int32, height int64) (ret []*types.Transaction) {
+//316190000 coins
+func createTicket(cfg *types.Chain33Config, minerAddr, returnAddr string, count int32, height int64) (ret []*types.Transaction) {
 	tx1 := types.Transaction{}
 	tx1.Execer = []byte(cfg.GetCoinExec())
 
@@ -336,8 +335,8 @@ func (client *Client) getModify(beg, end int64) ([]byte, error) {
 
 // CheckBlock ticket implete checkblock func
 func (client *Client) CheckBlock(parent *types.Block, current *types.BlockDetail) error {
-	chainCfg := client.GetAPI().GetConfig()
-	cfg := ty.GetTicketMinerParam(chainCfg, current.Block.Height)
+	chain33Cfg := client.GetAPI().GetConfig()
+	cfg := ty.GetTicketMinerParam(chain33Cfg, current.Block.Height)
 	if current.Block.BlockTime-types.Now().Unix() > cfg.FutureBlockTime {
 		return types.ErrFutureBlock
 	}
@@ -397,7 +396,7 @@ func (client *Client) CheckBlock(parent *types.Block, current *types.BlockDetail
 		return types.ErrBlockSize
 	}
 	//vrf verify
-	if chainCfg.IsDappFork(current.Block.Height, ty.TicketX, "ForkTicketVrf") {
+	if chain33Cfg.IsDappFork(current.Block.Height, ty.TicketX, "ForkTicketVrf") {
 		var input []byte
 		if current.Block.Height > 1 {
 			LastTicketAction, err := client.getMinerTx(parent)
@@ -471,13 +470,13 @@ func (client *Client) getCurrentTarget(blocktime int64, id string, modify []byte
 // the exported version uses the current best chain as the previous block node
 // while this function accepts any block node.
 func (client *Client) getNextRequiredDifficulty(block *types.Block, bits uint32) (uint32, []byte, error) {
-	chainCfg := client.GetAPI().GetConfig()
+	chain33Cfg := client.GetAPI().GetConfig()
 	// Genesis block.
 	if block == nil {
-		return chainCfg.GetP(0).PowLimitBits, defaultModify, nil
+		return chain33Cfg.GetP(0).PowLimitBits, defaultModify, nil
 	}
-	powLimitBits := chainCfg.GetP(block.Height).PowLimitBits
-	cfg := ty.GetTicketMinerParam(chainCfg, block.Height)
+	powLimitBits := chain33Cfg.GetP(block.Height).PowLimitBits
+	cfg := ty.GetTicketMinerParam(chain33Cfg, block.Height)
 	blocksPerRetarget := int64(cfg.TargetTimespan / cfg.TargetTimePerBlock)
 	// Return the previous block's difficulty requirements if this block
 	// is not at a difficulty retarget interval.
@@ -649,7 +648,7 @@ func (client *Client) Miner(block *types.Block) error {
 	return nil
 }
 
-// gas 直接燃烧
+//gas 直接燃烧
 func calcTotalFee(block *types.Block) (total int64) {
 	return 0
 }
@@ -759,7 +758,7 @@ func (client *Client) createBlock() *types.Block {
 }
 
 func (client *Client) updateBlock(block *types.Block, txHashList [][]byte) (txList [][]byte) {
-	chainCfg := client.GetAPI().GetConfig()
+	chain33Cfg := client.GetAPI().GetConfig()
 	lastBlock := client.GetCurrentBlock()
 	block.BlockTime = types.Now().Unix()
 
@@ -768,9 +767,9 @@ func (client *Client) updateBlock(block *types.Block, txHashList [][]byte) (txLi
 		block.Txs = client.CheckTxDup(block.Txs)
 		block.Txs = client.CheckTxExpire(block.Txs, lastBlock.Height+1, block.BlockTime)
 	}
-	block.ParentHash = lastBlock.Hash(chainCfg)
+	block.ParentHash = lastBlock.Hash(chain33Cfg)
 	block.Height = lastBlock.Height + 1
-	cfg := chainCfg.GetP(block.Height)
+	cfg := chain33Cfg.GetP(block.Height)
 	var txs []*types.Transaction
 	if len(block.Txs) < int(cfg.MaxTxNumber-1) {
 		txs = client.RequestTx(int(cfg.MaxTxNumber)-1-len(block.Txs), txHashList)
@@ -831,7 +830,7 @@ func getTxHashes(txs []*types.Transaction) (hashes [][]byte) {
 	return hashes
 }
 
-// CmpBestBlock 比较newBlock是不是最优区块，目前ticket主要是比较挖矿交易的难度系数
+//CmpBestBlock 比较newBlock是不是最优区块，目前ticket主要是比较挖矿交易的难度系数
 func (client *Client) CmpBestBlock(newBlock *types.Block, cmpBlock *types.Block) bool {
 	cfg := client.GetAPI().GetConfig()
 

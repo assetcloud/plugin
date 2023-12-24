@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
+	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
 )
 
 //----------------------------- data for testing ---------------------------------
@@ -87,6 +87,6 @@ func TestPriceCheck(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		assert.Equal(t, c.result, checkPrice(chainTestCfg, chainTestCfg.GetDappFork(pty.TradeX, pty.ForkTradePriceX), c.exec, c.symbol))
+		assert.Equal(t, c.result, checkPrice(chain33TestCfg, chain33TestCfg.GetDappFork(pty.TradeX, pty.ForkTradePriceX), c.exec, c.symbol))
 	}
 }

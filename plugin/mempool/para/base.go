@@ -6,10 +6,10 @@ import (
 
 	"sync"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/queue"
-	"github.com/assetcloud/chain/rpc/grpcclient"
-	"github.com/assetcloud/chain/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/queue"
+	"github.com/33cn/chain33/rpc/grpcclient"
+	"github.com/33cn/chain33/types"
 )
 
 var mlog = log.New("module", "mempool.para")
@@ -20,7 +20,7 @@ type Mempool struct {
 	key         string
 	wg          sync.WaitGroup
 	client      queue.Client
-	mainGrpcCli types.ChainClient
+	mainGrpcCli types.Chain33Client
 
 	isclose int32
 }
@@ -45,9 +45,22 @@ func (mem *Mempool) SetQueueClient(client queue.Client) {
 			var reply interface{}
 			switch msg.Ty {
 			case types.EventTx:
-				mlog.Info("Receive msg from para mempool")
 				tx := msg.GetData().(*types.Transaction)
 				reply, err = mem.mainGrpcCli.SendTransaction(context.Background(), tx)
+				// 兼容rpc发送交易错误处理, 同常规mempool返回逻辑保持一致
+				if err != nil {
+					reply = &types.Reply{IsOk: false, Msg: []byte(err.Error())}
+					err = nil
+				}
+			case types.EventAddDelayTx:
+				dtx := msg.GetData().(*types.DelayTx)
+				reply, err = mem.mainGrpcCli.SendDelayTransaction(context.Background(), dtx)
+				// 兼容rpc接收返回时错误处理
+				if err != nil {
+					reply = &types.Reply{IsOk: false, Msg: []byte(err.Error())}
+					err = nil
+				}
+
 			case types.EventGetProperFee:
 				reply, err = mem.mainGrpcCli.GetProperFee(context.Background(), &types.ReqProperFee{})
 			case types.EventGetMempoolSize:
@@ -68,7 +81,7 @@ func (mem *Mempool) SetQueueClient(client queue.Client) {
 	}()
 }
 
-func (mem *Mempool) setMainGrpcCli(cfg *types.ChainConfig) {
+func (mem *Mempool) setMainGrpcCli(cfg *types.Chain33Config) {
 	if cfg != nil && cfg.IsPara() {
 		grpcCli, err := grpcclient.NewMainChainClient(cfg, "")
 		if err != nil {

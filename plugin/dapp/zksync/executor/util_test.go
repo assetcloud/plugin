@@ -3,7 +3,7 @@ package executor
 import (
 	"testing"
 
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/stretchr/testify/assert"
 )
 

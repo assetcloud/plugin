@@ -1,10 +1,10 @@
 package commands
 
 import (
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,7 @@ func queryAccountCmd() *cobra.Command {
 	}
 	cmd.AddCommand(getAccountByIdCmd())
 	cmd.AddCommand(getAccountByEthCmd())
-	cmd.AddCommand(getAccountByChainCmd())
+	cmd.AddCommand(getAccountByChain33Cmd())
 	cmd.AddCommand(getContractAccountCmd())
 	cmd.AddCommand(getTokenBalanceCmd())
 	cmd.AddCommand(getMaxAccountCmd())
@@ -60,7 +60,7 @@ func getMaxAccountId(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp types.Int64
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -94,7 +94,7 @@ func getAccountById(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.Leaf
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -128,48 +128,48 @@ func getAccountByEth(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
-func getAccountByChainCmd() *cobra.Command {
+func getAccountByChain33Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "accountC",
-		Short: "get zksync account by chainAddr",
-		Run:   getAccountByChain,
+		Short: "get zksync account by chain33Addr",
+		Run:   getAccountByChain33,
 	}
-	getAccountByChainFlag(cmd)
+	getAccountByChain33Flag(cmd)
 	return cmd
 }
 
-func getAccountByChainFlag(cmd *cobra.Command) {
-	cmd.Flags().StringP("chainAddr", "c", "", "zksync account chainAddr")
-	cmd.MarkFlagRequired("chainAddr")
+func getAccountByChain33Flag(cmd *cobra.Command) {
+	cmd.Flags().StringP("chain33Addr", "c", "", "zksync account chain33Addr")
+	cmd.MarkFlagRequired("chain33Addr")
 }
 
-func getAccountByChain(cmd *cobra.Command, args []string) {
+func getAccountByChain33(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	chainAddr, _ := cmd.Flags().GetString("chainAddr")
+	chain33Addr, _ := cmd.Flags().GetString("chain33Addr")
 
 	var params rpctypes.Query4Jrpc
 
 	params.Execer = zt.Zksync
 	req := &zt.ZkQueryReq{
-		ChainAddr: chainAddr,
+		Chain33Addr: chain33Addr,
 	}
 
-	params.FuncName = "GetAccountByChain"
+	params.FuncName = "GetAccountByChain33"
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
 func getContractAccountCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "contractAccount",
-		Short: "get zksync contractAccount by chainWalletAddr and token symbol",
+		Short: "get zksync contractAccount by chain33WalletAddr and token symbol",
 		Run:   getContractAccount,
 	}
 	getContractAccountFlag(cmd)
@@ -177,30 +177,30 @@ func getContractAccountCmd() *cobra.Command {
 }
 
 func getContractAccountFlag(cmd *cobra.Command) {
-	cmd.Flags().StringP("chainAddr", "c", "", "chain wallet address")
-	cmd.MarkFlagRequired("chainAddr")
+	cmd.Flags().StringP("chain33Addr", "c", "", "chain33 wallet address")
+	cmd.MarkFlagRequired("chain33Addr")
 	cmd.Flags().StringP("token", "t", "", "token symbol")
 	cmd.MarkFlagRequired("token")
 }
 
 func getContractAccount(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	chainAddr, _ := cmd.Flags().GetString("chainAddr")
+	chain33Addr, _ := cmd.Flags().GetString("chain33Addr")
 	token, _ := cmd.Flags().GetString("token")
 
 	var params rpctypes.Query4Jrpc
 
 	params.Execer = zt.Zksync
 	req := &zt.ZkQueryReq{
-		TokenSymbol:     token,
-		ChainWalletAddr: chainAddr,
+		TokenSymbol:       token,
+		Chain33WalletAddr: chain33Addr,
 	}
 
 	params.FuncName = "GetZkContractAccount"
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp types.Account
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -242,7 +242,7 @@ func getTokenBalance(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkQueryResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -281,7 +281,7 @@ func getLastQueueId(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp types.Int64
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -313,7 +313,7 @@ func getL2Queue(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkOperation
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -348,7 +348,7 @@ func getL2BatchQueue(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkBatchOperation
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -373,7 +373,7 @@ func getExodusMode(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp types.Int64
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -416,7 +416,7 @@ func getPriority(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkDepositWitnessInfo
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -441,7 +441,7 @@ func getLastPriority(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.L1PriorityID
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -479,7 +479,7 @@ func getTokenFee(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp types.ReplyString
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -515,7 +515,7 @@ func getTokenSymbol(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkTokenSymbol
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -540,7 +540,7 @@ func getVerifier(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkVerifier
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -577,6 +577,6 @@ func getL2TotalDeposit(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.TokenBalance
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }

@@ -12,10 +12,10 @@ import (
 	"strings"
 	"time"
 
-	oraclety "github.com/assetcloud/plugin/plugin/dapp/oracle/types"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	oraclety "github.com/33cn/plugin/plugin/dapp/oracle/types"
 	"github.com/spf13/cobra"
 )
 
@@ -133,7 +133,7 @@ func publishEvent(cmd *cobra.Command, args []string) {
 		Payload:    []byte(fmt.Sprintf("{\"type\":\"%s\",\"subType\":\"%s\",\"time\":%d, \"content\":\"%s\", \"introduction\":\"%s\"}", ty, subType, t.Unix(), content, introduction)),
 	}
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -176,7 +176,7 @@ func abortPublishEvent(cmd *cobra.Command, args []string) {
 		Payload:    []byte(fmt.Sprintf("{\"eventID\":\"%s\"}", eventID)),
 	}
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -243,7 +243,7 @@ func prePublishResult(cmd *cobra.Command, args []string) {
 		Payload:    []byte(fmt.Sprintf("{\"eventID\":\"%s\", \"source\":\"%s\", \"result\":\"%s\"}", eventID, source, result)),
 	}
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -286,7 +286,7 @@ func abortPrePubResult(cmd *cobra.Command, args []string) {
 		Payload:    []byte(fmt.Sprintf("{\"eventID\":\"%s\"}", eventID)),
 	}
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -353,7 +353,7 @@ func publishResult(cmd *cobra.Command, args []string) {
 		Payload:    []byte(fmt.Sprintf("{\"eventID\":\"%s\", \"source\":\"%s\", \"result\":\"%s\"}", eventID, source, result)),
 	}
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -459,7 +459,7 @@ func oracleQuery(cmd *cobra.Command, args []string) {
 		req := &oraclety.QueryOracleInfos{EventID: eIDs}
 		params.Payload = types.MustPBToJSON(req)
 		var res oraclety.ReplyOracleStatusList
-		ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 	} else if statusStr != "" {
 		if status < 0 || status > 5 {
@@ -474,7 +474,7 @@ func oracleQuery(cmd *cobra.Command, args []string) {
 			params.FuncName = oraclety.FuncNameQueryEventIDByStatus
 		}
 		var res oraclety.ReplyEventIDs
-		ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 	} else {
 		fmt.Println("Error: requeres at least one of eventID, eventIDs, status")

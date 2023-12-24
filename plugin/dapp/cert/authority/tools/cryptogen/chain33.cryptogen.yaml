@@ -4,7 +4,7 @@ SignType: auth_sm2
 Root:
   Name: ca
   CA:
-    CommonName: ChainCA
+    CommonName: Chain33CA
     Country: China
     Province: Zhejiang
     Locality: Hangzhou

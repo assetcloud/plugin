@@ -3,8 +3,8 @@ package types
 import (
 	"reflect"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/types"
 )
 
 /*
@@ -82,12 +82,12 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(VoteX, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(VoteX, NewType(cfg))
 }
 
@@ -95,7 +95,7 @@ type voteType struct {
 	types.ExecTypeBase
 }
 
-func NewType(cfg *types.ChainConfig) *voteType {
+func NewType(cfg *types.Chain33Config) *voteType {
 	c := &voteType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

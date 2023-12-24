@@ -22,14 +22,16 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/common/log/log15"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/system/crypto/none"
-	"github.com/assetcloud/chain/types"
-	ty "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
+	"github.com/33cn/plugin/plugin/crypto/bls"
+
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/common/log/log15"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/system/crypto/none"
+	"github.com/33cn/chain33/types"
+	ty "github.com/33cn/plugin/plugin/dapp/valnode/types"
 	"google.golang.org/grpc"
 	_ "google.golang.org/grpc/encoding/gzip"
 )
@@ -38,6 +40,13 @@ const fee = 1e6
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789-=_+=/<>!@#$%^&"
 
 var r *rand.Rand
+var signType string
+
+var (
+	log      = log15.New()
+	testExec = "none"
+	execAddr = address.ExecAddress(testExec)
+)
 
 // TxHeightOffset needed
 var TxHeightOffset int64
@@ -47,48 +56,57 @@ func main() {
 		LoadHelp()
 		return
 	}
-	fmt.Println("jrpc url:", os.Args[2]+":8801")
+	fmt.Println("grpc url:", os.Args[2])
+
+	// 指定设置交易执行器为平行链
+	if strings.Contains(os.Args[0], "para") {
+		testExec = "user.p.para.none"
+		execAddr = address.ExecAddress(testExec)
+	}
 	r = rand.New(rand.NewSource(time.Now().UnixNano()))
-	argsWithoutProg := os.Args[1:]
-	switch argsWithoutProg[0] {
+	args := os.Args[1:]
+	// 最后一个参数指定签名类型, 支持 bls
+	signType = args[len(args)-1]
+
+	switch args[0] {
 	case "-h": //使用帮助
 		LoadHelp()
 	case "perf":
-		if len(argsWithoutProg) != 6 {
+		if len(args) < 6 {
 			fmt.Print(errors.New("参数错误").Error())
 			return
 		}
-		Perf(argsWithoutProg[1], argsWithoutProg[2], argsWithoutProg[3], argsWithoutProg[4], argsWithoutProg[5])
+		Perf(args[1], args[2], args[3], args[4], args[5])
 	case "perfV2":
-		if len(argsWithoutProg) != 5 {
+		if len(args) != 5 {
 			fmt.Print(errors.New("参数错误").Error())
 			return
 		}
-		PerfV2(argsWithoutProg[1], argsWithoutProg[2], argsWithoutProg[3], argsWithoutProg[4])
+		PerfV2(args[1], args[2], args[3], args[4])
 	case "put":
-		if len(argsWithoutProg) != 3 {
+		if len(args) != 3 {
 			fmt.Print(errors.New("参数错误").Error())
 			return
 		}
-		Put(argsWithoutProg[1], argsWithoutProg[2], "")
+		Put(args[1], args[2], "")
 	case "get":
-		if len(argsWithoutProg) != 3 {
+		if len(args) != 3 {
 			fmt.Print(errors.New("参数错误").Error())
 			return
 		}
-		Get(argsWithoutProg[1], argsWithoutProg[2])
+		Get(args[1], args[2])
 	case "valnode":
-		if len(argsWithoutProg) != 4 {
+		if len(args) != 4 {
 			fmt.Print(errors.New("参数错误").Error())
 			return
 		}
-		ValNode(argsWithoutProg[1], argsWithoutProg[2], argsWithoutProg[3])
+		ValNode(args[1], args[2], args[3])
 	case "perfOld":
-		if len(argsWithoutProg) != 6 {
+		if len(args) != 6 {
 			fmt.Print(errors.New("参数错误").Error())
 			return
 		}
-		PerfOld(argsWithoutProg[1], argsWithoutProg[2], argsWithoutProg[3], argsWithoutProg[4], argsWithoutProg[5])
+		PerfOld(args[1], args[2], args[3], args[4], args[5])
 	}
 }
 
@@ -104,6 +122,11 @@ func LoadHelp() {
 }
 
 // Perf 性能测试
+// host grpc地址, localhost:8802
+// txsize 存证交易字节大小
+// num 单次循环总发送交易数量
+// sleepinterval 单次循环后协程等待间隔秒
+// totalduration  总持续次数
 func Perf(host, txsize, num, sleepinterval, totalduration string) {
 	var numThread int
 	numInt, err := strconv.Atoi(num)
@@ -142,14 +165,14 @@ func Perf(host, txsize, num, sleepinterval, totalduration string) {
 		ch <- struct{}{}
 		conn := newGrpcConn(host)
 		defer conn.Close()
-		gcli := types.NewChainClient(conn)
+		gcli := types.NewChain33Client(conn)
 		for {
 			height, err := getHeight(gcli)
 			if err != nil {
 				//conn.Close()
 				log.Error("getHeight", "err", err)
 				//conn = newGrpcConn(ip)
-				//gcli = types.NewChainClient(conn)
+				//gcli = types.NewChain33Client(conn)
 				time.Sleep(time.Second)
 			} else {
 				atomic.StoreInt64(&blockHeight, height)
@@ -173,7 +196,7 @@ func Perf(host, txsize, num, sleepinterval, totalduration string) {
 					tx.Expire = height + types.TxHeightFlag + types.LowAllowPackHeight
 					tx.Payload = RandStringBytes(sizeInt)
 					//交易签名
-					tx.Sign(types.SECP256K1, priv)
+					tx.Sign(int32(getSignID()), priv)
 					txChan <- tx
 				}
 				if sleep > 0 {
@@ -188,7 +211,7 @@ func Perf(host, txsize, num, sleepinterval, totalduration string) {
 		go func() {
 			conn := newGrpcConn(host)
 			defer conn.Close()
-			gcli := types.NewChainClient(conn)
+			gcli := types.NewChain33Client(conn)
 
 			for tx := range txChan {
 				//发送交易
@@ -197,19 +220,9 @@ func Perf(host, txsize, num, sleepinterval, totalduration string) {
 				txPool.Put(tx)
 				atomic.AddInt64(&total, 1)
 				if err != nil {
-					if strings.Contains(err.Error(), "ErrTxExpire") {
-						continue
-					}
-					if strings.Contains(err.Error(), "ErrMemFull") {
-						time.Sleep(time.Second)
-						continue
-					}
-
 					log.Error("sendtx", "err", err)
 					time.Sleep(time.Second)
-					//conn.Close()
-					//conn = newGrpcConn(ip)
-					//gcli = types.NewChainClient(conn)
+
 				} else {
 					atomic.AddInt64(&success, 1)
 				}
@@ -253,7 +266,7 @@ func PerfV2(host, txsize, sleepinterval, duration string) {
 		ch <- struct{}{}
 		conn := newGrpcConn(host)
 		defer conn.Close()
-		gcli := types.NewChainClient(conn)
+		gcli := types.NewChain33Client(conn)
 		for {
 			height, err := getHeight(gcli)
 			if err != nil {
@@ -306,7 +319,7 @@ func PerfV2(host, txsize, sleepinterval, duration string) {
 		go func() {
 			conn := newGrpcConn(host)
 			defer conn.Close()
-			gcli := types.NewChainClient(conn)
+			gcli := types.NewChain33Client(conn)
 			txs := &types.Transactions{Txs: make([]*types.Transaction, 0, batchNum)}
 			retryTxs := make([]*types.Transaction, 0, batchNum*2)
 
@@ -363,12 +376,7 @@ func PerfV2(host, txsize, sleepinterval, duration string) {
 	log.Info("sendtx success tx", "success", success)
 }
 
-var (
-	log      = log15.New()
-	execAddr = address.ExecAddress("user.write")
-)
-
-func getHeight(gcli types.ChainClient) (int64, error) {
+func getHeight(gcli types.Chain33Client) (int64, error) {
 	header, err := gcli.GetLastHeader(context.Background(), &types.ReqNil{})
 	if err != nil {
 		log.Error("getHeight", "err", err)
@@ -379,7 +387,7 @@ func getHeight(gcli types.ChainClient) (int64, error) {
 
 var txPool = sync.Pool{
 	New: func() interface{} {
-		tx := &types.Transaction{Execer: []byte("user.write")}
+		tx := &types.Transaction{Execer: []byte(testExec)}
 		return tx
 	},
 }
@@ -465,7 +473,7 @@ func Put(ip string, size string, privkey string) {
 	tx.To = address.ExecAddress("user.write")
 	tx.Expire = TxHeightOffset + types.TxHeightFlag
 	tx.Sign(types.SECP256K1, getprivkey(privkey))
-	poststr := fmt.Sprintf(`{"jsonrpc":"2.0","id":2,"method":"Chain.SendTransaction","params":[{"data":"%v"}]}`,
+	poststr := fmt.Sprintf(`{"jsonrpc":"2.0","id":2,"method":"Chain33.SendTransaction","params":[{"data":"%v"}]}`,
 		common.ToHex(types.Encode(tx)))
 
 	resp, err := http.Post(url, "application/json", bytes.NewBufferString(poststr))
@@ -488,7 +496,7 @@ func Get(ip string, hash string) {
 	url := "http://" + ip + ":8801"
 	fmt.Println("transaction hash:", hash)
 
-	poststr := fmt.Sprintf(`{"jsonrpc":"2.0","id":2,"method":"Chain.QueryTransaction","params":[{"hash":"%s"}]}`, hash)
+	poststr := fmt.Sprintf(`{"jsonrpc":"2.0","id":2,"method":"Chain33.QueryTransaction","params":[{"hash":"%s"}]}`, hash)
 	resp, err := http.Post(url, "application/json", bytes.NewBufferString(poststr))
 	if err != nil {
 		fmt.Println(err)
@@ -506,7 +514,7 @@ func Get(ip string, hash string) {
 
 func setTxHeight(ip string) {
 	url := "http://" + ip + ":8801"
-	poststr := fmt.Sprintf(`{"jsonrpc":"2.0","id":2,"method":"Chain.GetLastHeader","params":[]}`)
+	poststr := fmt.Sprintf(`{"jsonrpc":"2.0","id":2,"method":"Chain33.GetLastHeader","params":[]}`)
 	resp, err := http.Post(url, "application/json", bytes.NewBufferString(poststr))
 	if err != nil {
 		fmt.Println(err)
@@ -552,8 +560,16 @@ func getprivkey(key string) crypto.PrivKey {
 	return priv
 }
 
+func getSignID() int {
+	if signType == "bls" {
+		return bls.ID
+	}
+	return types.SECP256K1
+}
+
 func genaddress() (string, crypto.PrivKey) {
-	cr, err := crypto.Load(types.GetSignName("", types.SECP256K1), -1)
+
+	cr, err := crypto.Load(types.GetSignName("", getSignID()), -1)
 	if err != nil {
 		panic(err)
 	}
@@ -600,7 +616,7 @@ func ValNode(ip, pubkey, power string) {
 	tx.Nonce = r.Int63()
 	tx.Sign(types.SECP256K1, getprivkey(privkey))
 
-	poststr := fmt.Sprintf(`{"jsonrpc":"2.0","id":2,"method":"Chain.SendTransaction","params":[{"data":"%v"}]}`,
+	poststr := fmt.Sprintf(`{"jsonrpc":"2.0","id":2,"method":"Chain33.SendTransaction","params":[{"data":"%v"}]}`,
 		common.ToHex(types.Encode(tx)))
 
 	resp, err := http.Post(url, "application/json", bytes.NewBufferString(poststr))

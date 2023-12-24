@@ -19,10 +19,10 @@ import (
 
 	"fmt"
 
-	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/tools/cryptogen/factory/csp"
-	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/tools/cryptogen/generator/utils"
-	ut "github.com/assetcloud/plugin/plugin/dapp/cert/authority/utils"
-	ty "github.com/assetcloud/plugin/plugin/dapp/cert/types"
+	"github.com/33cn/plugin/plugin/dapp/cert/authority/tools/cryptogen/factory/csp"
+	"github.com/33cn/plugin/plugin/dapp/cert/authority/tools/cryptogen/generator/utils"
+	ut "github.com/33cn/plugin/plugin/dapp/cert/authority/utils"
+	ty "github.com/33cn/plugin/plugin/dapp/cert/types"
 	"github.com/tjfoc/gmsm/sm2"
 )
 

@@ -5,12 +5,12 @@
 package kvdb
 
 import (
-	"github.com/assetcloud/chain/common"
-	clog "github.com/assetcloud/chain/common/log"
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/queue"
-	drivers "github.com/assetcloud/chain/system/store"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common"
+	clog "github.com/33cn/chain33/common/log"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/queue"
+	drivers "github.com/33cn/chain33/system/store"
+	"github.com/33cn/chain33/types"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -37,7 +37,7 @@ type KVStore struct {
 }
 
 // New KVStore module
-func New(cfg *types.Store, sub []byte, chaincfg *types.ChainConfig) queue.Module {
+func New(cfg *types.Store, sub []byte, chain33cfg *types.Chain33Config) queue.Module {
 	bs := drivers.NewBaseStore(cfg)
 	kvs := &KVStore{bs, make(map[string]map[string]*types.KeyValue)}
 	bs.SetChild(kvs)

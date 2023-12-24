@@ -5,10 +5,10 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
 
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 	"github.com/stretchr/testify/assert"
 )
 

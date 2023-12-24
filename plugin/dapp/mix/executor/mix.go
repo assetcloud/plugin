@@ -5,11 +5,11 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common"
-	log "github.com/assetcloud/chain/common/log/log15"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	"github.com/33cn/chain33/common"
+	log "github.com/33cn/chain33/common/log/log15"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 )
 
 var (
@@ -22,20 +22,20 @@ type Mix struct {
 	drivers.DriverBase
 }
 
-// Init paracross exec register
-func Init(name string, cfg *types.ChainConfig, sub []byte) {
+//Init paracross exec register
+func Init(name string, cfg *types.Chain33Config, sub []byte) {
 	drivers.Register(cfg, GetName(), newMix, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 	setPrefix()
 }
 
-// InitExecType ...
+//InitExecType ...
 func InitExecType() {
 	ety := types.LoadExecutorType(driverName)
 	ety.InitFuncList(types.ListMethod(&Mix{}))
 }
 
-// GetName return paracross name
+//GetName return paracross name
 func GetName() string {
 	return newMix().GetName()
 }

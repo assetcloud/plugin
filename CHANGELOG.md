@@ -1,5 +1,6 @@
 changelog
 
+<<<<<<< HEAD
 <a name="1.68.4"></a>
 
 ## [1.68.4](https://github.com/assetcloud/plugin/compare/v1.68.3...v1.68.4) (2023-09-13)
@@ -63,6 +64,55 @@ changelog
 ### Bug Fixes
 
 - update chain patch version ([385028c](https://github.com/assetcloud/plugin/commit/385028c))
+=======
+<a name="1.68.2"></a>
+## [1.68.2](https://github.com/assetcloud/plugin/compare/v1.68.1...v1.68.2) (2023-03-16)
+
+
+### Bug Fixes
+
+* init evm exec address with format ([36e8875](https://github.com/assetcloud/plugin/commit/36e8875))
+
+<a name="1.68.1"></a>
+## [1.68.1](https://github.com/assetcloud/plugin/compare/v1.68.0...v1.68.1) (2023-03-14)
+
+
+### Bug Fixes
+
+* fix rpc config for parachain ([cd9ad35](https://github.com/assetcloud/plugin/commit/cd9ad35))
+
+<a name="1.68.0"></a>
+# [1.68.0](https://github.com/assetcloud/plugin/compare/v1.67.6...v1.68.0) (2023-02-21)
+
+
+### Features
+
+* add consensus commiter plugin rollup(assetcloud/chain#1268) ([b0aca7d](https://github.com/assetcloud/plugin/commit/b0aca7d)), closes [assetcloud/chain#1268](https://github.com/assetcloud/chain/issues/1268)
+
+<a name="1.67.6"></a>
+## [1.67.6](https://github.com/assetcloud/plugin/compare/v1.67.5...v1.67.6) (2023-01-31)
+
+
+### Bug Fixes
+
+* add return for get evm tx recevier ([533f35a](https://github.com/assetcloud/plugin/commit/533f35a))
+
+<a name="1.67.5"></a>
+## [1.67.5](https://github.com/assetcloud/plugin/compare/v1.67.4...v1.67.5) (2023-01-16)
+
+
+### Bug Fixes
+
+* add evm mix address fork ([7fecaf4](https://github.com/assetcloud/plugin/commit/7fecaf4))
+
+<a name="1.67.4"></a>
+## [1.67.4](https://github.com/assetcloud/plugin/compare/v1.67.3...v1.67.4) (2022-10-11)
+
+
+### Bug Fixes
+
+* update chain patch version ([385028c](https://github.com/assetcloud/plugin/commit/385028c))
+>>>>>>> c7f90405aaee21be0ead6b9b99d81458fc46c947
 
 <a name="1.67.3"></a>
 

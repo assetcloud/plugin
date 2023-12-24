@@ -1,8 +1,8 @@
 package executor
 
 import (
-	types2 "github.com/assetcloud/plugin/plugin/dapp/wasm/types"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
+	types2 "github.com/33cn/plugin/plugin/dapp/wasm/types"
 )
 
 func (w *Wasm) ExecDelLocal_Create(payload *types2.WasmCreate, tx *types.Transaction, receipt *types.ReceiptData, index int) (*types.LocalDBSet, error) {

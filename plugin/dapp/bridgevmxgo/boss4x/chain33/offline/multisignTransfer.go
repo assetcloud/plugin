@@ -5,26 +5,26 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
-	gnosis "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
+	gnosis "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
 
-	chainCommon "github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/system/crypto/secp256k1"
-	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
-	chainRelayer "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain"
-	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	relayerutils "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
-	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/math"
+	chain33Common "github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/system/crypto/secp256k1"
+	erc20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	chain33Relayer "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33"
+	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	relayerutils "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/math"
 	btcecsecp256k1 "github.com/btcsuite/btcd/btcec"
 	ethSecp256k1 "github.com/ethereum/go-ethereum/crypto/secp256k1"
 	"github.com/spf13/cobra"
 )
 
 /*
-./boss4x chain offline create_multisign_transfer -a 10 -r 168Sn1DXnLrZHTcAM9stD6t2P49fNuJfJ9 -m 1NFDfEwne4kjuxAZrtYEh4kfSrnGSE7ap
-./boss4x chain offline multisign_transfer -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262a -s 0xcd284cd17456b73619fa609bb9e3105e8eff5d059c5e0b6eb1effbebd4d64144,0xe892212221b3b58211b90194365f4662764b6d5474ef2961ef77c909e31eeed3,0x9d19a2e9a440187010634f4f08ce36e2bc7b521581436a99f05568be94dc66ea,0x45d4ce009e25e6d5e00d8d3a50565944b2e3604aa473680a656b242d9acbff35 --chainID 33
-./boss4x chain offline send -f multisign_transfer.txt
+./boss4x chain33 offline create_multisign_transfer -a 10 -r 168Sn1DXnLrZHTcAM9stD6t2P49fNuJfJ9 -m 1NFDfEwne4kjuxAZrtYEh4kfSrnGSE7ap
+./boss4x chain33 offline multisign_transfer -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262a -s 0xcd284cd17456b73619fa609bb9e3105e8eff5d059c5e0b6eb1effbebd4d64144,0xe892212221b3b58211b90194365f4662764b6d5474ef2961ef77c909e31eeed3,0x9d19a2e9a440187010634f4f08ce36e2bc7b521581436a99f05568be94dc66ea,0x45d4ce009e25e6d5e00d8d3a50565944b2e3604aa473680a656b242d9acbff35 --chainID 33
+./boss4x chain33 offline send -f multisign_transfer.txt
 */
 
 type transferTxData struct {
@@ -86,15 +86,15 @@ func CreateMultisignTransfer(cmd *cobra.Command, _ []string) {
 		//对于其他erc20资产，直接将其设置为0
 		valueStr = "0"
 		to = token
-		dataStr = chainCommon.ToHex(data)
+		dataStr = chain33Common.ToHex(data)
 	}
 
 	//获取nonce
 	nonce := getMulSignNonce(multisign, rpcLaddr)
 	parameter2getHash := fmt.Sprintf("getTransactionHash(%s, %s, %s, 0, %d, %d, %d, %s, %s, %d)", to, valueStr, dataStr,
-		safeTxGas, baseGas, gasPrice, ebrelayerTypes.NilAddrChain, ebrelayerTypes.NilAddrChain, nonce)
+		safeTxGas, baseGas, gasPrice, ebrelayerTypes.NilAddrChain33, ebrelayerTypes.NilAddrChain33, nonce)
 
-	result := chainRelayer.Query(multisign, parameter2getHash, multisign, rpcLaddr, generated.GnosisSafeABI)
+	result := chain33Relayer.Query(multisign, parameter2getHash, multisign, rpcLaddr, generated.GnosisSafeABI)
 	if nil == result {
 		fmt.Println("Failed to getTransactionHash :", ebrelayerTypes.ErrGetTransactionHash)
 		return
@@ -106,7 +106,7 @@ func CreateMultisignTransfer(cmd *cobra.Command, _ []string) {
 	txinfo.Receiver = receiver
 	txinfo.MultisignAddr = multisign
 	txinfo.Amount = amount
-	txinfo.Data = chainCommon.ToHex(contentHash)
+	txinfo.Data = chain33Common.ToHex(contentHash)
 	txinfo.Token = token
 	txinfo.name = "create_multisign_transfer"
 	writeToFile(txinfo.name+".txt", txinfo)
@@ -145,7 +145,7 @@ func MultisignTransfer(cmd *cobra.Command, _ []string) {
 
 	//对于平台币转账，这个data只是个占位符，没有作用
 	dataStr := "0x"
-	contentHash, err := chainCommon.FromHex(txinfo.Data)
+	contentHash, err := chain33Common.FromHex(txinfo.Data)
 	safeTxGas := int64(10 * 10000)
 	baseGas := 0
 	gasPrice := 0
@@ -163,13 +163,13 @@ func MultisignTransfer(cmd *cobra.Command, _ []string) {
 		//对于其他erc20资产，直接将其设置为0
 		valueStr = "0"
 		to = txinfo.Token
-		dataStr = chainCommon.ToHex(data)
+		dataStr = chain33Common.ToHex(data)
 	}
 
 	var sigs []byte
 	for _, privateKey := range keys {
 		var driver secp256k1.Driver
-		privateKeySli, err := chainCommon.FromHex(privateKey)
+		privateKeySli, err := chain33Common.FromHex(privateKey)
 		if nil != err {
 			fmt.Println("evmAbi.Pack(parameter, erc20.ERC20ABI, false)", "Failed", err.Error())
 			return
@@ -180,9 +180,9 @@ func MultisignTransfer(cmd *cobra.Command, _ []string) {
 			return
 		}
 		temp, _ := btcecsecp256k1.PrivKeyFromBytes(btcecsecp256k1.S256(), ownerPrivateKey.Bytes())
-		privateKey4chainEcdsa := temp.ToECDSA()
+		privateKey4chain33Ecdsa := temp.ToECDSA()
 
-		sig, err := ethSecp256k1.Sign(contentHash, math.PaddedBigBytes(privateKey4chainEcdsa.D, 32))
+		sig, err := ethSecp256k1.Sign(contentHash, math.PaddedBigBytes(privateKey4chain33Ecdsa.D, 32))
 		if nil != err {
 			fmt.Println("evmAbi.Pack(parameter, erc20.ERC20ABI, false)", "Failed", err.Error())
 			return
@@ -194,7 +194,7 @@ func MultisignTransfer(cmd *cobra.Command, _ []string) {
 
 	//构造execTransaction参数
 	parameter2Exec := fmt.Sprintf("execTransaction(%s, %s, %s, 0, %d, %d, %d, %s, %s, %s)", to, valueStr, dataStr,
-		safeTxGas, baseGas, gasPrice, ebrelayerTypes.NilAddrChain, ebrelayerTypes.NilAddrChain, chainCommon.ToHex(sigs))
+		safeTxGas, baseGas, gasPrice, ebrelayerTypes.NilAddrChain33, ebrelayerTypes.NilAddrChain33, chain33Common.ToHex(sigs))
 	_, packData, err := evmAbi.Pack(parameter2Exec, gnosis.GnosisSafeABI, false)
 	if nil != err {
 		fmt.Println("execTransaction evmAbi.Pack", "Failed", err.Error())
@@ -207,7 +207,7 @@ func MultisignTransfer(cmd *cobra.Command, _ []string) {
 func getMulSignNonce(mulsign, rpcLaddr string) int64 {
 	parameter := fmt.Sprintf("nonce()")
 
-	result := chainRelayer.Query(mulsign, parameter, mulsign, rpcLaddr, gnosis.GnosisSafeABI)
+	result := chain33Relayer.Query(mulsign, parameter, mulsign, rpcLaddr, gnosis.GnosisSafeABI)
 	if nil == result {
 		return 0
 	}

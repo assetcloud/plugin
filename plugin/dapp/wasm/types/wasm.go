@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"regexp"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 var NameReg *regexp.Regexp
@@ -40,11 +40,11 @@ func init() {
 	NameReg, _ = regexp.Compile(NameRegExp)
 }
 
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(WasmX, "Enable", 0)
 }
 
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(WasmX, NewType(cfg))
 }
 
@@ -52,7 +52,7 @@ type WasmType struct {
 	types.ExecTypeBase
 }
 
-func NewType(cfg *types.ChainConfig) *WasmType {
+func NewType(cfg *types.Chain33Config) *WasmType {
 	c := &WasmType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

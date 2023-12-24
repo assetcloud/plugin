@@ -3,9 +3,9 @@ package executor
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/common/db/table"
-	"github.com/assetcloud/chain/types"
-	ety "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
+	"github.com/33cn/chain33/common/db/table"
+	"github.com/33cn/chain33/types"
+	ety "github.com/33cn/plugin/plugin/dapp/exchange/types"
 )
 
 /*
@@ -266,7 +266,7 @@ func (e *exchange) updateMatchOrders(marketTable, orderTable, historyTable *tabl
 	return nil
 }
 
-// OpSwap ...
+//OpSwap ...
 func OpSwap(op int32) int32 {
 	if op == ety.OpBuy {
 		return ety.OpSell

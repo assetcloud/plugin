@@ -8,13 +8,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/assetcloud/chain/client"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/types"
-	wcom "github.com/assetcloud/chain/wallet/common"
-	ty "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/33cn/chain33/client"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/types"
+	wcom "github.com/33cn/chain33/wallet/common"
+	ty "github.com/33cn/plugin/plugin/dapp/paracross/types"
 )
 
 var (
@@ -69,7 +69,7 @@ func (policy *ParaPolicy) OnWalletLocked() {
 	bizlog.Info("OnWalletLocked", "IsWalletLock", walletsatus.IsWalletLock)
 }
 
-// 解锁超时处理，需要区分整个钱包的解锁或者只挖矿的解锁
+//解锁超时处理，需要区分整个钱包的解锁或者只挖矿的解锁
 func (policy *ParaPolicy) resetTimeout(Timeout int64) {
 	if policy.minertimeout == nil {
 		policy.minertimeout = time.AfterFunc(time.Second*time.Duration(Timeout), func() {

@@ -7,10 +7,10 @@ package commands
 import (
 	"encoding/json"
 
-	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	auty "github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
+	jsonrpc "github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	auty "github.com/33cn/plugin/plugin/dapp/autonomy/types"
 	"github.com/spf13/cobra"
 )
 
@@ -75,7 +75,7 @@ func proposalItem(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", pm, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -114,7 +114,7 @@ func revokeProposalItem(cmd *cobra.Command, args []string) {
 		Payload:    payLoad,
 	}
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", pm, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -156,7 +156,7 @@ func voteProposalItem(cmd *cobra.Command, args []string) {
 		Payload:    payLoad,
 	}
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", pm, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -195,7 +195,7 @@ func terminateProposalItem(cmd *cobra.Command, args []string) {
 		Payload:    payLoad,
 	}
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", pm, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -259,6 +259,6 @@ func showProposalItem(cmd *cobra.Command, args []string) {
 		rep = &auty.ReplyQueryProposalItem{}
 	}
 
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, rep)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, rep)
 	ctx.Run()
 }

@@ -1,4 +1,4 @@
-package chain
+package chain33
 
 import (
 	"bytes"
@@ -11,26 +11,26 @@ import (
 	"sync/atomic"
 	"time"
 
-	dbm "github.com/assetcloud/chain/common/db"
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	chainTypes "github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
-	relayerTx "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
-	syncTx "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain/transceiver/sync"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
+	dbm "github.com/33cn/chain33/common/db"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	chain33Types "github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
+	relayerTx "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+	syncTx "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain33/transceiver/sync"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/utils"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
 	ethCommon "github.com/ethereum/go-ethereum/common"
 )
 
-var relayerLog = log.New("module", "chain_relayer")
+var relayerLog = log.New("module", "chain33_relayer")
 
-// Relayer4Chain ...
-type Relayer4Chain struct {
+//Relayer4Chain33 ...
+type Relayer4Chain33 struct {
 	syncTxReceipts      *syncTx.TxReceipts
 	ethClient           ethinterface.EthClientSpec
 	rpcLaddr            string //用户向指定的blockchain节点进行rpc调用
@@ -39,21 +39,21 @@ type Relayer4Chain struct {
 	lastHeight4Tx       int64 //等待被处理的具有相应的交易回执的高度
 	matDegree           int32 //成熟度         heightSync2App    matDegress   height
 	//passphase            string
-	privateKey4Ethereum *ecdsa.PrivateKey
-	ethSender           ethCommon.Address
-	bridgeRegistryAddr  ethCommon.Address
-	oracleInstance      *generated.Oracle
-	totalTx4ChainToEth  int64
-	statusCheckedIndex  int64
-	ctx                 context.Context
-	rwLock              sync.RWMutex
-	unlock              chan int
+	privateKey4Ethereum  *ecdsa.PrivateKey
+	ethSender            ethCommon.Address
+	bridgeRegistryAddr   ethCommon.Address
+	oracleInstance       *generated.Oracle
+	totalTx4Chain33ToEth int64
+	statusCheckedIndex   int64
+	ctx                  context.Context
+	rwLock               sync.RWMutex
+	unlock               chan int
 }
 
-// StartChainRelayer : initializes a relayer which witnesses events on the chain network and relays them to Ethereum
-func StartChainRelayer(ctx context.Context, syncTxConfig *ebTypes.SyncTxConfig, registryAddr, provider string, db dbm.DB) *Relayer4Chain {
-	chian33Relayer := &Relayer4Chain{
-		rpcLaddr:            syncTxConfig.ChainHost,
+// StartChain33Relayer : initializes a relayer which witnesses events on the chain33 network and relays them to Ethereum
+func StartChain33Relayer(ctx context.Context, syncTxConfig *ebTypes.SyncTxConfig, registryAddr, provider string, db dbm.DB) *Relayer4Chain33 {
+	chian33Relayer := &Relayer4Chain33{
+		rpcLaddr:            syncTxConfig.Chain33Host,
 		fetchHeightPeriodMs: syncTxConfig.FetchHeightPeriodMs,
 		unlock:              make(chan int),
 		db:                  db,
@@ -62,7 +62,7 @@ func StartChainRelayer(ctx context.Context, syncTxConfig *ebTypes.SyncTxConfig, 
 	}
 
 	syncCfg := &ebTypes.SyncTxReceiptConfig{
-		ChainHost:         syncTxConfig.ChainHost,
+		Chain33Host:       syncTxConfig.Chain33Host,
 		PushHost:          syncTxConfig.PushHost,
 		PushName:          syncTxConfig.PushName,
 		PushBind:          syncTxConfig.PushBind,
@@ -76,51 +76,51 @@ func StartChainRelayer(ctx context.Context, syncTxConfig *ebTypes.SyncTxConfig, 
 		panic(err)
 	}
 	chian33Relayer.ethClient = client
-	chian33Relayer.totalTx4ChainToEth = chian33Relayer.getTotalTxAmount2Eth()
+	chian33Relayer.totalTx4Chain33ToEth = chian33Relayer.getTotalTxAmount2Eth()
 	chian33Relayer.statusCheckedIndex = chian33Relayer.getStatusCheckedIndex()
 
 	go chian33Relayer.syncProc(syncCfg)
 	return chian33Relayer
 }
 
-// QueryTxhashRelay2Eth ...
-func (chainRelayer *Relayer4Chain) QueryTxhashRelay2Eth() ebTypes.Txhashes {
-	txhashs := utils.QueryTxhashes([]byte(chainToEthBurnLockTxHashPrefix), chainRelayer.db)
+//QueryTxhashRelay2Eth ...
+func (chain33Relayer *Relayer4Chain33) QueryTxhashRelay2Eth() ebTypes.Txhashes {
+	txhashs := utils.QueryTxhashes([]byte(chain33ToEthBurnLockTxHashPrefix), chain33Relayer.db)
 	return ebTypes.Txhashes{Txhash: txhashs}
 }
 
-func (chainRelayer *Relayer4Chain) syncProc(syncCfg *ebTypes.SyncTxReceiptConfig) {
-	_, _ = fmt.Fprintln(os.Stdout, "Pls unlock or import private key for Chain relayer")
-	<-chainRelayer.unlock
-	_, _ = fmt.Fprintln(os.Stdout, "Chain relayer starts to run...")
+func (chain33Relayer *Relayer4Chain33) syncProc(syncCfg *ebTypes.SyncTxReceiptConfig) {
+	_, _ = fmt.Fprintln(os.Stdout, "Pls unlock or import private key for Chain33 relayer")
+	<-chain33Relayer.unlock
+	_, _ = fmt.Fprintln(os.Stdout, "Chain33 relayer starts to run...")
 
-	chainRelayer.syncTxReceipts = syncTx.StartSyncTxReceipt(syncCfg, chainRelayer.db)
-	chainRelayer.lastHeight4Tx = chainRelayer.loadLastSyncHeight()
+	chain33Relayer.syncTxReceipts = syncTx.StartSyncTxReceipt(syncCfg, chain33Relayer.db)
+	chain33Relayer.lastHeight4Tx = chain33Relayer.loadLastSyncHeight()
 
-	oracleInstance, err := relayerTx.RecoverOracleInstance(chainRelayer.ethClient, chainRelayer.bridgeRegistryAddr, chainRelayer.bridgeRegistryAddr)
+	oracleInstance, err := relayerTx.RecoverOracleInstance(chain33Relayer.ethClient, chain33Relayer.bridgeRegistryAddr, chain33Relayer.bridgeRegistryAddr)
 	if err != nil {
 		panic(err.Error())
 	}
-	chainRelayer.oracleInstance = oracleInstance
+	chain33Relayer.oracleInstance = oracleInstance
 
-	timer := time.NewTicker(time.Duration(chainRelayer.fetchHeightPeriodMs) * time.Millisecond)
+	timer := time.NewTicker(time.Duration(chain33Relayer.fetchHeightPeriodMs) * time.Millisecond)
 	for {
 		select {
 		case <-timer.C:
-			height := chainRelayer.getCurrentHeight()
+			height := chain33Relayer.getCurrentHeight()
 			relayerLog.Debug("syncProc", "getCurrentHeight", height)
-			chainRelayer.onNewHeightProc(height)
+			chain33Relayer.onNewHeightProc(height)
 
-		case <-chainRelayer.ctx.Done():
+		case <-chain33Relayer.ctx.Done():
 			timer.Stop()
 			return
 		}
 	}
 }
 
-func (chainRelayer *Relayer4Chain) getCurrentHeight() int64 {
+func (chain33Relayer *Relayer4Chain33) getCurrentHeight() int64 {
 	var res rpctypes.Header
-	ctx := jsonclient.NewRPCCtx(chainRelayer.rpcLaddr, "Chain.GetLastHeader", nil, &res)
+	ctx := jsonclient.NewRPCCtx(chain33Relayer.rpcLaddr, "Chain33.GetLastHeader", nil, &res)
 	_, err := ctx.RunResult()
 	if nil != err {
 		relayerLog.Error("getCurrentHeight", "Failede due to:", err.Error())
@@ -128,36 +128,36 @@ func (chainRelayer *Relayer4Chain) getCurrentHeight() int64 {
 	return res.Height
 }
 
-func (chainRelayer *Relayer4Chain) onNewHeightProc(currentHeight int64) {
+func (chain33Relayer *Relayer4Chain33) onNewHeightProc(currentHeight int64) {
 	//检查已经提交的交易结果
-	chainRelayer.rwLock.Lock()
-	for chainRelayer.statusCheckedIndex < chainRelayer.totalTx4ChainToEth {
-		index := chainRelayer.statusCheckedIndex + 1
-		txhash, err := chainRelayer.getEthTxhash(index)
+	chain33Relayer.rwLock.Lock()
+	for chain33Relayer.statusCheckedIndex < chain33Relayer.totalTx4Chain33ToEth {
+		index := chain33Relayer.statusCheckedIndex + 1
+		txhash, err := chain33Relayer.getEthTxhash(index)
 		if nil != err {
 			relayerLog.Error("onNewHeightProc", "getEthTxhash for index ", index, "error", err.Error())
 			break
 		}
-		status := relayerTx.GetEthTxStatus(chainRelayer.ethClient, txhash)
+		status := relayerTx.GetEthTxStatus(chain33Relayer.ethClient, txhash)
 		//按照提交交易的先后顺序检查交易，只要出现当前交易还在pending状态，就不再检查后续交易，等到下个区块再从该交易进行检查
 		//TODO:可能会由于网络和打包挖矿的原因，使得交易执行顺序和提交顺序有差别，后续完善该检查逻辑
 		if status == relayerTx.EthTxPending.String() {
 			break
 		}
-		_ = chainRelayer.setLastestRelay2EthTxhash(status, txhash.Hex(), index)
-		atomic.AddInt64(&chainRelayer.statusCheckedIndex, 1)
-		_ = chainRelayer.setStatusCheckedIndex(chainRelayer.statusCheckedIndex)
+		_ = chain33Relayer.setLastestRelay2EthTxhash(status, txhash.Hex(), index)
+		atomic.AddInt64(&chain33Relayer.statusCheckedIndex, 1)
+		_ = chain33Relayer.setStatusCheckedIndex(chain33Relayer.statusCheckedIndex)
 	}
-	chainRelayer.rwLock.Unlock()
+	chain33Relayer.rwLock.Unlock()
 	//未达到足够的成熟度，不进行处理
 	//  +++++++++||++++++++++++||++++++++++||
 	//           ^             ^           ^
 	// lastHeight4Tx    matDegress   currentHeight
-	for chainRelayer.lastHeight4Tx+int64(chainRelayer.matDegree)+1 <= currentHeight {
-		relayerLog.Info("onNewHeightProc", "currHeight", currentHeight, "lastHeight4Tx", chainRelayer.lastHeight4Tx)
+	for chain33Relayer.lastHeight4Tx+int64(chain33Relayer.matDegree)+1 <= currentHeight {
+		relayerLog.Info("onNewHeightProc", "currHeight", currentHeight, "lastHeight4Tx", chain33Relayer.lastHeight4Tx)
 
-		lastHeight4Tx := chainRelayer.lastHeight4Tx
-		TxReceipts, err := chainRelayer.syncTxReceipts.GetNextValidTxReceipts(lastHeight4Tx)
+		lastHeight4Tx := chain33Relayer.lastHeight4Tx
+		TxReceipts, err := chain33Relayer.syncTxReceipts.GetNextValidTxReceipts(lastHeight4Tx)
 		if nil == TxReceipts || nil != err {
 			if err != nil {
 				relayerLog.Error("onNewHeightProc", "Failed to GetNextValidTxReceipts due to:", err.Error())
@@ -175,19 +175,19 @@ func (chainRelayer *Relayer4Chain) onNewHeightProc(currentHeight int64) {
 				continue
 			}
 			var ss types.X2EthereumAction
-			_ = chainTypes.Decode(tx.Payload, &ss)
+			_ = chain33Types.Decode(tx.Payload, &ss)
 			actionName := ss.GetActionName()
 			if relayerTx.BurnAction == actionName || relayerTx.LockAction == actionName {
-				relayerLog.Debug("^_^ ^_^ Processing chain tx receipt", "ActionName", actionName, "fromAddr", tx.From(), "exec", string(tx.Execer))
+				relayerLog.Debug("^_^ ^_^ Processing chain33 tx receipt", "ActionName", actionName, "fromAddr", tx.From(), "exec", string(tx.Execer))
 				actionEvent := getOracleClaimType(actionName)
-				if err := chainRelayer.handleBurnLockMsg(actionEvent, TxReceipts.ReceiptData[i], tx.Hash()); nil != err {
+				if err := chain33Relayer.handleBurnLockMsg(actionEvent, TxReceipts.ReceiptData[i], tx.Hash()); nil != err {
 					errInfo := fmt.Sprintf("Failed to handleBurnLockMsg due to:%s", err.Error())
 					panic(errInfo)
 				}
 			}
 		}
-		chainRelayer.lastHeight4Tx = TxReceipts.Height
-		chainRelayer.setLastSyncHeight(chainRelayer.lastHeight4Tx)
+		chain33Relayer.lastHeight4Tx = TxReceipts.Height
+		chain33Relayer.setLastSyncHeight(chain33Relayer.lastHeight4Tx)
 	}
 }
 
@@ -207,36 +207,36 @@ func getOracleClaimType(eventType string) events.Event {
 	return claimType
 }
 
-// handleBurnLockMsg : parse event data as a ChainMsg, package it into a ProphecyClaim, then relay tx to the Ethereum Network
-func (chainRelayer *Relayer4Chain) handleBurnLockMsg(claimEvent events.Event, receipt *chainTypes.ReceiptData, chainTxHash []byte) error {
-	relayerLog.Info("handleBurnLockMsg", "Received tx with hash", ethCommon.Bytes2Hex(chainTxHash))
+// handleBurnLockMsg : parse event data as a Chain33Msg, package it into a ProphecyClaim, then relay tx to the Ethereum Network
+func (chain33Relayer *Relayer4Chain33) handleBurnLockMsg(claimEvent events.Event, receipt *chain33Types.ReceiptData, chain33TxHash []byte) error {
+	relayerLog.Info("handleBurnLockMsg", "Received tx with hash", ethCommon.Bytes2Hex(chain33TxHash))
 
-	// Parse the witnessed event's data into a new ChainMsg
-	chainMsg := relayerTx.ParseBurnLockTxReceipt(claimEvent, receipt)
-	if nil == chainMsg {
+	// Parse the witnessed event's data into a new Chain33Msg
+	chain33Msg := relayerTx.ParseBurnLockTxReceipt(claimEvent, receipt)
+	if nil == chain33Msg {
 		//收到执行失败的交易，直接跳过
-		relayerLog.Error("handleBurnLockMsg", "Received failed tx with hash", ethCommon.Bytes2Hex(chainTxHash))
+		relayerLog.Error("handleBurnLockMsg", "Received failed tx with hash", ethCommon.Bytes2Hex(chain33TxHash))
 		return nil
 	}
 
-	// Parse the ChainMsg into a ProphecyClaim for relay to Ethereum
-	prophecyClaim := relayerTx.ChainMsgToProphecyClaim(*chainMsg)
+	// Parse the Chain33Msg into a ProphecyClaim for relay to Ethereum
+	prophecyClaim := relayerTx.Chain33MsgToProphecyClaim(*chain33Msg)
 
-	// Relay the ChainMsg to the Ethereum network
-	txhash, err := relayerTx.RelayOracleClaimToEthereum(chainRelayer.oracleInstance, chainRelayer.ethClient, chainRelayer.ethSender, claimEvent, prophecyClaim, chainRelayer.privateKey4Ethereum, chainTxHash)
+	// Relay the Chain33Msg to the Ethereum network
+	txhash, err := relayerTx.RelayOracleClaimToEthereum(chain33Relayer.oracleInstance, chain33Relayer.ethClient, chain33Relayer.ethSender, claimEvent, prophecyClaim, chain33Relayer.privateKey4Ethereum, chain33TxHash)
 	if nil != err {
 		return err
 	}
 
 	//保存交易hash，方便查询
-	atomic.AddInt64(&chainRelayer.totalTx4ChainToEth, 1)
-	txIndex := atomic.LoadInt64(&chainRelayer.totalTx4ChainToEth)
-	if err = chainRelayer.updateTotalTxAmount2Eth(txIndex); nil != err {
-		relayerLog.Error("handleLogNewProphecyClaimEvent", "Failed to RelayLockToChain due to:", err.Error())
+	atomic.AddInt64(&chain33Relayer.totalTx4Chain33ToEth, 1)
+	txIndex := atomic.LoadInt64(&chain33Relayer.totalTx4Chain33ToEth)
+	if err = chain33Relayer.updateTotalTxAmount2Eth(txIndex); nil != err {
+		relayerLog.Error("handleLogNewProphecyClaimEvent", "Failed to RelayLockToChain33 due to:", err.Error())
 		return err
 	}
-	if err = chainRelayer.setLastestRelay2EthTxhash(relayerTx.EthTxPending.String(), txhash, txIndex); nil != err {
-		relayerLog.Error("handleLogNewProphecyClaimEvent", "Failed to RelayLockToChain due to:", err.Error())
+	if err = chain33Relayer.setLastestRelay2EthTxhash(relayerTx.EthTxPending.String(), txhash, txIndex); nil != err {
+		relayerLog.Error("handleLogNewProphecyClaimEvent", "Failed to RelayLockToChain33 due to:", err.Error())
 		return err
 	}
 	return nil

@@ -7,7 +7,7 @@ package executor
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/common/address"
+	"github.com/33cn/chain33/common/address"
 )
 
 var (
@@ -44,7 +44,7 @@ func setPrefix() {
 
 }
 
-// support multi version verify parameter setting
+//support multi version verify parameter setting
 func getVerifyKeysKey(ty int32) []byte {
 	return []byte(fmt.Sprintf(verifyKeys+"%d", ty))
 }

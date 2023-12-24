@@ -1,10 +1,10 @@
 package runtime
 
 import (
-	"github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/math"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/params"
+	"github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/math"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/params"
 )
 
 // memoryGasCost calculates the quadratic gas for memory expansion. It does so

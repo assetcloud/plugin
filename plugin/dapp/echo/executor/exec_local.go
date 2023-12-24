@@ -3,8 +3,8 @@ package executor
 import (
 	"fmt"
 
-	echotypes "github.com/assetcloud/plugin/plugin/dapp/echo/types/echo"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
+	echotypes "github.com/33cn/plugin/plugin/dapp/echo/types/echo"
 )
 
 // ExecLocal_Ping 交易执行成功，将本消息对应的数值加1

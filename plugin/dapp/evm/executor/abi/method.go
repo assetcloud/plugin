@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto"
 )
 
 // FunctionType represents different types of functions a contract might have.

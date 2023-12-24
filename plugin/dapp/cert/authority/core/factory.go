@@ -7,7 +7,7 @@ package core
 import (
 	"errors"
 
-	ty "github.com/assetcloud/plugin/plugin/dapp/cert/types"
+	ty "github.com/33cn/plugin/plugin/dapp/cert/types"
 )
 
 // GetLocalValidator 根据类型获取校验器

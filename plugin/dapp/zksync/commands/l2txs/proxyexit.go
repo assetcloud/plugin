@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 )
 
@@ -24,9 +24,9 @@ func proxyManyExitFlag(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("keys")
 	cmd.Flags().Uint64P("tokenId", "t", 0, "eth token id")
 	_ = cmd.MarkFlagRequired("tokenId")
-	cmd.Flags().StringP("proxyIDs", "p", "0", "L2 proxy account ids on chain, use ',' separate")
+	cmd.Flags().StringP("proxyIDs", "p", "0", "L2 proxy account ids on chain33, use ',' separate")
 	_ = cmd.MarkFlagRequired("proxyIDs")
-	cmd.Flags().StringP("targetIDs", "g", "0", "L2 target account ids on chain, use ',' separate")
+	cmd.Flags().StringP("targetIDs", "g", "0", "L2 target account ids on chain33, use ',' separate")
 	_ = cmd.MarkFlagRequired("targetIDs")
 }
 
@@ -64,9 +64,9 @@ func proxyManyExit(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("send ForceExit failed to createChainTx due to err:", err.Error())
+			fmt.Println("send ForceExit failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)

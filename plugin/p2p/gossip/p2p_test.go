@@ -11,24 +11,24 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/assetcloud/chain/common/pubsub"
+	"github.com/33cn/chain33/common/pubsub"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/assetcloud/chain/p2p"
+	"github.com/33cn/chain33/p2p"
 
-	"github.com/assetcloud/chain/p2p/utils"
+	"github.com/33cn/chain33/p2p/utils"
 
 	"os"
 	"strings"
 	"testing"
 
-	"github.com/assetcloud/chain/client"
+	"github.com/33cn/chain33/client"
 
-	l "github.com/assetcloud/chain/common/log"
+	l "github.com/33cn/chain33/common/log"
 
-	"github.com/assetcloud/chain/queue"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/wallet"
+	"github.com/33cn/chain33/queue"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/wallet"
 
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
@@ -126,7 +126,7 @@ func processMsg(q queue.Queue) {
 }
 
 //new p2p
-func newP2p(cfg *types.ChainConfig, port int32, dbpath string, q queue.Queue) *P2p {
+func newP2p(cfg *types.Chain33Config, port int32, dbpath string, q queue.Queue) *P2p {
 	p2pCfg := cfg.GetModuleConfig().P2P
 	p2pCfg.Enable = true
 	p2pCfg.DbPath = dbpath
@@ -189,7 +189,7 @@ func testNetInfo(t *testing.T, p2p *P2p) {
 
 //测试Peer
 func testPeer(t *testing.T, p2p *P2p, q queue.Queue) {
-	cfg := types.NewChainConfig(types.ReadFile("../../../chain.toml"))
+	cfg := types.NewChain33Config(types.ReadFile("../../../chain33.toml"))
 	conn, err := grpc.Dial("localhost:53802", grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(grpc.UseCompressor("gzip")))
 	assert.Nil(t, err)
@@ -440,7 +440,7 @@ func testRestart(t *testing.T, p2p *P2p) {
 }
 
 func Test_p2p(t *testing.T) {
-	cfg := types.NewChainConfig(types.ReadFile("../../../chain.toml"))
+	cfg := types.NewChain33Config(types.ReadFile("../../../chain33.toml"))
 	q := queue.New("channel")
 	q.SetConfig(cfg)
 	go q.Start()

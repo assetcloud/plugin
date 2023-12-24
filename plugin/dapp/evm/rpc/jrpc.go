@@ -9,11 +9,11 @@ import (
 	"encoding/hex"
 	"errors"
 
-	chainComm "github.com/assetcloud/chain/common"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	chain33Comm "github.com/33cn/chain33/common"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
 
-	"github.com/assetcloud/chain/types"
-	evm "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	"github.com/33cn/chain33/types"
+	evm "github.com/33cn/plugin/plugin/dapp/evm/types"
 )
 
 // EvmCreateTx 创建Evm合约接口
@@ -67,7 +67,7 @@ func (c *Jrpc) CalcNewContractAddr(parm *evm.EvmCalcNewContractAddrReq, result *
 	if callerAddr == nil {
 		return errors.New("InvalidCallerAddress")
 	}
-	hashByte, err := chainComm.FromHex(parm.Txhash)
+	hashByte, err := chain33Comm.FromHex(parm.Txhash)
 	if err != nil {
 		return errors.New("InvalidHexTxHash")
 	}

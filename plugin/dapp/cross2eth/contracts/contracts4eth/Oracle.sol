@@ -2,15 +2,16 @@ pragma solidity ^0.5.0;
 
 import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Valset.sol";
-import "./ChainBridge.sol";
+import "./Chain33Bridge.sol";
 
 contract Oracle {
+
     using SafeMath for uint256;
 
     /*
     * @dev: Public variable declarations
     */
-    ChainBridge public chainBridge;
+    Chain33Bridge public chain33Bridge;
     Valset public valset;
     address public operator;
 
@@ -27,59 +28,96 @@ contract Oracle {
     /*
     * @dev: Event declarations
     */
-    event LogNewOracleClaim(bytes32 _claimID, address _validatorAddress, bytes _signature);
+    event LogNewOracleClaim(
+        bytes32 _claimID,
+        address _validatorAddress,
+        bytes _signature
+    );
 
     event LogProphecyProcessed(
-        bytes32 _claimID, uint256 _weightedSignedPower, uint256 _weightedTotalPower, address _submitter
+        bytes32 _claimID,
+        uint256 _weightedSignedPower,
+        uint256 _weightedTotalPower,
+        address _submitter
     );
 
     /*
     * @dev: Modifier to restrict access to the operator.
     */
-    modifier onlyOperator() {
-        require(msg.sender == operator, "Must be the operator.");
+    modifier onlyOperator()
+    {
+        require(
+            msg.sender == operator,
+            'Must be the operator.'
+        );
         _;
     }
 
     /*
     * @dev: Modifier to restrict access to current ValSet validators
     */
-    modifier onlyValidator() {
-        require(valset.isActiveValidator(msg.sender), "Must be an active validator");
+    modifier onlyValidator()
+    {
+        require(
+            valset.isActiveValidator(msg.sender),
+            "Must be an active validator"
+        );
         _;
     }
 
     /*
     * @dev: Modifier to restrict access to current ValSet validators
     */
-    modifier isPending(bytes32 _claimID) {
-        require(chainBridge.isProphecyClaimActive(_claimID) == true, "The prophecy must be pending for this operation");
+    modifier isPending(
+        bytes32 _claimID
+    )
+    {
+        require(
+            chain33Bridge.isProphecyClaimActive(
+                _claimID
+            ) == true,
+            "The prophecy must be pending for this operation"
+        );
         _;
     }
 
     /*
     * @dev: Modifier to restrict the claim type must be burn or lock
     */
-    modifier isValidClaimType(ClaimType _claimType) {
-        require(chainBridge.isValidClaimType(uint8(_claimType)) == true, "The claim type must be burn or lock");
-        _;
-    }
+    modifier isValidClaimType(
+        ClaimType _claimType
+    )
+    {
+        require(
+           chain33Bridge.isValidClaimType(
+               uint8(_claimType)
+           ) == true,
+           "The claim type must be burn or lock"
+        );
+            _;
+        }
 
     /*
     * @dev: Constructor
     */
-    constructor(address _operator, address _valset, address _chainBridge) public {
+    constructor(
+        address _operator,
+        address _valset,
+        address _chain33Bridge
+    )
+        public
+    {
         operator = _operator;
-        chainBridge = ChainBridge(_chainBridge);
+        chain33Bridge = Chain33Bridge(_chain33Bridge);
         valset = Valset(_valset);
     }
 
     /*
     * @dev: newOracleClaim
-    *       Allows validators to make new OracleClaims on chain lock/burn prophecy,
+    *       Allows validators to make new OracleClaims on chain33 lock/burn prophecy,
     *       if the required vote power reached,just make it processed
     * @param _claimType: burn or lock,
-    * @param _chainSender: chain sender,
+    * @param _chain33Sender: chain33 sender,
     * @param _ethereumReceiver: receiver on ethereum
     * @param _tokenAddress: token address
     * @param _symbol: token symbol
@@ -90,47 +128,68 @@ contract Oracle {
     */
     function newOracleClaim(
         ClaimType _claimType,
-        bytes memory _chainSender,
+        bytes memory _chain33Sender,
         address payable _ethereumReceiver,
         address _tokenAddress,
         string memory _symbol,
         uint256 _amount,
         bytes32 _claimID,
         bytes memory _signature
-    ) public onlyValidator isValidClaimType(_claimType) {
+    )
+        public
+        onlyValidator
+        isValidClaimType(_claimType)
+    {
         address validatorAddress = msg.sender;
 
         // Validate the msg.sender's signature
-        require(validatorAddress == valset.recover(_claimID, _signature), "Invalid _claimID signature.");
+        require(
+            validatorAddress == valset.recover(
+                _claimID,
+                _signature
+            ),
+            "Invalid _claimID signature."
+        );
 
         // Confirm that this address has not already made an oracle claim on this _ClaimID
-        require(!hasMadeClaim[_claimID][validatorAddress], "Cannot make duplicate oracle claims from the same address.");
+        require(
+            !hasMadeClaim[_claimID][validatorAddress],
+            "Cannot make duplicate oracle claims from the same address."
+        );
 
         if (oracleClaimValidators[_claimID].length == 0) {
-            chainBridge.setNewProphecyClaim(
-                _claimID,
-                uint8(_claimType),
-                _chainSender,
-                _ethereumReceiver,
-                validatorAddress,
-                _tokenAddress,
-                _symbol,
-                _amount
-            );
+             chain33Bridge.setNewProphecyClaim(
+                            _claimID,
+                            uint8(_claimType),
+                            _chain33Sender,
+                            _ethereumReceiver,
+                            validatorAddress,
+                            _tokenAddress,
+                            _symbol,
+                            _amount);
         }
 
         hasMadeClaim[_claimID][validatorAddress] = true;
         oracleClaimValidators[_claimID].push(validatorAddress);
 
-        emit LogNewOracleClaim(_claimID, validatorAddress, _signature);
+        emit LogNewOracleClaim(
+            _claimID,
+            validatorAddress,
+            _signature
+        );
 
-        (bool valid, uint256 weightedSignedPower, uint256 weightedTotalPower) = getClaimThreshold(_claimID);
-        if (true == valid) {
+        (bool valid, uint256 weightedSignedPower, uint256 weightedTotalPower ) = getClaimThreshold(_claimID);
+        if (true == valid)  {
             //if processed already,just emit an event
-            if (chainBridge.isProphecyClaimActive(_claimID) == true) {
+            if (chain33Bridge.isProphecyClaimActive(_claimID) == true) {
                 completeClaim(_claimID);
             }
-            emit LogProphecyProcessed(_claimID, weightedSignedPower, weightedTotalPower, msg.sender);
+            emit LogProphecyProcessed(
+                _claimID,
+                weightedSignedPower,
+                weightedTotalPower,
+                msg.sender
+            );
         }
     }
 
@@ -139,15 +198,24 @@ contract Oracle {
     *       Operator accessor method which checks if a prophecy has passed
     *       the validity threshold, without actually completing the prophecy.
     */
-    function checkBridgeProphecy(bytes32 _claimID)
+    function checkBridgeProphecy(
+        bytes32 _claimID
+    )
         public
         view
         onlyOperator
         isPending(_claimID)
-        returns (bool, uint256, uint256)
+        returns(bool, uint256, uint256)
     {
-        require(chainBridge.isProphecyClaimActive(_claimID) == true, "Can only check active prophecies");
-        return getClaimThreshold(_claimID);
+        require(
+            chain33Bridge.isProphecyClaimActive(
+                _claimID
+            ) == true,
+            "Can only check active prophecies"
+        );
+        return getClaimThreshold(
+            _claimID
+        );
     }
 
     /*
@@ -156,7 +224,13 @@ contract Oracle {
     *       combined active signatory validator powers pass the validation threshold.
     *       The hardcoded threshold is (Combined signed power * 2) >= (Total power * 3).
     */
-    function getClaimThreshold(bytes32 _claimID) internal view returns (bool, uint256, uint256) {
+    function getClaimThreshold(
+        bytes32 _claimID
+    )
+        internal
+        view
+        returns(bool, uint256, uint256)
+    {
         uint256 signedPower = 0;
         uint256 totalPower = valset.totalPower();
 
@@ -164,10 +238,14 @@ contract Oracle {
         for (uint256 i = 0; i < oracleClaimValidators[_claimID].length; i = i.add(1)) {
             address signer = oracleClaimValidators[_claimID][i];
 
-            // Only add the power of active validators
-            if (valset.isActiveValidator(signer)) {
-                signedPower = signedPower.add(valset.getValidatorPower(signer));
-            }
+                // Only add the power of active validators
+                if(valset.isActiveValidator(signer)) {
+                    signedPower = signedPower.add(
+                        valset.getValidatorPower(
+                            signer
+                        )
+                    );
+                }
         }
 
         // Calculate if weighted signed power has reached threshold of weighted total power
@@ -175,15 +253,25 @@ contract Oracle {
         uint256 weightedTotalPower = totalPower.mul(2);
         bool hasReachedThreshold = weightedSignedPower >= weightedTotalPower;
 
-        return (hasReachedThreshold, weightedSignedPower, weightedTotalPower);
+        return(
+            hasReachedThreshold,
+            weightedSignedPower,
+            weightedTotalPower
+        );
     }
 
     /*
     * @dev: completeClaim
     *       Completes a claim by completing the corresponding BridgeClaim
-    *       on the ChainBridge.
+    *       on the Chain33Bridge.
     */
-    function completeClaim(bytes32 _claimID) internal {
-        chainBridge.completeClaim(_claimID);
+    function completeClaim(
+        bytes32 _claimID
+    )
+        internal
+    {
+        chain33Bridge.completeClaim(
+            _claimID
+        );
     }
 }

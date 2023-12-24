@@ -13,10 +13,10 @@ enum EthBridgeStatus {
 
 message X2ethereumAction {
     oneof value {
-        Eth2Chain eth2ChainLock = 1;
-        Eth2Chain eth2ChainBurn = 2;
-        ChainToEth chainToEthBurn = 3;
-        ChainToEth chainToEthLock = 4;
+        Eth2Chain33 eth2Chain33Lock = 1;
+        Eth2Chain33 eth2Chain33Burn = 2;
+        Chain33ToEth chain33ToEthBurn = 3;
+        Chain33ToEth chain33ToEthLock = 4;
         MsgValidator addValidator = 5;
         MsgValidator removeValidator = 6;
         MsgValidator modifyPower = 7;
@@ -38,14 +38,14 @@ message MsgValidator {
 }
 
 // EthBridgeClaim is a structure that contains all the data for a particular bridge claim
-message Eth2Chain {
+message Eth2Chain33 {
     int64 EthereumChainID = 1;
     string BridgeContractAddress = 2;
     int64 Nonce = 3;
     string IssuerDotSymbol = 4;
     string TokenContractAddress = 6;
     string EthereumSender = 7;
-    string ChainReceiver = 8;
+    string Chain33Receiver = 8;
     string ValidatorAddress = 9;
     string Amount = 10;
     int64 ClaimType = 11;
@@ -54,16 +54,16 @@ message Eth2Chain {
 
 // OracleClaimContent is the details of how the content of the claim for each validator will be stored in the oracle
 message OracleClaimContent {
-    string ChainReceiver = 1;
+    string Chain33Receiver = 1;
     string Amount = 2;
     int64 ClaimType = 3;
     int64 Decimals = 4;
 }
 
 // MsgBurn defines a message for burning coins and triggering a related event
-message ChainToEth {
+message Chain33ToEth {
     string TokenContract = 1;
-    string ChainSender = 2;
+    string Chain33Sender = 2;
     string EthereumReceiver = 3;
     string Amount = 4;
     string IssuerDotSymbol = 5;
@@ -71,14 +71,14 @@ message ChainToEth {
 }
 
 // 回执接口定义
-message ReceiptEth2Chain {
+message ReceiptEth2Chain33 {
     int64 EthereumChainID = 1;
     string BridgeContractAddress = 2;
     int64 Nonce = 3;
     string IssuerDotSymbol = 4;
     string TokenAddress = 5;
     string EthereumSender = 7;
-    string ChainReceiver = 8;
+    string Chain33Receiver = 8;
     string ValidatorAddress = 9;
     string Amount = 10;
     int64 ClaimType = 11;
@@ -88,9 +88,9 @@ message ReceiptEth2Chain {
     int64 Decimals = 15;
 }
 
-message ReceiptChainToEth {
+message ReceiptChain33ToEth {
     string TokenContract = 1;
-    string ChainSender = 2;
+    string Chain33Sender = 2;
     string EthereumReceiver = 3;
     string Amount = 4;
     string IssuerDotSymbol = 5;

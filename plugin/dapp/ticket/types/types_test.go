@@ -8,8 +8,8 @@ import (
 	"encoding/hex"
 	"testing"
 
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
 	"github.com/stretchr/testify/assert"
 )
 

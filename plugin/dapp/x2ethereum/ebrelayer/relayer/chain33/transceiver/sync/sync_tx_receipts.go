@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package sync ...
+//Package sync ...
 package sync
 
 import (
@@ -13,12 +13,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/assetcloud/chain/blockchain"
-	dbm "github.com/assetcloud/chain/common/db"
-	l "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	"github.com/assetcloud/chain/types"
-	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/33cn/chain33/blockchain"
+	dbm "github.com/33cn/chain33/common/db"
+	l "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	"github.com/33cn/chain33/types"
+	relayerTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	"github.com/rs/cors"
 )
 
@@ -27,7 +27,7 @@ var (
 	syncTxReceipts *TxReceipts
 )
 
-// StartSyncTxReceipt ...
+//StartSyncTxReceipt ...
 func StartSyncTxReceipt(cfg *relayerTypes.SyncTxReceiptConfig, db dbm.DB) *TxReceipts {
 	log.Debug("StartSyncTxReceipt, load config", "para:", cfg)
 	log.Debug("TxReceipts started ")
@@ -123,9 +123,9 @@ func checkClient(addr string, expectClient string) bool {
 	return addr == expectClient
 }
 
-// 向chain节点的注册推送交易回执，AddSubscribeTxReceipt具有2种功能：
-// 首次注册功能，如果没有进行过注册，则进行首次注册
-// 如果已经注册，则继续推送
+//向chain33节点的注册推送交易回执，AddSubscribeTxReceipt具有2种功能：
+//首次注册功能，如果没有进行过注册，则进行首次注册
+//如果已经注册，则继续推送
 func bindOrResumePush(cfg *relayerTypes.SyncTxReceiptConfig) {
 	contract := make(map[string]bool)
 	contract["x2ethereum"] = true
@@ -140,16 +140,16 @@ func bindOrResumePush(cfg *relayerTypes.SyncTxReceiptConfig) {
 		Contract:      contract,
 	}
 	var res types.ReplySubscribePush
-	ctx := jsonclient.NewRPCCtx(cfg.ChainHost, "Chain.AddPushSubscribe", params, &res)
+	ctx := jsonclient.NewRPCCtx(cfg.Chain33Host, "Chain33.AddPushSubscribe", params, &res)
 	_, err := ctx.RunResult()
 	if err != nil {
-		fmt.Println("Failed to AddSubscribeTxReceipt to  rpc addr:", cfg.ChainHost, "ReplySubTxReceipt", res)
+		fmt.Println("Failed to AddSubscribeTxReceipt to  rpc addr:", cfg.Chain33Host, "ReplySubTxReceipt", res)
 		panic("bindOrResumePush client failed due to:" + err.Error())
 	}
 	if !res.IsOk {
-		fmt.Println("Failed to AddSubscribeTxReceipt to  rpc addr:", cfg.ChainHost, "ReplySubTxReceipt", res)
+		fmt.Println("Failed to AddSubscribeTxReceipt to  rpc addr:", cfg.Chain33Host, "ReplySubTxReceipt", res)
 		panic("bindOrResumePush client failed due to:" + res.Msg)
 	}
-	log.Info("bindOrResumePush", "Succeed to AddSubscribeTxReceipt for rpc address:", cfg.ChainHost)
+	log.Info("bindOrResumePush", "Succeed to AddSubscribeTxReceipt for rpc address:", cfg.Chain33Host)
 	fmt.Println("Succeed to AddPushSubscribe")
 }

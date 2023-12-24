@@ -1,19 +1,19 @@
-package chain
+package chain33
 
 import (
 	"errors"
 	"fmt"
 	"time"
 
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4chain/generated"
-	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4chain33/generated"
+	erc20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
 	ethcommon "github.com/ethereum/go-ethereum/common"
 )
 
-func deployAndInit2Chain(rpcLaddr, paraChainName string, para4deploy *DeployPara4Chain) (*X2EthDeployResult, error) {
+func deployAndInit2Chain33(rpcLaddr, paraChainName string, para4deploy *DeployPara4Chain33) (*X2EthDeployResult, error) {
 	deployer := para4deploy.Deployer.String()
 
 	var err error
@@ -58,7 +58,7 @@ func deployAndInit2Chain(rpcLaddr, paraChainName string, para4deploy *DeployPara
 
 	deployValsetHash, err := deploySingleContract(ethcommon.FromHex(generated.ValsetBin), generated.ValsetABI, constructorPara, "valset", paraChainName, para4deploy.Deployer.String(), rpcLaddr)
 	if nil != err {
-		chaintxLog.Error("DeployAndInit", "failed to DeployValset due to:", err.Error())
+		chain33txLog.Error("DeployAndInit", "failed to DeployValset due to:", err.Error())
 		return nil, err
 	}
 	{
@@ -71,7 +71,7 @@ func deployAndInit2Chain(rpcLaddr, paraChainName string, para4deploy *DeployPara
 			case <-oneSecondtimeout.C:
 				data, _ := getTxByHashesRpc(deployValsetHash, rpcLaddr)
 				if data == "" {
-					chaintxLog.Info("deployAndInit2Chain", "No receipt received yet for Deploy valset tx and continue to wait", "continue")
+					chain33txLog.Info("deployAndInit2Chain33", "No receipt received yet for Deploy valset tx and continue to wait", "continue")
 					continue
 				} else if data != "2" {
 					return nil, errors.New("Deploy valset failed due to" + ", ty = " + data)
@@ -80,14 +80,14 @@ func deployAndInit2Chain(rpcLaddr, paraChainName string, para4deploy *DeployPara
 				deployValset.Address = getContractAddr(deployer, deployValsetHash)
 				deployValset.TxHash = deployValsetHash
 				valsetAddr = deployValset.Address.String()
-				chaintxLog.Info("deployAndInit2Chain", "Succeed to deploy valset with address =", valsetAddr)
+				chain33txLog.Info("deployAndInit2Chain33", "Succeed to deploy valset with address =", valsetAddr)
 				goto deployEthereumBridge
 			}
 		}
 	}
 
 deployEthereumBridge:
-	//x2EthContracts.ChainBridge, deployInfo.ChainBridge, err = DeployChainBridge(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Valset.Address)
+	//x2EthContracts.Chain33Bridge, deployInfo.Chain33Bridge, err = DeployChain33Bridge(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Valset.Address)
 	//constructor(
 	//	address _operator,
 	//	address _valset
@@ -95,7 +95,7 @@ deployEthereumBridge:
 	constructorPara = fmt.Sprintf("constructor(%s, %s)", para4deploy.Operator.String(), valsetAddr)
 	deployEthereumBridgeHash, err := deploySingleContract(ethcommon.FromHex(generated.EthereumBridgeBin), generated.EthereumBridgeABI, constructorPara, "EthereumBridge", paraChainName, para4deploy.Deployer.String(), rpcLaddr)
 	if nil != err {
-		chaintxLog.Error("DeployAndInit", "failed to deployEthereumBridge due to:", err.Error())
+		chain33txLog.Error("DeployAndInit", "failed to deployEthereumBridge due to:", err.Error())
 		return nil, err
 	}
 	{
@@ -108,7 +108,7 @@ deployEthereumBridge:
 			case <-oneSecondtimeout.C:
 				data, _ := getTxByHashesRpc(deployEthereumBridgeHash, rpcLaddr)
 				if data == "" {
-					chaintxLog.Info("deployAndInit2Chain", "No receipt received yet for Deploy EthereumBridge tx and continue to wait", "continue")
+					chain33txLog.Info("deployAndInit2Chain33", "No receipt received yet for Deploy EthereumBridge tx and continue to wait", "continue")
 					continue
 				} else if data != "2" {
 					return nil, errors.New("Deploy EthereumBridge failed due to" + ", ty = " + data)
@@ -116,7 +116,7 @@ deployEthereumBridge:
 				deployEthereumBridge.Address = getContractAddr(deployer, deployEthereumBridgeHash)
 				deployValset.TxHash = deployEthereumBridgeHash
 				ethereumBridgeAddr = deployEthereumBridge.Address.String()
-				chaintxLog.Info("deployAndInit2Chain", "Succeed to deploy EthereumBridge with address =", ethereumBridgeAddr)
+				chain33txLog.Info("deployAndInit2Chain33", "Succeed to deploy EthereumBridge with address =", ethereumBridgeAddr)
 				goto deployOracle
 			}
 		}
@@ -129,10 +129,10 @@ deployOracle:
 	//	address _ethereumBridge
 	//)
 	constructorPara = fmt.Sprintf("constructor(%s, %s, %s)", para4deploy.Operator.String(), valsetAddr, ethereumBridgeAddr)
-	//x2EthContracts.Oracle, deployInfo.Oracle, err = DeployOracle(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Valset.Address, deployInfo.ChainBridge.Address)
+	//x2EthContracts.Oracle, deployInfo.Oracle, err = DeployOracle(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Valset.Address, deployInfo.Chain33Bridge.Address)
 	deployOracleHash, err := deploySingleContract(ethcommon.FromHex(generated.OracleBin), generated.OracleABI, constructorPara, "Oracle", paraChainName, para4deploy.Deployer.String(), rpcLaddr)
 	if nil != err {
-		chaintxLog.Error("DeployAndInit", "failed to DeployOracle due to:", err.Error())
+		chain33txLog.Error("DeployAndInit", "failed to DeployOracle due to:", err.Error())
 		return nil, err
 	}
 	{
@@ -145,7 +145,7 @@ deployOracle:
 			case <-oneSecondtimeout.C:
 				data, _ := getTxByHashesRpc(deployOracleHash, rpcLaddr)
 				if data == "" {
-					chaintxLog.Info("deployAndInit2Chain", "No receipt received yet for Deploy Oracle tx and continue to wait", "continue")
+					chain33txLog.Info("deployAndInit2Chain33", "No receipt received yet for Deploy Oracle tx and continue to wait", "continue")
 					continue
 				} else if data != "2" {
 					return nil, errors.New("Deploy Oracle failed due to" + ", ty = " + data)
@@ -153,7 +153,7 @@ deployOracle:
 				deployOracle.Address = getContractAddr(deployer, deployOracleHash)
 				deployOracle.TxHash = deployOracleHash
 				oracleAddr = deployOracle.Address.String()
-				chaintxLog.Info("deployAndInit2Chain", "Succeed to deploy Oracle with address =", oracleAddr)
+				chain33txLog.Info("deployAndInit2Chain33", "Succeed to deploy Oracle with address =", oracleAddr)
 				goto deployBridgeBank
 			}
 		}
@@ -168,7 +168,7 @@ deployBridgeBank:
 	constructorPara = fmt.Sprintf("constructor(%s, %s, %s)", para4deploy.Operator.String(), oracleAddr, ethereumBridgeAddr)
 	deployBridgeBankHash, err := deploySingleContract(ethcommon.FromHex(generated.BridgeBankBin), generated.BridgeBankABI, constructorPara, "BridgeBank", paraChainName, para4deploy.Deployer.String(), rpcLaddr)
 	if nil != err {
-		chaintxLog.Error("DeployAndInit", "failed to DeployBridgeBank due to:", err.Error())
+		chain33txLog.Error("DeployAndInit", "failed to DeployBridgeBank due to:", err.Error())
 		return nil, err
 	}
 	{
@@ -181,7 +181,7 @@ deployBridgeBank:
 			case <-oneSecondtimeout.C:
 				data, _ := getTxByHashesRpc(deployBridgeBankHash, rpcLaddr)
 				if data == "" {
-					chaintxLog.Info("deployAndInit2Chain", "No receipt received yet for Deploy BridgeBank tx and continue to wait", "continue")
+					chain33txLog.Info("deployAndInit2Chain33", "No receipt received yet for Deploy BridgeBank tx and continue to wait", "continue")
 					continue
 				} else if data != "2" {
 					return nil, errors.New("Deploy BridgeBank failed due to" + ", ty = " + data)
@@ -189,7 +189,7 @@ deployBridgeBank:
 				deployBridgeBank.Address = getContractAddr(deployer, deployBridgeBankHash)
 				deployBridgeBank.TxHash = deployOracleHash
 				bridgeBankAddr = deployBridgeBank.Address.String()
-				chaintxLog.Info("deployAndInit2Chain", "Succeed to deploy BridgeBank with address =", bridgeBankAddr)
+				chain33txLog.Info("deployAndInit2Chain33", "Succeed to deploy BridgeBank with address =", bridgeBankAddr)
 				goto settingBridgeBank
 			}
 		}
@@ -203,12 +203,12 @@ settingBridgeBank:
 	callPara := fmt.Sprintf("setBridgeBank(%s)", bridgeBankAddr)
 	_, packData, err := evmAbi.Pack(callPara, generated.EthereumBridgeABI, false)
 	if nil != err {
-		chaintxLog.Info("setBridgeBank", "Failed to do abi.Pack due to:", err.Error())
+		chain33txLog.Info("setBridgeBank", "Failed to do abi.Pack due to:", err.Error())
 		return nil, ebrelayerTypes.ErrPack
 	}
 	settingBridgeBankHash, err := sendTx2Evm(packData, rpcLaddr, ethereumBridgeAddr, paraChainName, deployer)
 	if nil != err {
-		chaintxLog.Error("DeployAndInit", "failed to settingBridgeBank due to:", err.Error())
+		chain33txLog.Error("DeployAndInit", "failed to settingBridgeBank due to:", err.Error())
 		return nil, err
 	}
 	{
@@ -222,12 +222,12 @@ settingBridgeBank:
 			case <-oneSecondtimeout.C:
 				data, _ := getTxByHashesRpc(settingBridgeBankHash, rpcLaddr)
 				if data == "" {
-					chaintxLog.Info("deployAndInit2Chain", "No receipt received yet for for setBridgeBank tx and continue to wait", "continue")
+					chain33txLog.Info("deployAndInit2Chain33", "No receipt received yet for for setBridgeBank tx and continue to wait", "continue")
 					continue
 				} else if data != "2" {
 					return nil, errors.New("setBridgeBank failed due to" + ", ty = " + data)
 				}
-				chaintxLog.Info("deployAndInit2Chain", "Succeed to setBridgeBank ", "Oh yea!!!")
+				chain33txLog.Info("deployAndInit2Chain33", "Succeed to setBridgeBank ", "Oh yea!!!")
 				goto setOracle
 			}
 		}
@@ -240,12 +240,12 @@ setOracle:
 	callPara = fmt.Sprintf("setOracle(%s)", oracleAddr)
 	_, packData, err = evmAbi.Pack(callPara, generated.EthereumBridgeABI, false)
 	if nil != err {
-		chaintxLog.Info("setOracle", "Failed to do abi.Pack due to:", err.Error())
+		chain33txLog.Info("setOracle", "Failed to do abi.Pack due to:", err.Error())
 		return nil, ebrelayerTypes.ErrPack
 	}
 	setOracleHash, err := sendTx2Evm(packData, rpcLaddr, ethereumBridgeAddr, paraChainName, deployer)
 	if nil != err {
-		chaintxLog.Error("DeployAndInit", "failed to setOracle due to:", err.Error())
+		chain33txLog.Error("DeployAndInit", "failed to setOracle due to:", err.Error())
 		return nil, err
 	}
 	{
@@ -259,12 +259,12 @@ setOracle:
 			case <-oneSecondtimeout.C:
 				data, _ := getTxByHashesRpc(setOracleHash, rpcLaddr)
 				if data == "" {
-					chaintxLog.Info("deployAndInit2Chain", "No receipt received yet for for setOracle tx and continue to wait", "continue")
+					chain33txLog.Info("deployAndInit2Chain33", "No receipt received yet for for setOracle tx and continue to wait", "continue")
 					continue
 				} else if data != "2" {
 					return nil, errors.New("setOracle failed due to" + ", ty = " + data)
 				}
-				chaintxLog.Info("deployAndInit2Chain", "Succeed to setOracle ", "Oh yea!!!")
+				chain33txLog.Info("deployAndInit2Chain33", "Succeed to setOracle ", "Oh yea!!!")
 				goto deployBridgeRegistry
 			}
 		}
@@ -280,7 +280,7 @@ deployBridgeRegistry:
 	constructorPara = fmt.Sprintf("constructor(%s, %s, %s, %s)", ethereumBridgeAddr, bridgeBankAddr, oracleAddr, valsetAddr)
 	deployBridgeRegistryHash, err := deploySingleContract(ethcommon.FromHex(generated.BridgeRegistryBin), generated.BridgeRegistryABI, constructorPara, "BridgeRegistry", paraChainName, para4deploy.Deployer.String(), rpcLaddr)
 	if nil != err {
-		chaintxLog.Error("DeployAndInit", "failed to deployBridgeRegistry due to:", err.Error())
+		chain33txLog.Error("DeployAndInit", "failed to deployBridgeRegistry due to:", err.Error())
 		return nil, err
 	}
 	{
@@ -293,7 +293,7 @@ deployBridgeRegistry:
 			case <-oneSecondtimeout.C:
 				data, _ := getTxByHashesRpc(deployBridgeRegistryHash, rpcLaddr)
 				if data == "" {
-					chaintxLog.Info("deployAndInit2Chain", "No receipt received yet for for deploy BridgeRegistry tx and continue to wait", "continue")
+					chain33txLog.Info("deployAndInit2Chain33", "No receipt received yet for for deploy BridgeRegistry tx and continue to wait", "continue")
 					continue
 				} else if data != "2" {
 					return nil, errors.New("deployBridgeRegistry failed due to" + ", ty = " + data)
@@ -302,7 +302,7 @@ deployBridgeRegistry:
 				deployBridgeRegistry.Address = getContractAddr(deployer, deployBridgeRegistryHash)
 				deployBridgeRegistry.TxHash = deployBridgeRegistryHash
 
-				chaintxLog.Info("deployAndInit2Chain", "Succeed to deployBridgeRegistry with address", deployBridgeRegistry.Address.String())
+				chain33txLog.Info("deployAndInit2Chain33", "Succeed to deployBridgeRegistry with address", deployBridgeRegistry.Address.String())
 				goto finished
 			}
 		}
@@ -311,10 +311,10 @@ finished:
 	return deployInfo, nil
 }
 
-func deployMulSign2Chain(rpcLaddr, paraChainName, deployer string) (string, error) {
+func deployMulSign2Chain33(rpcLaddr, paraChainName, deployer string) (string, error) {
 	deployMulSign, err := deploySingleContract(ethcommon.FromHex(generated.GnosisSafeBin), generated.GnosisSafeABI, "", "mul-sign", paraChainName, deployer, rpcLaddr)
 	if nil != err {
-		chaintxLog.Error("deployMulSign2Chain", "failed to deployMulSign due to:", err.Error())
+		chain33txLog.Error("deployMulSign2Chain33", "failed to deployMulSign due to:", err.Error())
 		return "", err
 	}
 
@@ -327,7 +327,7 @@ func deployMulSign2Chain(rpcLaddr, paraChainName, deployer string) (string, erro
 		case <-oneSecondtimeout.C:
 			data, _ := getTxByHashesRpc(deployMulSign, rpcLaddr)
 			if data == "" {
-				chaintxLog.Info("deployMulSign2Chain", "No receipt received yet for Deploy MulSign tx and continue to wait", "continue")
+				chain33txLog.Info("deployMulSign2Chain33", "No receipt received yet for Deploy MulSign tx and continue to wait", "continue")
 				continue
 			} else if data != "2" {
 				return "", errors.New("Deploy MulSign failed due to" + ", ty = " + data)
@@ -335,17 +335,17 @@ func deployMulSign2Chain(rpcLaddr, paraChainName, deployer string) (string, erro
 
 			address := getContractAddr(deployer, deployMulSign)
 			mulSignAddr := address.String()
-			chaintxLog.Info("deployMulSign2Chain", "Succeed to deploy MulSign with address =", mulSignAddr)
+			chain33txLog.Info("deployMulSign2Chain33", "Succeed to deploy MulSign with address =", mulSignAddr)
 			return mulSignAddr, nil
 		}
 	}
 }
 
-func deployERC20ToChain(rpcLaddr, paraChainName, deployer string, param ebTypes.ERC20Token) (string, error) {
+func deployERC20ToChain33(rpcLaddr, paraChainName, deployer string, param ebTypes.ERC20Token) (string, error) {
 	constructorPara := "constructor(" + param.Symbol + "," + param.Symbol + "," + param.Amount + "," + param.Owner + ")"
 	deployErc20, err := deploySingleContract(ethcommon.FromHex(erc20.ERC20Bin), erc20.ERC20ABI, constructorPara, "Erc20:"+param.Symbol, paraChainName, deployer, rpcLaddr)
 	if nil != err {
-		chaintxLog.Error("deployERC20ToChain", "failed to deployMulSign due to:", err.Error())
+		chain33txLog.Error("deployERC20ToChain33", "failed to deployMulSign due to:", err.Error())
 		return "", err
 	}
 
@@ -358,7 +358,7 @@ func deployERC20ToChain(rpcLaddr, paraChainName, deployer string, param ebTypes.
 		case <-oneSecondtimeout.C:
 			data, _ := getTxByHashesRpc(deployErc20, rpcLaddr)
 			if data == "" {
-				chaintxLog.Info("deployERC20ToChain", "No receipt received yet for Deploy erc20 tx and continue to wait", "continue")
+				chain33txLog.Info("deployERC20ToChain33", "No receipt received yet for Deploy erc20 tx and continue to wait", "continue")
 				continue
 			} else if data != "2" {
 				return "", errors.New("Deploy erc20 failed due to" + ", ty = " + data)
@@ -366,7 +366,7 @@ func deployERC20ToChain(rpcLaddr, paraChainName, deployer string, param ebTypes.
 
 			address := getContractAddr(deployer, deployErc20)
 			erc20Addr := address.String()
-			chaintxLog.Info("deployERC20ToChain", "Succeed to deploy erc20 with address =", erc20Addr)
+			chain33txLog.Info("deployERC20ToChain33", "Succeed to deploy erc20 with address =", erc20Addr)
 			return erc20Addr, nil
 		}
 	}

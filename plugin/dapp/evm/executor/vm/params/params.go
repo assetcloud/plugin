@@ -7,8 +7,8 @@ package params
 import (
 	"math/big"
 
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/state"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/state"
 )
 
 // GasParam 解释器中调用Gas计算时所传递的合约中和Gas相关的参数结构

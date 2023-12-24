@@ -26,9 +26,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/assetcloud/chain/common"
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/plugin/plugin/store/mpt/db2/rlp"
+	"github.com/33cn/chain33/common"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/plugin/plugin/store/mpt/db2/rlp"
 )
 
 // secureKeyPrefix is the database key prefix used to store trie node preimages.

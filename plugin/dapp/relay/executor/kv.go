@@ -7,11 +7,11 @@ package executor
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/common/address"
+	"github.com/33cn/chain33/common/address"
 
 	"strings"
 
-	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
+	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
 )
 
 const (

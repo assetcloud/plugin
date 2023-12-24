@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "./EthereumBank.sol";
-import "./ChainBank.sol";
+import "./Chain33Bank.sol";
 import "../Oracle.sol";
 import "../EthereumBridge.sol";
 
@@ -9,12 +9,12 @@ import "../EthereumBridge.sol";
  * @title BridgeBank
  * @dev Bank contract which coordinates asset-related functionality.
  *      EthereumBank manages the minting and burning of tokens which
- *      represent Ethereum based assets, while ChainBank manages
- *      the locking and unlocking of Chain and ERC20 token assets
- *      based on Chain.
+ *      represent Ethereum based assets, while Chain33Bank manages
+ *      the locking and unlocking of Chain33 and ERC20 token assets
+ *      based on Chain33.
  **/
 
-contract BridgeBank is EthereumBank, ChainBank {
+contract BridgeBank is EthereumBank, Chain33Bank {
 
     using SafeMath for uint256;
     
@@ -120,7 +120,7 @@ contract BridgeBank is EthereumBank, ChainBank {
      * @dev: Mints new BankTokens
      *
      * @param _ethereumSender: The sender's Ethereum address in bytes.
-     * @param _chainRecipient: The intended recipient's Chain address.
+     * @param _chain33Recipient: The intended recipient's Chain33 address.
      * @param _ethereumTokenAddress: The currency type
      * @param _symbol: ethereum token symbol
      * @param _amount: number of ethereum tokens to be minted
@@ -148,7 +148,7 @@ contract BridgeBank is EthereumBank, ChainBank {
      * @dev: Burns bank tokens
      *
      * @param _ethereumReceiver: The _ethereum receiver address in bytes.
-     * @param _ethereumTokenAddress: The token address mint on chain and it's origin from Ethereum
+     * @param _ethereumTokenAddress: The token address mint on chain33 and it's origin from Ethereum
      * @param _amount: number of ethereum tokens to be burned
      */
     function burnBridgeTokens(
@@ -170,7 +170,7 @@ contract BridgeBank is EthereumBank, ChainBank {
      * @dev: withdraw asset via Proxy
      *
      * @param _ethereumReceiver: The _ethereum receiver address in bytes.
-     * @param _bridgeTokenAddress: The bridge Token Address issued in chain and it's origin from Ethereum/BSC
+     * @param _bridgeTokenAddress: The bridge Token Address issued in chain33 and it's origin from Ethereum/BSC
      * @param _amount: number of bridge tokens to be transferred to proxy address
      */
     function withdrawViaProxy(
@@ -244,10 +244,10 @@ contract BridgeBank is EthereumBank, ChainBank {
     }
 
     /*
-    * @dev: Locks received Chain funds.
+    * @dev: Locks received Chain33 funds.
     *
     * @param _recipient: bytes representation of destination address.
-    * @param _token: token address in origin chain (0x0 if chain)
+    * @param _token: token address in origin chain (0x0 if chain33)
     * @param _amount: value of deposit
     */
     function lock(
@@ -261,7 +261,7 @@ contract BridgeBank is EthereumBank, ChainBank {
     {
         string memory symbol;
 
-        // Chain deposit
+        // Chain33 deposit
         if (msg.value > 0) {
           require(
               _token == address(0),
@@ -284,7 +284,7 @@ contract BridgeBank is EthereumBank, ChainBank {
           symbol = BridgeToken(_token).symbol();
           require(
               tokenAllow2Lock[keccak256(abi.encodePacked(symbol))] == _token,
-              'The token is not allowed to be locked from Chain.'
+              'The token is not allowed to be locked from Chain33.'
           );
         }
 
@@ -298,9 +298,9 @@ contract BridgeBank is EthereumBank, ChainBank {
     }
 
    /*
-    * @dev: Unlocks Chain and ERC20 tokens held on the contract.
+    * @dev: Unlocks Chain33 and ERC20 tokens held on the contract.
     *
-    * @param _recipient: recipient's Chain address
+    * @param _recipient: recipient's Chain33 address
     * @param _token: token contract address
     * @param _symbol: token symbol
     * @param _amount: wei amount or ERC20 token count
@@ -350,7 +350,7 @@ contract BridgeBank is EthereumBank, ChainBank {
     * @dev: Allows access to a Ethereum deposit's information via its unique identifier.
     *
     * @param _id: The deposit to be viewed.
-    * @return: Original sender's Chain address.
+    * @return: Original sender's Chain33 address.
     * @return: Intended Ethereum recipient's address in bytes.
     * @return: The lock deposit's currency, denoted by a token address.
     * @return: The amount locked in the deposit.

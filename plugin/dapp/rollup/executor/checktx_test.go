@@ -5,13 +5,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/assetcloud/chain/client/mocks"
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	paratypes "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
-	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
+	"github.com/33cn/chain33/client/mocks"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	paratypes "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
@@ -42,7 +42,7 @@ func Test_checkCommit(t *testing.T) {
 	defer util.CloseTestDB(dir, state)
 	api := &mocks.QueueProtocolAPI{}
 	r.SetAPI(api)
-	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
 	api.On("GetConfig").Return(cfg)
 	r.SetStateDB(state)
 	header := &types.Header{Height: 1}

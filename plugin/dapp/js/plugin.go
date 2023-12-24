@@ -1,13 +1,13 @@
 package js
 
 import (
-	"github.com/assetcloud/plugin/plugin/dapp/js/executor"
-	ptypes "github.com/assetcloud/plugin/plugin/dapp/js/types"
-	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/33cn/chain33/pluginmgr"
+	"github.com/33cn/plugin/plugin/dapp/js/executor"
+	ptypes "github.com/33cn/plugin/plugin/dapp/js/types"
 
 	// init auto test
-	_ "github.com/assetcloud/plugin/plugin/dapp/js/autotest"
-	"github.com/assetcloud/plugin/plugin/dapp/js/command"
+	_ "github.com/33cn/plugin/plugin/dapp/js/autotest"
+	"github.com/33cn/plugin/plugin/dapp/js/command"
 )
 
 func init() {

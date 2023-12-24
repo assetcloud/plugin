@@ -4,13 +4,13 @@ import (
 	"context"
 	"errors"
 
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 )
 
-// GetOperator ...
+//GetOperator ...
 func GetOperator(client ethinterface.EthClientSpec, sender, bridgeBank common.Address) (common.Address, error) {
 	header, err := client.HeaderByNumber(context.Background(), nil)
 	if err != nil {
@@ -36,7 +36,7 @@ func GetOperator(client ethinterface.EthClientSpec, sender, bridgeBank common.Ad
 	return bridgeBankInstance.Operator(&auth)
 }
 
-// IsActiveValidator ...
+//IsActiveValidator ...
 func IsActiveValidator(validator common.Address, valset *generated.Valset) (bool, error) {
 	opts := &bind.CallOpts{
 		Pending: true,
@@ -54,8 +54,8 @@ func IsActiveValidator(validator common.Address, valset *generated.Valset) (bool
 	return isActiveValidator, nil
 }
 
-// IsProphecyPending ...
-func IsProphecyPending(claimID [32]byte, validator common.Address, chainBridge *generated.ChainBridge) (bool, error) {
+//IsProphecyPending ...
+func IsProphecyPending(claimID [32]byte, validator common.Address, chain33Bridge *generated.Chain33Bridge) (bool, error) {
 	opts := &bind.CallOpts{
 		Pending: true,
 		From:    validator,
@@ -63,15 +63,15 @@ func IsProphecyPending(claimID [32]byte, validator common.Address, chainBridge *
 	}
 
 	// Initialize BridgeRegistry instance
-	active, err := chainBridge.IsProphecyClaimActive(opts, claimID)
+	active, err := chain33Bridge.IsProphecyClaimActive(opts, claimID)
 	if err != nil {
-		txslog.Error("IsActiveValidatorFromChainBridge", "Failed to query IsActiveValidator due to:", err.Error())
+		txslog.Error("IsActiveValidatorFromChain33Bridge", "Failed to query IsActiveValidator due to:", err.Error())
 		return false, err
 	}
 	return active, nil
 }
 
-// GetBalance ...
+//GetBalance ...
 func GetBalance(client ethinterface.EthClientSpec, tokenAddr, owner string) (string, error) {
 	//查询ERC20余额
 	if tokenAddr != "" {
@@ -100,7 +100,7 @@ func GetBalance(client ethinterface.EthClientSpec, tokenAddr, owner string) (str
 	return balance.String(), nil
 }
 
-// GetLockedFunds ...
+//GetLockedFunds ...
 func GetLockedFunds(bridgeBank *generated.BridgeBank, tokenAddrStr string) (string, error) {
 	var tokenAddr common.Address
 	if tokenAddrStr != "" {
@@ -118,7 +118,7 @@ func GetLockedFunds(bridgeBank *generated.BridgeBank, tokenAddrStr string) (stri
 	return balance.String(), nil
 }
 
-// GetDepositFunds ...
+//GetDepositFunds ...
 func GetDepositFunds(client bind.ContractBackend, tokenAddrStr string) (string, error) {
 	if tokenAddrStr == "" {
 		return "", errors.New("nil token address")
@@ -142,7 +142,7 @@ func GetDepositFunds(client bind.ContractBackend, tokenAddrStr string) (string, 
 	return supply.String(), nil
 }
 
-// GetToken2address ...
+//GetToken2address ...
 func GetToken2address(bridgeBank *generated.BridgeBank, tokenSymbol string) (string, error) {
 	opts := &bind.CallOpts{
 		Pending: true,

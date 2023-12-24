@@ -7,9 +7,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/assetcloud/chain/types"
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
-	"github.com/assetcloud/plugin/plugin/dapp/zksync/wallet"
+	"github.com/33cn/chain33/types"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	"github.com/33cn/plugin/plugin/dapp/zksync/wallet"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 )
 
@@ -547,7 +547,7 @@ func getTransferNFTOperationByChunk(chunk []byte) *zt.ZkOperation {
 	return &zt.ZkOperation{Ty: zt.TyTransferNFTAction, Op: special}
 }
 
-// 根据ops解析成leaf，并对相同的acctId,tokenId做合并，同时对deposit和withdraw操作做merge
+//根据ops解析成leaf，并对相同的acctId,tokenId做合并，同时对deposit和withdraw操作做merge
 func parseRollbackOps(ops []*zt.ZkOperation) ([]uint64, []uint64, map[uint64]*zt.HistoryLeaf, map[uint64]*zt.HistoryLeaf, error) {
 	if len(ops) <= 0 {
 		return nil, nil, nil, nil, errors.Wrapf(types.ErrInvalidParam, "rollback ops=0")
@@ -615,7 +615,7 @@ func parseRollbackOps(ops []*zt.ZkOperation) ([]uint64, []uint64, map[uint64]*zt
 	return depositAcctIds, withdrawAcctIds, depositAccountMap, withdrawAccountMap, nil
 }
 
-// deposit和withdraw中相同acctId且相同tokenId的balance做一个合并,方便清算
+//deposit和withdraw中相同acctId且相同tokenId的balance做一个合并,方便清算
 func mergeAccountMap(depositMap, withdrawMap map[uint64]*zt.HistoryLeaf) error {
 	for i, w := range withdrawMap {
 		if d, ok := depositMap[i]; ok {
@@ -695,7 +695,7 @@ func updateLeaf(tree map[uint64]*zt.HistoryLeaf, accountID, tokenID uint64, amou
 	return leaf
 }
 
-// 统计所有token的gap
+//统计所有token的gap
 func updateTokenGap(tokenGap map[uint64]string, tokenId uint64, gap string) {
 	v, ok := tokenGap[tokenId]
 	if !ok {

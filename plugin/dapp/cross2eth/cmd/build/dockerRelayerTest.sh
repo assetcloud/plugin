@@ -21,14 +21,14 @@ function AllRelayerMainTest() {
     fi
 
     if [[ $# -ge 2 ]]; then
-        chainID="${2}"
+        chain33ID="${2}"
     fi
 
     get_cli
 
     # init
-    ChainCli=${MainCli}
-    InitChainValidator
+    Chain33Cli=${MainCli}
+    InitChain33Validator
     # para add
     initPara
 

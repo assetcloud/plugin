@@ -4,7 +4,8 @@ import "../openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Valset.sol";
 import "./BridgeBank/BridgeBank.sol";
 
-contract ChainBridge {
+contract Chain33Bridge {
+
     using SafeMath for uint256;
 
     /*
@@ -35,7 +36,7 @@ contract ChainBridge {
 
     struct ProphecyClaim {
         ClaimType claimType;
-        bytes chainSender;
+        bytes chain33Sender;
         address payable ethereumReceiver;
         address originalValidator;
         address tokenAddress;
@@ -47,14 +48,18 @@ contract ChainBridge {
     /*
     * @dev: Event declarations
     */
-    event LogOracleSet(address _oracle);
+    event LogOracleSet(
+        address _oracle
+    );
 
-    event LogBridgeBankSet(address _bridgeBank);
+    event LogBridgeBankSet(
+        address _bridgeBank
+    );
 
     event LogNewProphecyClaim(
         uint256 _prophecyID,
         ClaimType _claimType,
-        bytes _chainSender,
+        bytes _chain33Sender,
         address payable _ethereumReceiver,
         address _validatorAddress,
         address _tokenAddress,
@@ -62,36 +67,54 @@ contract ChainBridge {
         uint256 _amount
     );
 
-    event LogProphecyCompleted(bytes32 _claimID, ClaimType _claimType);
+    event LogProphecyCompleted(
+        bytes32 _claimID,
+        ClaimType _claimType
+    );
 
     /*
     * @dev: Modifier which only allows access to currently pending prophecies
     */
-    modifier isPending(bytes32 _claimID) {
-        require(isProphecyClaimActive(_claimID), "Prophecy claim is not active");
+    modifier isPending(
+        bytes32 _claimID
+    )
+    {
+        require(
+            isProphecyClaimActive(_claimID),
+            "Prophecy claim is not active"
+        );
         _;
     }
 
     /*
     * @dev: Modifier to restrict access to the operator.
     */
-    modifier onlyOperator() {
-        require(msg.sender == operator, "Must be the operator.");
+    modifier onlyOperator()
+    {
+        require(
+            msg.sender == operator,
+            'Must be the operator.'
+        );
         _;
     }
 
     /*
     * @dev: Modifier to restrict access to the oracle.
     */
-    modifier onlyOracle() {
-        require(msg.sender == oracle, "Must be the oracle.");
+    modifier onlyOracle()
+    {
+        require(
+            msg.sender == oracle,
+            'Must be the oracle.'
+        );
         _;
     }
 
-    /*
+      /*
     * @dev: The bridge is not active until oracle and bridge bank are set
     */
-    modifier isActive() {
+    modifier isActive()
+    {
         require(
             hasOracle == true && hasBridgeBank == true,
             "The Operator must set the oracle and bridge bank for bridge activation"
@@ -102,7 +125,10 @@ contract ChainBridge {
     /*
     * @dev: Modifier to make sure the claim type is valid
     */
-    modifier validClaimType(ClaimType _claimType) {
+    modifier validClaimType(
+        ClaimType _claimType
+    )
+    {
         require(
             _claimType == ClaimType.Burn || _claimType == ClaimType.Lock,
             "The claim type must be ClaimType.Burn or ClaimType.Lock"
@@ -113,7 +139,12 @@ contract ChainBridge {
     /*
     * @dev: Constructor
     */
-    constructor(address _operator, address _valset) public {
+    constructor(
+        address _operator,
+        address _valset
+    )
+        public
+    {
         prophecyClaimCount = 0;
         operator = _operator;
         valset = Valset(_valset);
@@ -124,25 +155,45 @@ contract ChainBridge {
     /*
     * @dev: setOracle
     */
-    function setOracle(address _oracle) public onlyOperator {
-        require(!hasOracle, "The Oracle cannot be updated once it has been set");
+    function setOracle(
+        address _oracle
+    )
+        public
+        onlyOperator
+    {
+        require(
+            !hasOracle,
+            "The Oracle cannot be updated once it has been set"
+        );
 
         hasOracle = true;
         oracle = _oracle;
 
-        emit LogOracleSet(oracle);
+        emit LogOracleSet(
+            oracle
+        );
     }
 
     /*
     * @dev: setBridgeBank
     */
-    function setBridgeBank(address payable _bridgeBank) public onlyOperator {
-        require(!hasBridgeBank, "The Bridge Bank cannot be updated once it has been set");
+    function setBridgeBank(
+        address payable _bridgeBank
+    )
+        public
+        onlyOperator
+    {
+        require(
+            !hasBridgeBank,
+            "The Bridge Bank cannot be updated once it has been set"
+        );
 
         hasBridgeBank = true;
         bridgeBank = BridgeBank(_bridgeBank);
 
-        emit LogBridgeBankSet(address(bridgeBank));
+        emit LogBridgeBankSet(
+            address(bridgeBank)
+        );
     }
 
     /*
@@ -154,13 +205,17 @@ contract ChainBridge {
     function setNewProphecyClaim(
         bytes32 _claimID,
         uint8 _claimType,
-        bytes memory _chainSender,
+        bytes memory _chain33Sender,
         address payable _ethereumReceiver,
         address _originalValidator,
         address _tokenAddress,
         string memory _symbol,
         uint256 _amount
-    ) public isActive onlyOracle {
+    )
+        public
+        isActive
+        onlyOracle
+    {
         // Increment the prophecy claim count
         prophecyClaimCount = prophecyClaimCount.add(1);
         ClaimType claimType = ClaimType(_claimType);
@@ -173,7 +228,7 @@ contract ChainBridge {
         // Create the new ProphecyClaim
         ProphecyClaim memory prophecyClaim = ProphecyClaim(
             claimType,
-            _chainSender,
+            _chain33Sender,
             _ethereumReceiver,
             _originalValidator,
             _tokenAddress,
@@ -188,7 +243,7 @@ contract ChainBridge {
         emit LogNewProphecyClaim(
             prophecyClaimCount,
             claimType,
-            _chainSender,
+            _chain33Sender,
             _ethereumReceiver,
             _originalValidator,
             _tokenAddress,
@@ -203,30 +258,45 @@ contract ChainBridge {
     *       Burn claims unlock tokens stored by BridgeBank.
     *       Lock claims mint BridgeTokens on BridgeBank's token whitelist.
     */
-    function completeClaim(bytes32 _claimID) public isPending(_claimID) {
-        require(msg.sender == oracle, "Only the Oracle may complete prophecies");
+    function completeClaim(
+        bytes32 _claimID
+    )
+        public
+        isPending(_claimID)
+    {
+        require(
+            msg.sender == oracle,
+            "Only the Oracle may complete prophecies"
+        );
 
         prophecyClaims[_claimID].status = Status.Success;
 
         ClaimType claimType = prophecyClaims[_claimID].claimType;
-        if (claimType == ClaimType.Burn) {
+        if(claimType == ClaimType.Burn) {
             unlockTokens(_claimID);
         } else {
             issueBridgeTokens(_claimID);
         }
 
-        emit LogProphecyCompleted(_claimID, claimType);
+        emit LogProphecyCompleted(
+            _claimID,
+            claimType
+        );
     }
 
     /*
     * @dev: issueBridgeTokens
     *       Issues a request for the BridgeBank to mint new BridgeTokens
     */
-    function issueBridgeTokens(bytes32 _claimID) internal {
+    function issueBridgeTokens(
+        bytes32 _claimID
+    )
+        internal
+    {
         ProphecyClaim memory prophecyClaim = prophecyClaims[_claimID];
 
         bridgeBank.mintBridgeTokens(
-            prophecyClaim.chainSender,
+            prophecyClaim.chain33Sender,
             prophecyClaim.ethereumReceiver,
             prophecyClaim.tokenAddress,
             prophecyClaim.symbol,
@@ -238,11 +308,18 @@ contract ChainBridge {
     * @dev: unlockTokens
     *       Issues a request for the BridgeBank to unlock funds held on contract
     */
-    function unlockTokens(bytes32 _claimID) internal {
+    function unlockTokens(
+        bytes32 _claimID
+    )
+        internal
+    {
         ProphecyClaim memory prophecyClaim = prophecyClaims[_claimID];
 
         bridgeBank.unlock(
-            prophecyClaim.ethereumReceiver, prophecyClaim.tokenAddress, prophecyClaim.symbol, prophecyClaim.amount
+            prophecyClaim.ethereumReceiver,
+            prophecyClaim.tokenAddress,
+            prophecyClaim.symbol,
+            prophecyClaim.amount
         );
     }
 
@@ -250,7 +327,13 @@ contract ChainBridge {
     * @dev: isProphecyClaimActive
     *       Returns boolean indicating if the ProphecyClaim is active
     */
-    function isProphecyClaimActive(bytes32 _claimID) public view returns (bool) {
+    function isProphecyClaimActive(
+        bytes32 _claimID
+    )
+        public
+        view
+        returns(bool)
+    {
         return prophecyClaims[_claimID].status == Status.Pending;
     }
 
@@ -259,14 +342,23 @@ contract ChainBridge {
     *       Returns boolean indicating if the validator that originally
     *       submitted the ProphecyClaim is still an active validator
     */
-    function isProphecyClaimValidatorActive(bytes32 _claimID) public view returns (bool) {
-        return valset.isActiveValidator(prophecyClaims[_claimID].originalValidator);
+    function isProphecyClaimValidatorActive(
+        bytes32 _claimID
+    )
+        public
+        view
+        returns(bool)
+    {
+        return valset.isActiveValidator(
+            prophecyClaims[_claimID].originalValidator
+        );
     }
 
     /*
     * @dev: Modifier to make sure the claim type is valid
     */
-    function isValidClaimType(uint8 _claimType) public pure returns (bool) {
+    function isValidClaimType(uint8 _claimType) public pure returns(bool)
+    {
         ClaimType claimType = ClaimType(_claimType);
         if (claimType == ClaimType.Burn || claimType == ClaimType.Lock) {
             return true;

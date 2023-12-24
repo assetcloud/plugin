@@ -8,14 +8,14 @@ import (
 	"strings"
 	"testing"
 
-	apimock "github.com/assetcloud/chain/client/mocks"
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/common/db/mocks"
-	"github.com/assetcloud/chain/types"
-	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
+	apimock "github.com/33cn/chain33/client/mocks"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/common/db/mocks"
+	"github.com/33cn/chain33/types"
+	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
@@ -40,7 +40,7 @@ func (s *suiteRelayLog) SetupSuite() {
 	}
 	s.db = new(mocks.KV)
 
-	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
+	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
 
 	s.log = newRelayLog(order, cfg)
 }
@@ -80,17 +80,17 @@ func (s *suiteRelayLog) TestReceiptLog() {
 	s.Equal(s.log.Id, log.OrderId)
 }
 
-// ////////////////////////////////////////////////
+//////////////////////////////////////////////////
 var (
 	addrFrom = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
 	addrTo   = "1Mcx9PczwPQ79tDnYzw62SEQifPwXH84yN"
 	addrBtc  = "1Am9UTGfdnxabvcywYG2hvzr6qK8T3oUZT"
 )
 
-// fromaddr 14KEKbYtKKQm4wMthSK9J4La4nAiidGozt
+//fromaddr 14KEKbYtKKQm4wMthSK9J4La4nAiidGozt
 var privFrom = getprivkey("CC38546E9E659D15E6B4893F0AB32A06D103931A8230B0BDE71459D2B27D6944")
 
-// to 1Mcx9PczwPQ79tDnYzw62SEQifPwXH84yN
+//to 1Mcx9PczwPQ79tDnYzw62SEQifPwXH84yN
 var privTo = getprivkey("BC38546E9E659D15E6B4893F0AB32A06D103931A8230B0BDE71459D2B27D6944")
 
 func getprivkey(key string) crypto.PrivKey {
@@ -1200,7 +1200,7 @@ func (s *suiteSaveBtcHeader) TestSaveBtcHeader_1() {
 	}
 }
 
-// not continuous
+//not continuous
 func (s *suiteSaveBtcHeader) TestSaveBtcHeader_2() {
 	head3 := &ty.BtcHeader{
 		Hash:          "16ad6d588aeca12bf3e7fd6b2263992b4442c9692f4e134ba7cf0d791746328a",
@@ -1236,7 +1236,7 @@ func (s *suiteSaveBtcHeader) TestSaveBtcHeader_2() {
 
 }
 
-// not continuous than previous
+//not continuous than previous
 func (s *suiteSaveBtcHeader) TestSaveBtcHeader_3() {
 	head3 := &ty.BtcHeader{
 		Hash:          "16ad6d588aeca12bf3e7fd6b2263992b4442c9692f4e134ba7cf0d791746328a",
@@ -1279,7 +1279,7 @@ func (s *suiteSaveBtcHeader) TestSaveBtcHeader_3() {
 
 }
 
-// reset
+//reset
 func (s *suiteSaveBtcHeader) TestSaveBtcHeader_4() {
 
 	head4 := &ty.BtcHeader{

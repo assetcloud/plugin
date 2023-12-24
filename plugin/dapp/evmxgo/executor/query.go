@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	evmxgotypes "github.com/assetcloud/plugin/plugin/dapp/evmxgo/types"
+	"github.com/33cn/chain33/types"
+	evmxgotypes "github.com/33cn/plugin/plugin/dapp/evmxgo/types"
 )
 
 // Query_GetTokens 获取evmxgo合约里面的币

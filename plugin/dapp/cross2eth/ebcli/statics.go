@@ -3,16 +3,16 @@ package main
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/spf13/cobra"
 )
 
-// StaticsCmd ...
+//StaticsCmd ...
 func StaticsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "statics",
-		Short: "statics of lock/burn asset from or to Ethereum and chain",
+		Short: "statics of lock/burn asset from or to Ethereum and chain33",
 		Run:   ShowStatics,
 	}
 
@@ -20,10 +20,10 @@ func StaticsCmd() *cobra.Command {
 	return cmd
 }
 
-// ShowLockStaticsFlags ...
+//ShowLockStaticsFlags ...
 func ShowStaticsFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("symbol", "s", "", "token symbol(optional)")
-	cmd.Flags().Int32P("from", "f", 0, "source chain, 0=ethereum, and 1=chain")
+	cmd.Flags().Int32P("from", "f", 0, "source chain, 0=ethereum, and 1=chain33")
 	_ = cmd.MarkFlagRequired("from")
 	cmd.Flags().StringP("operation", "o", "b", "operation type, b=burn, l=lock, w=withdraw")
 	_ = cmd.MarkFlagRequired("operation")
@@ -32,7 +32,7 @@ func ShowStaticsFlags(cmd *cobra.Command) {
 	cmd.Flags().Int32P("index", "i", 0, "tx index(optional, exclude, default from 0)")
 }
 
-// ShowLockStatics ...
+//ShowLockStatics ...
 func ShowStatics(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	symbol, _ := cmd.Flags().GetString("symbol")
@@ -43,7 +43,7 @@ func ShowStatics(cmd *cobra.Command, args []string) {
 	index, _ := cmd.Flags().GetInt32("index")
 
 	if from != 0 && 1 != from {
-		fmt.Println("Pls set correct source chain flag, 0=ethereum, and 1=chain")
+		fmt.Println("Pls set correct source chain flag, 0=ethereum, and 1=chain33")
 		return
 	}
 

@@ -5,9 +5,9 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/types"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/golang/protobuf/proto"
 

@@ -1,9 +1,9 @@
 package rpc
 
 import (
-	types2 "github.com/assetcloud/plugin/plugin/dapp/wasm/types"
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
+	types2 "github.com/33cn/plugin/plugin/dapp/wasm/types"
 )
 
 func (c *channelClient) check(in *types2.QueryCheckContract) (*types.Reply, error) {

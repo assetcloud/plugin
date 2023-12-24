@@ -12,18 +12,18 @@ source "./mainPubilcRelayerTest.sh"
 # shellcheck disable=SC2034
 {
     nonce=0
-    chainBridgeBank=""
-    chainBridgeRegistry=""
-    chainMultisignAddr=""
-    chainBtyERC20TokenAddr="1111111111111111111114oLvT2"
+    chain33BridgeBank=""
+    chain33BridgeRegistry=""
+    chain33MultisignAddr=""
+    chain33BtyERC20TokenAddr="1111111111111111111114oLvT2"
 
-    chainUSDTBridgeTokenAddr=""
-    chainUSDTBridgeTokenAddrOnETH=""
-    chainUSDTBridgeTokenAddrOnBSC=""
+    chain33USDTBridgeTokenAddr=""
+    chain33USDTBridgeTokenAddrOnETH=""
+    chain33USDTBridgeTokenAddrOnBSC=""
 
-    chainMainBridgeTokenAddr=""
-    chainMainBridgeTokenAddrETH=""
-    chainMainBridgeTokenAddrBNB=""
+    chain33MainBridgeTokenAddr=""
+    chain33MainBridgeTokenAddrETH=""
+    chain33MainBridgeTokenAddrBNB=""
 
     ethereumBridgeBank=""
     ethereumBridgeRegistry=""
@@ -47,9 +47,9 @@ source "./mainPubilcRelayerTest.sh"
     ethDeployAddr="0x8AFDADFC88a1087c9A1D6c0F5Dd04634b87F303a"
     ethDeployKey="0x8656d2bc732a8a816a461ba5e2d8aac7c7f85c26a813df30d5327210465eb230"
 
-    # chain 部署合约者的私钥 用于部署合约时签名使用
-    chainDeployAddr="1JxhYLYsrscjTaQfaMoVUrnSdrejP7XRQD"
-    chainDeployKey="0x9ef82623a5e9aac58d3a6b06392af66ec77289522b28896aed66abaaede66903"
+    # chain33 部署合约者的私钥 用于部署合约时签名使用
+    chain33DeployAddr="1JxhYLYsrscjTaQfaMoVUrnSdrejP7XRQD"
+    chain33DeployKey="0x9ef82623a5e9aac58d3a6b06392af66ec77289522b28896aed66abaaede66903"
 
     # eth 验证者私钥
     ethValidatorAddra="0x92C8b16aFD6d423652559C6E266cBE1c29Bfd84f"
@@ -61,15 +61,15 @@ source "./mainPubilcRelayerTest.sh"
     ethValidatorAddrKeyc="bbf5e65539e9af0eb0cfac30bad475111054b09c11d668fc0731d54ea777471e"
     ethValidatorAddrKeyd="c9fa31d7984edf81b8ef3b40c761f1847f6fcd5711ab2462da97dc458f1f896b"
 
-    # 新增地址 chain 需要导入地址 转入 10 bty当收费费
-    chainValidatora="1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ"
-    chainValidatorb="155ooMPBTF8QQsGAknkK7ei5D78rwDEFe6"
-    chainValidatorc="13zBdQwuyDh7cKN79oT2odkxYuDbgQiXFv"
-    chainValidatord="113ZzVamKfAtGt9dq45fX1mNsEoDiN95HG"
-    chainValidatorKeya="0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae"
-    chainValidatorKeyb="0x9d539bc5fd084eb7fe86ad631dba9aa086dba38418725c38d9751459f567da66"
-    chainValidatorKeyc="0x0a6671f101e30a2cc2d79d77436b62cdf2664ed33eb631a9c9e3f3dd348a23be"
-    chainValidatorKeyd="0x3818b257b05ee75b6e43ee0e3cfc2d8502342cf67caed533e3756966690b62a5"
+    # 新增地址 chain33 需要导入地址 转入 10 bty当收费费
+    chain33Validatora="1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ"
+    chain33Validatorb="155ooMPBTF8QQsGAknkK7ei5D78rwDEFe6"
+    chain33Validatorc="13zBdQwuyDh7cKN79oT2odkxYuDbgQiXFv"
+    chain33Validatord="113ZzVamKfAtGt9dq45fX1mNsEoDiN95HG"
+    chain33ValidatorKeya="0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae"
+    chain33ValidatorKeyb="0x9d539bc5fd084eb7fe86ad631dba9aa086dba38418725c38d9751459f567da66"
+    chain33ValidatorKeyc="0x0a6671f101e30a2cc2d79d77436b62cdf2664ed33eb631a9c9e3f3dd348a23be"
+    chain33ValidatorKeyd="0x3818b257b05ee75b6e43ee0e3cfc2d8502342cf67caed533e3756966690b62a5"
 
     ethTestAddr1=0xbc333839E37bc7fAAD0137aBaE2275030555101f
     ethTestAddrKey1=0x0c61f5a879d70807686e43eccc1f52987a15230ae0472902834af4d1933674f2
@@ -79,105 +79,105 @@ source "./mainPubilcRelayerTest.sh"
     ethReceiverAddr1="0xa4ea64a583f6e51c3799335b28a8f0529570a635"
     #ethReceiverAddrKey1="355b876d7cbcb930d5dfab767f66336ce327e082cbaa1877210c1bae89b1df71"
 
-    chainTestAddr1="1Cj1rqUenPmkeD6A8MGEzkBKQFN2H9yL3x"
-    chainTestAddrKey1="0x7269a7a87d476310da37a9ca1ddc9333c9d7a0dfe1f2998b84758843a895433b"
-    chainTestAddr2="1BCGLhdcdthNutQowV2YShuuN9fJRRGLxu"
-    chainTestAddrKey2="0xb74acfd4eebbbd07bcae212baa7f094235ab8dc04f2f1d828681477b98b24008"
+    chain33TestAddr1="1Cj1rqUenPmkeD6A8MGEzkBKQFN2H9yL3x"
+    chain33TestAddrKey1="0x7269a7a87d476310da37a9ca1ddc9333c9d7a0dfe1f2998b84758843a895433b"
+    chain33TestAddr2="1BCGLhdcdthNutQowV2YShuuN9fJRRGLxu"
+    chain33TestAddrKey2="0xb74acfd4eebbbd07bcae212baa7f094235ab8dc04f2f1d828681477b98b24008"
 
-    chainReceiverAddr="12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"
-    chainReceiverAddrKey="4257d8692ef7fe13c68b65d6a52f03933db2fa5ce8faf210b5b8b80c721ced01"
+    chain33ReceiverAddr="12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"
+    chain33ReceiverAddrKey="4257d8692ef7fe13c68b65d6a52f03933db2fa5ce8faf210b5b8b80c721ced01"
 
     paraMainAddr="12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"
     paraMainAddrKey="4257d8692ef7fe13c68b65d6a52f03933db2fa5ce8faf210b5b8b80c721ced01"
 }
 
-function chain_offline_send_evm() {
+function chain33_offline_send_evm() {
     # shellcheck disable=SC2154
-    result=$(${EvmxgoBoss4xCLI} chain offline send -f "${1}")
+    result=$(${EvmxgoBoss4xCLI} chain33 offline send -f "${1}")
     hash=$(echo "${result}" | jq -r ".[0].TxHash")
     # shellcheck disable=SC2154
-    check_tx "${ChainCli}" "${hash}"
+    check_tx "${Chain33Cli}" "${hash}"
 }
 
 # $1 symbol $2 bridgeTokenAddr
 function updateConfig() {
     local symbol=$1
     local bridgeTokenAddr=$2
-    tx=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain.CreateTransaction","params":[{"execer":"manage","actionName":"Modify","payload":{"key":"evmxgo-mint-'"${symbol}"'","value":"{\"address\":\"'"${bridgeTokenAddr}"'\",\"precision\":8,\"introduction\":\"symbol:'"${symbol}"', bridgeTokenAddr:'"${bridgeTokenAddr}"'\"}","op":"add","addr":""}}]}' -H 'content-type:text/plain;' "http://${docker_chain_ip}:8901" | jq -r ".result")
+    tx=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain33.CreateTransaction","params":[{"execer":"manage","actionName":"Modify","payload":{"key":"evmxgo-mint-'"${symbol}"'","value":"{\"address\":\"'"${bridgeTokenAddr}"'\",\"precision\":8,\"introduction\":\"symbol:'"${symbol}"', bridgeTokenAddr:'"${bridgeTokenAddr}"'\"}","op":"add","addr":""}}]}' -H 'content-type:text/plain;' "http://${docker_chain33_ip}:8901" | jq -r ".result")
     if [ "${tx}" == "" ]; then
         echo -e "${RED}update config create tx 1${NOC}"
         exit 1
     fi
 
-    sign=$(${ChainCli} wallet sign -k "$paraMainAddrKey" -d "${tx}")
-    hash=$(${ChainCli} wallet send -d "${sign}")
-    check_tx "${ChainCli}" "${hash}"
+    sign=$(${Chain33Cli} wallet sign -k "$paraMainAddrKey" -d "${tx}")
+    hash=$(${Chain33Cli} wallet send -d "${sign}")
+    check_tx "${Chain33Cli}" "${hash}"
 }
 
 function configbridgevmxgoAddr() {
     local bridgevmxgoAddr=$1
-    tx=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain.CreateTransaction","params":[{"execer":"manage","actionName":"Modify","payload":{"key":"bridgevmxgo-contract-addr","value":"{\"address\":\"'"${bridgevmxgoAddr}"'\"}","op":"add","addr":""}}]}' -H 'content-type:text/plain;' "http://${docker_chain_ip}:8901" | jq -r ".result")
+    tx=$(curl -s --data-binary '{"jsonrpc":"2.0","id":2,"method":"Chain33.CreateTransaction","params":[{"execer":"manage","actionName":"Modify","payload":{"key":"bridgevmxgo-contract-addr","value":"{\"address\":\"'"${bridgevmxgoAddr}"'\"}","op":"add","addr":""}}]}' -H 'content-type:text/plain;' "http://${docker_chain33_ip}:8901" | jq -r ".result")
     if [ "${tx}" == "" ]; then
         echo -e "${RED}update config create tx 1${NOC}"
         exit 1
     fi
 
-    sign=$(${ChainCli} wallet sign -k "$paraMainAddrKey" -d "${tx}")
-    hash=$(${ChainCli} wallet send -d "${sign}")
-    check_tx "${ChainCli}" "${hash}"
+    sign=$(${Chain33Cli} wallet sign -k "$paraMainAddrKey" -d "${tx}")
+    hash=$(${Chain33Cli} wallet send -d "${sign}")
+    check_tx "${Chain33Cli}" "${hash}"
 }
 
 function DeployEvmxgo() {
-    # 在 chain 上部署合约
+    # 在 chain33 上部署合约
     # shellcheck disable=SC2154
-    ${EvmxgoBoss4xCLI} chain offline create -f 1 -k "${chainDeployKey}" -n "deploy crossx to chain" -r "${chainDeployAddr}, [${chainValidatora}, ${chainValidatorb}, ${chainValidatorc}, ${chainValidatord}], [96, 1, 1, 1]"
-    result=$(${EvmxgoBoss4xCLI} chain offline send -f "deployBridgevmxgo2Chain.txt")
+    ${EvmxgoBoss4xCLI} chain33 offline create -f 1 -k "${chain33DeployKey}" -n "deploy crossx to chain33" -r "${chain33DeployAddr}, [${chain33Validatora}, ${chain33Validatorb}, ${chain33Validatorc}, ${chain33Validatord}], [96, 1, 1, 1]"
+    result=$(${EvmxgoBoss4xCLI} chain33 offline send -f "deployBridgevmxgo2Chain33.txt")
 
     for i in {0..6}; do
         hash=$(echo "${result}" | jq -r ".[$i].TxHash")
-        check_tx "${ChainCli}" "${hash}"
+        check_tx "${Chain33Cli}" "${hash}"
     done
-    XgoBridgeRegistryOnChain=$(echo "${result}" | jq -r ".[6].ContractAddr")
-    XgoChainOracle=$(echo "${result}" | jq -r ".[2].ContractAddr")
+    XgoBridgeRegistryOnChain33=$(echo "${result}" | jq -r ".[6].ContractAddr")
+    XgoChain33Oracle=$(echo "${result}" | jq -r ".[2].ContractAddr")
 
     # 拷贝 BridgeRegistry.abi 和 BridgeBank.abi
-    cp XgoBridgeRegistryOnChain.abi "${XgoBridgeRegistryOnChain}.abi"
-    XgoChainBridgeBank=$(${ChainCli} evm query -c "${chainDeployAddr}" -b "bridgeBank()" -a "${XgoBridgeRegistryOnChain}")
-    cp XgoChainBridgeBank.abi "${XgoChainBridgeBank}.abi"
+    cp XgoBridgeRegistryOnChain33.abi "${XgoBridgeRegistryOnChain33}.abi"
+    XgoChain33BridgeBank=$(${Chain33Cli} evm query -c "${chain33DeployAddr}" -b "bridgeBank()" -a "${XgoBridgeRegistryOnChain33}")
+    cp XgoChain33BridgeBank.abi "${XgoChain33BridgeBank}.abi"
 }
 
 function set_config_ethereum() {
-    ${EvmxgoBoss4xCLI} chain offline create_add_lock_list -s ETH -t "${chainMainBridgeTokenAddr}" -c "${XgoChainBridgeBank}" -k "${chainDeployKey}" -f 1
-    chain_offline_send_evm "create_add_lock_list.txt"
+    ${EvmxgoBoss4xCLI} chain33 offline create_add_lock_list -s ETH -t "${chain33MainBridgeTokenAddr}" -c "${XgoChain33BridgeBank}" -k "${chain33DeployKey}" -f 1
+    chain33_offline_send_evm "create_add_lock_list.txt"
 
-    ${EvmxgoBoss4xCLI} chain offline create_add_lock_list -s USDT -t "${chainUSDTBridgeTokenAddr}" -c "${XgoChainBridgeBank}" -k "${chainDeployKey}" -f 1
-    chain_offline_send_evm "create_add_lock_list.txt"
+    ${EvmxgoBoss4xCLI} chain33 offline create_add_lock_list -s USDT -t "${chain33USDTBridgeTokenAddr}" -c "${XgoChain33BridgeBank}" -k "${chain33DeployKey}" -f 1
+    chain33_offline_send_evm "create_add_lock_list.txt"
 
-    updateConfig "ETH" "${chainMainBridgeTokenAddr}"
-    updateConfig "USDT" "${chainUSDTBridgeTokenAddr}"
-    configbridgevmxgoAddr "${XgoChainBridgeBank}"
+    updateConfig "ETH" "${chain33MainBridgeTokenAddr}"
+    updateConfig "USDT" "${chain33USDTBridgeTokenAddr}"
+    configbridgevmxgoAddr "${XgoChain33BridgeBank}"
 }
 
 function set_config_bsc() {
-    ${EvmxgoBoss4xCLI} chain offline create_add_lock_list -s BNB -t "${chainMainBridgeTokenAddr}" -c "${XgoChainBridgeBank}" -k "${chainDeployKey}" -f 1
-    chain_offline_send_evm "create_add_lock_list.txt"
+    ${EvmxgoBoss4xCLI} chain33 offline create_add_lock_list -s BNB -t "${chain33MainBridgeTokenAddr}" -c "${XgoChain33BridgeBank}" -k "${chain33DeployKey}" -f 1
+    chain33_offline_send_evm "create_add_lock_list.txt"
 
-    ${EvmxgoBoss4xCLI} chain offline create_add_lock_list -s BUSDT -t "${chainUSDTBridgeTokenAddr}" -c "${XgoChainBridgeBank}" -k "${chainDeployKey}" -f 1
-    chain_offline_send_evm "create_add_lock_list.txt"
+    ${EvmxgoBoss4xCLI} chain33 offline create_add_lock_list -s BUSDT -t "${chain33USDTBridgeTokenAddr}" -c "${XgoChain33BridgeBank}" -k "${chain33DeployKey}" -f 1
+    chain33_offline_send_evm "create_add_lock_list.txt"
 
-    updateConfig "BNB" "${chainMainBridgeTokenAddr}"
-    updateConfig "BUSDT" "${chainUSDTBridgeTokenAddr}"
-    configbridgevmxgoAddr "${XgoChainBridgeBank}"
+    updateConfig "BNB" "${chain33MainBridgeTokenAddr}"
+    updateConfig "BUSDT" "${chain33USDTBridgeTokenAddr}"
+    configbridgevmxgoAddr "${XgoChain33BridgeBank}"
 }
 
-function TestETH2EVMToChain() {
+function TestETH2EVMToChain33() {
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
     # 查询 ETH 这端 bridgeBank 地址原来是 0
     result=$(${CLIA} ethereum balance -o "${ethereumBridgeBank}")
     cli_ret "${result}" "balance" ".balance" "0"
 
     # ETH 这端 lock 11个
-    result=$(${CLIA} ethereum lock -m 11 -k "${ethTestAddrKey1}" -r "${chainReceiverAddr}")
+    result=$(${CLIA} ethereum lock -m 11 -k "${ethTestAddrKey1}" -r "${chain33ReceiverAddr}")
     cli_ret "${result}" "lock"
 
     # eth 等待 2 个区块
@@ -189,44 +189,44 @@ function TestETH2EVMToChain() {
 
     sleep "${maturityDegree}"
 
-    # chain chainMainBridgeTokenAddr（ETH合约中）查询 lock 金额
-    result=$(${ChainCli} evm query -a "${chainMainBridgeTokenAddr}" -c "${chainDeployAddr}" -b "balanceOf(${chainReceiverAddr})")
+    # chain33 chain33MainBridgeTokenAddr（ETH合约中）查询 lock 金额
+    result=$(${Chain33Cli} evm query -a "${chain33MainBridgeTokenAddr}" -c "${chain33DeployAddr}" -b "balanceOf(${chain33ReceiverAddr})")
     # 结果是 11 * le8
     is_equal "${result}" "1100000000"
 
-    ${EvmxgoBoss4xCLI} chain offline approve_erc20 -a 330000000000 -s "${XgoChainBridgeBank}" -c "${chainMainBridgeTokenAddr}" -k "${chainReceiverAddrKey}" -f 1
-    chain_offline_send_evm "approve_erc20.txt"
+    ${EvmxgoBoss4xCLI} chain33 offline approve_erc20 -a 330000000000 -s "${XgoChain33BridgeBank}" -c "${chain33MainBridgeTokenAddr}" -k "${chain33ReceiverAddrKey}" -f 1
+    chain33_offline_send_evm "approve_erc20.txt"
 
-    hash=$(${ChainCli} send evm call -f 1 -k "${chainReceiverAddr}" -e "${XgoChainBridgeBank}" -p "lock(${chainTestAddr2}, ${chainMainBridgeTokenAddr}, 500000000)")
-    check_tx "${ChainCli}" "${hash}"
+    hash=$(${Chain33Cli} send evm call -f 1 -k "${chain33ReceiverAddr}" -e "${XgoChain33BridgeBank}" -p "lock(${chain33TestAddr2}, ${chain33MainBridgeTokenAddr}, 500000000)")
+    check_tx "${Chain33Cli}" "${hash}"
 
-    result=$(${ChainCli} evm query -a "${chainMainBridgeTokenAddr}" -c "${chainDeployAddr}" -b "balanceOf(${chainReceiverAddr})")
+    result=$(${Chain33Cli} evm query -a "${chain33MainBridgeTokenAddr}" -c "${chain33DeployAddr}" -b "balanceOf(${chain33ReceiverAddr})")
     is_equal "${result}" "600000000"
 
-    result=$(${ChainCli} evm query -a "${chainMainBridgeTokenAddr}" -c "${chainDeployAddr}" -b "balanceOf(${XgoChainBridgeBank})")
+    result=$(${Chain33Cli} evm query -a "${chain33MainBridgeTokenAddr}" -c "${chain33DeployAddr}" -b "balanceOf(${XgoChain33BridgeBank})")
     is_equal "${result}" "500000000"
 
     let nonce=nonce+1
-    hash=$(${EvmxgoBoss4xCLI} chain burn_xgo -m "300000000" -f "${chainTestAddr2}" -r "${chainTestAddr2}" -o "${XgoChainOracle}" -n "${nonce}" -s "$1" -t "${chainMainBridgeTokenAddr}" -k "${chainValidatorKeya}")
-    check_tx "${ChainCli}" "${hash}"
+    hash=$(${EvmxgoBoss4xCLI} chain33 burn_xgo -m "300000000" -f "${chain33TestAddr2}" -r "${chain33TestAddr2}" -o "${XgoChain33Oracle}" -n "${nonce}" -s "$1" -t "${chain33MainBridgeTokenAddr}" -k "${chain33ValidatorKeya}")
+    check_tx "${Chain33Cli}" "${hash}"
 
-    result=$(${ChainCli} evm query -a "${chainMainBridgeTokenAddr}" -c "${chainDeployAddr}" -b "balanceOf(${XgoChainBridgeBank})")
+    result=$(${Chain33Cli} evm query -a "${chain33MainBridgeTokenAddr}" -c "${chain33DeployAddr}" -b "balanceOf(${XgoChain33BridgeBank})")
     is_equal "${result}" "200000000"
 
-    result=$(${ChainCli} evm query -a "${chainMainBridgeTokenAddr}" -c "${chainDeployAddr}" -b "balanceOf(${chainTestAddr2})")
+    result=$(${Chain33Cli} evm query -a "${chain33MainBridgeTokenAddr}" -c "${chain33DeployAddr}" -b "balanceOf(${chain33TestAddr2})")
     is_equal "${result}" "300000000"
 
     echo -e "${GRE}=========== $FUNCNAME end ===========${NOC}"
 }
 
-function Testethereum2EVMToChain_usdt() {
+function Testethereum2EVMToChain33_usdt() {
     echo -e "${GRE}=========== $FUNCNAME begin ===========${NOC}"
     # 查询 ETH 这端 bridgeBank 地址原来是
     result=$(${CLIA} ethereum balance -o "${ethereumBridgeBank}" -t "${ethereumUSDTERC20TokenAddr}")
     cli_ret "${result}" "balance" ".balance" "0"
 
     # ETH 这端 lock 12个
-    result=$(${CLIA} ethereum lock -m 12 -k "${ethTestAddrKey1}" -r "${chainReceiverAddr}" -t "${ethereumUSDTERC20TokenAddr}")
+    result=$(${CLIA} ethereum lock -m 12 -k "${ethTestAddrKey1}" -r "${chain33ReceiverAddr}" -t "${ethereumUSDTERC20TokenAddr}")
     cli_ret "${result}" "lock"
 
     # eth 等待 2 个区块
@@ -238,30 +238,30 @@ function Testethereum2EVMToChain_usdt() {
 
     sleep "${maturityDegree}"
 
-    # chain chainMainBridgeTokenAddr（ETH合约中）查询 lock 金额
-    result=$(${ChainCli} evm query -a "${chainUSDTBridgeTokenAddr}" -c "${chainTestAddr1}" -b "balanceOf(${chainReceiverAddr})")
+    # chain33 chain33MainBridgeTokenAddr（ETH合约中）查询 lock 金额
+    result=$(${Chain33Cli} evm query -a "${chain33USDTBridgeTokenAddr}" -c "${chain33TestAddr1}" -b "balanceOf(${chain33ReceiverAddr})")
     is_equal "${result}" "1200000000"
 
-    ${EvmxgoBoss4xCLI} chain offline approve_erc20 -a 330000000000 -s "${XgoChainBridgeBank}" -c "${chainUSDTBridgeTokenAddr}" -k "${chainReceiverAddrKey}" -f 1
-    chain_offline_send_evm "approve_erc20.txt"
+    ${EvmxgoBoss4xCLI} chain33 offline approve_erc20 -a 330000000000 -s "${XgoChain33BridgeBank}" -c "${chain33USDTBridgeTokenAddr}" -k "${chain33ReceiverAddrKey}" -f 1
+    chain33_offline_send_evm "approve_erc20.txt"
 
-    hash=$(${ChainCli} send evm call -f 1 -k "${chainReceiverAddr}" -e "${XgoChainBridgeBank}" -p "lock(${chainTestAddr2}, ${chainUSDTBridgeTokenAddr}, 500000000)")
-    check_tx "${ChainCli}" "${hash}"
+    hash=$(${Chain33Cli} send evm call -f 1 -k "${chain33ReceiverAddr}" -e "${XgoChain33BridgeBank}" -p "lock(${chain33TestAddr2}, ${chain33USDTBridgeTokenAddr}, 500000000)")
+    check_tx "${Chain33Cli}" "${hash}"
 
-    result=$(${ChainCli} evm query -a "${chainUSDTBridgeTokenAddr}" -c "${chainDeployAddr}" -b "balanceOf(${chainReceiverAddr})")
+    result=$(${Chain33Cli} evm query -a "${chain33USDTBridgeTokenAddr}" -c "${chain33DeployAddr}" -b "balanceOf(${chain33ReceiverAddr})")
     is_equal "${result}" "700000000"
 
-    result=$(${ChainCli} evm query -a "${chainUSDTBridgeTokenAddr}" -c "${chainDeployAddr}" -b "balanceOf(${XgoChainBridgeBank})")
+    result=$(${Chain33Cli} evm query -a "${chain33USDTBridgeTokenAddr}" -c "${chain33DeployAddr}" -b "balanceOf(${XgoChain33BridgeBank})")
     is_equal "${result}" "500000000"
 
     let nonce=nonce+1
-    hash=$(${EvmxgoBoss4xCLI} chain burn_xgo -m "300000000" -f "${chainTestAddr2}" -r "${chainTestAddr2}" -o "${XgoChainOracle}" -n "${nonce}" -s "$1" -t "${chainUSDTBridgeTokenAddr}" -k "${chainValidatorKeya}")
-    check_tx "${ChainCli}" "${hash}"
+    hash=$(${EvmxgoBoss4xCLI} chain33 burn_xgo -m "300000000" -f "${chain33TestAddr2}" -r "${chain33TestAddr2}" -o "${XgoChain33Oracle}" -n "${nonce}" -s "$1" -t "${chain33USDTBridgeTokenAddr}" -k "${chain33ValidatorKeya}")
+    check_tx "${Chain33Cli}" "${hash}"
 
-    result=$(${ChainCli} evm query -a "${chainUSDTBridgeTokenAddr}" -c "${chainDeployAddr}" -b "balanceOf(${XgoChainBridgeBank})")
+    result=$(${Chain33Cli} evm query -a "${chain33USDTBridgeTokenAddr}" -c "${chain33DeployAddr}" -b "balanceOf(${XgoChain33BridgeBank})")
     is_equal "${result}" "200000000"
 
-    result=$(${ChainCli} evm query -a "${chainUSDTBridgeTokenAddr}" -c "${chainDeployAddr}" -b "balanceOf(${chainTestAddr2})")
+    result=$(${Chain33Cli} evm query -a "${chain33USDTBridgeTokenAddr}" -c "${chain33DeployAddr}" -b "balanceOf(${chain33TestAddr2})")
     is_equal "${result}" "300000000"
 
     echo -e "${GRE}=========== $FUNCNAME end ===========${NOC}"
@@ -272,10 +272,10 @@ function get_evm_cli() {
     {
         paraName="user.p.para."
         # shellcheck disable=SC2154
-        docker_chain_ip=$(get_docker_addr "${dockerNamePrefix}_chain_1")
-        MainCli="./chain-cli --rpc_laddr http://${docker_chain_ip}:8801"
-        Para8801Cli="./chain-cli --rpc_laddr http://${docker_chain_ip}:8901 --paraName ${paraName}"
-        Para8901Cli="./chain-cli --rpc_laddr http://${docker_chain_ip}:8901 --paraName ${paraName}"
+        docker_chain33_ip=$(get_docker_addr "${dockerNamePrefix}_chain33_1")
+        MainCli="./chain33-cli --rpc_laddr http://${docker_chain33_ip}:8801"
+        Para8801Cli="./chain33-cli --rpc_laddr http://${docker_chain33_ip}:8901 --paraName ${paraName}"
+        Para8901Cli="./chain33-cli --rpc_laddr http://${docker_chain33_ip}:8901 --paraName ${paraName}"
 
         docker_ebrelayera_ip=$(get_docker_addr "${dockerNamePrefix}_ebrelayera_1")
         CLIA="docker exec ${dockerNamePrefix}_ebrelayera_1 /root/ebcli_A"
@@ -285,24 +285,24 @@ function get_evm_cli() {
 
         docker_ganachetesteth_ip=$(get_docker_addr "${dockerNamePrefix}_ganachetesteth_1")
         docker_ganachetestbsc_ip=$(get_docker_addr "${dockerNamePrefix}_ganachetestbsc_1")
-        Boss4xCLI="docker exec ${dockerNamePrefix}_ebrelayera_1 /root/boss4x --rpc_laddr http://${docker_chain_ip}:8901 --rpc_laddr_ethereum http://${docker_ganachetesteth_ip}:8545 --paraName ${paraName} --chainID ${chainID} --chainEthId 1337"
+        Boss4xCLI="docker exec ${dockerNamePrefix}_ebrelayera_1 /root/boss4x --rpc_laddr http://${docker_chain33_ip}:8901 --rpc_laddr_ethereum http://${docker_ganachetesteth_ip}:8545 --paraName ${paraName} --chainID ${chain33ID} --chainEthId 1337"
 
-        Boss4xCLIeth="docker exec ${dockerNamePrefix}_ebrelayera_1 /root/boss4x --rpc_laddr http://${docker_chain_ip}:8901 --rpc_laddr_ethereum http://${docker_ganachetesteth_ip}:8545 --paraName ${paraName} --chainID ${chainID} --chainEthId 1337"
-        Boss4xCLIbsc="docker exec ${dockerNamePrefix}_ebrelayera_1 /root/boss4x --rpc_laddr http://${docker_chain_ip}:8901 --rpc_laddr_ethereum http://${docker_ganachetestbsc_ip}:8545 --paraName ${paraName} --chainID ${chainID} --chainEthId 1337"
+        Boss4xCLIeth="docker exec ${dockerNamePrefix}_ebrelayera_1 /root/boss4x --rpc_laddr http://${docker_chain33_ip}:8901 --rpc_laddr_ethereum http://${docker_ganachetesteth_ip}:8545 --paraName ${paraName} --chainID ${chain33ID} --chainEthId 1337"
+        Boss4xCLIbsc="docker exec ${dockerNamePrefix}_ebrelayera_1 /root/boss4x --rpc_laddr http://${docker_chain33_ip}:8901 --rpc_laddr_ethereum http://${docker_ganachetestbsc_ip}:8545 --paraName ${paraName} --chainID ${chain33ID} --chainEthId 1337"
 
         CLIAeth="docker exec ${dockerNamePrefix}_ebrelayera_1 /root/ebcli_A --node_addr http://${docker_ganachetesteth_ip}:8545 --eth_chain_name Ethereum"
         CLIAbsc="docker exec ${dockerNamePrefix}_ebrelayera_1 /root/ebcli_A --node_addr http://${docker_ganachetestbsc_ip}:8545 --eth_chain_name Binance"
 
-        EvmxgoBoss4xCLI="./evmxgoboss4x --rpc_laddr http://${docker_chain_ip}:8901 --paraName user.p.para. --chainID ${chainID}"
+        EvmxgoBoss4xCLI="./evmxgoboss4x --rpc_laddr http://${docker_chain33_ip}:8901 --paraName user.p.para. --chainID ${chain33ID}"
     }
 }
 
 function test_xgo() {
-    TestETH2ChainAssets
-    TestETH2ChainUSDT
+    TestETH2Chain33Assets
+    TestETH2Chain33USDT
 
-    TestETH2EVMToChain "$1"
-    Testethereum2EVMToChain_usdt "$2"
+    TestETH2EVMToChain33 "$1"
+    Testethereum2EVMToChain33_usdt "$2"
 }
 
 # shellcheck disable=SC2034
@@ -311,20 +311,20 @@ function test_evm_all() {
     Boss4xCLI=${Boss4xCLIeth}
     CLIA=${CLIAeth}
     ethereumBridgeBank="${ethereumBridgeBankOnETH}"
-    chainMainBridgeTokenAddr="${chainMainBridgeTokenAddrETH}"
+    chain33MainBridgeTokenAddr="${chain33MainBridgeTokenAddrETH}"
     ethereumBtyBridgeTokenAddr="${ethereumBtyBridgeTokenAddrOnETH}"
     ethereumUSDTERC20TokenAddr="${ethereumUSDTERC20TokenAddrOnETH}"
-    chainUSDTBridgeTokenAddr="${chainUSDTBridgeTokenAddrOnETH}"
+    chain33USDTBridgeTokenAddr="${chain33USDTBridgeTokenAddrOnETH}"
     set_config_ethereum
     test_xgo "ETH" "USDT"
 
     Boss4xCLI=${Boss4xCLIbsc}
     CLIA=${CLIAbsc}
     ethereumBridgeBank="${ethereumBridgeBankOnBSC}"
-    chainMainBridgeTokenAddr="${chainMainBridgeTokenAddrBNB}"
+    chain33MainBridgeTokenAddr="${chain33MainBridgeTokenAddrBNB}"
     ethereumBtyBridgeTokenAddr="${ethereumBtyBridgeTokenAddrOnBSC}"
     ethereumUSDTERC20TokenAddr="${ethereumUSDTERC20TokenAddrOnBSC}"
-    chainUSDTBridgeTokenAddr="${chainUSDTBridgeTokenAddrOnBSC}"
+    chain33USDTBridgeTokenAddr="${chain33USDTBridgeTokenAddrOnBSC}"
     set_config_bsc
     test_xgo "BNB" "BUSDT"
 }
@@ -340,24 +340,24 @@ function AllRelayerMainTest() {
 
     # shellcheck disable=SC2120
     if [[ $# -ge 2 ]]; then
-        chainID="${2}"
+        chain33ID="${2}"
     fi
 
     get_evm_cli
 
     # init
-    ChainCli=${MainCli}
-    InitChainValidator
+    Chain33Cli=${MainCli}
+    InitChain33Validator
     # para add
     initPara
 
-    ChainCli=${Para8901Cli}
+    Chain33Cli=${Para8901Cli}
     StartDockerRelayerDeploy
 
     DeployEvmxgo
     test_evm_all
 
     echo_addrs
-    echo -e "${GRE}XgoChainOracle: ${XgoChainOracle} ${NOC}"
+    echo -e "${GRE}XgoChain33Oracle: ${XgoChain33Oracle} ${NOC}"
     echo -e "${GRE}=========== $FUNCNAME end ===========${NOC}"
 }

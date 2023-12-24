@@ -7,11 +7,11 @@ import (
 
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/common/db/table"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/merkletree"
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/common/db/table"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/mix/executor/merkletree"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/pkg/errors"
 )
@@ -29,26 +29,26 @@ type balancehistory struct {
 	after  string
 }
 
-func getCfgFeeAddr(cfg *types.ChainConfig) (string, string) {
+func getCfgFeeAddr(cfg *types.Chain33Config) (string, string) {
 	confManager := types.ConfSub(cfg, zt.Zksync)
 	ethAddr := confManager.GStr(zt.ZkCfgEthFeeAddr)
-	chainAddr := confManager.GStr(zt.ZkCfgLayer2FeeAddr)
-	if len(ethAddr) <= 0 || len(chainAddr) <= 0 {
-		panic(fmt.Sprintf("zksync not cfg init fee addr, ethAddr=%s,33Addr=%s", ethAddr, chainAddr))
+	chain33Addr := confManager.GStr(zt.ZkCfgLayer2FeeAddr)
+	if len(ethAddr) <= 0 || len(chain33Addr) <= 0 {
+		panic(fmt.Sprintf("zksync not cfg init fee addr, ethAddr=%s,33Addr=%s", ethAddr, chain33Addr))
 	}
 	ethAddrDecimal, _ := zt.HexAddr2Decimal(ethAddr)
-	chainAddrDecimal, _ := zt.HexAddr2Decimal(chainAddr)
-	return ethAddrDecimal, chainAddrDecimal
+	chain33AddrDecimal, _ := zt.HexAddr2Decimal(chain33Addr)
+	return ethAddrDecimal, chain33AddrDecimal
 }
 
-// 由于ethAddr+chainAddr 唯一确定一个accountId,所以设置初始账户的chainAddr不相同
-func getInitAccountLeaf(ethFeeAddr, chainFeeAddr string) []*zt.Leaf {
+// 由于ethAddr+chain33Addr 唯一确定一个accountId,所以设置初始账户的chain33Addr不相同
+func getInitAccountLeaf(ethFeeAddr, chain33FeeAddr string) []*zt.Leaf {
 	zeroHash := zt.Str2Byte("0")
 	defaultAccount := &zt.Leaf{
-		EthAddress: "0",
-		AccountId:  zt.SystemDefaultAcctId,
-		ChainAddr:  "3",
-		TokenHash:  zeroHash,
+		EthAddress:  "0",
+		AccountId:   zt.SystemDefaultAcctId,
+		Chain33Addr: "3",
+		TokenHash:   zeroHash,
 	}
 
 	//default system FeeAccount
@@ -56,31 +56,31 @@ func getInitAccountLeaf(ethFeeAddr, chainFeeAddr string) []*zt.Leaf {
 	//不然在token=null场景下设置pubkey,电路会计算出错，因为rhs部分会计算token tree part
 	//缺省电路token tree都是0,会把token=0作为一个新node计算,而预设tokenId就可以解决这个问题
 	feeAccount := &zt.Leaf{
-		EthAddress: ethFeeAddr,
-		AccountId:  zt.SystemFeeAccountId,
-		ChainAddr:  chainFeeAddr,
-		TokenHash:  zeroHash,
-		TokenIds:   []uint64{0},
+		EthAddress:  ethFeeAddr,
+		AccountId:   zt.SystemFeeAccountId,
+		Chain33Addr: chain33FeeAddr,
+		TokenHash:   zeroHash,
+		TokenIds:    []uint64{0},
 	}
 	//default NFT system account
 	NFTAccount := &zt.Leaf{
-		EthAddress: "0",
-		AccountId:  zt.SystemNFTAccountId,
-		ChainAddr:  "1",
-		TokenHash:  zeroHash,
+		EthAddress:  "0",
+		AccountId:   zt.SystemNFTAccountId,
+		Chain33Addr: "1",
+		TokenHash:   zeroHash,
 	}
 
 	treeToContractAccount := &zt.Leaf{
-		EthAddress: ethFeeAddr,
-		AccountId:  zt.SystemTree2ContractAcctId,
-		ChainAddr:  "2",
-		TokenHash:  zeroHash,
+		EthAddress:  ethFeeAddr,
+		AccountId:   zt.SystemTree2ContractAcctId,
+		Chain33Addr: "2",
+		TokenHash:   zeroHash,
 	}
 	return []*zt.Leaf{defaultAccount, feeAccount, NFTAccount, treeToContractAccount}
 }
 
 // 获取系统初始root，如果未设置fee账户，缺省采用配置文件，
-func getInitTreeRoot(cfg *types.ChainConfig, ethAddrDecimal, layer2AddrDecimal string) string {
+func getInitTreeRoot(cfg *types.Chain33Config, ethAddrDecimal, layer2AddrDecimal string) string {
 	var feeEth, fee33 string
 	if len(ethAddrDecimal) > 0 && len(layer2AddrDecimal) > 0 {
 		feeEth, fee33 = ethAddrDecimal, layer2AddrDecimal
@@ -128,12 +128,12 @@ func getInitLeafTokenHash(h hash.Hash, leafs []*zt.Leaf) {
 	h.Reset()
 }
 
-func NewInitAccount(ethFeeAddr, chainFeeAddr string) ([]*types.KeyValue, error) {
-	if len(ethFeeAddr) <= 0 || len(chainFeeAddr) <= 0 {
-		return nil, errors.New("zksync default fee addr(ethFeeAddr,zkChainFeeAddr) is nil")
+func NewInitAccount(ethFeeAddr, chain33FeeAddr string) ([]*types.KeyValue, error) {
+	if len(ethFeeAddr) <= 0 || len(chain33FeeAddr) <= 0 {
+		return nil, errors.New("zksync default fee addr(ethFeeAddr,zkChain33FeeAddr) is nil")
 	}
 	var kvs []*types.KeyValue
-	initLeafAccounts := getInitAccountLeaf(ethFeeAddr, chainFeeAddr)
+	initLeafAccounts := getInitAccountLeaf(ethFeeAddr, chain33FeeAddr)
 
 	for _, leaf := range initLeafAccounts {
 		kv := &types.KeyValue{
@@ -143,7 +143,7 @@ func NewInitAccount(ethFeeAddr, chainFeeAddr string) ([]*types.KeyValue, error) 
 		kvs = append(kvs, kv)
 
 		kv = &types.KeyValue{
-			Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
+			Key:   GetChain33EthPrimaryKey(leaf.Chain33Addr, leaf.EthAddress),
 			Value: types.Encode(leaf),
 		}
 		kvs = append(kvs, kv)
@@ -214,14 +214,14 @@ func updateTokenBalance(accountId uint64, tokenId uint64, amount string, option 
 	return kv, balanceInfoPtr, nil
 }
 
-func AddNewLeafOpt(ethAddress string, tokenId, accountId uint64, amount string, chainAddr string) []*types.KeyValue {
+func AddNewLeafOpt(ethAddress string, tokenId, accountId uint64, amount string, chain33Addr string) []*types.KeyValue {
 	var kvs []*types.KeyValue
 
 	leaf := &zt.Leaf{
-		EthAddress: ethAddress,
-		AccountId:  accountId,
-		ChainAddr:  chainAddr,
-		TokenIds:   make([]uint64, 0),
+		EthAddress:  ethAddress,
+		AccountId:   accountId,
+		Chain33Addr: chain33Addr,
+		TokenIds:    make([]uint64, 0),
 		//ProxyPubKeys: new(zt.AccountProxyPubKeys),
 	}
 
@@ -244,7 +244,7 @@ func AddNewLeafOpt(ethAddress string, tokenId, accountId uint64, amount string, 
 	kvs = append(kvs, kv)
 
 	kv = &types.KeyValue{
-		Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
+		Key:   GetChain33EthPrimaryKey(leaf.Chain33Addr, leaf.EthAddress),
 		Value: types.Encode(leaf),
 	}
 	kvs = append(kvs, kv)
@@ -270,7 +270,7 @@ func updateLeafOpt(statedb dbm.KV, leaf *zt.Leaf, tokenId uint64, option int32) 
 	kvs = append(kvs, kv)
 
 	kv = &types.KeyValue{
-		Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
+		Key:   GetChain33EthPrimaryKey(leaf.Chain33Addr, leaf.EthAddress),
 		Value: types.Encode(leaf),
 	}
 	kvs = append(kvs, kv)
@@ -296,7 +296,7 @@ func applyL2AccountUpdate(accountID, tokenID uint64, amount string, option int32
 
 	l2Log := &zt.AccountTokenBalanceReceipt{}
 	l2Log.EthAddress = leaf.EthAddress
-	l2Log.ChainAddr = leaf.ChainAddr
+	l2Log.Chain33Addr = leaf.Chain33Addr
 	l2Log.TokenId = tokenID
 	l2Log.AccountId = accountID
 	l2Log.BalanceBefore = balanceHistory.before
@@ -311,7 +311,7 @@ func applyL2AccountUpdate(accountID, tokenID uint64, amount string, option int32
 	return kvs, log, l2Log, nil
 }
 
-func applyL2AccountCreate(accountID, tokenID uint64, amount, ethAddress, chainAddr string, statedb dbm.KV, makeEncode bool) ([]*types.KeyValue, *types.ReceiptLog, *zt.AccountTokenBalanceReceipt, error) {
+func applyL2AccountCreate(accountID, tokenID uint64, amount, ethAddress, chain33Addr string, statedb dbm.KV, makeEncode bool) ([]*types.KeyValue, *types.ReceiptLog, *zt.AccountTokenBalanceReceipt, error) {
 	var kvs []*types.KeyValue
 	var log *types.ReceiptLog
 	//如果NFTAccountId第一次初始化token，因为缺省初始balance为（SystemNFTTokenId+1),这里add时候默认为+2
@@ -319,7 +319,7 @@ func applyL2AccountCreate(accountID, tokenID uint64, amount, ethAddress, chainAd
 		amount = new(big.Int).SetUint64(zt.SystemNFTTokenId + 2).String()
 	}
 
-	kvs = append(kvs, AddNewLeafOpt(ethAddress, tokenID, accountID, amount, chainAddr)...)
+	kvs = append(kvs, AddNewLeafOpt(ethAddress, tokenID, accountID, amount, chain33Addr)...)
 
 	//设置新账户的ID.
 	newAccountKV := CalcNewAccountIDkv(int64(accountID))
@@ -327,7 +327,7 @@ func applyL2AccountCreate(accountID, tokenID uint64, amount, ethAddress, chainAd
 
 	l2Log := &zt.AccountTokenBalanceReceipt{}
 	l2Log.EthAddress = ethAddress
-	l2Log.ChainAddr = chainAddr
+	l2Log.Chain33Addr = chain33Addr
 	l2Log.TokenId = tokenID
 	l2Log.AccountId = accountID
 	l2Log.BalanceBefore = "0"
@@ -407,15 +407,15 @@ func GetLeafByEthAddress(db dbm.KV, ethAddress string) ([]*zt.Leaf, error) {
 	for _, row := range rows {
 		data := row.Data.(*zt.Leaf)
 		data.EthAddress, _ = zt.DecimalAddr2Hex(data.GetEthAddress(), zt.EthAddrLen)
-		data.ChainAddr, _ = zt.DecimalAddr2Hex(data.GetChainAddr(), zt.BTYAddrLen)
+		data.Chain33Addr, _ = zt.DecimalAddr2Hex(data.GetChain33Addr(), zt.BTYAddrLen)
 		datas = append(datas, data)
 	}
 	return datas, nil
 }
 
-func GetLeafByChainAddress(db dbm.KV, chainAddr string) ([]*zt.Leaf, error) {
+func GetLeafByChain33Address(db dbm.KV, chain33Addr string) ([]*zt.Leaf, error) {
 	accountTable := NewAccountTreeTable(db)
-	rows, err := accountTable.ListIndex("chain_address", []byte(fmt.Sprintf("%s", chainAddr)), nil, 1000, dbm.ListASC)
+	rows, err := accountTable.ListIndex("chain33_address", []byte(fmt.Sprintf("%s", chain33Addr)), nil, 1000, dbm.ListASC)
 
 	datas := make([]*zt.Leaf, 0)
 	if err != nil {
@@ -428,18 +428,18 @@ func GetLeafByChainAddress(db dbm.KV, chainAddr string) ([]*zt.Leaf, error) {
 	for _, row := range rows {
 		data := row.Data.(*zt.Leaf)
 		data.EthAddress, _ = zt.DecimalAddr2Hex(data.GetEthAddress(), zt.EthAddrLen)
-		data.ChainAddr, _ = zt.DecimalAddr2Hex(data.GetChainAddr(), zt.BTYAddrLen)
+		data.Chain33Addr, _ = zt.DecimalAddr2Hex(data.GetChain33Addr(), zt.BTYAddrLen)
 		datas = append(datas, data)
 	}
 	return datas, nil
 }
 
-func GetLeafByChainAndEthAddress(db dbm.KV, chainAddr, ethAddress string) (*zt.Leaf, error) {
-	if chainAddr == "" || ethAddress == "" {
+func GetLeafByChain33AndEthAddress(db dbm.KV, chain33Addr, ethAddress string) (*zt.Leaf, error) {
+	if chain33Addr == "" || ethAddress == "" {
 		return nil, types.ErrInvalidParam
 	}
 
-	val, err := db.Get(GetChainEthPrimaryKey(chainAddr, ethAddress))
+	val, err := db.Get(GetChain33EthPrimaryKey(chain33Addr, ethAddress))
 	if err != nil {
 		if err.Error() == types.ErrNotFound.Error() {
 			return nil, nil
@@ -498,7 +498,7 @@ func getLeafHash(h hash.Hash, leaf *zt.Leaf) []byte {
 	accountIdBytes := new(fr.Element).SetUint64(leaf.GetAccountId()).Bytes()
 	h.Write(accountIdBytes[:])
 	h.Write(zt.Str2Byte(leaf.GetEthAddress()))
-	h.Write(zt.Str2Byte(leaf.GetChainAddr()))
+	h.Write(zt.Str2Byte(leaf.GetChain33Addr()))
 
 	getLeafPubKeyHash(h, leaf.GetPubKey())
 	getLeafPubKeyHash(h, leaf.GetProxyPubKeys().GetNormal())
@@ -555,7 +555,7 @@ func UpdatePubKey(statedb dbm.KV, localdb dbm.KV, pubKeyTy uint64, pubKey *zt.Zk
 	kvs = append(kvs, kv)
 
 	kv = &types.KeyValue{
-		Key:   GetChainEthPrimaryKey(leaf.ChainAddr, leaf.EthAddress),
+		Key:   GetChain33EthPrimaryKey(leaf.Chain33Addr, leaf.EthAddress),
 		Value: types.Encode(leaf),
 	}
 

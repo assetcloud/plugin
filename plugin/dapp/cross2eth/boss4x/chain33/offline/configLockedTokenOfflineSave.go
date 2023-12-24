@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4chain/generated"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	utilsRelayer "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
-	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4chain33/generated"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	utilsRelayer "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
 	"github.com/spf13/cobra"
 )
 
 /*
-./boss4x chain offline set_offline_token -c 1MaP3rrwiLV1wrxPhDwAfHggtei1ByaKrP -s BTY -m 100000000000 -p 50 -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae --chainID 33
-./boss4x chain offline send -f chain_set_offline_token.txt
+./boss4x chain33 offline set_offline_token -c 1MaP3rrwiLV1wrxPhDwAfHggtei1ByaKrP -s BTY -m 100000000000 -p 50 -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae --chainID 33
+./boss4x chain33 offline send -f chain33_set_offline_token.txt
 */
 
 func ConfigLockedTokenOfflineSaveCmd() *cobra.Command {
@@ -51,7 +51,7 @@ func ConfigMultisignLockedTokenOfflineSave(cmd *cobra.Command, _ []string) {
 	bn, _ = bn.SetString(utilsRelayer.TrimZeroAndDot(threshold), 10)
 
 	if token == "" || symbol == "BTY" {
-		token = ebTypes.BTYAddrChain
+		token = ebTypes.BTYAddrChain33
 	}
 
 	parameter := fmt.Sprintf("configLockedTokenOfflineSave(%s,%s,%d,%d)", token, symbol, bn, percents)
@@ -60,5 +60,5 @@ func ConfigMultisignLockedTokenOfflineSave(cmd *cobra.Command, _ []string) {
 		fmt.Println("ConfigMultisignLockedTokenOfflineSave", "Failed to do abi.Pack due to:", err.Error())
 		return
 	}
-	callContractAndSignWrite(cmd, packData, contract, "chain_set_offline_token")
+	callContractAndSignWrite(cmd, packData, contract, "chain33_set_offline_token")
 }

@@ -7,17 +7,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/client/mocks"
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/rpc/grpcclient"
-	"github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	types2 "github.com/assetcloud/plugin/plugin/dapp/wasm/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/client/mocks"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/rpc/grpcclient"
+	"github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	types2 "github.com/33cn/plugin/plugin/dapp/wasm/types"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
@@ -34,11 +34,11 @@ var (
 	}
 	wasmAddr string
 
-	cfg *types.ChainConfig
+	cfg *types.Chain33Config
 )
 
 func init() {
-	cfg = types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
+	cfg = types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
 	Init(types2.WasmX, cfg, nil)
 }
 

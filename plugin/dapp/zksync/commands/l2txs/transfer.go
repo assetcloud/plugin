@@ -5,14 +5,14 @@ import (
 	"strconv"
 	"strings"
 
-	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 )
 
 func SendTransferTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "transfer",
-		Short: "send transfer tx to chain",
+		Short: "send transfer tx to chain33",
 		Run:   tranfer,
 	}
 	sendTransferFlags(cmd)
@@ -57,9 +57,9 @@ func tranfer(cmd *cobra.Command, args []string) {
 		},
 	}
 
-	tx, err := createChainTx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
+	tx, err := createChain33Tx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
 	if nil != err {
-		fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
+		fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
 		return
 	}
 	sendTx(rpcLaddr, tx)
@@ -68,7 +68,7 @@ func tranfer(cmd *cobra.Command, args []string) {
 func BatchSendTransferTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "batchtransfer",
-		Short: "send transfer tx to chain batch",
+		Short: "send transfer tx to chain33 batch",
 		Run:   batchSendTransfer,
 	}
 	batchSendTransferFlags(cmd)
@@ -122,9 +122,9 @@ func batchSendTransfer(cmd *cobra.Command, args []string) {
 	}
 
 	for i := uint64(0); i < count; i++ {
-		tx, err := createChainTx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("send transfer failed to createChainTx due to err:", err.Error())
+			fmt.Println("send transfer failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		fmt.Println("tx with index", i)
@@ -135,7 +135,7 @@ func batchSendTransfer(cmd *cobra.Command, args []string) {
 func SendManyTransferTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "transfer_many",
-		Short: "send many transfer tx to chain",
+		Short: "send many transfer tx to chain33",
 		Run:   tranferMany,
 	}
 	sendManyTransferFlags(cmd)
@@ -147,9 +147,9 @@ func sendManyTransferFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("tokenId")
 	cmd.Flags().StringP("amount", "m", "0", "contractToTree amount")
 	_ = cmd.MarkFlagRequired("amount")
-	cmd.Flags().StringP("fromIDs", "f", "0", "from account ids on chain, use ',' separate")
+	cmd.Flags().StringP("fromIDs", "f", "0", "from account ids on chain33, use ',' separate")
 	_ = cmd.MarkFlagRequired("fromIDs")
-	cmd.Flags().StringP("toIDs", "d", "0", "to account ids on chain, use ',' separate")
+	cmd.Flags().StringP("toIDs", "d", "0", "to account ids on chain33, use ',' separate")
 	_ = cmd.MarkFlagRequired("accountIDs")
 	cmd.Flags().StringP("keys", "k", "", "private keys, use ',' separate")
 	_ = cmd.MarkFlagRequired("keys")
@@ -190,9 +190,9 @@ func tranferMany(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
+			fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)
@@ -202,7 +202,7 @@ func tranferMany(cmd *cobra.Command, args []string) {
 func SendManyTransferTxFromOneCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "transfer_many_2",
-		Short: "from one addr, send many transfer tx to chain",
+		Short: "from one addr, send many transfer tx to chain33",
 		Run:   tranferManyFromOne,
 	}
 	sendManyTransferFromOneFlags(cmd)
@@ -216,7 +216,7 @@ func sendManyTransferFromOneFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("amount")
 	cmd.Flags().StringP("fromID", "f", "0", "from account id")
 	_ = cmd.MarkFlagRequired("fromID")
-	cmd.Flags().StringP("toIDs", "d", "0", "to account ids on chain, use ',' separate")
+	cmd.Flags().StringP("toIDs", "d", "0", "to account ids on chain33, use ',' separate")
 	_ = cmd.MarkFlagRequired("accountIDs")
 	cmd.Flags().StringP("key", "k", "", "private key")
 	_ = cmd.MarkFlagRequired("key")
@@ -250,9 +250,9 @@ func tranferManyFromOne(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChainTx(key, getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(key, getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
+			fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)

@@ -9,20 +9,20 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/client/mocks"
-	"github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/rpc/grpcclient"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	ptypes "github.com/assetcloud/plugin/plugin/dapp/js/types"
-	"github.com/assetcloud/plugin/plugin/dapp/js/types/jsproto"
+	"github.com/33cn/chain33/client/mocks"
+	"github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/rpc/grpcclient"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	ptypes "github.com/33cn/plugin/plugin/dapp/js/types"
+	"github.com/33cn/plugin/plugin/dapp/js/types/jsproto"
 	"github.com/robertkrimen/otto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
 func initExec(ldb db.DB, kvdb db.KVDB, code string, t assert.TestingT) *js {
-	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
 	Init(ptypes.JsX, cfg, nil)
 
 	e := newjs().(*js)

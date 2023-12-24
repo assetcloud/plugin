@@ -7,19 +7,18 @@ package executor
 import (
 	"bytes"
 	"fmt"
+	log "github.com/33cn/chain33/common/log/log15"
 	"math/big"
 	"os"
 	"reflect"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-
-	"github.com/assetcloud/chain/common/address"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/runtime"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/state"
-	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	"github.com/33cn/chain33/common/address"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/runtime"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/state"
+	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
 )
 
 var (
@@ -67,7 +66,7 @@ func initEvmSubConfig(sub []byte, evmEnableHeight int64) {
 }
 
 // Init 初始化本合约对象
-func Init(name string, cfg *types.ChainConfig, sub []byte) {
+func Init(name string, cfg *types.Chain33Config, sub []byte) {
 
 	enableHeight := cfg.GetDappFork(driverName, evmtypes.EVMEnable)
 	initEvmSubConfig(sub, enableHeight)

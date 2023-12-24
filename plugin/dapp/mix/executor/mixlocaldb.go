@@ -5,9 +5,9 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 )
 
 func (e *Mix) execAutoLocalMix(tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {

@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	chainCommon "github.com/assetcloud/chain/common"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	chain33Common "github.com/33cn/chain33/common"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -24,8 +24,8 @@ import (
 )
 
 func Test_LoadABI(t *testing.T) {
-	abi1 := LoadABI(ChainBankABI)
-	abi2 := LoadABI(ChainBridgeABI)
+	abi1 := LoadABI(Chain33BankABI)
+	abi2 := LoadABI(Chain33BridgeABI)
 	abi3 := LoadABI(EthereumBankABI)
 	assert.NotEmpty(t, abi1, abi2, abi3)
 }
@@ -34,7 +34,7 @@ func TestContractRegistry_String(t *testing.T) {
 	assert.Equal(t, Valset.String(), "valset")
 	assert.Equal(t, Oracle.String(), "oracle")
 	assert.Equal(t, BridgeBank.String(), "bridgebank")
-	assert.Equal(t, ChainBridge.String(), "chainbridge")
+	assert.Equal(t, Chain33Bridge.String(), "chain33bridge")
 }
 
 func Test_GetAddressFromBridgeRegistry(t *testing.T) {
@@ -59,19 +59,19 @@ func Test_RelayOracleClaimToEthereum(t *testing.T) {
 	para, sim, _, x2EthDeployInfo, err := deployContracts()
 	require.NoError(t, err)
 
-	privateKeySlice, err := chainCommon.FromHex("0x3fa21584ae2e4fd74db9b58e2386f5481607dfa4d7ba0617aaa7858e5025dc1e")
+	privateKeySlice, err := chain33Common.FromHex("0x3fa21584ae2e4fd74db9b58e2386f5481607dfa4d7ba0617aaa7858e5025dc1e")
 	require.Nil(t, err)
 	privateKey, err := crypto.ToECDSA(privateKeySlice)
 	require.Nil(t, err)
 
 	prophecyClaim := ProphecyClaim{
 		ClaimType:            events.ClaimTypeBurn,
-		ChainSender:          []byte("12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"),
+		Chain33Sender:        []byte("12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"),
 		EthereumReceiver:     common.HexToAddress("0x0C05bA5c230fDaA503b53702aF1962e08D0C60BF"),
 		TokenContractAddress: common.HexToAddress("0x0000000000000000000000000000000000000000"),
 		Symbol:               "eth",
 		Amount:               big.NewInt(100000000000000000),
-		ChainTxHash:          common.Hex2Bytes("fd5747c43d1460bb6f8a7a26c66b4ccab5500d05668278efe5c0fd5951dfd909"),
+		Chain33TxHash:        common.Hex2Bytes("fd5747c43d1460bb6f8a7a26c66b4ccab5500d05668278efe5c0fd5951dfd909"),
 	}
 
 	Addr2TxNonce := make(map[common.Address]*NonceMutex)
@@ -182,7 +182,7 @@ func PrepareTestEnvironment(deployerPrivateKey string, ethValidatorAddrKeys []st
 	return sim, para
 }
 
-// DeployValset : 部署Valset
+//DeployValset : 部署Valset
 func DeployValset(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer common.Address, operator common.Address, initValidators []common.Address, initPowers []*big.Int) (*generated.Valset, *DeployResult, error) {
 	auth, err := PrepareAuth(client, privateKey, deployer)
 	if nil != err {
@@ -203,15 +203,15 @@ func DeployValset(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKe
 	return valset, deployResult, nil
 }
 
-// DeployChainBridge : 部署ChainBridge
-func DeployChainBridge(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer common.Address, operator, valset common.Address) (*generated.ChainBridge, *DeployResult, error) {
+//DeployChain33Bridge : 部署Chain33Bridge
+func DeployChain33Bridge(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer common.Address, operator, valset common.Address) (*generated.Chain33Bridge, *DeployResult, error) {
 	auth, err := PrepareAuth(client, privateKey, deployer)
 	if nil != err {
 		return nil, nil, err
 	}
 
 	//部署合约
-	addr, tx, chainBridge, err := generated.DeployChainBridge(auth, client, operator, valset)
+	addr, tx, chain33Bridge, err := generated.DeployChain33Bridge(auth, client, operator, valset)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -220,18 +220,18 @@ func DeployChainBridge(client ethinterface.EthClientSpec, privateKey *ecdsa.Priv
 		Address: addr,
 		TxHash:  tx.Hash().String(),
 	}
-	return chainBridge, deployResult, nil
+	return chain33Bridge, deployResult, nil
 }
 
-// DeployOracle : 部署Oracle
-func DeployOracle(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer, operator, valset, chainBridge common.Address) (*generated.Oracle, *DeployResult, error) {
+//DeployOracle : 部署Oracle
+func DeployOracle(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer, operator, valset, chain33Bridge common.Address) (*generated.Oracle, *DeployResult, error) {
 	auth, err := PrepareAuth(client, privateKey, deployer)
 	if nil != err {
 		return nil, nil, err
 	}
 
 	//部署合约
-	addr, tx, oracle, err := generated.DeployOracle(auth, client, operator, valset, chainBridge)
+	addr, tx, oracle, err := generated.DeployOracle(auth, client, operator, valset, chain33Bridge)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -243,15 +243,15 @@ func DeployOracle(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKe
 	return oracle, deployResult, nil
 }
 
-// DeployBridgeBank : 部署BridgeBank
-func DeployBridgeBank(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer, operator, oracle, chainBridge common.Address) (*generated.BridgeBank, *DeployResult, error) {
+//DeployBridgeBank : 部署BridgeBank
+func DeployBridgeBank(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer, operator, oracle, chain33Bridge common.Address) (*generated.BridgeBank, *DeployResult, error) {
 	auth, err := PrepareAuth(client, privateKey, deployer)
 	if nil != err {
 		return nil, nil, err
 	}
 
 	//部署合约
-	addr, tx, bridgeBank, err := generated.DeployBridgeBank(auth, client, operator, oracle, chainBridge)
+	addr, tx, bridgeBank, err := generated.DeployBridgeBank(auth, client, operator, oracle, chain33Bridge)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -263,15 +263,15 @@ func DeployBridgeBank(client ethinterface.EthClientSpec, privateKey *ecdsa.Priva
 	return bridgeBank, deployResult, nil
 }
 
-// DeployBridgeRegistry : 部署BridgeRegistry
-func DeployBridgeRegistry(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer, chainBridgeAddr, bridgeBankAddr, oracleAddr, valsetAddr common.Address) (*generated.BridgeRegistry, *DeployResult, error) {
+//DeployBridgeRegistry : 部署BridgeRegistry
+func DeployBridgeRegistry(client ethinterface.EthClientSpec, privateKey *ecdsa.PrivateKey, deployer, chain33BridgeAddr, bridgeBankAddr, oracleAddr, valsetAddr common.Address) (*generated.BridgeRegistry, *DeployResult, error) {
 	auth, err := PrepareAuth(client, privateKey, deployer)
 	if nil != err {
 		return nil, nil, err
 	}
 
 	//部署合约
-	addr, tx, bridgeRegistry, err := generated.DeployBridgeRegistry(auth, client, chainBridgeAddr, bridgeBankAddr, oracleAddr, valsetAddr)
+	addr, tx, bridgeRegistry, err := generated.DeployBridgeRegistry(auth, client, chain33BridgeAddr, bridgeBankAddr, oracleAddr, valsetAddr)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -283,7 +283,7 @@ func DeployBridgeRegistry(client ethinterface.EthClientSpec, privateKey *ecdsa.P
 	return bridgeRegistry, deployResult, nil
 }
 
-// DeployAndInit ...
+//DeployAndInit ...
 func DeployAndInit(client ethinterface.EthClientSpec, para *DeployPara) (*X2EthContracts, *X2EthDeployInfo, error) {
 	x2EthContracts := &X2EthContracts{}
 	deployInfo := &X2EthDeployInfo{}
@@ -306,16 +306,16 @@ func DeployAndInit(client ethinterface.EthClientSpec, para *DeployPara) (*X2EthC
 		sim.Commit()
 	}
 
-	x2EthContracts.ChainBridge, deployInfo.ChainBridge, err = DeployChainBridge(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Valset.Address)
+	x2EthContracts.Chain33Bridge, deployInfo.Chain33Bridge, err = DeployChain33Bridge(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Valset.Address)
 	if nil != err {
-		deployLog.Error("DeployAndInit", "failed to DeployChainBridge due to:", err.Error())
+		deployLog.Error("DeployAndInit", "failed to DeployChain33Bridge due to:", err.Error())
 		return nil, nil, err
 	}
 	if isSim {
 		sim.Commit()
 	}
 
-	x2EthContracts.Oracle, deployInfo.Oracle, err = DeployOracle(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Valset.Address, deployInfo.ChainBridge.Address)
+	x2EthContracts.Oracle, deployInfo.Oracle, err = DeployOracle(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Valset.Address, deployInfo.Chain33Bridge.Address)
 	if nil != err {
 		deployLog.Error("DeployAndInit", "failed to DeployOracle due to:", err.Error())
 		return nil, nil, err
@@ -324,7 +324,7 @@ func DeployAndInit(client ethinterface.EthClientSpec, para *DeployPara) (*X2EthC
 		sim.Commit()
 	}
 
-	x2EthContracts.BridgeBank, deployInfo.BridgeBank, err = DeployBridgeBank(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Oracle.Address, deployInfo.ChainBridge.Address)
+	x2EthContracts.BridgeBank, deployInfo.BridgeBank, err = DeployBridgeBank(client, para.DeployPrivateKey, para.Deployer, para.Operator, deployInfo.Oracle.Address, deployInfo.Chain33Bridge.Address)
 	if nil != err {
 		deployLog.Error("DeployAndInit", "failed to DeployBridgeBank due to:", err.Error())
 		return nil, nil, err
@@ -337,7 +337,7 @@ func DeployAndInit(client ethinterface.EthClientSpec, para *DeployPara) (*X2EthC
 	if nil != err {
 		return nil, nil, err
 	}
-	_, err = x2EthContracts.ChainBridge.SetBridgeBank(auth, deployInfo.BridgeBank.Address)
+	_, err = x2EthContracts.Chain33Bridge.SetBridgeBank(auth, deployInfo.BridgeBank.Address)
 	if nil != err {
 		deployLog.Error("DeployAndInit", "failed to SetBridgeBank due to:", err.Error())
 		return nil, nil, err
@@ -350,7 +350,7 @@ func DeployAndInit(client ethinterface.EthClientSpec, para *DeployPara) (*X2EthC
 	if nil != err {
 		return nil, nil, err
 	}
-	_, err = x2EthContracts.ChainBridge.SetOracle(auth, deployInfo.Oracle.Address)
+	_, err = x2EthContracts.Chain33Bridge.SetOracle(auth, deployInfo.Oracle.Address)
 	if nil != err {
 		deployLog.Error("DeployAndInit", "failed to SetOracle due to:", err.Error())
 		return nil, nil, err
@@ -359,7 +359,7 @@ func DeployAndInit(client ethinterface.EthClientSpec, para *DeployPara) (*X2EthC
 		sim.Commit()
 	}
 
-	x2EthContracts.BridgeRegistry, deployInfo.BridgeRegistry, err = DeployBridgeRegistry(client, para.DeployPrivateKey, para.Deployer, deployInfo.ChainBridge.Address, deployInfo.BridgeBank.Address, deployInfo.Oracle.Address, deployInfo.Valset.Address)
+	x2EthContracts.BridgeRegistry, deployInfo.BridgeRegistry, err = DeployBridgeRegistry(client, para.DeployPrivateKey, para.Deployer, deployInfo.Chain33Bridge.Address, deployInfo.BridgeBank.Address, deployInfo.Oracle.Address, deployInfo.Valset.Address)
 	if nil != err {
 		deployLog.Error("DeployAndInit", "failed to DeployBridgeBank due to:", err.Error())
 		return nil, nil, err

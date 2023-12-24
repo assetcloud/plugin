@@ -8,16 +8,16 @@ import (
 	"strings"
 	"testing"
 
-	commonlog "github.com/assetcloud/chain/common/log"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util/testnode"
-	pty "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
+	commonlog "github.com/33cn/chain33/common/log"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util/testnode"
+	pty "github.com/33cn/plugin/plugin/dapp/blackwhite/types"
 	"github.com/stretchr/testify/assert"
 
-	_ "github.com/assetcloud/chain/system"
-	_ "github.com/assetcloud/plugin/plugin"
+	_ "github.com/33cn/chain33/system"
+	_ "github.com/33cn/plugin/plugin"
 )
 
 func init() {
@@ -89,7 +89,7 @@ func testRoundInfoCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params.FuncName = pty.GetBlackwhiteRoundInfo
 	params.Payload = types.MustPBToJSON(req)
 	rep = &pty.ReplyBlackwhiteRoundInfo{}
-	return jrpc.Call("Chain.Query", params, rep)
+	return jrpc.Call("Chain33.Query", params, rep)
 }
 
 func testRoundListCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -100,7 +100,7 @@ func testRoundListCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params.Payload = types.MustPBToJSON(req)
 	rep = &pty.ReplyBlackwhiteRoundList{}
 
-	return jrpc.Call("Chain.Query", params, rep)
+	return jrpc.Call("Chain33.Query", params, rep)
 }
 
 func testLoopResultCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -111,5 +111,5 @@ func testLoopResultCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params.Payload = types.MustPBToJSON(req)
 	rep = &pty.ReplyLoopResults{}
 
-	return jrpc.Call("Chain.Query", params, rep)
+	return jrpc.Call("Chain33.Query", params, rep)
 }

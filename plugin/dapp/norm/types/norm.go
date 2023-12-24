@@ -5,7 +5,7 @@
 package types
 
 import (
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 // NormX name
@@ -18,12 +18,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(NormX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(NormX, NewType(cfg))
 }
 
@@ -33,7 +33,7 @@ type NormType struct {
 }
 
 // NewType method
-func NewType(cfg *types.ChainConfig) *NormType {
+func NewType(cfg *types.Chain33Config) *NormType {
 	c := &NormType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

@@ -5,7 +5,7 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 // ExecDelLocal 回退自动删除，重写基类

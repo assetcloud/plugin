@@ -7,13 +7,13 @@ package executor
 import (
 	"testing"
 
-	"github.com/assetcloud/chain/client"
-	"github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/queue"
-	"github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	auty "github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
+	"github.com/33cn/chain33/client"
+	"github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/queue"
+	"github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	auty "github.com/33cn/plugin/plugin/dapp/autonomy/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -81,7 +81,7 @@ boardPeriod=518400
 itemWaitBlockNumber=40000
 `
 
-var chainTestCfg = types.NewChainConfig(types.MergeCfg(autoC, types.GetDefaultCfgstring()))
+var chainTestCfg = types.NewChain33Config(types.MergeCfg(autoC, types.GetDefaultCfgstring()))
 
 var autoCfg = GetAutonomyParam(chainTestCfg, 0)
 

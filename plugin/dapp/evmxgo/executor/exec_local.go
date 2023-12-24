@@ -3,10 +3,10 @@ package executor
 import (
 	"encoding/hex"
 
-	"github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	evmxgotypes "github.com/assetcloud/plugin/plugin/dapp/evmxgo/types"
+	"github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	evmxgotypes "github.com/33cn/plugin/plugin/dapp/evmxgo/types"
 	"github.com/jinzhu/copier"
 )
 
@@ -223,7 +223,7 @@ func (e *evmxgo) ExecLocal_Burn(payload *evmxgotypes.EvmxgoBurn, tx *types.Trans
 	return &types.LocalDBSet{KV: set}, nil
 }
 
-func (e *evmxgo) ExecLocal_BurntMap(payload *evmxgotypes.EvmxgoBurnMap, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
+func (e *evmxgo) ExecLocal_BurnMap(payload *evmxgotypes.EvmxgoBurnMap, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	pay := &evmxgotypes.EvmxgoBurn{}
 	_ = copier.Copy(pay, payload)
 	return e.ExecLocal_Burn(pay, tx, receiptData, index)

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
 
-	chainCommon "github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/system/crypto/secp256k1"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
+	chain33Common "github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/system/crypto/secp256k1"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,7 +22,7 @@ func BenchmarkTransfer(b *testing.B) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(b, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(b, err)
@@ -41,7 +41,7 @@ func BenchmarkTransfer(b *testing.B) {
 	assert.Equal(b, acc4token1Balance.TokenId, tokenId)
 
 	//设置公钥
-	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(b, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(b, err)
@@ -58,9 +58,9 @@ func BenchmarkTransfer(b *testing.B) {
 
 	//测试向新账户进行转币操作
 	toEthAddr := "12a0e25e62c1dbd32e505446062b26aecb65f028"
-	toL2ChainAddr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
+	toL2Chain33Addr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
 	//toAddrprivkey := "0x7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115"
-	receipt, localReceipt, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2ChainAddr)
+	receipt, localReceipt, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2Chain33Addr)
 	assert.Nil(b, err)
 	assert.Equal(b, receipt.Ty, int32(types.ExecOk))
 	assert.Greater(b, len(localReceipt.KV), 0)

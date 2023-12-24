@@ -7,36 +7,36 @@ import (
 	"strings"
 	"time"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/exchange/executor"
-	et "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
-	tt "github.com/assetcloud/plugin/plugin/dapp/token/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/exchange/executor"
+	et "github.com/33cn/plugin/plugin/dapp/exchange/types"
+	tt "github.com/33cn/plugin/plugin/dapp/token/types"
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
 )
 
-// GRPCCli ...
+//GRPCCli ...
 type GRPCCli struct {
-	client types.ChainClient
+	client types.Chain33Client
 }
 
-// NewGRPCCli ...
+//NewGRPCCli ...
 func NewGRPCCli(grpcAddr string) *GRPCCli {
 	conn, err := grpc.Dial(grpcAddr, grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
-	client := types.NewChainClient(conn)
-	cfg := types.NewChainConfig(et.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain")
+	client := types.NewChain33Client(conn)
+	cfg := types.NewChain33Config(et.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain33")
 	executor.Init(et.ExchangeX, cfg, nil)
 	return &GRPCCli{
 		client: client,
 	}
 }
 
-// Send ...
+//Send ...
 func (c *GRPCCli) Send(tx *types.Transaction, hexKey string) ([]*types.ReceiptLog, error) {
 	txHash, logs, err := c.sendAndWaitReceipt(tx, hexKey)
 	if txHash != nil {
@@ -53,7 +53,7 @@ func (c *GRPCCli) Send(tx *types.Transaction, hexKey string) ([]*types.ReceiptLo
 	return logs, nil
 }
 
-// Query ...
+//Query ...
 func (c *GRPCCli) Query(fn string, msg proto.Message) ([]byte, error) {
 	ss := strings.Split(fn, ".")
 	var in types.ChainExecutor
@@ -76,7 +76,7 @@ func (c *GRPCCli) Query(fn string, msg proto.Message) ([]byte, error) {
 	return r.Msg, nil
 }
 
-// GetExecAccount ...
+//GetExecAccount ...
 func (c *GRPCCli) GetExecAccount(addr string, exec string, symbol string) (*types.Account, error) {
 	if exec == "coins" {
 		// bty
@@ -136,10 +136,10 @@ func (c *GRPCCli) sendAndWaitReceipt(tx *types.Transaction, hexKey string) (txHa
 	return r.Msg, d.Receipt.Logs, nil
 }
 
-// SendTx ...
+//SendTx ...
 func (c *GRPCCli) SendTx(tx *types.Transaction, hexKey string) (reply *types.Reply, err error) {
-	cfg := types.NewChainConfig(et.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain")
+	cfg := types.NewChain33Config(et.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain33")
 	tx, err = types.FormatTx(cfg, et.ExchangeX, tx)
 	if err != nil {
 		return nil, err

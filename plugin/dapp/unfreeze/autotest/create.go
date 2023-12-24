@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"github.com/assetcloud/chain/cmd/autotest/types"
+	"github.com/33cn/chain33/cmd/autotest/types"
 )
 
 type fixAmountCase struct {

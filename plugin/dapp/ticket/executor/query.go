@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/ticket/types"
 )
 
 // Query_TicketInfos query tick info

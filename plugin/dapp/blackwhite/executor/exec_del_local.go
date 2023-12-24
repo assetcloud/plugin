@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	gt "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
+	"github.com/33cn/chain33/types"
+	gt "github.com/33cn/plugin/plugin/dapp/blackwhite/types"
 )
 
 func (c *Blackwhite) execDelLocal(receiptData *types.ReceiptData) ([]*types.KeyValue, error) {

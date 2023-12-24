@@ -4,10 +4,17 @@
 [![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/assetcloud/plugin?svg=true&branch=master&passingText=Windows%20-%20OK&failingText=Windows%20-%20failed&pendingText=Windows%20-%20pending)](https://ci.appveyor.com/project/assetcloud/plugin)
 [![codecov](https://codecov.io/gh/assetcloud/plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/assetcloud/plugin)
 
+<<<<<<< HEAD
 # chain 官方插件系统（v1.68.4）
 
 - chain 地址: https://github.com/assetcloud/chain
 - chain 官网: https://chain.33.cn
+=======
+# chain 官方插件系统（v1.68.2）
+
+* chain地址: https://github.com/assetcloud/chain
+* chain官网: https://chain.33.cn
+>>>>>>> c7f90405aaee21be0ead6b9b99d81458fc46c947
 
 ### 环境
 

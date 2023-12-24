@@ -12,10 +12,10 @@ import (
 	"strings"
 	"time"
 
-	tmtypes "github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/common/merkle"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/common/merkle"
+	"github.com/33cn/chain33/types"
+	tmtypes "github.com/33cn/plugin/plugin/dapp/qbftNode/types"
 )
 
 // QbftBlockID struct

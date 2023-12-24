@@ -1,45 +1,45 @@
-package chain
+package chain33
 
 import (
-	chainCommon "github.com/assetcloud/chain/common"
+	chain33Common "github.com/33cn/chain33/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	//dbm "github.com/assetcloud/chain/common/db"
-	chainTypes "github.com/assetcloud/chain/types"
-	wcom "github.com/assetcloud/chain/wallet/common"
-	x2ethTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	//dbm "github.com/33cn/chain33/common/db"
+	chain33Types "github.com/33cn/chain33/types"
+	wcom "github.com/33cn/chain33/wallet/common"
+	x2ethTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 )
 
 var (
-	chainAccountKey = []byte("ChainAccount4Relayer")
-	start           = int(1)
+	chain33AccountKey = []byte("Chain33Account4Relayer")
+	start             = int(1)
 )
 
-// GetAccount ...
-func (chainRelayer *Relayer4Chain) GetAccount(passphrase string) (privateKey, addr string, err error) {
-	accountInfo, err := chainRelayer.db.Get(chainAccountKey)
+//GetAccount ...
+func (chain33Relayer *Relayer4Chain33) GetAccount(passphrase string) (privateKey, addr string, err error) {
+	accountInfo, err := chain33Relayer.db.Get(chain33AccountKey)
 	if nil != err {
 		return "", "", err
 	}
 	ethAccount := &x2ethTypes.Account4Relayer{}
-	if err := chainTypes.Decode(accountInfo, ethAccount); nil != err {
+	if err := chain33Types.Decode(accountInfo, ethAccount); nil != err {
 		return "", "", err
 	}
 	decryptered := wcom.CBCDecrypterPrivkey([]byte(passphrase), ethAccount.Privkey)
-	privateKey = chainCommon.ToHex(decryptered)
+	privateKey = chain33Common.ToHex(decryptered)
 	addr = ethAccount.Addr
 	return
 }
 
-// GetAccountAddr ...
-func (chainRelayer *Relayer4Chain) GetAccountAddr() (addr string, err error) {
-	accountInfo, err := chainRelayer.db.Get(chainAccountKey)
+//GetAccountAddr ...
+func (chain33Relayer *Relayer4Chain33) GetAccountAddr() (addr string, err error) {
+	accountInfo, err := chain33Relayer.db.Get(chain33AccountKey)
 	if nil != err {
 		relayerLog.Info("GetValidatorAddr", "Failed to get account from db due to:", err.Error())
 		return "", err
 	}
 	ethAccount := &x2ethTypes.Account4Relayer{}
-	if err := chainTypes.Decode(accountInfo, ethAccount); nil != err {
+	if err := chain33Types.Decode(accountInfo, ethAccount); nil != err {
 		relayerLog.Info("GetValidatorAddr", "Failed to decode due to:", err.Error())
 		return "", err
 	}
@@ -47,9 +47,9 @@ func (chainRelayer *Relayer4Chain) GetAccountAddr() (addr string, err error) {
 	return
 }
 
-// ImportPrivateKey ...
-func (chainRelayer *Relayer4Chain) ImportPrivateKey(passphrase, privateKeyStr string) (addr string, err error) {
-	privateKeySlice, err := chainCommon.FromHex(privateKeyStr)
+//ImportPrivateKey ...
+func (chain33Relayer *Relayer4Chain33) ImportPrivateKey(passphrase, privateKeyStr string) (addr string, err error) {
+	privateKeySlice, err := chain33Common.FromHex(privateKeyStr)
 	if nil != err {
 		return "", err
 	}
@@ -59,49 +59,49 @@ func (chainRelayer *Relayer4Chain) ImportPrivateKey(passphrase, privateKeyStr st
 	}
 
 	ethSender := crypto.PubkeyToAddress(privateKey.PublicKey)
-	chainRelayer.privateKey4Ethereum = privateKey
-	chainRelayer.ethSender = ethSender
-	chainRelayer.unlock <- start
+	chain33Relayer.privateKey4Ethereum = privateKey
+	chain33Relayer.ethSender = ethSender
+	chain33Relayer.unlock <- start
 
-	addr = chainCommon.ToHex(ethSender.Bytes())
+	addr = chain33Common.ToHex(ethSender.Bytes())
 	encryptered := wcom.CBCEncrypterPrivkey([]byte(passphrase), privateKeySlice)
 	ethAccount := &x2ethTypes.Account4Relayer{
 		Privkey: encryptered,
 		Addr:    addr,
 	}
-	encodedInfo := chainTypes.Encode(ethAccount)
-	err = chainRelayer.db.SetSync(chainAccountKey, encodedInfo)
+	encodedInfo := chain33Types.Encode(ethAccount)
+	err = chain33Relayer.db.SetSync(chain33AccountKey, encodedInfo)
 
 	return
 }
 
-// StoreAccountWithNewPassphase ...
-func (chainRelayer *Relayer4Chain) StoreAccountWithNewPassphase(newPassphrase, oldPassphrase string) error {
-	accountInfo, err := chainRelayer.db.Get(chainAccountKey)
+//StoreAccountWithNewPassphase ...
+func (chain33Relayer *Relayer4Chain33) StoreAccountWithNewPassphase(newPassphrase, oldPassphrase string) error {
+	accountInfo, err := chain33Relayer.db.Get(chain33AccountKey)
 	if nil != err {
 		relayerLog.Info("StoreAccountWithNewPassphase", "pls check account is created already, err", err)
 		return err
 	}
 	ethAccount := &x2ethTypes.Account4Relayer{}
-	if err := chainTypes.Decode(accountInfo, ethAccount); nil != err {
+	if err := chain33Types.Decode(accountInfo, ethAccount); nil != err {
 		return err
 	}
 	decryptered := wcom.CBCDecrypterPrivkey([]byte(oldPassphrase), ethAccount.Privkey)
 	encryptered := wcom.CBCEncrypterPrivkey([]byte(newPassphrase), decryptered)
 	ethAccount.Privkey = encryptered
-	encodedInfo := chainTypes.Encode(ethAccount)
-	return chainRelayer.db.SetSync(chainAccountKey, encodedInfo)
+	encodedInfo := chain33Types.Encode(ethAccount)
+	return chain33Relayer.db.SetSync(chain33AccountKey, encodedInfo)
 }
 
-// RestorePrivateKeys ...
-func (chainRelayer *Relayer4Chain) RestorePrivateKeys(passphrase string) error {
-	accountInfo, err := chainRelayer.db.Get(chainAccountKey)
+//RestorePrivateKeys ...
+func (chain33Relayer *Relayer4Chain33) RestorePrivateKeys(passphrase string) error {
+	accountInfo, err := chain33Relayer.db.Get(chain33AccountKey)
 	if nil != err {
-		relayerLog.Info("No private key saved for Relayer4Chain")
+		relayerLog.Info("No private key saved for Relayer4Chain33")
 		return nil
 	}
 	ethAccount := &x2ethTypes.Account4Relayer{}
-	if err := chainTypes.Decode(accountInfo, ethAccount); nil != err {
+	if err := chain33Types.Decode(accountInfo, ethAccount); nil != err {
 		relayerLog.Info("RestorePrivateKeys", "Failed to decode due to:", err.Error())
 		return err
 	}
@@ -112,14 +112,14 @@ func (chainRelayer *Relayer4Chain) RestorePrivateKeys(passphrase string) error {
 		return err
 	}
 
-	chainRelayer.rwLock.Lock()
-	chainRelayer.privateKey4Ethereum = privateKey
-	chainRelayer.ethSender = crypto.PubkeyToAddress(privateKey.PublicKey)
-	chainRelayer.rwLock.Unlock()
-	chainRelayer.unlock <- start
+	chain33Relayer.rwLock.Lock()
+	chain33Relayer.privateKey4Ethereum = privateKey
+	chain33Relayer.ethSender = crypto.PubkeyToAddress(privateKey.PublicKey)
+	chain33Relayer.rwLock.Unlock()
+	chain33Relayer.unlock <- start
 	return nil
 }
 
-//func (chainRelayer *Relayer4Chain) UpdatePrivateKey(Passphrase, privateKey string) error {
+//func (chain33Relayer *Relayer4Chain33) UpdatePrivateKey(Passphrase, privateKey string) error {
 //	return nil
 //}

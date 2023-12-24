@@ -7,7 +7,7 @@ package types
 import (
 	"reflect"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 func init() {
@@ -17,13 +17,13 @@ func init() {
 	types.RegExec(DPosX, InitExecutor)
 }
 
-// InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+//InitFork ...
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(DPosX, "Enable", 0)
 }
 
-// InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+//InitExecutor ...
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(DPosX, NewType(cfg))
 }
 
@@ -33,7 +33,7 @@ type DPosType struct {
 }
 
 // NewType method
-func NewType(cfg *types.ChainConfig) *DPosType {
+func NewType(cfg *types.Chain33Config) *DPosType {
 	c := &DPosType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

@@ -20,17 +20,17 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
 
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 
 	"github.com/consensys/gnark/backend"
 
-	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/zksnark"
+	"github.com/33cn/plugin/plugin/dapp/mix/executor/zksnark"
 )
 
-// 产生随机秘钥和receivingPk对data DH加密，返回随机秘钥的公钥
+//产生随机秘钥和receivingPk对data DH加密，返回随机秘钥的公钥
 func encryptSecretData(req *mixTy.EncryptSecretData) (*mixTy.DHSecret, error) {
 	secret, err := common.FromHex(req.Secret)
 	if err != nil {
@@ -174,7 +174,7 @@ func getCircuitKeyFileName(circuitTy mixTy.VerifyType) (string, string, error) {
 	}
 }
 
-// 文件内容存储的是hex string，读的时候直接转换为string即可
+//文件内容存储的是hex string，读的时候直接转换为string即可
 func readZkKeyFile(path string) (string, error) {
 	f, err := os.Open(path)
 	if err != nil {

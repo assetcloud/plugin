@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	accountmanagertypes "github.com/assetcloud/plugin/plugin/dapp/accountmanager/types"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	accountmanagertypes "github.com/33cn/plugin/plugin/dapp/accountmanager/types"
 )
 
 /*

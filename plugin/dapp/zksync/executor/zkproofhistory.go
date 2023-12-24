@@ -5,16 +5,16 @@ import (
 	"hash"
 	"math/big"
 
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/merkletree"
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/mix/executor/merkletree"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/pkg/errors"
 )
 
-// 暂时保存到全局变量里面
+//暂时保存到全局变量里面
 func getHistoryAccountProofFromDb(targetRootHash string) *zt.HistoryAccountProofInfo {
 	if historyProof.RootHash == targetRootHash {
 		return &historyProof
@@ -27,7 +27,7 @@ func setHistoryAccountProofToDb(proof *zt.HistoryAccountProofInfo) error {
 	return nil
 }
 
-// 根据rootHash获取account在该root下的证明
+//根据rootHash获取account在该root下的证明
 func getAccountProofInHistory(statedb dbm.KV, req *zt.ZkReqExistenceProof) (*zt.ZkProofWitness, error) {
 	historyAccountInfo, err := BuildStateDbHistoryAccount(statedb, req.RootHash)
 	if err != nil {
@@ -39,15 +39,15 @@ func getAccountProofInHistory(statedb dbm.KV, req *zt.ZkReqExistenceProof) (*zt.
 	return GetHistoryAccountProof(historyAccountInfo, req.AccountId, req.TokenId)
 }
 
-func getInitHistoryLeaf(ethFeeAddr, chainFeeAddr string) []*zt.HistoryLeaf {
-	leaves := getInitAccountLeaf(ethFeeAddr, chainFeeAddr)
+func getInitHistoryLeaf(ethFeeAddr, chain33FeeAddr string) []*zt.HistoryLeaf {
+	leaves := getInitAccountLeaf(ethFeeAddr, chain33FeeAddr)
 	var historyLeaf []*zt.HistoryLeaf
 	for _, l := range leaves {
 		history := &zt.HistoryLeaf{
-			EthAddress: l.EthAddress,
-			AccountId:  l.AccountId,
-			ChainAddr:  l.ChainAddr,
-			TokenHash:  zt.Byte2Str(l.TokenHash),
+			EthAddress:  l.EthAddress,
+			AccountId:   l.AccountId,
+			Chain33Addr: l.Chain33Addr,
+			TokenHash:   zt.Byte2Str(l.TokenHash),
 		}
 		if len(l.TokenIds) > 0 {
 			token := &zt.TokenBalance{
@@ -62,7 +62,7 @@ func getInitHistoryLeaf(ethFeeAddr, chainFeeAddr string) []*zt.HistoryLeaf {
 	return historyLeaf
 }
 
-// BuildStateDbHistoryAccount 从statedb中构建账户tree，以此构建证明
+//BuildStateDbHistoryAccount 从statedb中构建账户tree，以此构建证明
 func BuildStateDbHistoryAccount(db dbm.KV, reqRootHash string) (*zt.HistoryAccountProofInfo, error) {
 	//允许reqRootHash为nil，或者和当前相同，则不需要重新构建
 	if len(historyProof.RootHash) > 0 && (historyProof.RootHash == reqRootHash || len(reqRootHash) == 0) {
@@ -86,7 +86,7 @@ func BuildStateDbHistoryAccount(db dbm.KV, reqRootHash string) (*zt.HistoryAccou
 		history := &zt.HistoryLeaf{
 			AccountId:    id,
 			EthAddress:   leaf.EthAddress,
-			ChainAddr:    leaf.ChainAddr,
+			Chain33Addr:  leaf.Chain33Addr,
 			PubKey:       leaf.PubKey,
 			ProxyPubKeys: leaf.ProxyPubKeys,
 		}
@@ -113,7 +113,7 @@ func BuildStateDbHistoryAccount(db dbm.KV, reqRootHash string) (*zt.HistoryAccou
 	return historyAccts, nil
 }
 
-// BuildHistoryAccountByProof 根据ProofId构建截止到当前proof的account tree，以此账户构建证明，适用于截止到某个proof的证明
+//BuildHistoryAccountByProof 根据ProofId构建截止到当前proof的account tree，以此账户构建证明，适用于截止到某个proof的证明
 func BuildHistoryAccountByProof(db dbm.KV, proofId uint64, reqRootHash string, feeAddrs *zt.ZkFeeAddrs) (*zt.HistoryAccountProofInfo, error) {
 	if proofId == 0 {
 		return BuildStateDbHistoryAccount(db, "")
@@ -141,7 +141,7 @@ func BuildHistoryAccountByProof(db dbm.KV, proofId uint64, reqRootHash string, f
 	return buildHistoryAccountsByOps(ops, reqRootHash, feeAddrs.EthFeeAddr, feeAddrs.L2FeeAddr)
 }
 
-// 根据某个proof的root恢复所有账户的快照，在资产不会从L2转出到contract时候可以使用
+//根据某个proof的root恢复所有账户的快照，在资产不会从L2转出到contract时候可以使用
 func getHistoryAccountByRoot(localdb dbm.KV, targetRootHash, l1FeeAddr, l2FeeAddr string) (*zt.HistoryAccountProofInfo, error) {
 	info := getHistoryAccountProofFromDb(targetRootHash)
 	if info != nil {
@@ -217,9 +217,9 @@ func getAccountMapByOp(op *zt.ZkOperation, accountMap map[uint64]*zt.HistoryLeaf
 		fromLeaf, ok := accountMap[operation.AccountID]
 		if !ok {
 			fromLeaf = &zt.HistoryLeaf{
-				AccountId:  operation.GetAccountID(),
-				EthAddress: operation.GetEthAddress(),
-				ChainAddr:  operation.GetLayer2Addr(),
+				AccountId:   operation.GetAccountID(),
+				EthAddress:  operation.GetEthAddress(),
+				Chain33Addr: operation.GetLayer2Addr(),
 				Tokens: []*zt.TokenBalance{
 					{
 						TokenId: operation.TokenID,
@@ -361,9 +361,9 @@ func getAccountMapByOp(op *zt.ZkOperation, accountMap map[uint64]*zt.HistoryLeaf
 
 		change, _ := new(big.Int).SetString(operation.Amount, 10)
 		toLeaf := &zt.HistoryLeaf{
-			AccountId:  operation.GetToAccountID(),
-			EthAddress: operation.GetEthAddress(),
-			ChainAddr:  operation.GetLayer2Addr(),
+			AccountId:   operation.GetToAccountID(),
+			EthAddress:  operation.GetEthAddress(),
+			Chain33Addr: operation.GetLayer2Addr(),
 			Tokens: []*zt.TokenBalance{
 				{
 					TokenId: operation.TokenID,
@@ -643,9 +643,9 @@ func getAccountMapByOp(op *zt.ZkOperation, accountMap map[uint64]*zt.HistoryLeaf
 		//to leaf
 		change, _ := new(big.Int).SetString(operation.Amount, 10)
 		toLeaf := &zt.HistoryLeaf{
-			AccountId:  operation.ToAccountID,
-			EthAddress: operation.GetEthAddress(),
-			ChainAddr:  operation.GetLayer2Addr(),
+			AccountId:   operation.ToAccountID,
+			EthAddress:  operation.GetEthAddress(),
+			Chain33Addr: operation.GetLayer2Addr(),
 			Tokens: []*zt.TokenBalance{
 				{
 					TokenId: operation.TokenID,
@@ -967,7 +967,7 @@ func getHistoryLeafHash(leaf *zt.HistoryLeaf, h hash.Hash) []byte {
 	accountIdBytes := new(fr.Element).SetUint64(leaf.GetAccountId()).Bytes()
 	h.Write(accountIdBytes[:])
 	h.Write(zt.Str2Byte(leaf.GetEthAddress()))
-	h.Write(zt.Str2Byte(leaf.GetChainAddr()))
+	h.Write(zt.Str2Byte(leaf.GetChain33Addr()))
 
 	getLeafPubKeyHash(h, leaf.GetPubKey())
 	getLeafPubKeyHash(h, leaf.GetProxyPubKeys().GetNormal())
@@ -1074,7 +1074,7 @@ func GetHistoryAccountProof(historyAccountInfo *zt.HistoryAccountProofInfo, targ
 	accountW := &zt.AccountWitness{
 		ID:            targetAccountID,
 		EthAddr:       targetLeaf.EthAddress,
-		ChainAddr:     targetLeaf.ChainAddr,
+		Chain33Addr:   targetLeaf.Chain33Addr,
 		TokenTreeRoot: tokenMerkleProof.RootHash,
 		PubKey:        targetLeaf.PubKey,
 		ProxyPubKeys:  targetLeaf.ProxyPubKeys,

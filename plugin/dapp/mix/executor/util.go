@@ -5,14 +5,14 @@
 package executor
 
 import (
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/zksnark"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/plugin/plugin/dapp/mix/executor/zksnark"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 
 	"github.com/pkg/errors"
 )
 
-// 考虑vk平滑切换的场景，允许有两个vk存在
+//考虑vk平滑切换的场景，允许有两个vk存在
 func zkProofVerify(db dbm.KV, proof *mixTy.ZkProofInfo, ty mixTy.VerifyType) error {
 	keys, err := getVerifyKeys(db, int32(ty))
 	if err != nil {

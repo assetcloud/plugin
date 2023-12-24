@@ -5,8 +5,8 @@
 package executor
 
 import (
-	pty "github.com/assetcloud/plugin/plugin/dapp/collateralize/types"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/collateralize/types"
 )
 
 func (c *Collateralize) execDelLocal(tx *types.Transaction, receiptData *types.ReceiptData) (*types.LocalDBSet, error) {

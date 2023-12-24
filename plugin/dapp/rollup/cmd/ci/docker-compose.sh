@@ -19,13 +19,13 @@ PWD=$(cd "$(dirname "$0")" && pwd)
 export PATH="$PWD:$PATH"
 
 MAIN_NODE="${1}_main_1"
-MAIN_CLI="docker exec ${MAIN_NODE} /root/chain-cli"
+MAIN_CLI="docker exec ${MAIN_NODE} /root/chain33-cli"
 
 PARA_NODE="${1}_para1_1"
-CLI="docker exec ${PARA_NODE} /root/chain-cli --paraName=user.p.para."
+CLI="docker exec ${PARA_NODE} /root/chain33-cli --paraName=user.p.para."
 
 PARA_NODE2="${1}_para2_1"
-CLI2="docker exec ${PARA_NODE2} /root/chain-cli --paraName=user.p.para."
+CLI2="docker exec ${PARA_NODE2} /root/chain33-cli --paraName=user.p.para."
 
 # shellcheck disable=SC2034
 
@@ -78,8 +78,8 @@ function wait_height() {
 
 function set_main_config() {
     echo "====== ${FUNCNAME[0]} ======"
-    conf="chain.test.toml"
-    rm -rf chain.toml
+    conf="chain33.test.toml"
+    rm -rf chain33.toml
     sed -i $sedfix '0,/^Title.*/s//Title="local"/' "${conf}"
     sed -i $sedfix '0,/^minTxFeeRate=.*/s//minTxFeeRate=0/' "${conf}"
 
@@ -90,7 +90,7 @@ function set_main_config() {
 
 function set_para_config() {
     echo "====== ${FUNCNAME[0]}======"
-    conf="chain.para.toml"
+    conf="chain33.para.toml"
     # blockchain
     sed -i $sedfix '0,/^isParaChain.*/s//isParaChain=false/' "${conf}"
 
@@ -121,14 +121,14 @@ function set_para_config() {
     sed -i $sedfix 's/^ForkBlockHash=.*/ForkBlockHash=0/' "${conf}"
     sed -i $sedfix 's/^ForkRootHash=.*/ForkRootHash=0/' "${conf}"
 
-    cp "${conf}" chain.para1.toml
-    cp "${conf}" chain.para2.toml
+    cp "${conf}" chain33.para1.toml
+    cp "${conf}" chain33.para2.toml
 
-    sed -i $sedfix '/^\[consensus\]/,/^name/!b;/^name/a minerstart=true' chain.para1.toml
-    sed -i $sedfix '/^\[consensus.sub.rollup\]/,/^authKey/s/^authKey.*/authKey="982797e30031e9d1d00e0f1edf6da86c6a55338165f12efee7ff77e0d485f4d7"/' chain.para1.toml
+    sed -i $sedfix '/^\[consensus\]/,/^name/!b;/^name/a minerstart=true' chain33.para1.toml
+    sed -i $sedfix '/^\[consensus.sub.rollup\]/,/^authKey/s/^authKey.*/authKey="982797e30031e9d1d00e0f1edf6da86c6a55338165f12efee7ff77e0d485f4d7"/' chain33.para1.toml
 
-    sed -i $sedfix '0,/^singleMode=.*/{//d}' chain.para2.toml
-    sed -i $sedfix '/^\[consensus.sub.rollup\]/,/^authKey/s/^authKey.*/authKey="c9d5e87e94677df823e1cce0eab7de2e7bb4f724a12592821f84e12b72c639c2"/' chain.para2.toml
+    sed -i $sedfix '0,/^singleMode=.*/{//d}' chain33.para2.toml
+    sed -i $sedfix '/^\[consensus.sub.rollup\]/,/^authKey/s/^authKey.*/authKey="c9d5e87e94677df823e1cce0eab7de2e7bb4f724a12592821f84e12b72c639c2"/' chain33.para2.toml
 
 }
 

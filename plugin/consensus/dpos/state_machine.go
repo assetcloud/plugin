@@ -14,10 +14,10 @@ import (
 	"strings"
 	"time"
 
-	dpostype "github.com/assetcloud/plugin/plugin/consensus/dpos/types"
-	dty "github.com/assetcloud/plugin/plugin/dapp/dposvote/types"
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
+	dpostype "github.com/33cn/plugin/plugin/consensus/dpos/types"
+	dty "github.com/33cn/plugin/plugin/dapp/dposvote/types"
 )
 
 var (

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 #1ks returner chain31
-MIX_CLI31="docker exec ${NODE1} /root/chain-cli "
+MIX_CLI31="docker exec ${NODE1} /root/chain33-cli "
 #1jr  authorize chain32
-MIX_CLI32="docker exec ${NODE2} /root/chain-cli "
+MIX_CLI32="docker exec ${NODE2} /root/chain33-cli "
 #1nl receiver  chain30
-MIX_CLI30="docker exec ${NODE4} /root/chain-cli "
+MIX_CLI30="docker exec ${NODE4} /root/chain33-cli "
 
 # shellcheck source=/dev/null
 #source test-rpc.sh

@@ -10,9 +10,9 @@ OUT_DIR="${1}/$strapp"
 mkdir -p "${OUT_DIR}"
 cp ./ci/* "${OUT_DIR}"
 
-CHAIN_PATH=$(go list -f "{{.Dir}}" github.com/assetcloud/chain)
-PLUGIN_PATH=$(go list -f "{{.Dir}}" github.com/assetcloud/plugin)
-# copy chain toml
+CHAIN33_PATH=$(go list -f "{{.Dir}}" github.com/33cn/chain33)
+PLUGIN_PATH=$(go list -f "{{.Dir}}" github.com/33cn/plugin)
+# copy chain33 toml
 
-cp "${CHAIN_PATH}/cmd/chain/chain.test.toml" "${OUT_DIR}"
-cp "${PLUGIN_PATH}/chain.para.toml" "${OUT_DIR}"
+cp "${CHAIN33_PATH}/cmd/chain33/chain33.test.toml" "${OUT_DIR}"
+cp "${PLUGIN_PATH}/chain33.para.toml" "${OUT_DIR}"

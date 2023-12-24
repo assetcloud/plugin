@@ -7,8 +7,8 @@ package rpc
 import (
 	"encoding/hex"
 
-	mty "github.com/assetcloud/plugin/plugin/dapp/multisig/types"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
+	mty "github.com/33cn/plugin/plugin/dapp/multisig/types"
 )
 
 // MultiSigAccCreateTx :构造创建多重签名账户的交易

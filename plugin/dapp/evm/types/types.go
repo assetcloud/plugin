@@ -7,7 +7,7 @@ package types
 import (
 	"reflect"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 const (

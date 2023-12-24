@@ -6,9 +6,9 @@ import (
 	"math/big"
 	"strconv"
 
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/types"
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/types"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/pkg/errors"
 )
 
@@ -80,9 +80,9 @@ func (z *zksync) Query_GetAccountById(in *zt.ZkQueryReq) (types.Message, error) 
 	if !ok {
 		return nil, errors.Wrapf(types.ErrInvalidParam, "wrong eth addr format=%s", leaf.GetEthAddress())
 	}
-	leaf.ChainAddr, ok = zt.DecimalAddr2Hex(leaf.GetChainAddr(), zt.BTYAddrLen)
+	leaf.Chain33Addr, ok = zt.DecimalAddr2Hex(leaf.GetChain33Addr(), zt.BTYAddrLen)
 	if !ok {
-		return nil, errors.Wrapf(types.ErrInvalidParam, "wrong chain addr format=%s", leaf.GetChainAddr())
+		return nil, errors.Wrapf(types.ErrInvalidParam, "wrong chain33 addr format=%s", leaf.GetChain33Addr())
 	}
 	return &leaf, nil
 }
@@ -108,14 +108,14 @@ func (z *zksync) Query_GetAccountByEth(in *zt.ZkQueryReq) (types.Message, error)
 	return res, nil
 }
 
-// Query_GetAccountByChain  通过chain地址查询account
-func (z *zksync) Query_GetAccountByChain(in *zt.ZkQueryReq) (types.Message, error) {
+// Query_GetAccountByChain33  通过chain33地址查询account
+func (z *zksync) Query_GetAccountByChain33(in *zt.ZkQueryReq) (types.Message, error) {
 	res := new(zt.ZkQueryResp)
-	addr, ok := zt.HexAddr2Decimal(in.GetChainAddr())
+	addr, ok := zt.HexAddr2Decimal(in.GetChain33Addr())
 	if !ok {
-		return nil, errors.Wrapf(types.ErrInvalidParam, "chain addr not hex format,%s", in.GetChainAddr())
+		return nil, errors.Wrapf(types.ErrInvalidParam, "chain33 addr not hex format,%s", in.GetChain33Addr())
 	}
-	leaves, err := GetLeafByChainAddress(z.GetLocalDB(), addr)
+	leaves, err := GetLeafByChain33Address(z.GetLocalDB(), addr)
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +150,7 @@ func (z *zksync) Query_GetTreeInitRoot(in *types.ReqAddrs) (types.Message, error
 	if in == nil {
 		return nil, types.ErrInvalidParam
 	}
-	var eth, chain string
+	var eth, chain33 string
 	//可以不填addr
 	if len(in.Addrs) == 2 {
 		addr, ok := zt.HexAddr2Decimal(in.Addrs[0])
@@ -163,10 +163,10 @@ func (z *zksync) Query_GetTreeInitRoot(in *types.ReqAddrs) (types.Message, error
 		if !ok {
 			return nil, errors.Wrapf(types.ErrNotAllow, "addr1=%s not hex format", in.Addrs[1])
 		}
-		chain = addr
+		chain33 = addr
 	}
 
-	root := getInitTreeRoot(z.GetAPI().GetConfig(), eth, chain)
+	root := getInitTreeRoot(z.GetAPI().GetConfig(), eth, chain33)
 	return &types.ReplyString{Data: root}, nil
 }
 
@@ -196,7 +196,7 @@ func (z *zksync) Query_GetZkContractAccount(in *zt.ZkQueryReq) (types.Message, e
 		return nil, types.ErrInvalidParam
 	}
 	accountdb, _ := account.NewAccountDB(z.GetAPI().GetConfig(), zt.Zksync, in.TokenSymbol, z.GetStateDB())
-	contractAccount := accountdb.LoadAccount(in.ChainWalletAddr)
+	contractAccount := accountdb.LoadAccount(in.Chain33WalletAddr)
 	return contractAccount, nil
 }
 

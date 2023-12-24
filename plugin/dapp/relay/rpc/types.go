@@ -5,7 +5,7 @@
 package rpc
 
 import (
-	"github.com/assetcloud/chain/rpc/types"
+	"github.com/33cn/chain33/rpc/types"
 )
 
 // Jrpc relay Jrpc interface

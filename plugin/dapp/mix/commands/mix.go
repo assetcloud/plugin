@@ -12,15 +12,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	"github.com/33cn/chain33/types"
 
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 	"github.com/spf13/cobra"
 )
 
-// ParcCmd paracross cmd register
+//ParcCmd paracross cmd register
 func MixCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "mix",
@@ -102,7 +102,7 @@ func createConfigVerify(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -230,7 +230,7 @@ func createConfigPubKey(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -275,7 +275,7 @@ func createConfigPayPubKey(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -330,7 +330,7 @@ func createTokenTxFee(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res types.ReplyString
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 	ctx.Run()
 
 }
@@ -378,7 +378,7 @@ func treePath(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res mixTy.CommitTreeProve
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 	ctx.Run()
 }
 
@@ -420,7 +420,7 @@ func treeLeaves(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res mixTy.TreeListResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 	ctx.Run()
 }
 
@@ -459,7 +459,7 @@ func treeRoot(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&mixTy.TreeInfoReq{RootHeight: seq, AssetExec: exec, AssetSymbol: symbol})
 
 	var res mixTy.RootListResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 	ctx.Run()
 }
 
@@ -494,7 +494,7 @@ func treeStatus(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&mixTy.TreeInfoReq{AssetExec: exec, AssetSymbol: symbol})
 
 	var res mixTy.TreeStatusResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 	ctx.Run()
 }
 
@@ -555,7 +555,7 @@ func showMixTxs(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp mixTy.MixTxListResp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -588,7 +588,7 @@ func showPayment(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&types.ReqString{Data: addr})
 
 	var resp mixTy.NoteAccountKey
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 

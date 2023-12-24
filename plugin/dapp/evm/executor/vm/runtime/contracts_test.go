@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
 )
 
 // precompiledTest defines the input/output pairs for precompiled contract tests.

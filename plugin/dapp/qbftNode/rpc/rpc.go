@@ -7,8 +7,8 @@ package rpc
 import (
 	"context"
 
-	vt "github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
+	vt "github.com/33cn/plugin/plugin/dapp/qbftNode/types"
 )
 
 // IsSync query is sync

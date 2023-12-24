@@ -15,14 +15,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/assetcloud/chain/common/crypto"
+	"github.com/33cn/chain33/common/crypto"
 
-	vrf "github.com/assetcloud/chain/common/vrf/secp256k1"
-	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	ttypes "github.com/assetcloud/plugin/plugin/consensus/dpos/types"
-	dty "github.com/assetcloud/plugin/plugin/dapp/dposvote/types"
+	vrf "github.com/33cn/chain33/common/vrf/secp256k1"
+	jsonrpc "github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	ttypes "github.com/33cn/plugin/plugin/consensus/dpos/types"
+	dty "github.com/33cn/plugin/plugin/dapp/dposvote/types"
 	secp256k1 "github.com/btcsuite/btcd/btcec"
 	"github.com/spf13/cobra"
 )
@@ -33,7 +33,7 @@ var (
 	pvFile   = "priv_validator_"
 )
 
-// DPosCmd DPosVote合约命令行
+//DPosCmd DPosVote合约命令行
 func DPosCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "dpos",
@@ -63,7 +63,7 @@ func DPosCmd() *cobra.Command {
 	return cmd
 }
 
-// DPosRegistCmd 构造候选节点注册的命令行
+//DPosRegistCmd 构造候选节点注册的命令行
 func DPosRegistCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "regist",
@@ -101,12 +101,12 @@ func regist(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 
 }
 
-// DPosCancelRegistCmd 构造候选节点去注册的命令行
+//DPosCancelRegistCmd 构造候选节点去注册的命令行
 func DPosCancelRegistCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "cancelRegist",
@@ -140,11 +140,11 @@ func cancelRegist(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
-// DPosVoteCmd 构造为候选节点投票的命令行
+//DPosVoteCmd 构造为候选节点投票的命令行
 func DPosVoteCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "vote",
@@ -180,11 +180,11 @@ func vote(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
-// DPosVoteCancelCmd 构造撤销对候选节点投票的命令行
+//DPosVoteCancelCmd 构造撤销对候选节点投票的命令行
 func DPosVoteCancelCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "cancelVote",
@@ -218,11 +218,11 @@ func cancelVote(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
-// DPosReRegistCmd 构造重新注册候选节点的命令行
+//DPosReRegistCmd 构造重新注册候选节点的命令行
 func DPosReRegistCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "reRegist",
@@ -260,12 +260,12 @@ func reRegist(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 
 }
 
-// DPosCandidatorQueryCmd 构造查询候选节点信息的命令行
+//DPosCandidatorQueryCmd 构造查询候选节点信息的命令行
 func DPosCandidatorQueryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "candidatorQuery",
@@ -302,7 +302,7 @@ func candidatorQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCandidatorByTopN
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.CandidatorReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 
 	case "pubkeys":
@@ -312,12 +312,12 @@ func candidatorQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCandidatorByPubkeys
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.CandidatorReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 	}
 }
 
-// DPosVoteQueryCmd 构造投票信息查询的命令行
+//DPosVoteQueryCmd 构造投票信息查询的命令行
 func DPosVoteQueryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "voteQuery",
@@ -351,12 +351,12 @@ func voteQuery(cmd *cobra.Command, args []string) {
 	params.FuncName = dty.FuncNameQueryVote
 	params.Payload = types.MustPBToJSON(req)
 	var res dty.DposVoteReply
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 	ctx.Run()
 
 }
 
-// DPosVrfMRegistCmd 构造注册VRF M信息（输入信息）的命令行
+//DPosVrfMRegistCmd 构造注册VRF M信息（输入信息）的命令行
 func DPosVrfMRegistCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "vrfMRegist",
@@ -394,11 +394,11 @@ func vrfM(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
-// DPosVrfRPRegistCmd 构造VRF R/P(hash及proof)注册的命令行
+//DPosVrfRPRegistCmd 构造VRF R/P(hash及proof)注册的命令行
 func DPosVrfRPRegistCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "vrfRPRegist",
@@ -440,11 +440,11 @@ func vrfRP(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
-// DPosVrfQueryCmd 构造VRF相关信息查询的命令行
+//DPosVrfQueryCmd 构造VRF相关信息查询的命令行
 func DPosVrfQueryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "vrfQuery",
@@ -493,7 +493,7 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByTime
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 
 	case "timestamp":
@@ -510,7 +510,7 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByTime
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 
 	case "cycle":
@@ -527,7 +527,7 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByCycle
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 
 	case "topN":
@@ -544,7 +544,7 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByCycleForTopN
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 
 	case "pubkeys":
@@ -564,13 +564,13 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByCycleForPubkeys
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 	}
 
 }
 
-// DPosCreateCmd to create keyfiles
+//DPosCreateCmd to create keyfiles
 func DPosCreateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "init_keyfile",
@@ -629,7 +629,7 @@ func createFiles(cmd *cobra.Command, args []string) {
 
 	// genesis file
 	genDoc := ttypes.GenesisDoc{
-		ChainID:     fmt.Sprintf("chain-%v", RandStr(6)),
+		ChainID:     fmt.Sprintf("chain33-%v", RandStr(6)),
 		GenesisTime: time.Now(),
 	}
 
@@ -663,7 +663,7 @@ func createFiles(cmd *cobra.Command, args []string) {
 	fmt.Printf("Generated genesis file path %v\n", genFile)
 }
 
-// DPosVrfVerifyCmd to create keyfiles
+//DPosVrfVerifyCmd to create keyfiles
 func DPosVrfVerifyCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "vrfVerify",
@@ -745,7 +745,7 @@ func verify(cmd *cobra.Command, args []string) {
 	fmt.Println("vrf hash is same with input hash, vrf Verify succeed")
 }
 
-// DPosVrfEvaluateCmd to create keyfiles
+//DPosVrfEvaluateCmd to create keyfiles
 func DPosVrfEvaluateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "vrfEvaluate",
@@ -791,7 +791,7 @@ func evaluate(cmd *cobra.Command, args []string) {
 	fmt.Println(fmt.Sprintf("proof:%x", vrfProof))
 }
 
-// DPosCBRecordCmd to create keyfiles
+//DPosCBRecordCmd to create keyfiles
 func DPosCBRecordCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "cbRecord",
@@ -873,11 +873,11 @@ func recordCB(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
-// DPosCBQueryCmd 查询Cycle Boundary info的命令
+//DPosCBQueryCmd 查询Cycle Boundary info的命令
 func DPosCBQueryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "cbQuery",
@@ -917,7 +917,7 @@ func cbQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCBInfoByCycle
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposCBReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 
 	case "height":
@@ -929,7 +929,7 @@ func cbQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCBInfoByHeight
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposCBReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 
 	case "hash":
@@ -941,12 +941,12 @@ func cbQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCBInfoByHash
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposCBReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 		ctx.Run()
 	}
 }
 
-// DPosTopNQueryCmd 构造TopN相关信息查询的命令行
+//DPosTopNQueryCmd 构造TopN相关信息查询的命令行
 func DPosTopNQueryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "topNQuery",
@@ -976,6 +976,6 @@ func topNQuery(cmd *cobra.Command, args []string) {
 	params.FuncName = dty.FuncNameQueryTopNByVersion
 	params.Payload = types.MustPBToJSON(req)
 	var res dty.TopNCandidatorsReply
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
 	ctx.Run()
 }

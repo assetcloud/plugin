@@ -5,14 +5,14 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common"
-	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/33cn/chain33/common"
+	dbm "github.com/33cn/chain33/common/db"
 	"github.com/golang/protobuf/proto"
 
 	"sort"
 
-	"github.com/assetcloud/chain/types"
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/33cn/chain33/types"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 	"github.com/pkg/errors"
 )
 
@@ -132,7 +132,7 @@ func updateStages(db dbm.KV, stage *pt.SelfConsensStage) (*types.Receipt, error)
 
 }
 
-func selfConsensInitStage(cfg *types.ChainConfig) *types.Receipt {
+func selfConsensInitStage(cfg *types.Chain33Config) *types.Receipt {
 	close := cfg.IsEnable(pt.ParaConsSubConf + "." + pt.ParaSelfConsInitConf)
 	stage := &pt.SelfConsensStage{StartHeight: 0, Enable: pt.ParaConfigYes}
 	if close {
@@ -298,7 +298,7 @@ func (a *action) stageVote(config *pt.ConfigVoteInfo) (*types.Receipt, error) {
 
 }
 
-// SelfConsensStageConfig support self consens stage config
+//SelfConsensStageConfig support self consens stage config
 func (a *action) SelfStageConfig(config *pt.ParaStageConfig) (*types.Receipt, error) {
 	if config.Ty == pt.ParaOpNewApply {
 		return a.stageApply(config.GetStage())

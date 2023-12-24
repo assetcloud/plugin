@@ -18,27 +18,27 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/util"
+	"github.com/33cn/chain33/util"
 
-	"github.com/assetcloud/chain/blockchain"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/common/limits"
-	"github.com/assetcloud/chain/common/log"
-	"github.com/assetcloud/chain/executor"
-	"github.com/assetcloud/chain/mempool"
-	"github.com/assetcloud/chain/p2p"
-	"github.com/assetcloud/chain/queue"
-	"github.com/assetcloud/chain/rpc"
-	"github.com/assetcloud/chain/store"
-	_ "github.com/assetcloud/chain/system"
-	cty "github.com/assetcloud/chain/system/dapp/coins/types"
-	"github.com/assetcloud/chain/types"
-	ttypes "github.com/assetcloud/plugin/plugin/consensus/dpos/types"
-	dty "github.com/assetcloud/plugin/plugin/dapp/dposvote/types"
-	_ "github.com/assetcloud/plugin/plugin/dapp/init"
-	pty "github.com/assetcloud/plugin/plugin/dapp/norm/types"
-	_ "github.com/assetcloud/plugin/plugin/store/init"
+	"github.com/33cn/chain33/blockchain"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/common/limits"
+	"github.com/33cn/chain33/common/log"
+	"github.com/33cn/chain33/executor"
+	"github.com/33cn/chain33/mempool"
+	"github.com/33cn/chain33/p2p"
+	"github.com/33cn/chain33/queue"
+	"github.com/33cn/chain33/rpc"
+	"github.com/33cn/chain33/store"
+	_ "github.com/33cn/chain33/system"
+	cty "github.com/33cn/chain33/system/dapp/coins/types"
+	"github.com/33cn/chain33/types"
+	ttypes "github.com/33cn/plugin/plugin/consensus/dpos/types"
+	dty "github.com/33cn/plugin/plugin/dapp/dposvote/types"
+	_ "github.com/33cn/plugin/plugin/dapp/init"
+	pty "github.com/33cn/plugin/plugin/dapp/norm/types"
+	_ "github.com/33cn/plugin/plugin/store/init"
 	"google.golang.org/grpc"
 )
 
@@ -46,7 +46,7 @@ var (
 	random    *rand.Rand
 	loopCount = 10
 	conn      *grpc.ClientConn
-	c         types.ChainClient
+	c         types.Chain33Client
 	strPubkey = "03EF0E1D3112CF571743A3318125EDE2E52A4EB904BCBAA4B1F75020C2846A7EB4"
 	pubkey    []byte
 
@@ -373,28 +373,28 @@ func DposPerf() {
 
 func initEnvDpos() (queue.Queue, *blockchain.BlockChain, queue.Module, queue.Module, *executor.Executor, queue.Module, queue.Module) {
 	flag.Parse()
-	chainCfg := types.NewChainConfig(types.ReadFile("chain.test.toml"))
+	chain33Cfg := types.NewChain33Config(types.ReadFile("chain33.test.toml"))
 	var q = queue.New("channel")
-	q.SetConfig(chainCfg)
-	cfg := chainCfg.GetModuleConfig()
+	q.SetConfig(chain33Cfg)
+	cfg := chain33Cfg.GetModuleConfig()
 	cfg.Log.LogFile = ""
-	sub := chainCfg.GetSubConfig()
+	sub := chain33Cfg.GetSubConfig()
 
-	chain := blockchain.New(chainCfg)
+	chain := blockchain.New(chain33Cfg)
 	chain.SetQueueClient(q.Client())
 
-	exec := executor.New(chainCfg)
+	exec := executor.New(chain33Cfg)
 	exec.SetQueueClient(q.Client())
-	chainCfg.SetMinFee(0)
-	s := store.New(chainCfg)
+	chain33Cfg.SetMinFee(0)
+	s := store.New(chain33Cfg)
 	s.SetQueueClient(q.Client())
 
 	cs := New(cfg.Consensus, sub.Consensus["dpos"])
 	cs.SetQueueClient(q.Client())
 
-	mem := mempool.New(chainCfg)
+	mem := mempool.New(chain33Cfg)
 	mem.SetQueueClient(q.Client())
-	network := p2p.NewP2PMgr(chainCfg)
+	network := p2p.NewP2PMgr(chain33Cfg)
 
 	network.SetQueueClient(q.Client())
 
@@ -404,7 +404,7 @@ func initEnvDpos() (queue.Queue, *blockchain.BlockChain, queue.Module, queue.Mod
 	return q, chain, s, mem, exec, cs, network
 }
 
-func createConn(url string) (*grpc.ClientConn, types.ChainClient, error) {
+func createConn(url string) (*grpc.ClientConn, types.Chain33Client, error) {
 	var err error
 	//url := "127.0.0.1:8802"
 	fmt.Println("grpc url:", url)
@@ -413,7 +413,7 @@ func createConn(url string) (*grpc.ClientConn, types.ChainClient, error) {
 		fmt.Fprintln(os.Stderr, err)
 		return conn1, nil, err
 	}
-	c1 := types.NewChainClient(conn)
+	c1 := types.NewChain33Client(conn)
 	//r = rand.New(rand.NewSource(types.Now().UnixNano()))
 	return conn1, c1, nil
 }
@@ -427,7 +427,7 @@ func createConn2() error {
 		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
-	c = types.NewChainClient(conn)
+	c = types.NewChain33Client(conn)
 	return nil
 }
 
@@ -463,7 +463,7 @@ func getprivkey(key string) crypto.PrivKey {
 	return priv
 }
 
-func prepareTxList(cfg *types.ChainConfig) *types.Transaction {
+func prepareTxList(cfg *types.Chain33Config) *types.Transaction {
 	var key string
 	var value string
 	var i int
@@ -491,7 +491,7 @@ func clearTestData() {
 	fmt.Println("test data clear successfully!")
 }
 
-func NormPut(cfg *types.ChainConfig) {
+func NormPut(cfg *types.Chain33Config) {
 	tx := prepareTxList(cfg)
 
 	reply, err := c.SendTransaction(context.Background(), tx)
@@ -578,7 +578,7 @@ func sendRegistVrfRPTx(cs *ConsensusState, info *dty.DposVrfRPRegist) bool {
 	return true
 }
 
-func sendTransferTx(cfg *types.ChainConfig, fromKey, to string, amount int64) bool {
+func sendTransferTx(cfg *types.Chain33Config, fromKey, to string, amount int64) bool {
 	signer := util.HexToPrivkey(fromKey)
 	var tx *types.Transaction
 	transfer := &cty.CoinsAction{}
@@ -612,7 +612,7 @@ func sendTransferTx(cfg *types.ChainConfig, fromKey, to string, amount int64) bo
 	return true
 }
 
-func sendTransferToExecTx(cfg *types.ChainConfig, fromKey, execName string, amount int64) bool {
+func sendTransferToExecTx(cfg *types.Chain33Config, fromKey, execName string, amount int64) bool {
 	signer := util.HexToPrivkey(fromKey)
 	var tx *types.Transaction
 	transfer := &cty.CoinsAction{}
@@ -649,7 +649,7 @@ func sendTransferToExecTx(cfg *types.ChainConfig, fromKey, execName string, amou
 	return true
 }
 
-func sendRegistCandidatorTx(cfg *types.ChainConfig, ppubkey, addr, ip, privKey string) bool {
+func sendRegistCandidatorTx(cfg *types.Chain33Config, ppubkey, addr, ip, privKey string) bool {
 	signer := util.HexToPrivkey(privKey)
 	var tx *types.Transaction
 	action := &dty.DposVoteAction{}

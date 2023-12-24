@@ -5,22 +5,22 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	"github.com/33cn/chain33/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 )
 
-// ExecLocal_Config asset withdraw local db process
+//ExecLocal_Config asset withdraw local db process
 func (m *Mix) ExecLocal_Config(payload *mixTy.MixConfigAction, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 
 	return nil, nil
 }
 
-// ExecLocal_Deposit asset withdraw local db process
+//ExecLocal_Deposit asset withdraw local db process
 func (m *Mix) ExecLocal_Deposit(payload *mixTy.MixDepositAction, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	return m.execAutoLocalMix(tx, receiptData, index)
 }
 
-// ExecLocal_Withdraw asset withdraw local db process
+//ExecLocal_Withdraw asset withdraw local db process
 func (m *Mix) ExecLocal_Withdraw(payload *mixTy.MixWithdrawAction, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	return m.execAutoLocalMix(tx, receiptData, index)
 }
@@ -30,7 +30,7 @@ func (m *Mix) ExecLocal_Transfer(payload *mixTy.MixTransferAction, tx *types.Tra
 	return m.execAutoLocalMix(tx, receiptData, index)
 }
 
-// ExecLocal_Authorize asset withdraw local db process
+//ExecLocal_Authorize asset withdraw local db process
 func (m *Mix) ExecLocal_Authorize(payload *mixTy.MixAuthorizeAction, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	return m.execAutoLocalMix(tx, receiptData, index)
 }

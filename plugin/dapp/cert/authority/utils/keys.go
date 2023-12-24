@@ -13,13 +13,13 @@ import (
 	"encoding/pem"
 	"math/big"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 
 	"fmt"
 
-	ty "github.com/assetcloud/plugin/plugin/dapp/cert/types"
-	ecdsa_util "github.com/assetcloud/chain/system/crypto/secp256r1"
-	sm2_util "github.com/assetcloud/chain/system/crypto/sm2"
+	ecdsa_util "github.com/33cn/chain33/system/crypto/secp256r1"
+	sm2_util "github.com/33cn/chain33/system/crypto/sm2"
+	ty "github.com/33cn/plugin/plugin/dapp/cert/types"
 	"github.com/pkg/errors"
 	"github.com/tjfoc/gmsm/sm2"
 )

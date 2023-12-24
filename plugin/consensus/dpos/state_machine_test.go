@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	_ "github.com/assetcloud/chain/system"
-	_ "github.com/assetcloud/plugin/plugin/dapp/init"
-	_ "github.com/assetcloud/plugin/plugin/store/init"
+	_ "github.com/33cn/chain33/system"
+	_ "github.com/33cn/plugin/plugin/dapp/init"
+	_ "github.com/33cn/plugin/plugin/store/init"
 	"github.com/stretchr/testify/assert"
 )
 

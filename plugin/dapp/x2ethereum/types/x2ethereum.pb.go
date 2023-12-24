@@ -11,7 +11,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 
-	types "github.com/assetcloud/chain/types"
+	types "github.com/33cn/chain33/types"
 	grpc "google.golang.org/grpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -79,10 +79,10 @@ type X2EthereumAction struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Value:
-	//	*X2EthereumAction_Eth2ChainLock
-	//	*X2EthereumAction_Eth2ChainBurn
-	//	*X2EthereumAction_ChainToEthBurn
-	//	*X2EthereumAction_ChainToEthLock
+	//	*X2EthereumAction_Eth2Chain33Lock
+	//	*X2EthereumAction_Eth2Chain33Burn
+	//	*X2EthereumAction_Chain33ToEthBurn
+	//	*X2EthereumAction_Chain33ToEthLock
 	//	*X2EthereumAction_AddValidator
 	//	*X2EthereumAction_RemoveValidator
 	//	*X2EthereumAction_ModifyPower
@@ -133,30 +133,30 @@ func (m *X2EthereumAction) GetValue() isX2EthereumAction_Value {
 	return nil
 }
 
-func (x *X2EthereumAction) GetEth2ChainLock() *Eth2Chain {
-	if x, ok := x.GetValue().(*X2EthereumAction_Eth2ChainLock); ok {
-		return x.Eth2ChainLock
+func (x *X2EthereumAction) GetEth2Chain33Lock() *Eth2Chain33 {
+	if x, ok := x.GetValue().(*X2EthereumAction_Eth2Chain33Lock); ok {
+		return x.Eth2Chain33Lock
 	}
 	return nil
 }
 
-func (x *X2EthereumAction) GetEth2ChainBurn() *Eth2Chain {
-	if x, ok := x.GetValue().(*X2EthereumAction_Eth2ChainBurn); ok {
-		return x.Eth2ChainBurn
+func (x *X2EthereumAction) GetEth2Chain33Burn() *Eth2Chain33 {
+	if x, ok := x.GetValue().(*X2EthereumAction_Eth2Chain33Burn); ok {
+		return x.Eth2Chain33Burn
 	}
 	return nil
 }
 
-func (x *X2EthereumAction) GetChainToEthBurn() *ChainToEth {
-	if x, ok := x.GetValue().(*X2EthereumAction_ChainToEthBurn); ok {
-		return x.ChainToEthBurn
+func (x *X2EthereumAction) GetChain33ToEthBurn() *Chain33ToEth {
+	if x, ok := x.GetValue().(*X2EthereumAction_Chain33ToEthBurn); ok {
+		return x.Chain33ToEthBurn
 	}
 	return nil
 }
 
-func (x *X2EthereumAction) GetChainToEthLock() *ChainToEth {
-	if x, ok := x.GetValue().(*X2EthereumAction_ChainToEthLock); ok {
-		return x.ChainToEthLock
+func (x *X2EthereumAction) GetChain33ToEthLock() *Chain33ToEth {
+	if x, ok := x.GetValue().(*X2EthereumAction_Chain33ToEthLock); ok {
+		return x.Chain33ToEthLock
 	}
 	return nil
 }
@@ -221,20 +221,20 @@ type isX2EthereumAction_Value interface {
 	isX2EthereumAction_Value()
 }
 
-type X2EthereumAction_Eth2ChainLock struct {
-	Eth2ChainLock *Eth2Chain `protobuf:"bytes,1,opt,name=eth2ChainLock,proto3,oneof"`
+type X2EthereumAction_Eth2Chain33Lock struct {
+	Eth2Chain33Lock *Eth2Chain33 `protobuf:"bytes,1,opt,name=eth2Chain33Lock,proto3,oneof"`
 }
 
-type X2EthereumAction_Eth2ChainBurn struct {
-	Eth2ChainBurn *Eth2Chain `protobuf:"bytes,2,opt,name=eth2ChainBurn,proto3,oneof"`
+type X2EthereumAction_Eth2Chain33Burn struct {
+	Eth2Chain33Burn *Eth2Chain33 `protobuf:"bytes,2,opt,name=eth2Chain33Burn,proto3,oneof"`
 }
 
-type X2EthereumAction_ChainToEthBurn struct {
-	ChainToEthBurn *ChainToEth `protobuf:"bytes,3,opt,name=chainToEthBurn,proto3,oneof"`
+type X2EthereumAction_Chain33ToEthBurn struct {
+	Chain33ToEthBurn *Chain33ToEth `protobuf:"bytes,3,opt,name=chain33ToEthBurn,proto3,oneof"`
 }
 
-type X2EthereumAction_ChainToEthLock struct {
-	ChainToEthLock *ChainToEth `protobuf:"bytes,4,opt,name=chainToEthLock,proto3,oneof"`
+type X2EthereumAction_Chain33ToEthLock struct {
+	Chain33ToEthLock *Chain33ToEth `protobuf:"bytes,4,opt,name=chain33ToEthLock,proto3,oneof"`
 }
 
 type X2EthereumAction_AddValidator struct {
@@ -265,13 +265,13 @@ type X2EthereumAction_WithdrawFromExec struct {
 	WithdrawFromExec *types.AssetsWithdraw `protobuf:"bytes,11,opt,name=withdrawFromExec,proto3,oneof"`
 }
 
-func (*X2EthereumAction_Eth2ChainLock) isX2EthereumAction_Value() {}
+func (*X2EthereumAction_Eth2Chain33Lock) isX2EthereumAction_Value() {}
 
-func (*X2EthereumAction_Eth2ChainBurn) isX2EthereumAction_Value() {}
+func (*X2EthereumAction_Eth2Chain33Burn) isX2EthereumAction_Value() {}
 
-func (*X2EthereumAction_ChainToEthBurn) isX2EthereumAction_Value() {}
+func (*X2EthereumAction_Chain33ToEthBurn) isX2EthereumAction_Value() {}
 
-func (*X2EthereumAction_ChainToEthLock) isX2EthereumAction_Value() {}
+func (*X2EthereumAction_Chain33ToEthLock) isX2EthereumAction_Value() {}
 
 func (*X2EthereumAction_AddValidator) isX2EthereumAction_Value() {}
 
@@ -390,7 +390,7 @@ func (x *MsgValidator) GetPower() int64 {
 }
 
 // EthBridgeClaim is a structure that contains all the data for a particular bridge claim
-type Eth2Chain struct {
+type Eth2Chain33 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -401,15 +401,15 @@ type Eth2Chain struct {
 	IssuerDotSymbol       string `protobuf:"bytes,4,opt,name=IssuerDotSymbol,proto3" json:"IssuerDotSymbol,omitempty"`
 	TokenContractAddress  string `protobuf:"bytes,6,opt,name=TokenContractAddress,proto3" json:"TokenContractAddress,omitempty"`
 	EthereumSender        string `protobuf:"bytes,7,opt,name=EthereumSender,proto3" json:"EthereumSender,omitempty"`
-	ChainReceiver       string `protobuf:"bytes,8,opt,name=ChainReceiver,proto3" json:"ChainReceiver,omitempty"`
+	Chain33Receiver       string `protobuf:"bytes,8,opt,name=Chain33Receiver,proto3" json:"Chain33Receiver,omitempty"`
 	ValidatorAddress      string `protobuf:"bytes,9,opt,name=ValidatorAddress,proto3" json:"ValidatorAddress,omitempty"`
 	Amount                string `protobuf:"bytes,10,opt,name=Amount,proto3" json:"Amount,omitempty"`
 	ClaimType             int64  `protobuf:"varint,11,opt,name=ClaimType,proto3" json:"ClaimType,omitempty"`
 	Decimals              int64  `protobuf:"varint,12,opt,name=Decimals,proto3" json:"Decimals,omitempty"`
 }
 
-func (x *Eth2Chain) Reset() {
-	*x = Eth2Chain{}
+func (x *Eth2Chain33) Reset() {
+	*x = Eth2Chain33{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_x2ethereum_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -417,13 +417,13 @@ func (x *Eth2Chain) Reset() {
 	}
 }
 
-func (x *Eth2Chain) String() string {
+func (x *Eth2Chain33) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Eth2Chain) ProtoMessage() {}
+func (*Eth2Chain33) ProtoMessage() {}
 
-func (x *Eth2Chain) ProtoReflect() protoreflect.Message {
+func (x *Eth2Chain33) ProtoReflect() protoreflect.Message {
 	mi := &file_x2ethereum_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -435,82 +435,82 @@ func (x *Eth2Chain) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Eth2Chain.ProtoReflect.Descriptor instead.
-func (*Eth2Chain) Descriptor() ([]byte, []int) {
+// Deprecated: Use Eth2Chain33.ProtoReflect.Descriptor instead.
+func (*Eth2Chain33) Descriptor() ([]byte, []int) {
 	return file_x2ethereum_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *Eth2Chain) GetEthereumChainID() int64 {
+func (x *Eth2Chain33) GetEthereumChainID() int64 {
 	if x != nil {
 		return x.EthereumChainID
 	}
 	return 0
 }
 
-func (x *Eth2Chain) GetBridgeContractAddress() string {
+func (x *Eth2Chain33) GetBridgeContractAddress() string {
 	if x != nil {
 		return x.BridgeContractAddress
 	}
 	return ""
 }
 
-func (x *Eth2Chain) GetNonce() int64 {
+func (x *Eth2Chain33) GetNonce() int64 {
 	if x != nil {
 		return x.Nonce
 	}
 	return 0
 }
 
-func (x *Eth2Chain) GetIssuerDotSymbol() string {
+func (x *Eth2Chain33) GetIssuerDotSymbol() string {
 	if x != nil {
 		return x.IssuerDotSymbol
 	}
 	return ""
 }
 
-func (x *Eth2Chain) GetTokenContractAddress() string {
+func (x *Eth2Chain33) GetTokenContractAddress() string {
 	if x != nil {
 		return x.TokenContractAddress
 	}
 	return ""
 }
 
-func (x *Eth2Chain) GetEthereumSender() string {
+func (x *Eth2Chain33) GetEthereumSender() string {
 	if x != nil {
 		return x.EthereumSender
 	}
 	return ""
 }
 
-func (x *Eth2Chain) GetChainReceiver() string {
+func (x *Eth2Chain33) GetChain33Receiver() string {
 	if x != nil {
-		return x.ChainReceiver
+		return x.Chain33Receiver
 	}
 	return ""
 }
 
-func (x *Eth2Chain) GetValidatorAddress() string {
+func (x *Eth2Chain33) GetValidatorAddress() string {
 	if x != nil {
 		return x.ValidatorAddress
 	}
 	return ""
 }
 
-func (x *Eth2Chain) GetAmount() string {
+func (x *Eth2Chain33) GetAmount() string {
 	if x != nil {
 		return x.Amount
 	}
 	return ""
 }
 
-func (x *Eth2Chain) GetClaimType() int64 {
+func (x *Eth2Chain33) GetClaimType() int64 {
 	if x != nil {
 		return x.ClaimType
 	}
 	return 0
 }
 
-func (x *Eth2Chain) GetDecimals() int64 {
+func (x *Eth2Chain33) GetDecimals() int64 {
 	if x != nil {
 		return x.Decimals
 	}
@@ -523,7 +523,7 @@ type OracleClaimContent struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ChainReceiver string `protobuf:"bytes,1,opt,name=ChainReceiver,proto3" json:"ChainReceiver,omitempty"`
+	Chain33Receiver string `protobuf:"bytes,1,opt,name=Chain33Receiver,proto3" json:"Chain33Receiver,omitempty"`
 	Amount          string `protobuf:"bytes,2,opt,name=Amount,proto3" json:"Amount,omitempty"`
 	ClaimType       int64  `protobuf:"varint,3,opt,name=ClaimType,proto3" json:"ClaimType,omitempty"`
 	Decimals        int64  `protobuf:"varint,4,opt,name=Decimals,proto3" json:"Decimals,omitempty"`
@@ -561,9 +561,9 @@ func (*OracleClaimContent) Descriptor() ([]byte, []int) {
 	return file_x2ethereum_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *OracleClaimContent) GetChainReceiver() string {
+func (x *OracleClaimContent) GetChain33Receiver() string {
 	if x != nil {
-		return x.ChainReceiver
+		return x.Chain33Receiver
 	}
 	return ""
 }
@@ -590,21 +590,21 @@ func (x *OracleClaimContent) GetDecimals() int64 {
 }
 
 // MsgBurn defines a message for burning coins and triggering a related event
-type ChainToEth struct {
+type Chain33ToEth struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	TokenContract    string `protobuf:"bytes,1,opt,name=TokenContract,proto3" json:"TokenContract,omitempty"`
-	ChainSender    string `protobuf:"bytes,2,opt,name=ChainSender,proto3" json:"ChainSender,omitempty"`
+	Chain33Sender    string `protobuf:"bytes,2,opt,name=Chain33Sender,proto3" json:"Chain33Sender,omitempty"`
 	EthereumReceiver string `protobuf:"bytes,3,opt,name=EthereumReceiver,proto3" json:"EthereumReceiver,omitempty"`
 	Amount           string `protobuf:"bytes,4,opt,name=Amount,proto3" json:"Amount,omitempty"`
 	IssuerDotSymbol  string `protobuf:"bytes,5,opt,name=IssuerDotSymbol,proto3" json:"IssuerDotSymbol,omitempty"`
 	Decimals         int64  `protobuf:"varint,7,opt,name=Decimals,proto3" json:"Decimals,omitempty"`
 }
 
-func (x *ChainToEth) Reset() {
-	*x = ChainToEth{}
+func (x *Chain33ToEth) Reset() {
+	*x = Chain33ToEth{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_x2ethereum_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -612,13 +612,13 @@ func (x *ChainToEth) Reset() {
 	}
 }
 
-func (x *ChainToEth) String() string {
+func (x *Chain33ToEth) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ChainToEth) ProtoMessage() {}
+func (*Chain33ToEth) ProtoMessage() {}
 
-func (x *ChainToEth) ProtoReflect() protoreflect.Message {
+func (x *Chain33ToEth) ProtoReflect() protoreflect.Message {
 	mi := &file_x2ethereum_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -630,47 +630,47 @@ func (x *ChainToEth) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ChainToEth.ProtoReflect.Descriptor instead.
-func (*ChainToEth) Descriptor() ([]byte, []int) {
+// Deprecated: Use Chain33ToEth.ProtoReflect.Descriptor instead.
+func (*Chain33ToEth) Descriptor() ([]byte, []int) {
 	return file_x2ethereum_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ChainToEth) GetTokenContract() string {
+func (x *Chain33ToEth) GetTokenContract() string {
 	if x != nil {
 		return x.TokenContract
 	}
 	return ""
 }
 
-func (x *ChainToEth) GetChainSender() string {
+func (x *Chain33ToEth) GetChain33Sender() string {
 	if x != nil {
-		return x.ChainSender
+		return x.Chain33Sender
 	}
 	return ""
 }
 
-func (x *ChainToEth) GetEthereumReceiver() string {
+func (x *Chain33ToEth) GetEthereumReceiver() string {
 	if x != nil {
 		return x.EthereumReceiver
 	}
 	return ""
 }
 
-func (x *ChainToEth) GetAmount() string {
+func (x *Chain33ToEth) GetAmount() string {
 	if x != nil {
 		return x.Amount
 	}
 	return ""
 }
 
-func (x *ChainToEth) GetIssuerDotSymbol() string {
+func (x *Chain33ToEth) GetIssuerDotSymbol() string {
 	if x != nil {
 		return x.IssuerDotSymbol
 	}
 	return ""
 }
 
-func (x *ChainToEth) GetDecimals() int64 {
+func (x *Chain33ToEth) GetDecimals() int64 {
 	if x != nil {
 		return x.Decimals
 	}
@@ -678,7 +678,7 @@ func (x *ChainToEth) GetDecimals() int64 {
 }
 
 // 回执接口定义
-type ReceiptEth2Chain struct {
+type ReceiptEth2Chain33 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -689,7 +689,7 @@ type ReceiptEth2Chain struct {
 	IssuerDotSymbol       string `protobuf:"bytes,4,opt,name=IssuerDotSymbol,proto3" json:"IssuerDotSymbol,omitempty"`
 	TokenAddress          string `protobuf:"bytes,5,opt,name=TokenAddress,proto3" json:"TokenAddress,omitempty"`
 	EthereumSender        string `protobuf:"bytes,7,opt,name=EthereumSender,proto3" json:"EthereumSender,omitempty"`
-	ChainReceiver       string `protobuf:"bytes,8,opt,name=ChainReceiver,proto3" json:"ChainReceiver,omitempty"`
+	Chain33Receiver       string `protobuf:"bytes,8,opt,name=Chain33Receiver,proto3" json:"Chain33Receiver,omitempty"`
 	ValidatorAddress      string `protobuf:"bytes,9,opt,name=ValidatorAddress,proto3" json:"ValidatorAddress,omitempty"`
 	Amount                string `protobuf:"bytes,10,opt,name=Amount,proto3" json:"Amount,omitempty"`
 	ClaimType             int64  `protobuf:"varint,11,opt,name=ClaimType,proto3" json:"ClaimType,omitempty"`
@@ -699,8 +699,8 @@ type ReceiptEth2Chain struct {
 	Decimals              int64  `protobuf:"varint,15,opt,name=Decimals,proto3" json:"Decimals,omitempty"`
 }
 
-func (x *ReceiptEth2Chain) Reset() {
-	*x = ReceiptEth2Chain{}
+func (x *ReceiptEth2Chain33) Reset() {
+	*x = ReceiptEth2Chain33{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_x2ethereum_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -708,13 +708,13 @@ func (x *ReceiptEth2Chain) Reset() {
 	}
 }
 
-func (x *ReceiptEth2Chain) String() string {
+func (x *ReceiptEth2Chain33) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ReceiptEth2Chain) ProtoMessage() {}
+func (*ReceiptEth2Chain33) ProtoMessage() {}
 
-func (x *ReceiptEth2Chain) ProtoReflect() protoreflect.Message {
+func (x *ReceiptEth2Chain33) ProtoReflect() protoreflect.Message {
 	mi := &file_x2ethereum_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -726,124 +726,124 @@ func (x *ReceiptEth2Chain) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ReceiptEth2Chain.ProtoReflect.Descriptor instead.
-func (*ReceiptEth2Chain) Descriptor() ([]byte, []int) {
+// Deprecated: Use ReceiptEth2Chain33.ProtoReflect.Descriptor instead.
+func (*ReceiptEth2Chain33) Descriptor() ([]byte, []int) {
 	return file_x2ethereum_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ReceiptEth2Chain) GetEthereumChainID() int64 {
+func (x *ReceiptEth2Chain33) GetEthereumChainID() int64 {
 	if x != nil {
 		return x.EthereumChainID
 	}
 	return 0
 }
 
-func (x *ReceiptEth2Chain) GetBridgeContractAddress() string {
+func (x *ReceiptEth2Chain33) GetBridgeContractAddress() string {
 	if x != nil {
 		return x.BridgeContractAddress
 	}
 	return ""
 }
 
-func (x *ReceiptEth2Chain) GetNonce() int64 {
+func (x *ReceiptEth2Chain33) GetNonce() int64 {
 	if x != nil {
 		return x.Nonce
 	}
 	return 0
 }
 
-func (x *ReceiptEth2Chain) GetIssuerDotSymbol() string {
+func (x *ReceiptEth2Chain33) GetIssuerDotSymbol() string {
 	if x != nil {
 		return x.IssuerDotSymbol
 	}
 	return ""
 }
 
-func (x *ReceiptEth2Chain) GetTokenAddress() string {
+func (x *ReceiptEth2Chain33) GetTokenAddress() string {
 	if x != nil {
 		return x.TokenAddress
 	}
 	return ""
 }
 
-func (x *ReceiptEth2Chain) GetEthereumSender() string {
+func (x *ReceiptEth2Chain33) GetEthereumSender() string {
 	if x != nil {
 		return x.EthereumSender
 	}
 	return ""
 }
 
-func (x *ReceiptEth2Chain) GetChainReceiver() string {
+func (x *ReceiptEth2Chain33) GetChain33Receiver() string {
 	if x != nil {
-		return x.ChainReceiver
+		return x.Chain33Receiver
 	}
 	return ""
 }
 
-func (x *ReceiptEth2Chain) GetValidatorAddress() string {
+func (x *ReceiptEth2Chain33) GetValidatorAddress() string {
 	if x != nil {
 		return x.ValidatorAddress
 	}
 	return ""
 }
 
-func (x *ReceiptEth2Chain) GetAmount() string {
+func (x *ReceiptEth2Chain33) GetAmount() string {
 	if x != nil {
 		return x.Amount
 	}
 	return ""
 }
 
-func (x *ReceiptEth2Chain) GetClaimType() int64 {
+func (x *ReceiptEth2Chain33) GetClaimType() int64 {
 	if x != nil {
 		return x.ClaimType
 	}
 	return 0
 }
 
-func (x *ReceiptEth2Chain) GetXTxHash() []byte {
+func (x *ReceiptEth2Chain33) GetXTxHash() []byte {
 	if x != nil {
 		return x.XTxHash
 	}
 	return nil
 }
 
-func (x *ReceiptEth2Chain) GetXHeight() uint64 {
+func (x *ReceiptEth2Chain33) GetXHeight() uint64 {
 	if x != nil {
 		return x.XHeight
 	}
 	return 0
 }
 
-func (x *ReceiptEth2Chain) GetProphecyID() string {
+func (x *ReceiptEth2Chain33) GetProphecyID() string {
 	if x != nil {
 		return x.ProphecyID
 	}
 	return ""
 }
 
-func (x *ReceiptEth2Chain) GetDecimals() int64 {
+func (x *ReceiptEth2Chain33) GetDecimals() int64 {
 	if x != nil {
 		return x.Decimals
 	}
 	return 0
 }
 
-type ReceiptChainToEth struct {
+type ReceiptChain33ToEth struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	TokenContract    string `protobuf:"bytes,1,opt,name=TokenContract,proto3" json:"TokenContract,omitempty"`
-	ChainSender    string `protobuf:"bytes,2,opt,name=ChainSender,proto3" json:"ChainSender,omitempty"`
+	Chain33Sender    string `protobuf:"bytes,2,opt,name=Chain33Sender,proto3" json:"Chain33Sender,omitempty"`
 	EthereumReceiver string `protobuf:"bytes,3,opt,name=EthereumReceiver,proto3" json:"EthereumReceiver,omitempty"`
 	Amount           string `protobuf:"bytes,4,opt,name=Amount,proto3" json:"Amount,omitempty"`
 	IssuerDotSymbol  string `protobuf:"bytes,5,opt,name=IssuerDotSymbol,proto3" json:"IssuerDotSymbol,omitempty"`
 	Decimals         int64  `protobuf:"varint,6,opt,name=Decimals,proto3" json:"Decimals,omitempty"`
 }
 
-func (x *ReceiptChainToEth) Reset() {
-	*x = ReceiptChainToEth{}
+func (x *ReceiptChain33ToEth) Reset() {
+	*x = ReceiptChain33ToEth{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_x2ethereum_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -851,13 +851,13 @@ func (x *ReceiptChainToEth) Reset() {
 	}
 }
 
-func (x *ReceiptChainToEth) String() string {
+func (x *ReceiptChain33ToEth) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ReceiptChainToEth) ProtoMessage() {}
+func (*ReceiptChain33ToEth) ProtoMessage() {}
 
-func (x *ReceiptChainToEth) ProtoReflect() protoreflect.Message {
+func (x *ReceiptChain33ToEth) ProtoReflect() protoreflect.Message {
 	mi := &file_x2ethereum_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -869,47 +869,47 @@ func (x *ReceiptChainToEth) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ReceiptChainToEth.ProtoReflect.Descriptor instead.
-func (*ReceiptChainToEth) Descriptor() ([]byte, []int) {
+// Deprecated: Use ReceiptChain33ToEth.ProtoReflect.Descriptor instead.
+func (*ReceiptChain33ToEth) Descriptor() ([]byte, []int) {
 	return file_x2ethereum_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *ReceiptChainToEth) GetTokenContract() string {
+func (x *ReceiptChain33ToEth) GetTokenContract() string {
 	if x != nil {
 		return x.TokenContract
 	}
 	return ""
 }
 
-func (x *ReceiptChainToEth) GetChainSender() string {
+func (x *ReceiptChain33ToEth) GetChain33Sender() string {
 	if x != nil {
-		return x.ChainSender
+		return x.Chain33Sender
 	}
 	return ""
 }
 
-func (x *ReceiptChainToEth) GetEthereumReceiver() string {
+func (x *ReceiptChain33ToEth) GetEthereumReceiver() string {
 	if x != nil {
 		return x.EthereumReceiver
 	}
 	return ""
 }
 
-func (x *ReceiptChainToEth) GetAmount() string {
+func (x *ReceiptChain33ToEth) GetAmount() string {
 	if x != nil {
 		return x.Amount
 	}
 	return ""
 }
 
-func (x *ReceiptChainToEth) GetIssuerDotSymbol() string {
+func (x *ReceiptChain33ToEth) GetIssuerDotSymbol() string {
 	if x != nil {
 		return x.IssuerDotSymbol
 	}
 	return ""
 }
 
-func (x *ReceiptChainToEth) GetDecimals() int64 {
+func (x *ReceiptChain33ToEth) GetDecimals() int64 {
 	if x != nil {
 		return x.Decimals
 	}
@@ -2458,11 +2458,11 @@ var file_x2ethereum_proto_goTypes = []interface{}{
 	(*X2EthereumAction)(nil),                      // 1: types.X2ethereumAction
 	(*MsgConsensusThreshold)(nil),                 // 2: types.MsgConsensusThreshold
 	(*MsgValidator)(nil),                          // 3: types.MsgValidator
-	(*Eth2Chain)(nil),                           // 4: types.Eth2Chain
+	(*Eth2Chain33)(nil),                           // 4: types.Eth2Chain33
 	(*OracleClaimContent)(nil),                    // 5: types.OracleClaimContent
-	(*ChainToEth)(nil),                          // 6: types.ChainToEth
-	(*ReceiptEth2Chain)(nil),                    // 7: types.ReceiptEth2Chain
-	(*ReceiptChainToEth)(nil),                   // 8: types.ReceiptChainToEth
+	(*Chain33ToEth)(nil),                          // 6: types.Chain33ToEth
+	(*ReceiptEth2Chain33)(nil),                    // 7: types.ReceiptEth2Chain33
+	(*ReceiptChain33ToEth)(nil),                   // 8: types.ReceiptChain33ToEth
 	(*ReceiptValidator)(nil),                      // 9: types.ReceiptValidator
 	(*ReceiptSetConsensusThreshold)(nil),          // 10: types.ReceiptSetConsensusThreshold
 	(*QueryEthProphecyParams)(nil),                // 11: types.QueryEthProphecyParams
@@ -2490,10 +2490,10 @@ var file_x2ethereum_proto_goTypes = []interface{}{
 	(*types.AssetsWithdraw)(nil),                  // 33: types.AssetsWithdraw
 }
 var file_x2ethereum_proto_depIdxs = []int32{
-	4,  // 0: types.X2ethereumAction.eth2ChainLock:type_name -> types.Eth2Chain
-	4,  // 1: types.X2ethereumAction.eth2ChainBurn:type_name -> types.Eth2Chain
-	6,  // 2: types.X2ethereumAction.chainToEthBurn:type_name -> types.ChainToEth
-	6,  // 3: types.X2ethereumAction.chainToEthLock:type_name -> types.ChainToEth
+	4,  // 0: types.X2ethereumAction.eth2Chain33Lock:type_name -> types.Eth2Chain33
+	4,  // 1: types.X2ethereumAction.eth2Chain33Burn:type_name -> types.Eth2Chain33
+	6,  // 2: types.X2ethereumAction.chain33ToEthBurn:type_name -> types.Chain33ToEth
+	6,  // 3: types.X2ethereumAction.chain33ToEthLock:type_name -> types.Chain33ToEth
 	3,  // 4: types.X2ethereumAction.addValidator:type_name -> types.MsgValidator
 	3,  // 5: types.X2ethereumAction.removeValidator:type_name -> types.MsgValidator
 	3,  // 6: types.X2ethereumAction.modifyPower:type_name -> types.MsgValidator
@@ -2560,7 +2560,7 @@ func file_x2ethereum_proto_init() {
 			}
 		}
 		file_x2ethereum_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Eth2Chain); i {
+			switch v := v.(*Eth2Chain33); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2584,7 +2584,7 @@ func file_x2ethereum_proto_init() {
 			}
 		}
 		file_x2ethereum_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChainToEth); i {
+			switch v := v.(*Chain33ToEth); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2596,7 +2596,7 @@ func file_x2ethereum_proto_init() {
 			}
 		}
 		file_x2ethereum_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ReceiptEth2Chain); i {
+			switch v := v.(*ReceiptEth2Chain33); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2608,7 +2608,7 @@ func file_x2ethereum_proto_init() {
 			}
 		}
 		file_x2ethereum_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ReceiptChainToEth); i {
+			switch v := v.(*ReceiptChain33ToEth); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2885,10 +2885,10 @@ func file_x2ethereum_proto_init() {
 		}
 	}
 	file_x2ethereum_proto_msgTypes[0].OneofWrappers = []interface{}{
-		(*X2EthereumAction_Eth2ChainLock)(nil),
-		(*X2EthereumAction_Eth2ChainBurn)(nil),
-		(*X2EthereumAction_ChainToEthBurn)(nil),
-		(*X2EthereumAction_ChainToEthLock)(nil),
+		(*X2EthereumAction_Eth2Chain33Lock)(nil),
+		(*X2EthereumAction_Eth2Chain33Burn)(nil),
+		(*X2EthereumAction_Chain33ToEthBurn)(nil),
+		(*X2EthereumAction_Chain33ToEthLock)(nil),
 		(*X2EthereumAction_AddValidator)(nil),
 		(*X2EthereumAction_RemoveValidator)(nil),
 		(*X2EthereumAction_ModifyPower)(nil),

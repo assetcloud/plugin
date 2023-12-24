@@ -7,10 +7,10 @@ import (
 	"strings"
 	"sync"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	token "github.com/assetcloud/plugin/plugin/dapp/evm/contracts/token/generated"
-	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	log "github.com/33cn/chain33/common/log/log15"
+	token "github.com/33cn/plugin/plugin/dapp/evm/contracts/token/generated"
+	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
 )
 
 const (
@@ -23,12 +23,12 @@ const (
 
 const tokenExecer = "token"
 
-// TokenContract token 合约
+//TokenContract token 合约
 type TokenContract struct {
 	SuperManager []string `json:"superManager,omitempty"`
 }
 
-// NewTokenPrecompile ...
+//NewTokenPrecompile ...
 func NewTokenPrecompile(tokeninfo *TokenContract) StatefulPrecompiledContract {
 	call := &tokenPrecompile{}
 	call.contractInfo = make(map[string]string)
@@ -68,7 +68,7 @@ func (t *tokenPrecompile) checkCreator(evm *EVM, caller ContractRef) bool {
 	return false
 }
 
-// setTokenSymbol 把token下币种的名称缓存起来
+//setTokenSymbol 把token下币种的名称缓存起来
 func (t *tokenPrecompile) setTokenSymbol(evm *EVM, caller ContractRef) {
 	t.cacheLock.Lock()
 	defer t.cacheLock.Unlock()
@@ -98,7 +98,7 @@ func (t *tokenPrecompile) setTokenSymbol(evm *EVM, caller ContractRef) {
 	log.Error("token.Precompiled setTokenSymbol", "err:", err)
 }
 
-// Run ...
+//Run ...
 func (t *tokenPrecompile) Run(evm *EVM, caller ContractRef, input []byte, suppliedGas uint64) (ret []byte, remainingGas uint64, err error) {
 	log.Info("token.Precompiled", "Run.Caller", caller.Address().String(), "inputSize:", len(input))
 	if !t.checkCreator(evm, caller) {

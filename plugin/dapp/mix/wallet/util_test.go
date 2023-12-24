@@ -5,8 +5,8 @@ import (
 
 	"github.com/consensys/gnark-crypto/ecc"
 
-	"github.com/assetcloud/chain/common"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	"github.com/33cn/chain33/common"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 	"github.com/stretchr/testify/assert"
 )
 

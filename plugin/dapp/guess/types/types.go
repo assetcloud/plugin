@@ -7,7 +7,7 @@ package types
 import (
 	"reflect"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 func init() {
@@ -18,12 +18,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(GuessX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(GuessX, NewType(cfg))
 }
 
@@ -33,7 +33,7 @@ type GuessType struct {
 }
 
 // NewType method
-func NewType(cfg *types.ChainConfig) *GuessType {
+func NewType(cfg *types.Chain33Config) *GuessType {
 	c := &GuessType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

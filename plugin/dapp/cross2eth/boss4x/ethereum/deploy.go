@@ -1,7 +1,7 @@
 package ethereum
 
 import (
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/boss4x/ethereum/offline"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/boss4x/ethereum/offline"
 	"github.com/spf13/cobra"
 )
 

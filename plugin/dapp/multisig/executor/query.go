@@ -5,10 +5,10 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/system/address/btc"
-	"github.com/assetcloud/chain/types"
-	mty "github.com/assetcloud/plugin/plugin/dapp/multisig/types"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/system/address/btc"
+	"github.com/33cn/chain33/types"
+	mty "github.com/33cn/plugin/plugin/dapp/multisig/types"
 )
 
 //Query_MultiSigAccCount 获取多重签名账户的数量，用于分批获取多重签名账户地址

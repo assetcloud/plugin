@@ -5,7 +5,7 @@
 package types
 
 import (
-	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/33cn/chain33/common/log/log15"
 )
 
 var tlog = log15.New("module", MixX)
@@ -37,7 +37,7 @@ const (
 	TyLogMixConfigPaymentKey   = 764
 )
 
-// action type
+//action type
 const (
 	MixActionConfig = iota
 	MixActionDeposit
@@ -46,7 +46,7 @@ const (
 	MixActionAuth
 )
 
-// circuits default file name
+//circuits default file name
 const (
 	DepositPk = "circuit_deposit.pk"
 	DepositVk = "circuit_deposit.vk"

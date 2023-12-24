@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 /*
@@ -52,14 +52,14 @@ const (
 	OpSell
 )
 
-// order status
+//order status
 const (
 	Ordered = iota
 	Completed
 	Revoked
 )
 
-// const
+//const
 const (
 	ListDESC = int32(0)
 	ListASC  = int32(1)
@@ -138,7 +138,7 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(ExchangeX, "Enable", 0)
 	cfg.RegisterDappFork(ExchangeX, ForkFix1, 0)
 	cfg.RegisterDappFork(ExchangeX, ForkParamV1, 0)
@@ -173,17 +173,17 @@ func InitFork(cfg *types.ChainConfig) {
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(ExchangeX, NewType(cfg))
 }
 
-// ExchangeType ...
+//ExchangeType ...
 type ExchangeType struct {
 	types.ExecTypeBase
 }
 
-// NewType ...
-func NewType(cfg *types.ChainConfig) *ExchangeType {
+//NewType ...
+func NewType(cfg *types.Chain33Config) *ExchangeType {
 	c := &ExchangeType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

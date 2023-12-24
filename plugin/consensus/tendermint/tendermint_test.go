@@ -16,33 +16,33 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/blockchain"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/limits"
-	"github.com/assetcloud/chain/common/log"
-	"github.com/assetcloud/chain/executor"
-	"github.com/assetcloud/chain/mempool"
-	"github.com/assetcloud/chain/queue"
-	"github.com/assetcloud/chain/rpc"
-	"github.com/assetcloud/chain/store"
-	mty "github.com/assetcloud/chain/system/dapp/manage/types"
-	"github.com/assetcloud/chain/types"
-	ty "github.com/assetcloud/plugin/plugin/consensus/tendermint/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/norm/types"
-	vty "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
+	"github.com/33cn/chain33/blockchain"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/limits"
+	"github.com/33cn/chain33/common/log"
+	"github.com/33cn/chain33/executor"
+	"github.com/33cn/chain33/mempool"
+	"github.com/33cn/chain33/queue"
+	"github.com/33cn/chain33/rpc"
+	"github.com/33cn/chain33/store"
+	mty "github.com/33cn/chain33/system/dapp/manage/types"
+	"github.com/33cn/chain33/types"
+	ty "github.com/33cn/plugin/plugin/consensus/tendermint/types"
+	pty "github.com/33cn/plugin/plugin/dapp/norm/types"
+	vty "github.com/33cn/plugin/plugin/dapp/valnode/types"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 
-	_ "github.com/assetcloud/chain/system"
-	_ "github.com/assetcloud/plugin/plugin/dapp/init"
-	_ "github.com/assetcloud/plugin/plugin/store/init"
+	_ "github.com/33cn/chain33/system"
+	_ "github.com/33cn/plugin/plugin/dapp/init"
+	_ "github.com/33cn/plugin/plugin/store/init"
 )
 
 var (
 	r         *rand.Rand
 	loopCount = 3
 	conn      *grpc.ClientConn
-	c         types.ChainClient
+	c         types.Chain33Client
 )
 
 func init() {
@@ -88,25 +88,25 @@ func TendermintPerf(t *testing.T) {
 
 func initEnvTendermint() (queue.Queue, *blockchain.BlockChain, queue.Module, queue.Module, *executor.Executor, queue.Module) {
 	flag.Parse()
-	chainCfg := types.NewChainConfig(types.ReadFile("chain.test.toml"))
+	chain33Cfg := types.NewChain33Config(types.ReadFile("chain33.test.toml"))
 	var q = queue.New("channel")
-	q.SetConfig(chainCfg)
-	cfg := chainCfg.GetModuleConfig()
-	sub := chainCfg.GetSubConfig()
+	q.SetConfig(chain33Cfg)
+	cfg := chain33Cfg.GetModuleConfig()
+	sub := chain33Cfg.GetSubConfig()
 
-	chain := blockchain.New(chainCfg)
+	chain := blockchain.New(chain33Cfg)
 	chain.SetQueueClient(q.Client())
 
-	exec := executor.New(chainCfg)
+	exec := executor.New(chain33Cfg)
 	exec.SetQueueClient(q.Client())
-	chainCfg.SetMinFee(0)
-	s := store.New(chainCfg)
+	chain33Cfg.SetMinFee(0)
+	s := store.New(chain33Cfg)
 	s.SetQueueClient(q.Client())
 
 	cs := New(cfg.Consensus, sub.Consensus["tendermint"])
 	cs.SetQueueClient(q.Client())
 
-	mem := mempool.New(chainCfg)
+	mem := mempool.New(chain33Cfg)
 	mem.SetQueueClient(q.Client())
 
 	rpc.InitCfg(cfg.RPC)
@@ -124,7 +124,7 @@ func createConn() error {
 		fmt.Fprintln(os.Stderr, err)
 		return err
 	}
-	c = types.NewChainClient(conn)
+	c = types.NewChain33Client(conn)
 	return nil
 }
 

@@ -7,9 +7,9 @@ package state
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
-	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
 )
 
 // BlockData 本文件用来存储硬分叉中需要用到的数据
@@ -75,7 +75,7 @@ func InitForkData() {
 }
 
 // ProcessFork 处理硬分叉逻辑
-func ProcessFork(cfg *types.ChainConfig, blockHeight int64, txHash []byte, receipt *types.Receipt) {
+func ProcessFork(cfg *types.Chain33Config, blockHeight int64, txHash []byte, receipt *types.Receipt) {
 	if cfg.IsLocal() {
 		return
 	}

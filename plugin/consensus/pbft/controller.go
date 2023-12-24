@@ -7,9 +7,9 @@ package pbft
 import (
 	"strings"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/queue"
-	pb "github.com/assetcloud/chain/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/queue"
+	pb "github.com/33cn/chain33/types"
 )
 
 var (

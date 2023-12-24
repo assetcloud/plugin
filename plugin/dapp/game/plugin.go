@@ -5,10 +5,10 @@
 package game
 
 import (
-	"github.com/assetcloud/plugin/plugin/dapp/game/commands"
-	"github.com/assetcloud/plugin/plugin/dapp/game/executor"
-	gt "github.com/assetcloud/plugin/plugin/dapp/game/types"
-	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/33cn/chain33/pluginmgr"
+	"github.com/33cn/plugin/plugin/dapp/game/commands"
+	"github.com/33cn/plugin/plugin/dapp/game/executor"
+	gt "github.com/33cn/plugin/plugin/dapp/game/types"
 )
 
 func init() {

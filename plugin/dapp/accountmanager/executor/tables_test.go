@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	et "github.com/assetcloud/plugin/plugin/dapp/accountmanager/types"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	et "github.com/33cn/plugin/plugin/dapp/accountmanager/types"
 )
 
 func TestAccountTable(t *testing.T) {

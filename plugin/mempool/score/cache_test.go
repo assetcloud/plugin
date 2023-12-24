@@ -5,18 +5,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	cty "github.com/assetcloud/chain/system/dapp/coins/types"
-	drivers "github.com/assetcloud/chain/system/mempool"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	"github.com/assetcloud/chain/util/testnode"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	cty "github.com/33cn/chain33/system/dapp/coins/types"
+	drivers "github.com/33cn/chain33/system/mempool"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	"github.com/33cn/chain33/util/testnode"
 	"github.com/golang/protobuf/proto"
 	"github.com/stretchr/testify/assert"
 
-	_ "github.com/assetcloud/chain/system"
+	_ "github.com/33cn/chain33/system"
 )
 
 var (
@@ -44,7 +44,7 @@ func initEnv(size int64) *Queue {
 	if size == 0 {
 		size = 100
 	}
-	_, sub := types.InitCfg("chain.test.toml")
+	_, sub := types.InitCfg("chain33.test.toml")
 	var subcfg subConfig
 	types.MustDecode(sub.Mempool["score"], &subcfg)
 	subcfg.PoolCacheSize = size
@@ -159,7 +159,7 @@ func TestQueueDirection(t *testing.T) {
 }
 
 func TestRealNodeMempool(t *testing.T) {
-	mock33 := testnode.New("chain.test.toml", nil)
+	mock33 := testnode.New("chain33.test.toml", nil)
 	cfg := mock33.GetClient().GetConfig()
 	defer mock33.Close()
 	mock33.Listen()

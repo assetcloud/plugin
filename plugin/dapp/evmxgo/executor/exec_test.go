@@ -8,23 +8,23 @@ import (
 	"testing"
 	"time"
 
-	"github.com/assetcloud/chain/account"
-	apimock "github.com/assetcloud/chain/client/mocks"
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/util"
-	bridgevmxgo "github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
+	"github.com/33cn/chain33/account"
+	apimock "github.com/33cn/chain33/client/mocks"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/util"
+	bridgevmxgo "github.com/33cn/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
 	"github.com/stretchr/testify/mock"
 
 	"strings"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/types"
-	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/evmxgo/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/types"
+	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	pty "github.com/33cn/plugin/plugin/dapp/evmxgo/types"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 )
@@ -38,8 +38,8 @@ var (
 	mainNetgrpcAddr = "localhost:8802"
 	ParaNetgrpcAddr = "localhost:8902"
 
-	mainClient types.ChainClient
-	paraClient types.ChainClient
+	mainClient types.Chain33Client
+	paraClient types.Chain33Client
 	r          *rand.Rand
 
 	ErrTest = errors.New("ErrTest")
@@ -116,13 +116,13 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	mainClient = types.NewChainClient(conn)
+	mainClient = types.NewChain33Client(conn)
 
 	conn, err = grpc.Dial(ParaNetgrpcAddr, grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
-	paraClient = types.NewChainClient(conn)
+	paraClient = types.NewChain33Client(conn)
 
 	r = rand.New(rand.NewSource(time.Now().UnixNano()))
 	addrexec = address.ExecAddress("")
@@ -207,7 +207,7 @@ func signTx(tx *types.Transaction, hexPrivKey string) (*types.Transaction, error
 }
 
 func Test_Token(t *testing.T) {
-	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
+	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
 	Init(pty.EvmxgoX, cfg, nil)
 	total := int64(100000)
 	accountA := types.Account{

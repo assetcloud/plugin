@@ -18,10 +18,10 @@ import (
 
 	"crypto/ecdsa"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	ecdsa_util "github.com/assetcloud/chain/system/crypto/secp256r1"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/utils"
+	log "github.com/33cn/chain33/common/log/log15"
+	ecdsa_util "github.com/33cn/chain33/system/crypto/secp256r1"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/cert/authority/utils"
 )
 
 var authLogger = log.New("module", "authority")

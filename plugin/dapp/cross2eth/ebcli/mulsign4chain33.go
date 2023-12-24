@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
 	"github.com/spf13/cobra"
 )
 
@@ -23,8 +23,8 @@ func MultiSignCmd() *cobra.Command {
 		SetupCmd(),
 		TransferCmd(),
 		ShowAddrCmd(),
-		SetChainMultiSignAddrCmd(),
-		GetChainMultiSignAddrCmd(),
+		SetChain33MultiSignAddrCmd(),
+		GetChain33MultiSignAddrCmd(),
 	)
 	return cmd
 }
@@ -84,7 +84,7 @@ func SetupOwner(cmd *cobra.Command, args []string) {
 		Owners:             owners,
 	}
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.SetupOwner4Chain", para, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.SetupOwner4Chain33", para, &res)
 	ctx.Run()
 }
 
@@ -127,45 +127,45 @@ func Transfer(cmd *cobra.Command, args []string) {
 		OwnerPrivateKeys: keys,
 	}
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.SafeTransfer4Chain", para, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.SafeTransfer4Chain33", para, &res)
 	ctx.Run()
 }
 
-func SetChainMultiSignAddrCmd() *cobra.Command {
+func SetChain33MultiSignAddrCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set_multiSign",
 		Short: "set multiSign address",
-		Run:   SetChainMultiSignAddr,
+		Run:   SetChain33MultiSignAddr,
 	}
-	SetChainMultiSignAddrCmdFlags(cmd)
+	SetChain33MultiSignAddrCmdFlags(cmd)
 	return cmd
 }
 
-func SetChainMultiSignAddrCmdFlags(cmd *cobra.Command) {
+func SetChain33MultiSignAddrCmdFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("address", "a", "", "address")
 	_ = cmd.MarkFlagRequired("address")
 }
 
-func SetChainMultiSignAddr(cmd *cobra.Command, _ []string) {
+func SetChain33MultiSignAddr(cmd *cobra.Command, _ []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	addr, _ := cmd.Flags().GetString("address")
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.SetChainMultiSignAddr", addr, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.SetChain33MultiSignAddr", addr, &res)
 	ctx.Run()
 }
 
-func GetChainMultiSignAddrCmd() *cobra.Command {
+func GetChain33MultiSignAddrCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get_multiSign",
 		Short: "get multiSign address",
-		Run:   GetChainMultiSignAddr,
+		Run:   GetChain33MultiSignAddr,
 	}
 	return cmd
 }
 
-func GetChainMultiSignAddr(cmd *cobra.Command, _ []string) {
+func GetChain33MultiSignAddr(cmd *cobra.Command, _ []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	var res rpctypes.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.GetChainMultiSignAddr", "", &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.GetChain33MultiSignAddr", "", &res)
 	ctx.Run()
 }

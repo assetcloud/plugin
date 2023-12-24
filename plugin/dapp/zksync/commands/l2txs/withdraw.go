@@ -5,14 +5,14 @@ import (
 	"strconv"
 	"strings"
 
-	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 )
 
 func sendWithdrawTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "withdraw",
-		Short: "send withdraw tx to chain",
+		Short: "send withdraw tx to chain33",
 		Run:   sendWithdraw,
 	}
 	sendWithdrawFlags(cmd)
@@ -25,7 +25,7 @@ func sendWithdrawFlags(cmd *cobra.Command) {
 
 	cmd.Flags().Uint64P("tokenId", "t", 0, "eth token id")
 	_ = cmd.MarkFlagRequired("tokenId")
-	cmd.Flags().Uint64P("accountID", "a", 0, "L2 account id on chain")
+	cmd.Flags().Uint64P("accountID", "a", 0, "L2 account id on chain33")
 	_ = cmd.MarkFlagRequired("accountID")
 	cmd.Flags().StringP("amount", "m", "0", "deposit amount")
 	_ = cmd.MarkFlagRequired("amount")
@@ -53,9 +53,9 @@ func sendWithdraw(cmd *cobra.Command, args []string) {
 		},
 	}
 
-	tx, err := createChainTx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
+	tx, err := createChain33Tx(privateKey, getRealExecName(paraName, zksyncTypes.Zksync), action)
 	if nil != err {
-		fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
+		fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
 		return
 	}
 	sendTx(rpcLaddr, tx)
@@ -64,7 +64,7 @@ func sendWithdraw(cmd *cobra.Command, args []string) {
 func sendManyWithdrawTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "withdraw_many",
-		Short: "send withdraw tx to chain",
+		Short: "send withdraw tx to chain33",
 		Run:   sendManyWithdraw,
 	}
 	sendManyWithdrawFlags(cmd)
@@ -76,7 +76,7 @@ func sendManyWithdrawFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("keys")
 	cmd.Flags().Uint64P("tokenId", "t", 0, "eth token id")
 	_ = cmd.MarkFlagRequired("tokenId")
-	cmd.Flags().StringP("accountIDs", "a", "0", "L2 account ids on chain, use ',' separate")
+	cmd.Flags().StringP("accountIDs", "a", "0", "L2 account ids on chain33, use ',' separate")
 	_ = cmd.MarkFlagRequired("accountIDs")
 	cmd.Flags().StringP("amount", "m", "0", "deposit amount")
 	_ = cmd.MarkFlagRequired("amount")
@@ -113,9 +113,9 @@ func sendManyWithdraw(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
+			fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)

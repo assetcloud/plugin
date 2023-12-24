@@ -7,9 +7,9 @@ package autotest
 import (
 	"reflect"
 
-	"github.com/assetcloud/chain/cmd/autotest/types"
-	ca "github.com/assetcloud/chain/system/dapp/coins/autotest"
-	ta "github.com/assetcloud/plugin/plugin/dapp/token/autotest"
+	"github.com/33cn/chain33/cmd/autotest/types"
+	ca "github.com/33cn/chain33/system/dapp/coins/autotest"
+	ta "github.com/33cn/plugin/plugin/dapp/token/autotest"
 )
 
 type privacyAutoTest struct {

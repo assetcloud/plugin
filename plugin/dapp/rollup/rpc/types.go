@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	rolluptypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	rolluptypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
 )
 
 /*

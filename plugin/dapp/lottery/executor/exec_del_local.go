@@ -5,9 +5,9 @@
 package executor
 
 import (
-	//"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/lottery/types"
+	//"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/lottery/types"
 )
 
 func (l *Lottery) execDelLocal(tx *types.Transaction, receiptData *types.ReceiptData) (*types.LocalDBSet, error) {

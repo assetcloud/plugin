@@ -11,7 +11,7 @@ import (
 	"io"
 	"net"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 	"github.com/golang/protobuf/proto"
 )
 

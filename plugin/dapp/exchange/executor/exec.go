@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	exchangetypes "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
+	"github.com/33cn/chain33/types"
+	exchangetypes "github.com/33cn/plugin/plugin/dapp/exchange/types"
 )
 
 /*
@@ -16,7 +16,7 @@ func (e *exchange) Exec_LimitOrder(payload *exchangetypes.LimitOrder, tx *types.
 	return action.LimitOrder(payload, "")
 }
 
-// 市价交易
+//市价交易
 func (e *exchange) Exec_MarketOrder(payload *exchangetypes.MarketOrder, tx *types.Transaction, index int) (*types.Receipt, error) {
 	//TODO marketOrder
 	return nil, types.ErrActionNotSupport

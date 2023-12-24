@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/33cn/chain33/common/log/log15"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 var ztlog = log15.New("module", Zksync)
@@ -130,17 +130,17 @@ const (
 	MinDecimalAllow = 4
 )
 
-// Zksync 执行器名称定义
+//Zksync 执行器名称定义
 const Zksync = "zksync"
 const ZkManagerKey = "manager"
 const ZkMimcHashSeed = "seed"
 const ZkVerifierKey = "verifier"
 
-// 配置的系统收交易费账户
+//配置的系统收交易费账户
 const ZkCfgEthFeeAddr = "ethFeeAddr"
 const ZkCfgLayer2FeeAddr = "layer2FeeAddr"
 
-// msg宽度
+//msg宽度
 const (
 	TxTypeBitWidth    = 8  //1byte
 	AccountBitWidth   = 32 //4byte
@@ -169,7 +169,7 @@ const (
 
 )
 
-// 不同type chunk数量
+//不同type chunk数量
 const (
 	DepositChunks          = 3
 	Contract2TreeChunks    = 2
@@ -204,7 +204,7 @@ const (
 
 )
 
-// ERC protocol
+//ERC protocol
 const (
 	ZKERC1155 = 1
 	ZKERC721  = 2
@@ -317,22 +317,22 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(Zksync, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(Zksync, NewType(cfg))
 }
 
-// ZksyncType ...
+//ZksyncType ...
 type ZksyncType struct {
 	types.ExecTypeBase
 }
 
-// NewType ...
-func NewType(cfg *types.ChainConfig) *ZksyncType {
+//NewType ...
+func NewType(cfg *types.Chain33Config) *ZksyncType {
 	c := &ZksyncType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

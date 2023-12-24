@@ -5,10 +5,10 @@
 package executor
 
 import (
-	log "github.com/assetcloud/chain/common/log/log15"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	dty "github.com/assetcloud/plugin/plugin/dapp/dposvote/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	dty "github.com/33cn/plugin/plugin/dapp/dposvote/types"
 )
 
 var logger = log.New("module", "execs.dposvote")
@@ -50,7 +50,7 @@ func calcTopNVersion(height int64) (version, left int64) {
 }
 
 // Init DPos Executor
-func Init(name string, cfg *types.ChainConfig, sub []byte) {
+func Init(name string, cfg *types.Chain33Config, sub []byte) {
 	driverName := GetName()
 	if name != driverName {
 		panic("system dapp can't be rename")
@@ -70,13 +70,13 @@ func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	InitExecType()
 }
 
-// InitExecType ...
+//InitExecType ...
 func InitExecType() {
 	ety := types.LoadExecutorType(driverName)
 	ety.InitFuncList(types.ListMethod(&DPos{}))
 }
 
-// DPos 执行器，用于Dpos候选节点注册、投票，VRF信息注册管理等功能
+//DPos 执行器，用于Dpos候选节点注册、投票，VRF信息注册管理等功能
 type DPos struct {
 	drivers.DriverBase
 }
@@ -88,17 +88,17 @@ func newDposVote() drivers.Driver {
 	return t
 }
 
-// GetName 获取DPos执行器的名称
+//GetName 获取DPos执行器的名称
 func GetName() string {
 	return newDposVote().GetName()
 }
 
-// ExecutorOrder Exec 的时候 同时执行 ExecLocal
+//ExecutorOrder Exec 的时候 同时执行 ExecLocal
 func (g *DPos) ExecutorOrder() int64 {
 	return drivers.ExecLocalSameTime
 }
 
-// GetDriverName 获取DPos执行器的名称
+//GetDriverName 获取DPos执行器的名称
 func (g *DPos) GetDriverName() string {
 	return dty.DPosX
 }

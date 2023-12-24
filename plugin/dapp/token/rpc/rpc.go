@@ -7,15 +7,15 @@ package rpc
 import (
 	"encoding/hex"
 
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/common/address"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/common/address"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	tokenty "github.com/33cn/plugin/plugin/dapp/token/types"
 	context "golang.org/x/net/context"
 )
 
-// TODO:和GetBalance进行泛化处理，同时LoadAccounts和LoadExecAccountQueue也需要进行泛化处理, added by hzj
+//TODO:和GetBalance进行泛化处理，同时LoadAccounts和LoadExecAccountQueue也需要进行泛化处理, added by hzj
 func (c *channelClient) getTokenBalance(in *tokenty.ReqTokenBalance) ([]*types.Account, error) {
 	cfg := c.GetConfig()
 	accountTokendb, err := account.NewAccountDB(cfg, tokenty.TokenX, in.GetTokenSymbol(), nil)

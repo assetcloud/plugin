@@ -7,7 +7,7 @@ package types
 import (
 	"reflect"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 func init() {
@@ -17,12 +17,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(MultiSigX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(MultiSigX, NewType(cfg))
 }
 
@@ -32,7 +32,7 @@ type MultiSigType struct {
 }
 
 // NewType new一个新的multisig合约实例
-func NewType(cfg *types.ChainConfig) *MultiSigType {
+func NewType(cfg *types.Chain33Config) *MultiSigType {
 	c := &MultiSigType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

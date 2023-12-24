@@ -8,19 +8,19 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/common/crypto"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	cty "github.com/assetcloud/chain/system/dapp/coins/types"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/cert/authority"
-	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/utils"
-	ct "github.com/assetcloud/plugin/plugin/dapp/cert/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/common/crypto"
+	drivers "github.com/33cn/chain33/system/dapp"
+	cty "github.com/33cn/chain33/system/dapp/coins/types"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/cert/authority"
+	"github.com/33cn/plugin/plugin/dapp/cert/authority/utils"
+	ct "github.com/33cn/plugin/plugin/dapp/cert/types"
 	"github.com/stretchr/testify/assert"
 
-	_ "github.com/assetcloud/chain/system"
-	_ "github.com/assetcloud/plugin/plugin"
+	_ "github.com/33cn/chain33/system"
+	_ "github.com/33cn/plugin/plugin"
 )
 
 var (
@@ -82,8 +82,8 @@ func signtxs(priv crypto.PrivKey, cert []byte) {
 /**
 初始化Author实例和userloader
 */
-func initEnv() (*types.ChainConfig, error) {
-	cfg := types.NewChainConfig(types.ReadFile("./test/chain.auth.test.toml"))
+func initEnv() (*types.Chain33Config, error) {
+	cfg := types.NewChain33Config(types.ReadFile("./test/chain33.auth.test.toml"))
 	sub := cfg.GetSubConfig()
 	var subcfg ct.Authority
 	if sub.Exec["cert"] != nil {

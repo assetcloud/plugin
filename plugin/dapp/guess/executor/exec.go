@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	gty "github.com/assetcloud/plugin/plugin/dapp/guess/types"
+	"github.com/33cn/chain33/types"
+	gty "github.com/33cn/plugin/plugin/dapp/guess/types"
 )
 
 //Exec_Start Guess执行器创建游戏

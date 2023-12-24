@@ -11,18 +11,18 @@ import (
 	"os"
 	"strings"
 
+	"github.com/33cn/chain33/common/log"
+	"github.com/33cn/chain33/pluginmgr"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebcli/buildflags"
+	relayerTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	tml "github.com/BurntSushi/toml"
-	"github.com/assetcloud/chain/common/log"
-	"github.com/assetcloud/chain/pluginmgr"
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebcli/buildflags"
-	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	"github.com/spf13/cobra"
 )
 
 var (
 	rootCmd = &cobra.Command{
-		Use:   "chainxEth-relayer" + "-cli",
-		Short: "chainxEth-relayer" + "client tools",
+		Use:   "chain33xEth-relayer" + "-cli",
+		Short: "chain33xEth-relayer" + "client tools",
 	}
 	configPath = flag.String("f", "", "configfile")
 )
@@ -57,7 +57,7 @@ func testTLS(RPCAddr string) string {
 	return "https://" + RPCAddr[7:]
 }
 
-// run :
+//run :
 func run(RPCAddr, NodeAddr string) {
 	//test tls is enable
 	RPCAddr = testTLS(RPCAddr)

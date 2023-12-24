@@ -5,9 +5,9 @@
 package rpc
 
 import (
-	"github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/rpc/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
+	"github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/rpc/types"
+	pty "github.com/33cn/plugin/plugin/dapp/privacy/types"
 )
 
 var log = log15.New("module", "privacy.rpc")

@@ -7,9 +7,9 @@ package executor
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
-	tickettypes "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
+	tickettypes "github.com/33cn/plugin/plugin/dapp/ticket/types"
 )
 
 const (

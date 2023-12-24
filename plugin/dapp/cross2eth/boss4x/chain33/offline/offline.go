@@ -9,23 +9,23 @@ import (
 
 	tml "github.com/BurntSushi/toml"
 
-	"github.com/assetcloud/plugin/plugin/dapp/dex/utils"
-	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	"github.com/33cn/plugin/plugin/dapp/dex/utils"
+	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 )
 
-var crossXfileName = "deployCrossX2Chain.txt"
+var crossXfileName = "deployCrossX2Chain33.txt"
 
 func Boss4xOfflineCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "offline",
-		Short: "create and sign offline tx to deploy and set cross contracts to chain",
+		Short: "create and sign offline tx to deploy and set cross contracts to chain33",
 	}
 	cmd.AddCommand(
 		CreateCrossBridgeCmd(),
 		CreateContractsWithFileCmd(),
-		SendSignTxs2ChainCmd(),
+		SendSignTxs2Chain33Cmd(),
 		CreateERC20Cmd(),
 		ApproveErc20Cmd(),
 		AddToken2LockListCmd(),
@@ -39,25 +39,25 @@ func Boss4xOfflineCmd() *cobra.Command {
 	return cmd
 }
 
-func SendSignTxs2ChainCmd() *cobra.Command {
+func SendSignTxs2Chain33Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "send",
-		Short: "send all the crossX txs to chain in serial",
-		Run:   sendSignTxs2Chain,
+		Short: "send all the crossX txs to chain33 in serial",
+		Run:   sendSignTxs2Chain33,
 	}
-	addSendSignTxs2ChainFlags(cmd)
+	addSendSignTxs2Chain33Flags(cmd)
 	return cmd
 }
 
-func addSendSignTxs2ChainFlags(cmd *cobra.Command) {
+func addSendSignTxs2Chain33Flags(cmd *cobra.Command) {
 	cmd.Flags().StringP("file", "f", "", "signed tx file")
 	_ = cmd.MarkFlagRequired("file")
 }
 
-func sendSignTxs2Chain(cmd *cobra.Command, _ []string) {
+func sendSignTxs2Chain33(cmd *cobra.Command, _ []string) {
 	filePath, _ := cmd.Flags().GetString("file")
 	url, _ := cmd.Flags().GetString("rpc_laddr")
-	utils.SendSignTxs2Chain(filePath, url)
+	utils.SendSignTxs2Chain33(filePath, url)
 }
 
 func getTxInfo(cmd *cobra.Command) *utils.TxCreateInfo {
@@ -110,14 +110,14 @@ func paraseFile(file string, result interface{}) error {
 	return json.Unmarshal(b, result)
 }
 
-func createOfflineTx(txCreateInfo *utils.TxCreateInfo, para []byte, contractAddr, name string, interval time.Duration) (*utils.ChainOfflineTx, error) {
+func createOfflineTx(txCreateInfo *utils.TxCreateInfo, para []byte, contractAddr, name string, interval time.Duration) (*utils.Chain33OfflineTx, error) {
 	action := &evmtypes.EVMContractAction{Amount: 0, GasLimit: 0, GasPrice: 0, Note: name, Para: para, ContractAddr: contractAddr}
 	content, txHash, err := utils.CallContractAndSign(txCreateInfo, action, contractAddr)
 	if nil != err {
 		return nil, err
 	}
 
-	Tx := &utils.ChainOfflineTx{
+	Tx := &utils.Chain33OfflineTx{
 		ContractAddr:  contractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -141,7 +141,7 @@ func callContractAndSignWrite(cmd *cobra.Command, para []byte, contractAddr, nam
 		return
 	}
 
-	var txs []*utils.ChainOfflineTx
+	var txs []*utils.Chain33OfflineTx
 	txs = append(txs, Tx)
 
 	fileName := fmt.Sprintf(Tx.OperationName + ".txt")

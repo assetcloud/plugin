@@ -10,22 +10,22 @@ import (
 	"sort"
 	"sync"
 
-	log "github.com/assetcloud/chain/common/log/log15"
+	log "github.com/33cn/chain33/common/log/log15"
 
 	"sync/atomic"
 
 	"time"
 
-	"github.com/assetcloud/chain/client/api"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/common/merkle"
-	"github.com/assetcloud/chain/queue"
-	"github.com/assetcloud/chain/rpc/grpcclient"
-	drivers "github.com/assetcloud/chain/system/consensus"
-	cty "github.com/assetcloud/chain/system/dapp/coins/types"
-	"github.com/assetcloud/chain/types"
-	paracross "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/33cn/chain33/client/api"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/common/merkle"
+	"github.com/33cn/chain33/queue"
+	"github.com/33cn/chain33/rpc/grpcclient"
+	drivers "github.com/33cn/chain33/system/consensus"
+	cty "github.com/33cn/chain33/system/dapp/coins/types"
+	"github.com/33cn/chain33/types"
+	paracross "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 )
 
 const (
@@ -34,7 +34,6 @@ const (
 	defaultGenesisBlockTime int64 = 1514533390
 	//current miner tx take any privatekey for unify all nodes sign purpose, and para chain is free
 	minerPrivateKey                      = "6da92a632ab7deb67d38c0f6560bcfed28167998f6496db64c258d5e8393a81b"
-	defaultGenesisAmount           int64 = 1e8
 	poolMainBlockMsec              int64 = 5000
 	defaultEmptyBlockInterval      int64 = 50 //write empty block every interval blocks in mainchain
 	defaultSearchMatchedBlockDepth int32 = 10000
@@ -52,7 +51,7 @@ func init() {
 
 type client struct {
 	*drivers.BaseClient
-	grpcClient      types.ChainClient
+	grpcClient      types.Chain33Client
 	execAPI         api.ExecutorAPI
 	caughtUp        int32
 	commitMsgClient *commitMsgClient
@@ -71,7 +70,6 @@ type client struct {
 
 type subConfig struct {
 	WriteBlockMsec          int64      `json:"writeBlockMsec,omitempty"`
-	ParaRemoteGrpcClient    string     `json:"paraRemoteGrpcClient,omitempty"`
 	StartHeight             int64      `json:"startHeight,omitempty"`
 	WaitMainBlockNum        int64      `json:"waitMainBlockNum,omitempty"`
 	GenesisStartHeightSame  bool       `json:"genesisStartHeightSame,omitempty"`
@@ -101,8 +99,9 @@ func New(cfg *types.Consensus, sub []byte) queue.Module {
 	if sub != nil {
 		types.MustDecode(sub, &subcfg)
 	}
-	if subcfg.GenesisAmount <= 0 {
-		subcfg.GenesisAmount = defaultGenesisAmount
+	//支持创世精度为0
+	if subcfg.GenesisAmount < 0 {
+		panic(fmt.Sprintf("genesis amount <0"))
 	}
 
 	if subcfg.WriteBlockMsec <= 0 {
@@ -392,6 +391,7 @@ func checkMinerTx(current *types.BlockDetail) error {
 
 	//判断exec 是否成功
 	if current.Receipts[0].Ty != types.ExecOk {
+		plog.Error("checkMinerTx", "receiptTy", current.Receipts[0].Ty)
 		return paracross.ErrParaMinerExecErr
 	}
 	return nil

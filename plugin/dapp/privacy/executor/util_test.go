@@ -8,21 +8,21 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/client"
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/common/log"
-	"github.com/assetcloud/chain/queue"
-	"github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	"github.com/assetcloud/chain/wallet"
-	wcom "github.com/assetcloud/chain/wallet/common"
-	pty "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/client"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/common/log"
+	"github.com/33cn/chain33/queue"
+	"github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	"github.com/33cn/chain33/wallet"
+	wcom "github.com/33cn/chain33/wallet/common"
+	pty "github.com/33cn/plugin/plugin/dapp/privacy/types"
 
-	pwallet "github.com/assetcloud/plugin/plugin/dapp/privacy/wallet"
+	pwallet "github.com/33cn/plugin/plugin/dapp/privacy/wallet"
 )
 
 var (
@@ -54,7 +54,7 @@ var (
 	testPolicy     = pwallet.New()
 	testPolicyName = pty.PrivacyX + "test"
 
-	testCfg = types.NewChainConfig(types.GetDefaultCfgstring())
+	testCfg = types.NewChain33Config(types.GetDefaultCfgstring())
 )
 
 func init() {
@@ -70,7 +70,7 @@ type testExecMock struct {
 	exec    dapp.Driver
 	wallet  *walletMock
 	policy  wcom.WalletBizPolicy
-	cfg     *types.ChainConfig
+	cfg     *types.Chain33Config
 	q       queue.Queue
 	qapi    client.QueueProtocolAPI
 }

@@ -7,15 +7,15 @@ package types
 import (
 	"reflect"
 
-	//log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/types"
+	//log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/types"
 )
 
 // RelayX name for executor
 var RelayX = "relay"
 
-// var tlog = log.New("module", name)
-// log for relay
+//var tlog = log.New("module", name)
+//log for relay
 const (
 	TyLogRelayCreate       = 350
 	TyLogRelayRevokeCreate = 351
@@ -54,18 +54,18 @@ func init() {
 	types.RegExec(RelayX, InitExecutor)
 }
 
-// InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+//InitFork ...
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(RelayX, "Enable", 0)
 }
 
-// InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+//InitExecutor ...
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(RelayX, NewType(cfg))
 }
 
 // NewType new relay type
-func NewType(cfg *types.ChainConfig) *RelayType {
+func NewType(cfg *types.Chain33Config) *RelayType {
 	c := &RelayType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

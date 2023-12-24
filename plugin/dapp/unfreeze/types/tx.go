@@ -7,7 +7,7 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 type parseUnfreezeCreate struct {

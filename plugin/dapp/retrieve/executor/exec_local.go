@@ -5,9 +5,9 @@
 package executor
 
 import (
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/types"
-	rt "github.com/assetcloud/plugin/plugin/dapp/retrieve/types"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/types"
+	rt "github.com/33cn/plugin/plugin/dapp/retrieve/types"
 )
 
 func createRetrieve(backupAddress, defaultAddress string, status int32) rt.RetrieveQuery {

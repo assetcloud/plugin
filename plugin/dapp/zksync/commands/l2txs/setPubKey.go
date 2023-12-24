@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ func setManyPubKeyCmd() *cobra.Command {
 func setPubKeyFlag(cmd *cobra.Command) {
 	cmd.Flags().StringP("keys", "k", "", "private keys, use ',' separate")
 	_ = cmd.MarkFlagRequired("keys")
-	cmd.Flags().StringP("accountIDs", "a", "0", "L2 account ids on chain, use ',' separate")
+	cmd.Flags().StringP("accountIDs", "a", "0", "L2 account ids on chain33, use ',' separate")
 	_ = cmd.MarkFlagRequired("accountIDs")
 	cmd.Flags().Uint64P("pubkeyT", "t", 0, "self default:0, proxy pubkey ty: 1: normal,2:system,3:super")
 	cmd.Flags().StringP("pubkeyX", "x", "", "proxy pubkey x value")
@@ -68,9 +68,9 @@ func setPubKey(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("SetPubKey failed to createChainTx due to err:", err.Error())
+			fmt.Println("SetPubKey failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)

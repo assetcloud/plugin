@@ -9,14 +9,14 @@ import (
 	"encoding/hex"
 	"strings"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 )
 
-// 1,如果全部是paracross的，主链成功会ExecOk，如果有一个不成功，全部回退回PACK，后面检查TyLogErr，OK意味着全部成功
-// 2,如果是paracross+other， other的是PACK，如果有一个是OK，那意味着全部OK，如果全部是PACK，检查TyLogErr
-// 3,如果是全部other，全部是PACK
+//1,如果全部是paracross的，主链成功会ExecOk，如果有一个不成功，全部回退回PACK，后面检查TyLogErr，OK意味着全部成功
+//2,如果是paracross+other， other的是PACK，如果有一个是OK，那意味着全部OK，如果全部是PACK，检查TyLogErr
+//3,如果是全部other，全部是PACK
 func checkReceiptExecOk(receipt *types.ReceiptData) bool {
 	if receipt.Ty == types.ExecOk {
 		return true
@@ -30,12 +30,12 @@ func checkReceiptExecOk(receipt *types.ReceiptData) bool {
 	return true
 }
 
-// 1. 如果涉及跨链合约，如果有超过两条平行链的交易被判定为失败，交易组会执行不成功,也不PACK。（这样的情况下，主链交易一定会执行不成功,最终也不会进到block里面）
-// 2. 跨链合约交易组，要么是paracross+user.p.xx.paracross组合，要么全是user.p.xx.paracross组合，后面是资产转移
-// 3. 如果交易组有一个ExecOk,主链上的交易都是ok的，可以全部打包
-// 4. 不论是否涉及跨链合约, 不同用途的tx打到一个group里面，如果主链交易有失败，平行链也不会执行，也需要排除掉
-// 5. 如果全部是ExecPack，有两种情况，一是交易组所有交易都是平行链交易，另一是主链有交易失败而打包了的交易，需要检查LogErr，如果有错，全部不打包
-// 经para filter之后， 交易组会存在如下几种tx：
+//1. 如果涉及跨链合约，如果有超过两条平行链的交易被判定为失败，交易组会执行不成功,也不PACK。（这样的情况下，主链交易一定会执行不成功,最终也不会进到block里面）
+//2. 跨链合约交易组，要么是paracross+user.p.xx.paracross组合，要么全是user.p.xx.paracross组合，后面是资产转移
+//3. 如果交易组有一个ExecOk,主链上的交易都是ok的，可以全部打包
+//4. 不论是否涉及跨链合约, 不同用途的tx打到一个group里面，如果主链交易有失败，平行链也不会执行，也需要排除掉
+//5. 如果全部是ExecPack，有两种情况，一是交易组所有交易都是平行链交易，另一是主链有交易失败而打包了的交易，需要检查LogErr，如果有错，全部不打包
+//经para filter之后， 交易组会存在如下几种tx：
 // 1, 主链	paracross	+  	平行链  user.p.xx.paracross  跨链兑换合约
 // 2, 主链   paracross	+  	平行链  user.p.xx.other 		混合交易组合
 // 3, 主链   other  		+ 	平行链  user.p.xx.paracross 	混合交易组合约
@@ -43,12 +43,12 @@ func checkReceiptExecOk(receipt *types.ReceiptData) bool {
 // 5, 主链+平行链 user.p.xx.paracross 交易组				混合跨链资产转移
 // 6, 平行链	    user.p.xx.paracross + user.p.xx.other   混合平行链组合
 // 7, 平行链     all user.p.xx.other  					混合平行链组合
-// /// 分叉以后只考虑平行链交易组全部是平行链tx，没有主链tx
-// 经para filter之后， 交易组会存在如下几种tx：
+///// 分叉以后只考虑平行链交易组全部是平行链tx，没有主链tx
+//经para filter之后， 交易组会存在如下几种tx：
 // 1, 主链+平行链 user.p.xx.paracross 交易组				混合跨链资产转移  paracross主链执行成功
 // 2, 平行链	    user.p.xx.paracross + user.p.xx.other   混合平行链组合    paracross主链执行成功
 // 3, 平行链     user.p.xx.other  交易组					混合平行链组合    other主链pack
-func filterParaTxGroup(cfg *types.ChainConfig, tx *types.Transaction, allTxs []*types.TxDetail, index int, mainBlockHeight, forkHeight int64) ([]*types.Transaction, int) {
+func filterParaTxGroup(cfg *types.Chain33Config, tx *types.Transaction, allTxs []*types.TxDetail, index int, mainBlockHeight, forkHeight int64) ([]*types.Transaction, int) {
 	var headIdx int
 
 	for i := index; i >= 0; i-- {
@@ -80,8 +80,8 @@ func filterParaTxGroup(cfg *types.ChainConfig, tx *types.Transaction, allTxs []*
 	return retTxs, endIdx
 }
 
-// FilterTxsForPara include some main tx in tx group before ForkParacrossCommitTx
-func FilterTxsForPara(cfg *types.ChainConfig, main *types.ParaTxDetail) []*types.Transaction {
+//FilterTxsForPara include some main tx in tx group before ForkParacrossCommitTx
+func FilterTxsForPara(cfg *types.Chain33Config, main *types.ParaTxDetail) []*types.Transaction {
 	cfgPara := types.ConfSub(cfg, pt.ParaX)
 	discardTxs := cfgPara.GStrList("discardTxs")
 	discardTxsMap := make(map[string]bool)
@@ -161,7 +161,7 @@ func FilterParaCrossAssetTxHashes(txs []*types.Transaction) ([][]byte, error) {
 	return txHashs, nil
 }
 
-// 经para filter之后， 交易组会存在如下几种tx：
+//经para filter之后， 交易组会存在如下几种tx：
 // 1, 主链	paracross	+  	平行链  user.p.xx.paracross  跨链兑换合约
 // 2, 主链   paracross	+  	平行链  user.p.xx.other 		混合交易组合
 // 3, 主链   other  		+ 	平行链  user.p.xx.paracross 	混合交易组合
@@ -200,7 +200,7 @@ func crossTxGroupProc(title string, txs []*types.Transaction, index int) ([]*typ
 
 }
 
-// FilterParaMainCrossTxHashes ForkParacrossCommitTx之前允许txgroup里面有main chain tx的跨链
+//FilterParaMainCrossTxHashes ForkParacrossCommitTx之前允许txgroup里面有main chain tx的跨链
 func FilterParaMainCrossTxHashes(title string, txs []*types.Transaction) [][]byte {
 	var crossTxHashs [][]byte
 	//跨链tx 必须是paracross合约且user.p.打头， user.p.xx.的非paracross合约不是跨链
@@ -223,7 +223,7 @@ func FilterParaMainCrossTxHashes(title string, txs []*types.Transaction) [][]byt
 
 }
 
-// CalcTxHashsHash 计算几个txhash的hash值 作校验使用
+//CalcTxHashsHash 计算几个txhash的hash值 作校验使用
 func CalcTxHashsHash(txHashs [][]byte) []byte {
 	if len(txHashs) == 0 {
 		return nil

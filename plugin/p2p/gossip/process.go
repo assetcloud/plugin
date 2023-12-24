@@ -10,10 +10,10 @@ import (
 	"encoding/hex"
 	"time"
 
-	"github.com/assetcloud/chain/p2p/utils"
+	"github.com/33cn/chain33/p2p/utils"
 
-	"github.com/assetcloud/chain/common/merkle"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common/merkle"
+	"github.com/33cn/chain33/types"
 )
 
 var (

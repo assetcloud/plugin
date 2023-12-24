@@ -5,8 +5,8 @@
 # 3. make build
 # ...
 
-SRC_EBCLI := github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebcli
-SRC_EBRELAYER := github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer
+SRC_EBCLI := github.com/33cn/plugin/plugin/dapp/cross2eth/ebcli
+SRC_EBRELAYER := github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer
 CLI_A := build/ebcli_A
 CLI_B := build/ebcli_B
 CLI_C := build/ebcli_C
@@ -16,23 +16,23 @@ LDFLAGS := ' -w -s'
 BUILDTIME:=$(shell date +"%Y-%m-%d %H:%M:%S %A")
 VERSION=$(shell git describe --tags || git rev-parse --short=8 HEAD)
 GitCommit=$(shell git rev-parse HEAD)
-BUILD_FLAGS := -ldflags '-X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
-                         -X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
-                         -X "github.com/assetcloud/plugin/version.Version=$(VERSION)" '
+BUILD_FLAGS := -ldflags '-X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
+                         -X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
+                         -X "github.com/33cn/plugin/version.Version=$(VERSION)" '
 
-BUILD_FLAGSB := -ldflags '-X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
-                         -X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
-                         -X "github.com/assetcloud/plugin/version.Version=$(VERSION)" \
+BUILD_FLAGSB := -ldflags '-X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
+                         -X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
+                         -X "github.com/33cn/plugin/version.Version=$(VERSION)" \
                          -X $(SRC_EBCLI)/buildflags.RPCAddr=http://localhost:9902" '
 
-BUILD_FLAGSC := -ldflags '-X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
-                         -X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
-                         -X "github.com/assetcloud/plugin/version.Version=$(VERSION)" \
+BUILD_FLAGSC := -ldflags '-X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
+                         -X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
+                         -X "github.com/33cn/plugin/version.Version=$(VERSION)" \
                          -X $(SRC_EBCLI)/buildflags.RPCAddr=http://localhost:9903" '
 
-BUILD_FLAGSD := -ldflags '-X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
-                         -X "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
-                         -X "github.com/assetcloud/plugin/version.Version=$(VERSION)" \
+BUILD_FLAGSD := -ldflags '-X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.GitCommit=$(GitCommit)" \
+                         -X "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version.BuildTime=$(BUILDTIME)" \
+                         -X "github.com/33cn/plugin/version.Version=$(VERSION)" \
                          -X $(SRC_EBCLI)/buildflags.RPCAddr=http://localhost:9904" '
 
 proj := "build"
@@ -61,7 +61,7 @@ cli:
 build_ci: depends ## Build the binary file for CI
 	@go build -v -i -o $(CLI) $(SRC_EBCLI)
 	@go build $(BUILD_FLAGS) -v -o $(APP)
-	@cp chain.toml build/
+	@cp chain33.toml build/
 
 para:
 	@go build -v -o build/$(NAME) -ldflags "-X $(SRC_EBCLI)/buildflags.ParaName=user.p.$(NAME). -X $(SRC_EBCLI)/buildflags.RPCAddr=http://localhost:8901" $(SRC_EBCLI)
@@ -91,18 +91,18 @@ fmt_go: fmt_shell ## go fmt
 	@go fmt ./...
 	@find . -name '*.go' -not -path "./vendor/*" | xargs goimports -l -w
 
-docker: ## build docker image for chain run
-	@sudo docker build . -f ./build/Dockerfile-run -t chain:latest
+docker: ## build docker image for chain33 run
+	@sudo docker build . -f ./build/Dockerfile-run -t chain33:latest
 
-docker-compose: ## build docker-compose for chain run
+docker-compose: ## build docker-compose for chain33 run
 	@cd build && if ! [ -d ci ]; then \
 	 make -C ../ ; \
 	 fi; \
-	 cp chain* Dockerfile  docker-compose* ci/ && cd ci/ && ./docker-compose-pre.sh run $(proj) $(dapp)  && cd ../..
+	 cp chain33* Dockerfile  docker-compose* ci/ && cd ci/ && ./docker-compose-pre.sh run $(proj) $(dapp)  && cd ../..
 
-docker-compose-down: ## build docker-compose for chain run
+docker-compose-down: ## build docker-compose for chain33 run
 	@cd build && if [ -d ci ]; then \
-	 cp chain* Dockerfile  docker-compose* ci/ && cd ci/ && ./docker-compose-pre.sh down $(proj) $(dapp) && cd .. ; \
+	 cp chain33* Dockerfile  docker-compose* ci/ && cd ci/ && ./docker-compose-pre.sh down $(proj) $(dapp) && cd .. ; \
 	 fi; \
 	 cd ..
 
@@ -118,7 +118,7 @@ clean: ## remove all the bins
 proto:protobuf
 
 protobuf: ## Generate protbuf file of types package
-#	@cd ${CHAIN_PATH}/types/proto && ./create_protobuf.sh && cd ../..
+#	@cd ${CHAIN33_PATH}/types/proto && ./create_protobuf.sh && cd ../..
 	@find ./plugin/dapp -maxdepth 2 -type d  -name proto -exec make -C {} \;
 
 
@@ -131,7 +131,7 @@ cleandata:
 	rm -rf build/datadir/addrbook
 	rm -rf build/datadir/blockchain.db
 	rm -rf build/datadir/mavltree
-	rm -rf build/chain.log
+	rm -rf build/chain33.log
 
 .PHONY: checkgofmt
 checkgofmt: ## get all go files and run go fmt on them

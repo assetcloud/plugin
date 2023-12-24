@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/common/commands"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -81,7 +81,7 @@ func setMintNFT(cmd *cobra.Command, args []string) {
 		ActionName: "MintNFT",
 		Payload:    types.MustPBToJSON(nft),
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -130,7 +130,7 @@ func transferNFT(cmd *cobra.Command, args []string) {
 		ActionName: "TransferNFT",
 		Payload:    types.MustPBToJSON(nft),
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -174,7 +174,7 @@ func withdrawNFT(cmd *cobra.Command, args []string) {
 		ActionName: "WithdrawNFT",
 		Payload:    types.MustPBToJSON(nft),
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -208,7 +208,7 @@ func getNftId(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var resp zt.ZkNFTTokenStatus
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -242,6 +242,6 @@ func getNftHash(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var id types.Int64
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &id)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &id)
 	ctx.Run()
 }

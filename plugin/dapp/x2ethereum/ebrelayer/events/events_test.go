@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/assert"
@@ -35,14 +35,14 @@ func Test_NewEventWrite(t *testing.T) {
 	assert.Equal(t, EventRecords["1"].Symbol, "bty")
 }
 
-func Test_NewChainMsg(t *testing.T) {
-	_ = NewChainMsg(MsgBurn, []byte("12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"), common.HexToAddress("0x0C05bA5c230fDaA503b53702aF1962e08D0C60BF"),
+func Test_NewChain33Msg(t *testing.T) {
+	_ = NewChain33Msg(MsgBurn, []byte("12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"), common.HexToAddress("0x0C05bA5c230fDaA503b53702aF1962e08D0C60BF"),
 		"eth", big.NewInt(100000000000000000), common.HexToAddress("0x0000000000000000000000000000000000000000"))
 }
 
-func Test_ChainMsgAttributeKey(t *testing.T) {
+func Test_Chain33MsgAttributeKey(t *testing.T) {
 	assert.Equal(t, UnsupportedAttributeKey.String(), "unsupported")
-	assert.Equal(t, ChainSender.String(), "chain_sender")
+	assert.Equal(t, Chain33Sender.String(), "chain33_sender")
 	assert.Equal(t, EthereumReceiver.String(), "ethereum_receiver")
 	assert.Equal(t, Coin.String(), "amount")
 	assert.Equal(t, TokenContractAddress.String(), "token_contract_address")

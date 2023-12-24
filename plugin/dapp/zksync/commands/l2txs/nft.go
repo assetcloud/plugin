@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/assetcloud/chain/types"
-	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/33cn/chain33/types"
+	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -90,9 +90,9 @@ func setMintNFT(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("mint nft failed to createChainTx due to err:", err.Error())
+			fmt.Println("mint nft failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)
@@ -158,9 +158,9 @@ func transferNFT(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("transfer nft failed to createChainTx due to err:", err.Error())
+			fmt.Println("transfer nft failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)
@@ -220,9 +220,9 @@ func withdrawNFT(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("WithdrawNFT failed to createChainTx due to err:", err.Error())
+			fmt.Println("WithdrawNFT failed to createChain33Tx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)

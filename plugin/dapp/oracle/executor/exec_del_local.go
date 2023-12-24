@@ -7,8 +7,8 @@
 package executor
 
 import (
-	oty "github.com/assetcloud/plugin/plugin/dapp/oracle/types"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
+	oty "github.com/33cn/plugin/plugin/dapp/oracle/types"
 )
 
 func (o *oracle) execDelLocal(receipt *types.ReceiptData) (*types.LocalDBSet, error) {

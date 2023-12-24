@@ -3,7 +3,7 @@ package types
 import (
 	"reflect"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 /*
@@ -110,12 +110,12 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(AccountmanagerX, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(AccountmanagerX, NewType(cfg))
 }
 
@@ -125,7 +125,7 @@ type AccountmanagerType struct {
 }
 
 //NewType ...
-func NewType(cfg *types.ChainConfig) *AccountmanagerType {
+func NewType(cfg *types.Chain33Config) *AccountmanagerType {
 	c := &AccountmanagerType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

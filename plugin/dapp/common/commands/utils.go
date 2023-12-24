@@ -9,14 +9,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpcTypes "github.com/assetcloud/chain/rpc/types"
-	commandtypes "github.com/assetcloud/chain/system/dapp/commands/types"
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpcTypes "github.com/33cn/chain33/rpc/types"
+	commandtypes "github.com/33cn/chain33/system/dapp/commands/types"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 	"github.com/spf13/cobra"
 
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/types"
 )
 
 // CreateAssetSendToExec 通用的创建 send_exec 交易， 额外指定资产合约

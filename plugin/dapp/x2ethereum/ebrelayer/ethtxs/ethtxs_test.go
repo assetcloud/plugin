@@ -7,10 +7,10 @@ package ethtxs
 //	"math/big"
 //	"testing"
 //
-//	chainCommon "github.com/assetcloud/chain/common"
-//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
-//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
-//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+//	chain33Common "github.com/33cn/chain33/common"
+//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
+//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
 //	"github.com/ethereum/go-ethereum"
 //	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 //	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
@@ -22,8 +22,8 @@ package ethtxs
 //)
 //
 //func Test_LoadABI(t *testing.T) {
-//	abi1 := LoadABI(ChainBankABI)
-//	abi2 := LoadABI(ChainBridgeABI)
+//	abi1 := LoadABI(Chain33BankABI)
+//	abi2 := LoadABI(Chain33BridgeABI)
 //	abi3 := LoadABI(EthereumBankABI)
 //	assert.NotEmpty(t, abi1, abi2, abi3)
 //}
@@ -40,7 +40,7 @@ package ethtxs
 //	assert.Equal(t, Valset.String(), "valset")
 //	assert.Equal(t, Oracle.String(), "oracle")
 //	assert.Equal(t, BridgeBank.String(), "bridgebank")
-//	assert.Equal(t, ChainBridge.String(), "chainbridge")
+//	assert.Equal(t, Chain33Bridge.String(), "chain33bridge")
 //}
 //
 //func Test_GetAddressFromBridgeRegistry(t *testing.T) {
@@ -66,22 +66,22 @@ package ethtxs
 //	require.NoError(t, err)
 //
 //	claimType := events.MsgBurn
-//	privateKeySlice, err := chainCommon.FromHex("0x3fa21584ae2e4fd74db9b58e2386f5481607dfa4d7ba0617aaa7858e5025dc1e")
+//	privateKeySlice, err := chain33Common.FromHex("0x3fa21584ae2e4fd74db9b58e2386f5481607dfa4d7ba0617aaa7858e5025dc1e")
 //	require.Nil(t, err)
 //	privateKey, err := crypto.ToECDSA(privateKeySlice)
 //	require.Nil(t, err)
 //
 //	prophecyClaim := ProphecyClaim{
 //		ClaimType:            events.MsgBurn,
-//		ChainSender:        []byte("12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"),
+//		Chain33Sender:        []byte("12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"),
 //		EthereumReceiver:     common.HexToAddress("0x0C05bA5c230fDaA503b53702aF1962e08D0C60BF"),
 //		TokenContractAddress: common.HexToAddress("0x0000000000000000000000000000000000000000"),
 //		Symbol:               "eth",
 //		Amount:               big.NewInt(100000000000000000),
 //	}
 //
-//	chainTxHash := common.Hex2Bytes("fd5747c43d1460bb6f8a7a26c66b4ccab5500d05668278efe5c0fd5951dfd909")
-//	txhash, err := RelayOracleClaimToEthereum(x2EthContracts.Oracle, sim, para.InitValidators[0], claimType, prophecyClaim, privateKey, chainTxHash)
+//	chain33TxHash := common.Hex2Bytes("fd5747c43d1460bb6f8a7a26c66b4ccab5500d05668278efe5c0fd5951dfd909")
+//	txhash, err := RelayOracleClaimToEthereum(x2EthContracts.Oracle, sim, para.InitValidators[0], claimType, prophecyClaim, privateKey, chain33TxHash)
 //	require.Nil(t, err)
 //	assert.Equal(t, txhash, "0x6fa087c7a2a8a4421f6e269fbc6c0838e99fa59d5760155a71cd7eb1c01aafad")
 //

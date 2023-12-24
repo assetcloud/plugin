@@ -4,11 +4,11 @@ import (
 	"encoding/hex"
 	"strings"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
 
-	"github.com/assetcloud/chain/types"
-	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
+	"github.com/33cn/chain33/types"
+	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
 )
 
 // CheckTx 实现自定义检验交易接口，供框架调用

@@ -5,22 +5,23 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common/address"
+	"github.com/33cn/chain33/common/address"
 	"github.com/consensys/gnark-crypto/ecc"
 
-	"github.com/assetcloud/chain/types"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	"github.com/33cn/chain33/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
 
-	dbm "github.com/assetcloud/chain/common/db"
+	dbm "github.com/33cn/chain33/common/db"
 	"github.com/pkg/errors"
 )
 
 /*
 1. verify(zk-proof)
 2. check if exist in authorize pool and nullifier pool
+
 */
-func transferInput(cfg *types.ChainConfig, db dbm.KV, execer, symbol string, proof *mixTy.ZkProofInfo) (*mixTy.TransferInputCircuit, error) {
+func transferInput(cfg *types.Chain33Config, db dbm.KV, execer, symbol string, proof *mixTy.ZkProofInfo) (*mixTy.TransferInputCircuit, error) {
 	var input mixTy.TransferInputCircuit
 	err := mixTy.ConstructCircuitPubInput(proof.PublicInput, &input)
 	if err != nil {
@@ -57,8 +58,9 @@ func transferInput(cfg *types.ChainConfig, db dbm.KV, execer, symbol string, pro
 /*
 1. verify(zk-proof)
 2. check if exist in authorize pool and nullifier pool
+
 */
-func transferOutputVerify(cfg *types.ChainConfig, db dbm.KV, proof *mixTy.ZkProofInfo) (*mixTy.TransferOutputCircuit, error) {
+func transferOutputVerify(cfg *types.Chain33Config, db dbm.KV, proof *mixTy.ZkProofInfo) (*mixTy.TransferOutputCircuit, error) {
 	var input mixTy.TransferOutputCircuit
 	err := mixTy.ConstructCircuitPubInput(proof.PublicInput, &input)
 	if err != nil {
@@ -120,7 +122,7 @@ func VerifyCommitValues(inputs []*mixTy.TransferInputCircuit, outputs []*mixTy.T
 	return false
 }
 
-func MixTransferInfoVerify(cfg *types.ChainConfig, db dbm.KV, transfer *mixTy.MixTransferAction) ([]*mixTy.TransferInputCircuit, []*mixTy.TransferOutputCircuit, error) {
+func MixTransferInfoVerify(cfg *types.Chain33Config, db dbm.KV, transfer *mixTy.MixTransferAction) ([]*mixTy.TransferInputCircuit, []*mixTy.TransferOutputCircuit, error) {
 	var inputs []*mixTy.TransferInputCircuit
 	var outputs []*mixTy.TransferOutputCircuit
 
@@ -157,7 +159,7 @@ func MixTransferInfoVerify(cfg *types.ChainConfig, db dbm.KV, transfer *mixTy.Mi
 	return inputs, outputs, nil
 }
 
-// 1. 如果
+//1. 如果
 func (a *action) processTransferFee(exec, symbol string) (*types.Receipt, error) {
 	cfg := a.api.GetConfig()
 	accoutDb, err := createAccount(cfg, exec, symbol, a.db)

@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"reflect"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/types"
 )
 
 var (
@@ -58,7 +58,7 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(TradeX, "Enable", 0)
 	cfg.RegisterDappFork(TradeX, ForkTradeBuyLimitX, 0)
 	cfg.RegisterDappFork(TradeX, ForkTradeAssetX, 0)
@@ -68,7 +68,7 @@ func InitFork(cfg *types.ChainConfig) {
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(TradeX, NewType(cfg))
 }
 
@@ -78,7 +78,7 @@ type TradeType struct {
 }
 
 //NewType ...
-func NewType(cfg *types.ChainConfig) *TradeType {
+func NewType(cfg *types.Chain33Config) *TradeType {
 	c := &TradeType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)
@@ -190,7 +190,7 @@ func (t *TradeType) CreateTx(action string, message json.RawMessage) (*types.Tra
 }
 
 //CreateRawTradeSellTx : 创建卖单交易
-func CreateRawTradeSellTx(cfg *types.ChainConfig, parm *TradeSellTx) (*types.Transaction, error) {
+func CreateRawTradeSellTx(cfg *types.Chain33Config, parm *TradeSellTx) (*types.Transaction, error) {
 	if parm == nil {
 		return nil, types.ErrInvalidParam
 	}
@@ -215,7 +215,7 @@ func CreateRawTradeSellTx(cfg *types.ChainConfig, parm *TradeSellTx) (*types.Tra
 }
 
 //CreateRawTradeBuyTx :创建想指定卖单发起的买单交易
-func CreateRawTradeBuyTx(cfg *types.ChainConfig, parm *TradeBuyTx) (*types.Transaction, error) {
+func CreateRawTradeBuyTx(cfg *types.Chain33Config, parm *TradeBuyTx) (*types.Transaction, error) {
 	if parm == nil {
 		return nil, types.ErrInvalidParam
 	}
@@ -228,7 +228,7 @@ func CreateRawTradeBuyTx(cfg *types.ChainConfig, parm *TradeBuyTx) (*types.Trans
 }
 
 //CreateRawTradeRevokeTx :创建取消卖单的交易
-func CreateRawTradeRevokeTx(cfg *types.ChainConfig, parm *TradeRevokeTx) (*types.Transaction, error) {
+func CreateRawTradeRevokeTx(cfg *types.Chain33Config, parm *TradeRevokeTx) (*types.Transaction, error) {
 	if parm == nil {
 		return nil, types.ErrInvalidParam
 	}
@@ -242,7 +242,7 @@ func CreateRawTradeRevokeTx(cfg *types.ChainConfig, parm *TradeRevokeTx) (*types
 }
 
 //CreateRawTradeBuyLimitTx :创建买单交易
-func CreateRawTradeBuyLimitTx(cfg *types.ChainConfig, parm *TradeBuyLimitTx) (*types.Transaction, error) {
+func CreateRawTradeBuyLimitTx(cfg *types.Chain33Config, parm *TradeBuyLimitTx) (*types.Transaction, error) {
 	if parm == nil {
 		return nil, types.ErrInvalidParam
 	}
@@ -264,7 +264,7 @@ func CreateRawTradeBuyLimitTx(cfg *types.ChainConfig, parm *TradeBuyLimitTx) (*t
 }
 
 //CreateRawTradeSellMarketTx : 创建向指定买单出售token的卖单交易
-func CreateRawTradeSellMarketTx(cfg *types.ChainConfig, parm *TradeSellMarketTx) (*types.Transaction, error) {
+func CreateRawTradeSellMarketTx(cfg *types.Chain33Config, parm *TradeSellMarketTx) (*types.Transaction, error) {
 	if parm == nil {
 		return nil, types.ErrInvalidParam
 	}
@@ -277,7 +277,7 @@ func CreateRawTradeSellMarketTx(cfg *types.ChainConfig, parm *TradeSellMarketTx)
 }
 
 //CreateRawTradeRevokeBuyTx : 取消发起的买单交易
-func CreateRawTradeRevokeBuyTx(cfg *types.ChainConfig, parm *TradeRevokeBuyTx) (*types.Transaction, error) {
+func CreateRawTradeRevokeBuyTx(cfg *types.Chain33Config, parm *TradeRevokeBuyTx) (*types.Transaction, error) {
 	if parm == nil {
 		return nil, types.ErrInvalidParam
 	}

@@ -1,17 +1,17 @@
 package l2txs
 
 import (
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
 	"github.com/spf13/cobra"
 )
 
-func SendChainL2TxCmd() *cobra.Command {
+func SendChain33L2TxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sendl2",
-		Short: "send l2 tx to chain ",
+		Short: "send l2 tx to chain33 ",
 		Args:  cobra.MinimumNArgs(1),
 	}
 
@@ -48,6 +48,6 @@ func sendTx(rpcLaddr string, tx *types.Transaction) {
 		Data:  dataStr,
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.SendTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.SendTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }

@@ -1,4 +1,4 @@
-package chain
+package chain33
 
 import (
 	"fmt"
@@ -7,19 +7,19 @@ import (
 	"strings"
 	"time"
 
-	"github.com/assetcloud/chain/common"
-	chainCommon "github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	chainCrypto "github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/system/crypto/secp256k1"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
-	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	"github.com/33cn/chain33/common"
+	chain33Common "github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	chain33Crypto "github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/system/crypto/secp256k1"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
 	btcec_secp256k1 "github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/golang/protobuf/proto"
@@ -29,7 +29,7 @@ import (
 func NewOracleClaimCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "burn_xgo",
-		Short: "burn xgo to chain evm",
+		Short: "burn xgo to chain33 evm",
 		Run:   NewOracleClaim,
 	}
 	addNewOracleClaimFlags(cmd)
@@ -69,9 +69,9 @@ func NewOracleClaim(cmd *cobra.Command, args []string) {
 	privateKeyStr, _ := cmd.Flags().GetString("relayerkey")
 
 	var driver secp256k1.Driver
-	privateKeySli, err := chainCommon.FromHex(privateKeyStr)
+	privateKeySli, err := chain33Common.FromHex(privateKeyStr)
 	if nil != err {
-		fmt.Println("Failed to do chainCommon.FromHex")
+		fmt.Println("Failed to do chain33Common.FromHex")
 		return
 	}
 	privateKey, err := driver.PrivKeyFromBytes(privateKeySli)
@@ -81,7 +81,7 @@ func NewOracleClaim(cmd *cobra.Command, args []string) {
 	}
 
 	temp, _ := btcec_secp256k1.PrivKeyFromBytes(btcec_secp256k1.S256(), privateKey.Bytes())
-	privatekey4chainEcdsa := temp.ToECDSA()
+	privatekey4chain33Ecdsa := temp.ToECDSA()
 
 	nonceBytes := big.NewInt(nonce).Bytes()
 	bigAmount := big.NewInt(0)
@@ -89,7 +89,7 @@ func NewOracleClaim(cmd *cobra.Command, args []string) {
 	amountBytes := bigAmount.Bytes()
 	claimID := crypto.Keccak256Hash(nonceBytes, []byte(fromAddr), []byte(receiver), []byte(symbol), amountBytes)
 
-	signature, err := utils.SignClaim4Evm(claimID, privatekey4chainEcdsa)
+	signature, err := utils.SignClaim4Evm(claimID, privatekey4chain33Ecdsa)
 	if nil != err {
 		fmt.Println("SignClaim4Evm due to" + err.Error())
 		return
@@ -105,11 +105,11 @@ func NewOracleClaim(cmd *cobra.Command, args []string) {
 		claimID.String(),
 		common.ToHex(signature))
 
-	note := fmt.Sprintf("relay with type:%s, chain-receiver:%s, ethereum-sender:%s, symbol:%s, amout:%s",
+	note := fmt.Sprintf("relay with type:%s, chain33-receiver:%s, ethereum-sender:%s, symbol:%s, amout:%s",
 		events.ClaimType(1).String(), receiver, fromAddr, symbol, amount)
 	_, packData, err := evmAbi.Pack(parameter, generated.OracleABI, false)
 	if nil != err {
-		fmt.Println("relayEvmTx2Chain", "Failed to do abi.Pack due to:", err.Error())
+		fmt.Println("relayEvmTx2Chain33", "Failed to do abi.Pack due to:", err.Error())
 		return
 	}
 
@@ -125,7 +125,7 @@ func NewOracleClaim(cmd *cobra.Command, args []string) {
 		Data:  data,
 	}
 	var txhash string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.SendTransaction", params, &txhash)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.SendTransaction", params, &txhash)
 	_, err = ctx.RunResult()
 	fmt.Println(txhash)
 }
@@ -142,7 +142,7 @@ func getExecerName(name string) string {
 	return ret
 }
 
-func createEvmTx(privateKey chainCrypto.PrivKey, action proto.Message, execer, to string, fee int64, chainID int32) string {
+func createEvmTx(privateKey chain33Crypto.PrivKey, action proto.Message, execer, to string, fee int64, chainID int32) string {
 	tx := &types.Transaction{Execer: []byte(execer), Payload: types.Encode(action), Fee: fee, To: to, ChainID: chainID}
 
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))

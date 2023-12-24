@@ -7,7 +7,7 @@ package executor
 import (
 	"testing"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/assert"
 )
 

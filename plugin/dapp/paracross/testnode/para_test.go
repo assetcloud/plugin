@@ -3,12 +3,12 @@ package testnode
 import (
 	"testing"
 
-	"github.com/assetcloud/chain/util"
+	"github.com/33cn/chain33/util"
 
-	_ "github.com/assetcloud/chain/system"
-	"github.com/assetcloud/chain/types"
-	_ "github.com/assetcloud/plugin/plugin"
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	_ "github.com/33cn/chain33/system"
+	"github.com/33cn/chain33/types"
+	_ "github.com/33cn/plugin/plugin"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/assert"
 )
 

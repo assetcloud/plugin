@@ -3,8 +3,8 @@ package executor
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/types"
-	echotypes "github.com/assetcloud/plugin/plugin/dapp/echo/types/echo"
+	"github.com/33cn/chain33/types"
+	echotypes "github.com/33cn/plugin/plugin/dapp/echo/types/echo"
 )
 
 // Exec_Ping 执行 ping 类型交易

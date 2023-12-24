@@ -5,12 +5,12 @@
 package wallet
 
 import (
-	"github.com/assetcloud/chain/common/db"
+	"github.com/33cn/chain33/common/db"
 
-	system "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	wcom "github.com/assetcloud/chain/wallet/common"
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	system "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	wcom "github.com/33cn/chain33/wallet/common"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 )
 
 func newStore(db db.DB) *mixStore {
@@ -82,7 +82,7 @@ func (store *mixStore) getRescanNoteStatus() int32 {
 	return mixTy.MixWalletRescanStatus_value[string(v)]
 }
 
-// AddRollbackKV add rollback kv
+//AddRollbackKV add rollback kv
 func (d *mixStore) AddRollbackKV(tx *types.Transaction, execer []byte, kvs []*types.KeyValue) []*types.KeyValue {
 	k := types.CalcRollbackKey(types.GetRealExecName(execer), tx.Hash())
 	kvc := system.NewKVCreator(d.GetDB(), types.CalcLocalPrefix(execer), k)
@@ -91,7 +91,7 @@ func (d *mixStore) AddRollbackKV(tx *types.Transaction, execer []byte, kvs []*ty
 	return kvc.KVList()
 }
 
-// DelRollbackKV del rollback kv when exec_del_local
+//DelRollbackKV del rollback kv when exec_del_local
 func (d *mixStore) DelRollbackKV(tx *types.Transaction, execer []byte) ([]*types.KeyValue, error) {
 	krollback := types.CalcRollbackKey(types.GetRealExecName(execer), tx.Hash())
 	kvc := system.NewKVCreator(d.GetDB(), types.CalcLocalPrefix(execer), krollback)

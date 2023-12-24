@@ -13,11 +13,11 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	"github.com/assetcloud/chain/util/testnode"
-	pt "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	"github.com/33cn/chain33/util/testnode"
+	pt "github.com/33cn/plugin/plugin/dapp/privacy/types"
 	"github.com/stretchr/testify/assert"
 )
 

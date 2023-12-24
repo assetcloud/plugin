@@ -1,14 +1,14 @@
-package chain
+package chain33
 
 import (
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/boss4x/chain/offline"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/boss4x/chain33/offline"
 	"github.com/spf13/cobra"
 )
 
-func ChainCmd() *cobra.Command {
+func Chain33Cmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "chain",
-		Short: "deploy to chain",
+		Use:   "chain33",
+		Short: "deploy to chain33",
 	}
 	cmd.AddCommand(
 		//deployCrossContractsCmd(),

@@ -27,7 +27,7 @@ type AccountTokenBalanceReceipt struct {
 
 	AccountId     uint64 `protobuf:"varint,1,opt,name=accountId,proto3" json:"accountId,omitempty"`    //accountId其实就是叶子的totalIndex
 	EthAddress    string `protobuf:"bytes,2,opt,name=ethAddress,proto3" json:"ethAddress,omitempty"`   //账户对应的以太坊地址
-	ChainAddr   string `protobuf:"bytes,3,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"` //chain地址
+	Chain33Addr   string `protobuf:"bytes,3,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"` //chain33地址
 	TokenId       uint64 `protobuf:"varint,4,opt,name=tokenId,proto3" json:"tokenId,omitempty"`        //叶子下拥有的tokenId
 	BalanceBefore string `protobuf:"bytes,5,opt,name=balanceBefore,proto3" json:"balanceBefore,omitempty"`
 	BalanceAfter  string `protobuf:"bytes,6,opt,name=balanceAfter,proto3" json:"balanceAfter,omitempty"`
@@ -79,9 +79,9 @@ func (x *AccountTokenBalanceReceipt) GetEthAddress() string {
 	return ""
 }
 
-func (x *AccountTokenBalanceReceipt) GetChainAddr() string {
+func (x *AccountTokenBalanceReceipt) GetChain33Addr() string {
 	if x != nil {
-		return x.ChainAddr
+		return x.Chain33Addr
 	}
 	return ""
 }

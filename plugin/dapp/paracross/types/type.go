@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"reflect"
 
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/types"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/types"
 )
 
 var (
@@ -65,8 +65,8 @@ func init() {
 
 }
 
-// InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+//InitFork ...
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(ParaX, "Enable", 0)
 	cfg.RegisterDappFork(ParaX, "ForkParacrossWithdrawFromParachain", 0)
 	cfg.RegisterDappFork(ParaX, ForkCommitTx, 0)
@@ -83,13 +83,13 @@ func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(ParaX, ForkParaRootHash, types.MaxHeight)
 }
 
-// InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+//InitExecutor ...
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(ParaX, NewType(cfg))
 }
 
 // GetExecName get para exec name
-func GetExecName(cfg *types.ChainConfig) string {
+func GetExecName(cfg *types.Chain33Config) string {
 	return cfg.ExecName(ParaX)
 }
 
@@ -99,7 +99,7 @@ type ParacrossType struct {
 }
 
 // NewType get paracross type
-func NewType(cfg *types.ChainConfig) *ParacrossType {
+func NewType(cfg *types.Chain33Config) *ParacrossType {
 	c := &ParacrossType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

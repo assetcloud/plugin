@@ -3,12 +3,12 @@ package executor
 import (
 	"errors"
 
-	"github.com/assetcloud/chain/common"
-	log "github.com/assetcloud/chain/common/log/log15"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
-	"github.com/assetcloud/plugin/plugin/dapp/zksync/wallet"
+	"github.com/33cn/chain33/common"
+	log "github.com/33cn/chain33/common/log/log15"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	"github.com/33cn/plugin/plugin/dapp/zksync/wallet"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
 )
@@ -27,7 +27,7 @@ var driverName = zt.Zksync
 var historyProof zt.HistoryAccountProofInfo
 
 // Init register dapp
-func Init(name string, cfg *types.ChainConfig, sub []byte) {
+func Init(name string, cfg *types.Chain33Config, sub []byte) {
 	drivers.Register(cfg, GetName(), NewZksync, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }
@@ -42,7 +42,7 @@ type zksync struct {
 	drivers.DriverBase
 }
 
-// NewExchange ...
+//NewExchange ...
 func NewZksync() drivers.Driver {
 	t := &zksync{}
 	t.SetChild(t)
@@ -55,7 +55,7 @@ func GetName() string {
 	return NewZksync().GetName()
 }
 
-// GetDriverName ...
+//GetDriverName ...
 func (z *zksync) GetDriverName() string {
 	return driverName
 }
@@ -129,7 +129,7 @@ func (z *zksync) CheckTx(tx *types.Transaction, index int) error {
 	return nil
 }
 
-// ExecutorOrder Exec 的时候 同时执行 ExecLocal
+//ExecutorOrder Exec 的时候 同时执行 ExecLocal
 func (z *zksync) ExecutorOrder() int64 {
 	return drivers.ExecLocalSameTime
 }

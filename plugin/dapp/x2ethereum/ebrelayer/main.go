@@ -15,15 +15,15 @@ import (
 	"sync"
 	"syscall"
 
+	dbm "github.com/33cn/chain33/common/db"
+	logf "github.com/33cn/chain33/common/log"
+	"github.com/33cn/chain33/common/log/log15"
+	chain33Types "github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer"
+	chain33Relayer "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain33"
+	ethRelayer "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/ethereum"
+	relayerTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	tml "github.com/BurntSushi/toml"
-	dbm "github.com/assetcloud/chain/common/db"
-	logf "github.com/assetcloud/chain/common/log"
-	"github.com/assetcloud/chain/common/log/log15"
-	chainTypes "github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer"
-	chainRelayer "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain"
-	ethRelayer "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/ethereum"
-	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	"github.com/btcsuite/btcd/limits"
 )
 
@@ -59,7 +59,7 @@ func main() {
 		panic(err)
 	}
 	cfg := initCfg(*configPath)
-	mainlog.Info("Starting FUZAMEI Chain-X-Ethereum relayer software:", "\n     Name: ", cfg.Title)
+	mainlog.Info("Starting FUZAMEI Chain33-X-Ethereum relayer software:", "\n     Name: ", cfg.Title)
 	logf.SetFileLog(convertLogCfg(cfg.Log))
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -69,10 +69,10 @@ func main() {
 	mainlog.Info("db info:", " Dbdriver = ", cfg.SyncTxConfig.Dbdriver, ", DbPath = ", cfg.SyncTxConfig.DbPath, ", DbCache = ", cfg.SyncTxConfig.DbCache)
 	db := dbm.NewDB("relayer_db_service", cfg.SyncTxConfig.Dbdriver, cfg.SyncTxConfig.DbPath, cfg.SyncTxConfig.DbCache)
 
-	chainRelayerService := chainRelayer.StartChainRelayer(ctx, cfg.SyncTxConfig, cfg.BridgeRegistry, cfg.EthProvider, db)
-	ethRelayerService := ethRelayer.StartEthereumRelayer(cfg.SyncTxConfig.ChainHost, db, cfg.EthProvider, cfg.BridgeRegistry, cfg.Deploy, cfg.EthMaturityDegree, cfg.EthBlockFetchPeriod)
+	chain33RelayerService := chain33Relayer.StartChain33Relayer(ctx, cfg.SyncTxConfig, cfg.BridgeRegistry, cfg.EthProvider, db)
+	ethRelayerService := ethRelayer.StartEthereumRelayer(cfg.SyncTxConfig.Chain33Host, db, cfg.EthProvider, cfg.BridgeRegistry, cfg.Deploy, cfg.EthMaturityDegree, cfg.EthBlockFetchPeriod)
 
-	relayerManager := relayer.NewRelayerManager(chainRelayerService, ethRelayerService, db)
+	relayerManager := relayer.NewRelayerManager(chain33RelayerService, ethRelayerService, db)
 
 	mainlog.Info("cfg.JrpcBindAddr = ", cfg.JrpcBindAddr)
 	startRPCServer(cfg.JrpcBindAddr, relayerManager)
@@ -87,8 +87,8 @@ func main() {
 	}()
 }
 
-func convertLogCfg(log *relayerTypes.Log) *chainTypes.Log {
-	return &chainTypes.Log{
+func convertLogCfg(log *relayerTypes.Log) *chain33Types.Log {
+	return &chain33Types.Log{
 		Loglevel:        log.Loglevel,
 		LogConsoleLevel: log.LogConsoleLevel,
 		LogFile:         log.LogFile,
@@ -120,12 +120,12 @@ func initCfg(path string) *relayerTypes.RelayerConfig {
 	return &cfg
 }
 
-// IsIPWhiteListEmpty ...
+//IsIPWhiteListEmpty ...
 func IsIPWhiteListEmpty() bool {
 	return len(IPWhiteListMap) == 0
 }
 
-// IsInIPWhitelist 判断ipAddr是否在ip地址白名单中
+//IsInIPWhitelist 判断ipAddr是否在ip地址白名单中
 func IsInIPWhitelist(ipAddrPort string) bool {
 	ipAddr, _, err := net.SplitHostPort(ipAddrPort)
 	if err != nil {
@@ -141,12 +141,12 @@ func IsInIPWhitelist(ipAddrPort string) bool {
 	return false
 }
 
-// RPCServer ...
+//RPCServer ...
 type RPCServer struct {
 	*rpc.Server
 }
 
-// ServeHTTP ...
+//ServeHTTP ...
 func (r *RPCServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	mainlog.Info("ServeHTTP", "request address", req.RemoteAddr)
 	if !IsIPWhiteListEmpty() {
@@ -159,24 +159,24 @@ func (r *RPCServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	r.Server.ServeHTTP(w, req)
 }
 
-// HandleHTTP ...
+//HandleHTTP ...
 func (r *RPCServer) HandleHTTP(rpcPath, debugPath string) {
 	http.Handle(rpcPath, r)
 }
 
-// HTTPConn ...
+//HTTPConn ...
 type HTTPConn struct {
 	in  io.Reader
 	out io.Writer
 }
 
-// Read ...
+//Read ...
 func (c *HTTPConn) Read(p []byte) (n int, err error) { return c.in.Read(p) }
 
-// Write ...
+//Write ...
 func (c *HTTPConn) Write(d []byte) (n int, err error) { return c.out.Write(d) }
 
-// Close ...
+//Close ...
 func (c *HTTPConn) Close() error { return nil }
 
 func startRPCServer(address string, api interface{}) {

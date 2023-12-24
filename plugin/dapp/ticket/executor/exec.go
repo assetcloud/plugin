@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
+	"github.com/33cn/chain33/types"
+	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
 )
 
 // Exec_Genesis exec genesis
@@ -40,7 +40,7 @@ func (t *Ticket) Exec_Tclose(payload *ty.TicketClose, tx *types.Transaction, ind
 	return actiondb.TicketClose(payload)
 }
 
-// Exec_Miner exec miner
+//Exec_Miner exec miner
 func (t *Ticket) Exec_Miner(payload *ty.TicketMiner, tx *types.Transaction, index int) (*types.Receipt, error) {
 	actiondb := NewAction(t, tx)
 	return actiondb.TicketMiner(payload, index)

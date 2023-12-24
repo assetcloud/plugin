@@ -4,8 +4,8 @@ import (
 	"crypto/ecdsa"
 	"math/big"
 
-	"github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
+	"github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -13,31 +13,31 @@ var (
 	deployLog = log15.New("contract deployer", "deployer")
 )
 
-// DeployResult ...
+//DeployResult ...
 type DeployResult struct {
 	Address common.Address
 	TxHash  string
 }
 
-// X2EthContracts ...
+//X2EthContracts ...
 type X2EthContracts struct {
 	BridgeRegistry *generated.BridgeRegistry
 	BridgeBank     *generated.BridgeBank
-	ChainBridge    *generated.ChainBridge
+	Chain33Bridge  *generated.Chain33Bridge
 	Valset         *generated.Valset
 	Oracle         *generated.Oracle
 }
 
-// X2EthDeployResult ...
+//X2EthDeployResult ...
 type X2EthDeployInfo struct {
 	BridgeRegistry *DeployResult
 	BridgeBank     *DeployResult
-	ChainBridge    *DeployResult
+	Chain33Bridge  *DeployResult
 	Valset         *DeployResult
 	Oracle         *DeployResult
 }
 
-// DeployPara ...
+//DeployPara ...
 type DeployPara struct {
 	DeployPrivateKey *ecdsa.PrivateKey
 	Deployer         common.Address
@@ -47,7 +47,7 @@ type DeployPara struct {
 	InitPowers       []*big.Int
 }
 
-// OperatorInfo ...
+//OperatorInfo ...
 type OperatorInfo struct {
 	PrivateKey *ecdsa.PrivateKey
 	Address    common.Address

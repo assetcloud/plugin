@@ -3,7 +3,7 @@ package executor
 import (
 	"testing"
 
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -66,7 +66,7 @@ func TestParseRollbackOps(t *testing.T) {
 
 }
 
-// 测试deposit withdraw merge
+//测试deposit withdraw merge
 func TestParseRollbackOps2(t *testing.T) {
 	special := &zt.ZkDepositWitnessInfo{
 		AccountID: 5,

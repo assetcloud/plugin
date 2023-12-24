@@ -4,7 +4,7 @@
 
 package types
 
-import "github.com/assetcloud/chain/types"
+import "github.com/33cn/chain33/types"
 
 // IsExpire 检查FTXO是否过期，过期返回true
 func (ftxos *FTXOsSTXOsInOneTx) IsExpire(blockheight, blocktime int64) bool {

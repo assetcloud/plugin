@@ -9,7 +9,7 @@ import (
 	"math/rand"
 	"sort"
 
-	"github.com/assetcloud/plugin/plugin/dapp/pokerbull/types"
+	"github.com/33cn/plugin/plugin/dapp/pokerbull/types"
 )
 
 // PokerCardNum 牌数，4 * 13 不带大小王

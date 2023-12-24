@@ -5,10 +5,10 @@
 package executor
 
 import (
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/types"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/types"
 
-	ptypes "github.com/assetcloud/plugin/plugin/dapp/js/types"
+	ptypes "github.com/33cn/plugin/plugin/dapp/js/types"
 )
 
 func getManageKey(key string, db dbm.KV) ([]byte, error) {

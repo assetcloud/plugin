@@ -7,7 +7,7 @@ package para
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 func calcTitleHeightKey(title string, height int64) []byte {

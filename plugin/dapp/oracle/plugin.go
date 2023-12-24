@@ -7,10 +7,10 @@
 package oracle
 
 import (
-	"github.com/assetcloud/plugin/plugin/dapp/oracle/commands"
-	"github.com/assetcloud/plugin/plugin/dapp/oracle/executor"
-	"github.com/assetcloud/plugin/plugin/dapp/oracle/types"
-	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/33cn/chain33/pluginmgr"
+	"github.com/33cn/plugin/plugin/dapp/oracle/commands"
+	"github.com/33cn/plugin/plugin/dapp/oracle/executor"
+	"github.com/33cn/plugin/plugin/dapp/oracle/types"
 )
 
 func init() {

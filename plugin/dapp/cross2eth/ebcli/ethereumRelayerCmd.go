@@ -8,14 +8,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/assetcloud/chain/common"
-	chainCommon "github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/33cn/chain33/common"
+	chain33Common "github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	relayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 	ethTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/spf13/cobra"
@@ -34,7 +34,7 @@ func EthereumRelayerCmd() *cobra.Command {
 		GenEthPrivateKeyCmd(),
 		GetAddressFromPrivateKeyCmd(),
 		ShowValidatorsAddrCmd(),
-		ShowChainTxsHashCmd(),
+		ShowChain33TxsHashCmd(),
 		IsValidatorActiveCmd(),
 		ShowOperatorCmd(),
 		ShowTxReceiptCmd(),
@@ -164,7 +164,7 @@ func GetAddressFromPrivateKeyCmd() *cobra.Command {
 
 func getAddressFromPrivateKey(cmd *cobra.Command, args []string) {
 	key, _ := cmd.Flags().GetString("key")
-	privateKeySlice, err := chainCommon.FromHex(key)
+	privateKeySlice, err := chain33Common.FromHex(key)
 	if nil != err {
 		fmt.Println("private key error: ", err)
 		return
@@ -179,7 +179,7 @@ func getAddressFromPrivateKey(cmd *cobra.Command, args []string) {
 	fmt.Println("addr: ", addr)
 }
 
-// GenEthPrivateKeyCmd ...
+//GenEthPrivateKeyCmd ...
 func GenEthPrivateKeyCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create_eth_key",
@@ -197,11 +197,11 @@ func generateEthereumPrivateKey(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// ShowValidatorsAddrCmd ...
+//ShowValidatorsAddrCmd ...
 func ShowValidatorsAddrCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show_validator",
-		Short: "show me the validators including ethereum and chain",
+		Short: "show me the validators including ethereum and chain33",
 		Run:   showValidatorsAddr,
 	}
 	return cmd
@@ -216,21 +216,21 @@ func showValidatorsAddr(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// ShowChainTxsHashCmd ...
-func ShowChainTxsHashCmd() *cobra.Command {
+//ShowChain33TxsHashCmd ...
+func ShowChain33TxsHashCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show_chain_tx",
-		Short: "show me the chain tx hashes",
-		Run:   showChainTxs,
+		Use:   "show_chain33_tx",
+		Short: "show me the chain33 tx hashes",
+		Run:   showChain33Txs,
 	}
 	return cmd
 }
 
-func showChainTxs(cmd *cobra.Command, args []string) {
+func showChain33Txs(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 
 	var res ebTypes.Txhashes
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowEthRelayer2ChainTxs", nil, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowEthRelayer2Chain33Txs", nil, &res)
 	if _, err := ctx.RunResult(); nil != err {
 		errInfo := err.Error()
 		fmt.Println("errinfo:" + errInfo)
@@ -241,7 +241,7 @@ func showChainTxs(cmd *cobra.Command, args []string) {
 	}
 }
 
-// IsValidatorActiveCmd ...
+//IsValidatorActiveCmd ...
 func IsValidatorActiveCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "active",
@@ -252,13 +252,13 @@ func IsValidatorActiveCmd() *cobra.Command {
 	return cmd
 }
 
-// IsValidatorActiveFlags ...
+//IsValidatorActiveFlags ...
 func IsValidatorActiveFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("addr", "a", "", "validator address")
 	_ = cmd.MarkFlagRequired("addr")
 }
 
-// IsValidatorActive ...
+//IsValidatorActive ...
 func IsValidatorActive(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	addr, _ := cmd.Flags().GetString("addr")
@@ -269,7 +269,7 @@ func IsValidatorActive(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// ShowOperatorCmd ...
+//ShowOperatorCmd ...
 func ShowOperatorCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "operator",
@@ -279,7 +279,7 @@ func ShowOperatorCmd() *cobra.Command {
 	return cmd
 }
 
-// ShowOperator ...
+//ShowOperator ...
 func ShowOperator(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	var res string
@@ -336,7 +336,7 @@ func DeployERC20(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// ShowTxReceiptCmd ...
+//ShowTxReceiptCmd ...
 func ShowTxReceiptCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "receipt",
@@ -347,13 +347,13 @@ func ShowTxReceiptCmd() *cobra.Command {
 	return cmd
 }
 
-// ShowTxReceiptFlags ...
+//ShowTxReceiptFlags ...
 func ShowTxReceiptFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("hash", "s", "", "tx hash")
 	_ = cmd.MarkFlagRequired("hash")
 }
 
-// ShowTxReceipt ...
+//ShowTxReceipt ...
 func ShowTxReceipt(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	ethChainName, _ := cmd.Flags().GetString("eth_chain_name")
@@ -369,7 +369,7 @@ func ShowTxReceipt(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// ApproveCmd ...
+//ApproveCmd ...
 func ApproveCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "approve",
@@ -380,7 +380,7 @@ func ApproveCmd() *cobra.Command {
 	return cmd
 }
 
-// ApproveAllowanceFlags ...
+//ApproveAllowanceFlags ...
 func ApproveAllowanceFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("key", "k", "", "owner private key")
 	_ = cmd.MarkFlagRequired("key")
@@ -390,7 +390,7 @@ func ApproveAllowanceFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("amount")
 }
 
-// ApproveAllowance ...
+//ApproveAllowance ...
 func ApproveAllowance(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	key, _ := cmd.Flags().GetString("key")
@@ -415,34 +415,34 @@ func ApproveAllowance(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// BurnCmd ...
+//BurnCmd ...
 func BurnCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "burn",
-		Short: "burn(including approve) the asset to make it unlocked on chain",
+		Short: "burn(including approve) the asset to make it unlocked on chain33",
 		Run:   Burn,
 	}
 	BurnFlags(cmd)
 	return cmd
 }
 
-// BurnFlags ...
+//BurnFlags ...
 func BurnFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("key", "k", "", "owner private key")
 	_ = cmd.MarkFlagRequired("key")
 	cmd.Flags().StringP("token", "t", "", "token address")
 	_ = cmd.MarkFlagRequired("token")
-	cmd.Flags().StringP("receiver", "r", "", "receiver address on chain")
+	cmd.Flags().StringP("receiver", "r", "", "receiver address on chain33")
 	_ = cmd.MarkFlagRequired("receiver")
 	cmd.Flags().Float64P("amount", "m", float64(0), "amount")
 	_ = cmd.MarkFlagRequired("amount")
 }
 
-// BurnAsyncCmd ...
+//BurnAsyncCmd ...
 func BurnAsyncCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "burn-async",
-		Short: "async burn the asset to make it unlocked on chain",
+		Short: "async burn the asset to make it unlocked on chain33",
 		Run:   BurnAsync,
 	}
 	BurnFlags(cmd)
@@ -465,18 +465,18 @@ func Burn(cmd *cobra.Command, args []string) {
 		return
 	}
 	para := ebTypes.Burn{
-		OwnerKey:      key,
-		TokenAddr:     tokenAddr,
-		Amount:        utils.ToWei(amount, d).String(),
-		ChainReceiver: receiver,
-		ChainName:     ethChainName,
+		OwnerKey:        key,
+		TokenAddr:       tokenAddr,
+		Amount:          utils.ToWei(amount, d).String(),
+		Chain33Receiver: receiver,
+		ChainName:       ethChainName,
 	}
 	var res rpctypes.Reply
 	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.Burn", para, &res)
 	ctx.Run()
 }
 
-// BurnAsync ...
+//BurnAsync ...
 func BurnAsync(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	key, _ := cmd.Flags().GetString("key")
@@ -491,50 +491,50 @@ func BurnAsync(cmd *cobra.Command, args []string) {
 		return
 	}
 	para := ebTypes.Burn{
-		OwnerKey:      key,
-		TokenAddr:     tokenAddr,
-		Amount:        utils.ToWei(amount, d).String(),
-		ChainReceiver: receiver,
+		OwnerKey:        key,
+		TokenAddr:       tokenAddr,
+		Amount:          utils.ToWei(amount, d).String(),
+		Chain33Receiver: receiver,
 	}
 	var res rpctypes.Reply
 	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.BurnAsync", para, &res)
 	ctx.Run()
 }
 
-// LockSyncCmd ...
+//LockSyncCmd ...
 func LockSyncCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "lock",
-		Short: "lock(including approve) eth or erc20 and cross-chain transfer to chain",
+		Short: "lock(including approve) eth or erc20 and cross-chain transfer to chain33",
 		Run:   LockEthErc20Asset,
 	}
 	LockEthErc20AssetFlags(cmd)
 	return cmd
 }
 
-// LockAsyncCmd ...
+//LockAsyncCmd ...
 func LockAsyncCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "lock-async",
-		Short: "async lock eth or erc20 and cross-chain transfer to chain",
+		Short: "async lock eth or erc20 and cross-chain transfer to chain33",
 		Run:   LockEthErc20AssetAsync,
 	}
 	LockEthErc20AssetFlags(cmd)
 	return cmd
 }
 
-// LockEthErc20AssetFlags ...
+//LockEthErc20AssetFlags ...
 func LockEthErc20AssetFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("key", "k", "", "owner private key")
 	_ = cmd.MarkFlagRequired("key")
 	cmd.Flags().StringP("token", "t", "", "token address, optional, nil for ETH")
 	cmd.Flags().Float64P("amount", "m", float64(0), "amount")
 	_ = cmd.MarkFlagRequired("amount")
-	cmd.Flags().StringP("receiver", "r", "", "chain receiver address")
+	cmd.Flags().StringP("receiver", "r", "", "chain33 receiver address")
 	_ = cmd.MarkFlagRequired("receiver")
 }
 
-// LockEthErc20Asset ...
+//LockEthErc20Asset ...
 func LockEthErc20Asset(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	ethChainName, _ := cmd.Flags().GetString("eth_chain_name")
@@ -553,11 +553,11 @@ func LockEthErc20Asset(cmd *cobra.Command, args []string) {
 	realAmount := utils.ToWei(amount, d)
 
 	para := ebTypes.LockEthErc20{
-		OwnerKey:      key,
-		TokenAddr:     tokenAddr,
-		Amount:        realAmount.String(),
-		ChainReceiver: receiver,
-		ChainName:     ethChainName,
+		OwnerKey:        key,
+		TokenAddr:       tokenAddr,
+		Amount:          realAmount.String(),
+		Chain33Receiver: receiver,
+		ChainName:       ethChainName,
 	}
 	var res rpctypes.Reply
 	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.LockEthErc20Asset", para, &res)
@@ -578,7 +578,7 @@ func LockEthErc20Asset(cmd *cobra.Command, args []string) {
 	}
 }
 
-// LockEthErc20AssetAsync ...
+//LockEthErc20AssetAsync ...
 func LockEthErc20AssetAsync(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	key, _ := cmd.Flags().GetString("key")
@@ -596,17 +596,17 @@ func LockEthErc20AssetAsync(cmd *cobra.Command, args []string) {
 	realAmount := utils.ToWei(amount, d)
 
 	para := ebTypes.LockEthErc20{
-		OwnerKey:      key,
-		TokenAddr:     tokenAddr,
-		Amount:        realAmount.String(),
-		ChainReceiver: receiver,
+		OwnerKey:        key,
+		TokenAddr:       tokenAddr,
+		Amount:          realAmount.String(),
+		Chain33Receiver: receiver,
 	}
 	var res rpctypes.Reply
 	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.LockEthErc20AssetAsync", para, &res)
 	ctx.Run()
 }
 
-// ShowBridgeBankAddrCmd ...
+//ShowBridgeBankAddrCmd ...
 func ShowBridgeBankAddrCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bridgeBankAddr",
@@ -616,7 +616,7 @@ func ShowBridgeBankAddrCmd() *cobra.Command {
 	return cmd
 }
 
-// ShowBridgeBankAddr ...
+//ShowBridgeBankAddr ...
 func ShowBridgeBankAddr(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	var res ebTypes.ReplyAddr
@@ -624,7 +624,7 @@ func ShowBridgeBankAddr(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// ShowBridgeRegistryAddrCmd ...
+//ShowBridgeRegistryAddrCmd ...
 func ShowBridgeRegistryAddrCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bridgeRegistry",
@@ -634,7 +634,7 @@ func ShowBridgeRegistryAddrCmd() *cobra.Command {
 	return cmd
 }
 
-// ShowBridgeRegistryAddr ...
+//ShowBridgeRegistryAddr ...
 func ShowBridgeRegistryAddr(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	var res ebTypes.ReplyAddr
@@ -642,7 +642,7 @@ func ShowBridgeRegistryAddr(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// GetBalanceCmd ...
+//GetBalanceCmd ...
 func ShowBalanceLockedCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "showBalanceLocked",
@@ -659,7 +659,7 @@ func ShowBalanceLockedFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("tokenAddr", "t", "", "token address, optional, nil for platform token(Eth)")
 }
 
-// GetBalance ...
+//GetBalance ...
 func ShowBalanceLocked(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	bridgeBank, _ := cmd.Flags().GetString("bridgeBank")
@@ -678,7 +678,7 @@ func ShowBalanceLocked(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// GetBalanceCmd ...
+//GetBalanceCmd ...
 func GetBalanceCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "balance",
@@ -689,14 +689,14 @@ func GetBalanceCmd() *cobra.Command {
 	return cmd
 }
 
-// GetBalanceFlags ...
+//GetBalanceFlags ...
 func GetBalanceFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("owner", "o", "", "owner address")
 	_ = cmd.MarkFlagRequired("owner")
 	cmd.Flags().StringP("tokenAddr", "t", "", "token address, optional, nil for Eth")
 }
 
-// GetBalance ...
+//GetBalance ...
 func GetBalance(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	ethChainName, _ := cmd.Flags().GetString("eth_chain_name")
@@ -713,7 +713,7 @@ func GetBalance(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-// TransferTokenCmd ...
+//TransferTokenCmd ...
 func TransferTokenCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "token_transfer",
@@ -724,7 +724,7 @@ func TransferTokenCmd() *cobra.Command {
 	return cmd
 }
 
-// TransferTokenFlags ...
+//TransferTokenFlags ...
 func TransferTokenFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("token", "t", "", "token address")
 	_ = cmd.MarkFlagRequired("token")
@@ -736,7 +736,7 @@ func TransferTokenFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("amount")
 }
 
-// TransferToken ...
+//TransferToken ...
 func TransferToken(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	ethChainName, _ := cmd.Flags().GetString("eth_chain_name")
@@ -793,7 +793,7 @@ func GetSelfBalanceCmd() *cobra.Command {
 	return cmd
 }
 
-// showMultiBalance ...
+//showMultiBalance ...
 func showMultiBalance(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	ethChainName, _ := cmd.Flags().GetString("eth_chain_name")
@@ -929,7 +929,7 @@ func SafeTransferEth(cmd *cobra.Command, _ []string) {
 	ctx.Run()
 }
 
-// ConfigLockedTokenOfflineSaveCmd ...
+//ConfigLockedTokenOfflineSaveCmd ...
 func ConfigLockedTokenOfflineSaveCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set_offline_token",
@@ -940,7 +940,7 @@ func ConfigLockedTokenOfflineSaveCmd() *cobra.Command {
 	return cmd
 }
 
-// ConfigLockedTokenOfflineSaveFlags ...
+//ConfigLockedTokenOfflineSaveFlags ...
 func ConfigLockedTokenOfflineSaveFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("token", "t", "", "token addr")
 	//_ = cmd.MarkFlagRequired("token")
@@ -952,7 +952,7 @@ func ConfigLockedTokenOfflineSaveFlags(cmd *cobra.Command) {
 	//_ = cmd.MarkFlagRequired("percents")
 }
 
-// ConfigLockedTokenOfflineSave ...
+//ConfigLockedTokenOfflineSave ...
 func ConfigLockedTokenOfflineSave(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 	ethChainName, _ := cmd.Flags().GetString("eth_chain_name")
@@ -1141,7 +1141,7 @@ func GetCfgWithdraw(cmd *cobra.Command, _ []string) {
 func ResendEthLockEventCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "resendLockEvent",
-		Short: "resend lock Event to chain process goroutine",
+		Short: "resend lock Event to chain33 process goroutine",
 		Run:   resendLockEvent,
 	}
 	addResendLockEventFlags(cmd)
@@ -1149,7 +1149,7 @@ func ResendEthLockEventCmd() *cobra.Command {
 }
 
 func addResendLockEventFlags(cmd *cobra.Command) {
-	cmd.Flags().Int64P("height", "g", 0, "height begin to resend chain event ")
+	cmd.Flags().Int64P("height", "g", 0, "height begin to resend chain33 event ")
 	_ = cmd.MarkFlagRequired("height")
 	cmd.Flags().Int32P("index", "i", 0, "tx index")
 	_ = cmd.MarkFlagRequired("index")
@@ -1174,7 +1174,7 @@ func resendLockEvent(cmd *cobra.Command, args []string) {
 func RegetEthLockEventCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "regetLockEvent",
-		Short: "reget lock Event to chain process goroutine",
+		Short: "reget lock Event to chain33 process goroutine",
 		Run:   reGetEthereumEvent,
 	}
 	addRegetEventFlags(cmd)
@@ -1218,7 +1218,7 @@ func CreateLockEventCmd() *cobra.Command {
 func addcreateLockEventFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("from", "f", "", "Ethereum from address")
 	_ = cmd.MarkFlagRequired("from")
-	cmd.Flags().StringP("receiver", "r", "", "chain receiver address")
+	cmd.Flags().StringP("receiver", "r", "", "chain33 receiver address")
 	_ = cmd.MarkFlagRequired("receiver")
 
 	cmd.Flags().StringP("token", "t", "", "Ethereum token address")

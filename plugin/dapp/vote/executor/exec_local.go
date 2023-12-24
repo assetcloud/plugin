@@ -3,8 +3,8 @@ package executor
 import (
 	"encoding/hex"
 
-	"github.com/assetcloud/chain/types"
-	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
+	"github.com/33cn/chain33/types"
+	vty "github.com/33cn/plugin/plugin/dapp/vote/types"
 )
 
 /*
@@ -178,7 +178,7 @@ func (v *vote) ExecLocal_UpdateMember(payload *vty.UpdateMember, tx *types.Trans
 	return v.addAutoRollBack(tx, dbSet.KV), nil
 }
 
-// 当区块回滚时，框架支持自动回滚localdb kv，需要对exec-local返回的kv进行封装
+//当区块回滚时，框架支持自动回滚localdb kv，需要对exec-local返回的kv进行封装
 func (v *vote) addAutoRollBack(tx *types.Transaction, kv []*types.KeyValue) *types.LocalDBSet {
 
 	dbSet := &types.LocalDBSet{}
@@ -235,7 +235,7 @@ func (v *vote) addGroupMember(groupID string, addrs []string) ([]*types.KeyValue
 	return kvs, nil
 }
 
-// 删除用户，将对应的groupID信息删除
+//删除用户，将对应的groupID信息删除
 func (v *vote) removeGroupMember(groupID string, addrs []string) ([]*types.KeyValue, error) {
 
 	table := newMemberTable(v.GetLocalDB())

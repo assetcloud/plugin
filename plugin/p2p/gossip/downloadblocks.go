@@ -12,7 +12,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	pb "github.com/assetcloud/chain/types"
+	pb "github.com/33cn/chain33/types"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )

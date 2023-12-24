@@ -14,7 +14,7 @@ import (
 	"math/big"
 	"time"
 
-	ecdsa_util "github.com/assetcloud/chain/system/crypto/secp256r1"
+	ecdsa_util "github.com/33cn/chain33/system/crypto/secp256r1"
 	"github.com/tjfoc/gmsm/sm2"
 )
 

@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 )
 
 // PrivacyX privacy executor name
@@ -46,12 +46,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(PrivacyX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(PrivacyX, NewType(cfg))
 }
 
@@ -61,7 +61,7 @@ type PrivacyType struct {
 }
 
 // NewType create PrivacyType object
-func NewType(cfg *types.ChainConfig) *PrivacyType {
+func NewType(cfg *types.Chain33Config) *PrivacyType {
 	c := &PrivacyType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

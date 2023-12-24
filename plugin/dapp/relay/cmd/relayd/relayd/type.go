@@ -5,8 +5,8 @@
 package relayd
 
 import (
-	_ "github.com/assetcloud/chain/system/address"
-	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
+	_ "github.com/33cn/chain33/system/address"
+	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
 )
 
 var (

@@ -12,12 +12,12 @@ import (
 	"strings"
 	"testing"
 
-	apimock "github.com/assetcloud/chain/client/mocks"
-	dbm "github.com/assetcloud/chain/common/db"
-	dbmock "github.com/assetcloud/chain/common/db/mocks"
-	"github.com/assetcloud/chain/types"
+	apimock "github.com/33cn/chain33/client/mocks"
+	dbm "github.com/33cn/chain33/common/db"
+	dbmock "github.com/33cn/chain33/common/db/mocks"
+	"github.com/33cn/chain33/types"
 
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -48,7 +48,7 @@ func createRawNodeConfigTx(config *pt.ParaNodeAddrConfig) (*types.Transaction, e
 	return tx, nil
 }
 
-// createRawNodeGroupApplyTx create raw tx for node group
+//createRawNodeGroupApplyTx create raw tx for node group
 func createRawNodeGroupApplyTx(apply *pt.ParaNodeGroupConfig) (*types.Transaction, error) {
 	apply.Id = strings.Trim(apply.Id, " ")
 
@@ -79,7 +79,7 @@ func (suite *NodeManageTestSuite) SetupSuite() {
 	//suite.localDB, _ = dbm.NewGoMemDB("local", "local", 1024)
 	suite.localDB = new(dbmock.KVDB)
 	suite.api = new(apimock.QueueProtocolAPI)
-	suite.api.On("GetConfig", mock.Anything).Return(chainTestCfg, nil)
+	suite.api.On("GetConfig", mock.Anything).Return(chain33TestCfg, nil)
 
 	block := &types.Block{
 		Height:     1,
@@ -97,16 +97,16 @@ func (suite *NodeManageTestSuite) SetupSuite() {
 	suite.exec.SetBlockInfo([]byte(""), []byte(""), 3)
 	enableParacrossTransfer = false
 
-	chainTestCfg.S("config.consensus.sub.para.MainForkParacrossCommitTx", int64(1))
-	chainTestCfg.S("config.consensus.sub.para.MainLoopCheckCommitTxDoneForkHeight", int64(1))
-	chainTestCfg.S("config.exec.sub.manage.superManager", []interface{}{Account12Q})
+	chain33TestCfg.S("config.consensus.sub.para.MainForkParacrossCommitTx", int64(1))
+	chain33TestCfg.S("config.consensus.sub.para.MainLoopCheckCommitTxDoneForkHeight", int64(1))
+	chain33TestCfg.S("config.exec.sub.manage.superManager", []interface{}{Account12Q})
 
 	// TODO, more fields
 	// setup block
 	blockDetail := &types.BlockDetail{
 		Block: &types.Block{},
 	}
-	MainBlockHash10 = blockDetail.Block.Hash(chainTestCfg)
+	MainBlockHash10 = blockDetail.Block.Hash(chain33TestCfg)
 }
 
 func (suite *NodeManageTestSuite) TestSetup() {
@@ -205,7 +205,7 @@ func checkVoteDoneReceipt(suite *NodeManageTestSuite, receipt *types.Receipt, co
 func voteTest(suite *NodeManageTestSuite, id string, join bool) {
 	var count int
 	config := &pt.ParaNodeAddrConfig{
-		Title: chainTestCfg.GetTitle(),
+		Title: chain33TestCfg.GetTitle(),
 		Op:    pt.ParaOpVote,
 		Id:    id,
 		Value: pt.ParaVoteYes,
@@ -234,7 +234,7 @@ func voteTest(suite *NodeManageTestSuite, id string, join bool) {
 
 func (suite *NodeManageTestSuite) testNodeGroupConfigQuit() {
 	config := &pt.ParaNodeGroupConfig{
-		Title: chainTestCfg.GetTitle(),
+		Title: chain33TestCfg.GetTitle(),
 		Addrs: applyAddrs,
 		Op:    pt.ParacrossNodeGroupApply,
 	}
@@ -249,7 +249,7 @@ func (suite *NodeManageTestSuite) testNodeGroupConfigQuit() {
 	suite.Nil(err)
 
 	config = &pt.ParaNodeGroupConfig{
-		Title: chainTestCfg.GetTitle(),
+		Title: chain33TestCfg.GetTitle(),
 		Id:    g.Current.Id,
 		Op:    pt.ParacrossNodeGroupQuit,
 	}
@@ -263,7 +263,7 @@ func (suite *NodeManageTestSuite) testNodeGroupConfig() {
 	suite.testNodeGroupConfigQuit()
 
 	config := &pt.ParaNodeGroupConfig{
-		Title: chainTestCfg.GetTitle(),
+		Title: chain33TestCfg.GetTitle(),
 		Addrs: applyAddrs,
 		Op:    pt.ParacrossNodeGroupApply,
 	}
@@ -278,7 +278,7 @@ func (suite *NodeManageTestSuite) testNodeGroupConfig() {
 	suite.Nil(err)
 
 	config = &pt.ParaNodeGroupConfig{
-		Title: chainTestCfg.GetTitle(),
+		Title: chain33TestCfg.GetTitle(),
 		Id:    g.Current.Id,
 		Op:    pt.ParacrossNodeGroupApprove,
 	}
@@ -292,7 +292,7 @@ func (suite *NodeManageTestSuite) testNodeGroupConfig() {
 func (suite *NodeManageTestSuite) testNodeConfig() {
 	//Join test
 	config := &pt.ParaNodeAddrConfig{
-		Title: chainTestCfg.GetTitle(),
+		Title: chain33TestCfg.GetTitle(),
 		Op:    pt.ParaOpNewApply,
 		Addr:  Account14K,
 	}
@@ -312,7 +312,7 @@ func (suite *NodeManageTestSuite) testNodeConfig() {
 
 	//Quit test
 	config = &pt.ParaNodeAddrConfig{
-		Title: chainTestCfg.GetTitle(),
+		Title: chain33TestCfg.GetTitle(),
 		Op:    pt.ParaOpQuit,
 		Addr:  Account14K,
 	}
@@ -398,27 +398,27 @@ func TestGetNodeIdSuffix(t *testing.T) {
 }
 
 func (suite *NodeManageTestSuite) testSuperQuery() {
-	ret, err := suite.exec.Query_GetNodeGroupAddrs(&pt.ReqParacrossNodeInfo{Title: chainTestCfg.GetTitle()})
+	ret, err := suite.exec.Query_GetNodeGroupAddrs(&pt.ReqParacrossNodeInfo{Title: chain33TestCfg.GetTitle()})
 	suite.Nil(err)
 	resp, ok := ret.(*types.ReplyConfig)
 	assert.Equal(suite.T(), ok, true)
 	assert.Equal(suite.T(), resp.Value, applyAddrs)
 
-	ret, err = suite.exec.Query_GetNodeAddrInfo(&pt.ReqParacrossNodeInfo{Title: chainTestCfg.GetTitle(), Addr: "1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"})
+	ret, err = suite.exec.Query_GetNodeAddrInfo(&pt.ReqParacrossNodeInfo{Title: chain33TestCfg.GetTitle(), Addr: "1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"})
 	suite.Nil(err)
 	resp2, ok := ret.(*pt.ParaNodeAddrIdStatus)
 	assert.Equal(suite.T(), ok, true)
 	assert.NotNil(suite.T(), resp2)
 
-	_, err = suite.exec.Query_GetNodeAddrInfo(&pt.ReqParacrossNodeInfo{Title: chainTestCfg.GetTitle(), Addr: "1FbS6G4CRYAYeSEPGg7uKP9MukUo6crEE5"})
+	_, err = suite.exec.Query_GetNodeAddrInfo(&pt.ReqParacrossNodeInfo{Title: chain33TestCfg.GetTitle(), Addr: "1FbS6G4CRYAYeSEPGg7uKP9MukUo6crEE5"})
 	suite.NotNil(err)
 
-	ret, err = suite.exec.Query_GetNodeGroupStatus(&pt.ReqParacrossNodeInfo{Title: chainTestCfg.GetTitle()})
+	ret, err = suite.exec.Query_GetNodeGroupStatus(&pt.ReqParacrossNodeInfo{Title: chain33TestCfg.GetTitle()})
 	suite.Nil(err)
 	resp3, ok := ret.(*pt.ParaNodeGroupStatus)
 	assert.Equal(suite.T(), ok, true)
 	assert.Equal(suite.T(), resp3.Status, int32(pt.ParacrossNodeGroupApprove))
 
-	_, err = suite.exec.Query_GetNodeIDInfo(&pt.ReqParacrossNodeInfo{Title: chainTestCfg.GetTitle(), Id: "mavl-paracross-title-nodeid-user.p.test.-0x8cf0e600667b8e6cf66516369acd4e1b5f6c93b3ae1c0b5edf458dfbe01f1607"})
+	_, err = suite.exec.Query_GetNodeIDInfo(&pt.ReqParacrossNodeInfo{Title: chain33TestCfg.GetTitle(), Id: "mavl-paracross-title-nodeid-user.p.test.-0x8cf0e600667b8e6cf66516369acd4e1b5f6c93b3ae1c0b5edf458dfbe01f1607"})
 	suite.Nil(err)
 }

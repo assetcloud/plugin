@@ -26,7 +26,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
 	"github.com/stretchr/testify/require"
 )
 
@@ -689,7 +689,7 @@ func TestUnmarshal(t *testing.T) {
 	buff.Write(common.Hex2Bytes("0000000000000000000000000000000000000000000000000000000000000020")) // offset
 	buff.Write(common.Hex2Bytes("0000000000000000000000000000000000000000000000000000000000000001")) // size
 	buff.Write(common.Hex2Bytes("0000000000000000000000000100000000000000000000000000000000000000"))
-	//适配chain中evm地址
+	//适配chain33中evm地址
 	var outAddr []common.Hash160Address
 	err = abi.Unpack(&outAddr, "addressSliceSingle", buff.Bytes())
 	if err != nil {

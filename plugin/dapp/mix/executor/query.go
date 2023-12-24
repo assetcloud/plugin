@@ -5,10 +5,10 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/types"
 
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 	"github.com/pkg/errors"
 )
 

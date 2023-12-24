@@ -7,7 +7,7 @@ package wallet
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/common/address"
+	"github.com/33cn/chain33/common/address"
 )
 
 const (

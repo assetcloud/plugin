@@ -5,13 +5,13 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
-	auty "github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
+	auty "github.com/33cn/plugin/plugin/dapp/autonomy/types"
 	"github.com/pkg/errors"
 
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/system/dapp"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/system/dapp"
 )
 
 func checkParaInvalid(param, min, max int64) bool {

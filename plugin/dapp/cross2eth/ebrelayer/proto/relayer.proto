@@ -46,7 +46,7 @@ message EthBridgeClaim {
     string tokenAddr = 4;
     string symbol        = 5;
     string ethereumSender = 6;
-    string chainReceiver = 7;
+    string chain33Receiver = 7;
     //因为考虑到eth是以wei单位的，需要更大的计数范围，所以使用string类型
     string amount = 9;
     int32 claimType = 10;
@@ -68,7 +68,7 @@ message RelayerRunStatus {
 
 message NewProphecyClaim {
     uint32 claimType = 1;
-    string chainSender = 2;
+    string chain33Sender = 2;
     string tokenAddr = 3;
     string symbol = 4;
     string ethReceiver = 5;
@@ -99,8 +99,8 @@ message LockEthErc20 {
     string ownerKey        = 1;
     string tokenAddr       = 2;
     string amount           = 3;
-    //将lock住的资产跨链转移到chain的该账户名下
-    string chainReceiver = 4;
+    //将lock住的资产跨链转移到chain33的该账户名下
+    string chain33Receiver = 4;
     string chainName       = 5;
 }
 
@@ -125,11 +125,11 @@ message Burn {
     string ownerKey   = 1;
     string tokenAddr  = 2;
     string amount      = 3;
-    string chainReceiver = 4;
+    string chain33Receiver = 4;
     string chainName       = 5;
 }
 
-message BurnFromChain {
+message BurnFromChain33 {
     string ownerKey   = 1;
     string tokenAddr  = 2;
     string amount      = 3;
@@ -154,13 +154,13 @@ message EventLogIndex {
     uint32 index = 2;
 }
 
-message ChainToEthereumStatics {
+message Chain33ToEthereumStatics {
     string ethTxstatus = 1;
-    string chainTxhash = 2;
+    string chain33Txhash = 2;
     string EthereumTxhash = 3;
     int32  burnLockWithdraw = 4;
-    //该笔lock或者burn交易的chain发起人
-    string chainSender = 5;
+    //该笔lock或者burn交易的chain33发起人
+    string chain33Sender = 5;
     string ethereumReceiver = 6;
     string symbol = 7;
     //因为考虑到,eth的单位是以wei计算的，所以使用string类型
@@ -170,14 +170,14 @@ message ChainToEthereumStatics {
     string operationType = 11;
 }
 
-message Ethereum2ChainStatics {
-    string chainTxstatus = 1;
-    string chainTxhash = 2;
+message Ethereum2Chain33Statics {
+    string chain33Txstatus = 1;
+    string chain33Txhash = 2;
     string EthereumTxhash = 3;
     int32  burnLock = 4;
-    //该笔lock或者burn交易的chain发起人
+    //该笔lock或者burn交易的chain33发起人
     string ethereumSender = 5;
-    string chainReceiver = 6;
+    string chain33Receiver = 6;
     string symbol = 7;
     //因为考虑到,eth的单位是以wei计算的，所以使用string类型
     string amount = 8;
@@ -207,8 +207,8 @@ message TokenStaticsRequest {
 }
 
 message TokenStaticsResponse {
-    repeated Ethereum2ChainStatics e2Cstatics = 1;
-    repeated ChainToEthereumStatics c2Estatics = 2;
+    repeated Ethereum2Chain33Statics e2Cstatics = 1;
+    repeated Chain33ToEthereumStatics c2Estatics = 2;
 }
 
 message SetupMulSign {
@@ -253,7 +253,7 @@ message BalanceLockedReq  {
     string chainName  = 3;
 }
 
-message ResendChainEventReq  {
+message ResendChain33EventReq  {
     int64 height = 1;
 }
 
@@ -286,12 +286,12 @@ message WithdrawSymbol2Para  {
 }
 
 message WithdrawTx  {
-    string chainSender         = 1;
+    string chain33Sender         = 1;
     string ethereumReceiver      = 2;
     string symbol                = 4;
     string amount                 = 5;
     int64 nonce                  = 6;
-    string txHashOnChain       = 7;
+    string txHashOnChain33       = 7;
     string txHashOnEthereum      = 8;
     int32 year                   = 9;
     int32 month                  = 10;
@@ -301,7 +301,7 @@ message WithdrawTx  {
     string errorDescription      = 14;
 }
 
-message WithdrawFromChain {
+message WithdrawFromChain33 {
     string ownerKey   = 1;
     string tokenAddr  = 2;
     string amount      = 3;
@@ -342,7 +342,7 @@ message CreateLockEventReq  {
     string chainName = 7;
 }
 
-message TxRelayConfirm4Chain  {
+message TxRelayConfirm4Chain33  {
     int32 eventType      = 1;
     bytes data           = 2;
     int32 fdTimes        = 3;

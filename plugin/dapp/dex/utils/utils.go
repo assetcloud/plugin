@@ -9,17 +9,17 @@ import (
 	"os"
 	"time"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/rpc/jsonclient"
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/system/crypto/secp256k1"
-	"github.com/assetcloud/chain/types"
-	chainTypes "github.com/assetcloud/chain/types"
-	ebrelayerChain "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain"
-	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/rpc/jsonclient"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/system/crypto/secp256k1"
+	"github.com/33cn/chain33/types"
+	chain33Types "github.com/33cn/chain33/types"
+	ebrelayerChain33 "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33"
+	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -32,7 +32,7 @@ type TxCreateInfo struct {
 	ChainID    int32
 }
 
-type ChainOfflineTx struct {
+type Chain33OfflineTx struct {
 	ContractAddr  string
 	TxHash        string
 	SignedRawTx   string
@@ -159,9 +159,9 @@ func WriteToFileInJson(fileName string, content interface{}) {
 	fmt.Println("Txs are written to file", fileName)
 }
 
-func SendSignTxs2Chain(filePath, rpcUrl string) {
-	var rdata []*ChainOfflineTx
-	var retData []*ChainOfflineTx
+func SendSignTxs2Chain33(filePath, rpcUrl string) {
+	var rdata []*Chain33OfflineTx
+	var retData []*Chain33OfflineTx
 	err := ParseFileInJson(filePath, &rdata)
 	if err != nil {
 		fmt.Printf("parse file with error:%s, make sure file:%s exist \n", err.Error(), filePath)
@@ -171,7 +171,7 @@ func SendSignTxs2Chain(filePath, rpcUrl string) {
 	for _, deployInfo := range rdata {
 		txhash, err := sendTransactionRpc(deployInfo.SignedRawTx, rpcUrl)
 		if nil != err {
-			fmt.Printf("Failed to send %s to chain due to error:%s \n", deployInfo.OperationName, err.Error())
+			fmt.Printf("Failed to send %s to chain33 due to error:%s \n", deployInfo.OperationName, err.Error())
 			return
 		}
 		if deployInfo.Interval != 0 {
@@ -180,9 +180,9 @@ func SendSignTxs2Chain(filePath, rpcUrl string) {
 
 		countTime := 0
 		for {
-			result := ebrelayerChain.GetTxStatusByHashesRpc(txhash, rpcUrl)
+			result := ebrelayerChain33.GetTxStatusByHashesRpc(txhash, rpcUrl)
 			//等待交易执行
-			if ebTypes.Invalid_ChainTx_Status == result {
+			if ebTypes.Invalid_Chain33Tx_Status == result {
 				time.Sleep(time.Second)
 
 				countTime++
@@ -193,7 +193,7 @@ func SendSignTxs2Chain(filePath, rpcUrl string) {
 				}
 				continue
 			}
-			if result != chainTypes.ExecOk {
+			if result != chain33Types.ExecOk {
 				fmt.Println("Failed to send txhash: ", txhash, "result: ", result)
 				return
 			} else {
@@ -201,7 +201,7 @@ func SendSignTxs2Chain(filePath, rpcUrl string) {
 			}
 		}
 
-		retData = append(retData, &ChainOfflineTx{TxHash: txhash, ContractAddr: deployInfo.ContractAddr, OperationName: deployInfo.OperationName})
+		retData = append(retData, &Chain33OfflineTx{TxHash: txhash, ContractAddr: deployInfo.ContractAddr, OperationName: deployInfo.OperationName})
 	}
 
 	data, err := json.MarshalIndent(retData, "", "    ")
@@ -216,7 +216,7 @@ func sendTransactionRpc(data, rpcLaddr string) (string, error) {
 	params := rpctypes.RawParm{
 		Data: data,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.SendTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.SendTransaction", params, nil)
 	var txhex string
 	rpc, err := jsonclient.NewJSONClient(ctx.Addr)
 	if err != nil {

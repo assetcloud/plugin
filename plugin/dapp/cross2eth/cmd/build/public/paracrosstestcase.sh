@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-PARA_CLI="docker exec ${NODE3} /root/chain-cli --paraName user.p.para. --rpc_laddr http://localhost:8901"
+PARA_CLI="docker exec ${NODE3} /root/chain33-cli --paraName user.p.para. --rpc_laddr http://localhost:8901"
 
-PARA_CLI2="docker exec ${NODE2} /root/chain-cli --paraName user.p.para. --rpc_laddr http://localhost:8901"
-PARA_CLI1="docker exec ${NODE1} /root/chain-cli --paraName user.p.para. --rpc_laddr http://localhost:8901"
-PARA_CLI4="docker exec ${NODE4} /root/chain-cli --paraName user.p.para. --rpc_laddr http://localhost:8901"
-PARA_CLI5="docker exec ${NODE5} /root/chain-cli --paraName user.p.game. --rpc_laddr http://localhost:8901"
+PARA_CLI2="docker exec ${NODE2} /root/chain33-cli --paraName user.p.para. --rpc_laddr http://localhost:8901"
+PARA_CLI1="docker exec ${NODE1} /root/chain33-cli --paraName user.p.para. --rpc_laddr http://localhost:8901"
+PARA_CLI4="docker exec ${NODE4} /root/chain33-cli --paraName user.p.para. --rpc_laddr http://localhost:8901"
+PARA_CLI5="docker exec ${NODE5} /root/chain33-cli --paraName user.p.game. --rpc_laddr http://localhost:8901"
 
 PARANAME="para"
 PARANAME_GAME="game"
@@ -17,22 +17,22 @@ if [ "$(uname)" == "Darwin" ]; then
 fi
 
 function para_init() {
-    para_set_toml chain.para33.toml "$PARANAME" "$1"
-    para_set_toml chain.para32.toml "$PARANAME" "$1"
-    para_set_toml chain.para31.toml "$PARANAME" "$1"
-    para_set_toml chain.para30.toml "$PARANAME" "$1"
+    para_set_toml chain33.para33.toml "$PARANAME" "$1"
+    para_set_toml chain33.para32.toml "$PARANAME" "$1"
+    para_set_toml chain33.para31.toml "$PARANAME" "$1"
+    para_set_toml chain33.para30.toml "$PARANAME" "$1"
 
-    sed -i $xsedfix 's/^authAccount=.*/authAccount="1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"/g' chain.para33.toml
-    sed -i $xsedfix 's/^authAccount=.*/authAccount="1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR"/g' chain.para32.toml
-    sed -i $xsedfix 's/^authAccount=.*/authAccount="1NLHPEcbTWWxxU3dGUZBhayjrCHD3psX7k"/g' chain.para31.toml
-    sed -i $xsedfix 's/^authAccount=.*/authAccount="1MCftFynyvG2F4ED5mdHYgziDxx6vDrScs"/g' chain.para30.toml
+    sed -i $xsedfix 's/^authAccount=.*/authAccount="1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"/g' chain33.para33.toml
+    sed -i $xsedfix 's/^authAccount=.*/authAccount="1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR"/g' chain33.para32.toml
+    sed -i $xsedfix 's/^authAccount=.*/authAccount="1NLHPEcbTWWxxU3dGUZBhayjrCHD3psX7k"/g' chain33.para31.toml
+    sed -i $xsedfix 's/^authAccount=.*/authAccount="1MCftFynyvG2F4ED5mdHYgziDxx6vDrScs"/g' chain33.para30.toml
 
-    para_set_toml chain.para29.toml "$PARANAME_GAME" "$1"
-    sed -i $xsedfix 's/^authAccount=.*/authAccount="1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"/g' chain.para29.toml
+    para_set_toml chain33.para29.toml "$PARANAME_GAME" "$1"
+    sed -i $xsedfix 's/^authAccount=.*/authAccount="1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4"/g' chain33.para29.toml
 }
 
 function para_set_toml() {
-    cp chain.para.toml "${1}"
+    cp chain33.para.toml "${1}"
     local paraname="$2"
 
     sed -i $xsedfix 's/^Title.*/Title="user.p.'''"$paraname"'''."/g' "${1}"
@@ -267,7 +267,7 @@ function query_tx() {
         sleep 1
 
         if [[ ${count} -ge 100 ]]; then
-            echo "chain query tx for too long"
+            echo "chain33 query tx for too long"
             break
         fi
     done

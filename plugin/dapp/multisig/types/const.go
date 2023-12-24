@@ -5,8 +5,8 @@
 package types
 
 import (
-	"github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/types"
 )
 
 var multisiglog = log15.New("module", "execs.multisig")

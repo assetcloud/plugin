@@ -8,9 +8,9 @@ package events
 import (
 	"math/big"
 
-	chainAddress "github.com/assetcloud/chain/common/address"
+	chain33Address "github.com/33cn/chain33/common/address"
 
-	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -35,31 +35,31 @@ type LockEvent struct {
 	Nonce  *big.Int
 }
 
-//chainBank.sol
-//event LogChainTokenBurn(
+//chain33Bank.sol
+//event LogChain33TokenBurn(
 //address _token,
 //string _symbol,
 //uint256 _amount,
 //address _ownerFrom,
-//bytes _chainReceiver,
+//bytes _chain33Receiver,
 //uint256 _nonce
 //);
 
 // BurnEvent : struct which represents a BurnEvent event
 type BurnEvent struct {
-	Token         common.Address
-	Symbol        string
-	Amount        *big.Int
-	OwnerFrom     common.Address
-	ChainReceiver []byte
-	Nonce         *big.Int
+	Token           common.Address
+	Symbol          string
+	Amount          *big.Int
+	OwnerFrom       common.Address
+	Chain33Receiver []byte
+	Nonce           *big.Int
 }
 
 // NewProphecyClaimEvent : struct which represents a LogNewProphecyClaim event
 type NewProphecyClaimEvent struct {
 	ProphecyID       *big.Int
 	ClaimType        uint8
-	ChainSender      []byte
+	Chain33Sender    []byte
 	EthereumReceiver common.Address
 	ValidatorAddress common.Address
 	TokenAddress     common.Address
@@ -67,7 +67,7 @@ type NewProphecyClaimEvent struct {
 	Amount           *big.Int
 }
 
-// LogNewBridgeToken ...
+//LogNewBridgeToken ...
 type LogNewBridgeToken struct {
 	Token  common.Address
 	Symbol string
@@ -91,17 +91,17 @@ func UnpackLogLock(contractAbi abi.ABI, eventName string, eventData []byte) (loc
 		return nil, ebrelayerTypes.ErrUnpack
 	}
 
-	chainReceiver := chainAddress.Address{}
-	chainReceiver.SetBytes(event.To)
+	chain33Receiver := chain33Address.Address{}
+	chain33Receiver.SetBytes(event.To)
 
 	eventsLog.Info("UnpackLogLock", "value", event.Value.String(), "symbol", event.Symbol,
 		"token addr", event.Token.Hex(), "sender", event.From.Hex(),
-		"recipient", chainReceiver.String(), "nonce", event.Nonce.String())
+		"recipient", chain33Receiver.String(), "nonce", event.Nonce.String())
 
 	return event, nil
 }
 
-// UnpackLogBurn ...
+//UnpackLogBurn ...
 func UnpackLogBurn(contractAbi abi.ABI, eventName string, eventData []byte) (burnEvent *BurnEvent, err error) {
 	event := &BurnEvent{}
 	// Parse the event's attributes as Ethereum network variables
@@ -113,7 +113,7 @@ func UnpackLogBurn(contractAbi abi.ABI, eventName string, eventData []byte) (bur
 
 	eventsLog.Info("UnpackLogBurn", "token addr", event.Token.Hex(), "symbol", event.Symbol,
 		"Amount", event.Amount.String(), "OwnerFrom", event.OwnerFrom.String(),
-		"ChainReceiver", string(event.ChainReceiver), "nonce", event.Nonce.String())
+		"Chain33Receiver", string(event.Chain33Receiver), "nonce", event.Nonce.String())
 	return event, nil
 }
 

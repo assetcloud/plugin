@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"testing"
 
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
 	"github.com/stretchr/testify/assert"
 )

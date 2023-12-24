@@ -8,13 +8,13 @@ import (
 	"bytes"
 	"encoding/hex"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
-	log "github.com/assetcloud/chain/common/log/log15"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/chain/util"
-	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
+	log "github.com/33cn/chain33/common/log/log15"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/chain33/util"
+	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
 )
 
 var (
@@ -29,20 +29,20 @@ type Paracross struct {
 	drivers.DriverBase
 }
 
-// Init paracross exec register
-func Init(name string, cfg *types.ChainConfig, sub []byte) {
+//Init paracross exec register
+func Init(name string, cfg *types.Chain33Config, sub []byte) {
 	drivers.Register(cfg, GetName(), newParacross, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 	setPrefix()
 }
 
-// InitExecType ...
+//InitExecType ...
 func InitExecType() {
 	ety := types.LoadExecutorType(driverName)
 	ety.InitFuncList(types.ListMethod(&Paracross{}))
 }
 
-// GetName return paracross name
+//GetName return paracross name
 func GetName() string {
 	return newParacross().GetName()
 }
@@ -106,7 +106,7 @@ func (c *Paracross) saveLocalParaTxs(tx *types.Transaction, isDel bool) (*types.
 
 }
 
-// 无法获取到commit tx信息，从commitDone 结构里面构建
+//无法获取到commit tx信息，从commitDone 结构里面构建
 func (c *Paracross) saveLocalParaTxsFork(commitDone *pt.ReceiptParacrossDone, isDel bool) (*types.LocalDBSet, error) {
 	status := &pt.ParacrossNodeStatus{
 		MainBlockHash:   commitDone.MainBlockHash,
@@ -328,7 +328,7 @@ func (c *Paracross) updateLocalAssetTransfer(tx *types.Transaction, paraHeight i
 	return &types.KeyValue{Key: key, Value: types.Encode(&asset)}, nil
 }
 
-// IsFriend call exec is same seariase exec
+//IsFriend call exec is same seariase exec
 func (c *Paracross) IsFriend(myexec, writekey []byte, tx *types.Transaction) bool {
 	//不允许平行链
 	cfg := c.GetAPI().GetConfig()

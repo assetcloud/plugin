@@ -7,7 +7,7 @@ package executor
 import (
 	"fmt"
 
-	"github.com/assetcloud/chain/common/address"
+	"github.com/33cn/chain33/common/address"
 )
 
 func calcLotteryBuyPrefix(lotteryID string, addr string) []byte {

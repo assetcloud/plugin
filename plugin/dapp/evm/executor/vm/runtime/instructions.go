@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/model"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/params"
+	"github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/model"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/params"
 	"github.com/holiman/uint256"
 )
 
@@ -245,7 +245,7 @@ func opSAR(pc *uint64, evm *EVM, callContext *callCtx) ([]byte, error) {
 	return nil, nil
 }
 
-// 使用keccak256进行哈希运算
+//使用keccak256进行哈希运算
 func opSha3(pc *uint64, evm *EVM, callContext *callCtx) ([]byte, error) {
 	offset, size := callContext.stack.pop(), callContext.stack.peek()
 	data := callContext.memory.GetPtr(int64(offset.Uint64()), int64(size.Uint64()))
@@ -648,7 +648,7 @@ func opCreate(pc *uint64, evm *EVM, callContext *callCtx) ([]byte, error) {
 
 	if !value.IsZero() && evm.CheckIsEthTx() {
 		// value 是coins的值，opcall 中默认是 1e18,框架默认coins 1e8 ，需要对value 处理成精度1e8的值
-		newValue := evm.ethPrecision2ChainStandard(value.ToBig())
+		newValue := evm.ethPrecision2Chain33Standard(value.ToBig())
 		bigValue, overflow := uint256.FromBig(newValue)
 		if overflow {
 			panic("opCreate: value wrong format")
@@ -676,7 +676,7 @@ func opCreate(pc *uint64, evm *EVM, callContext *callCtx) ([]byte, error) {
 	return nil, nil
 }
 
-// CREATE2
+//CREATE2
 func opCreate2(pc *uint64, evm *EVM, callContext *callCtx) ([]byte, error) {
 	var (
 		endowment    = callContext.stack.pop()
@@ -752,7 +752,7 @@ func opCall(pc *uint64, evm *EVM, callContext *callCtx) ([]byte, error) {
 		gas += params.CallStipend
 		if evm.CheckIsEthTx() {
 			// value 是coins的值，opcall 中默认是 1e18,框架默认coins 1e8 ，需要对value 处理成精度1e8的值
-			newValue := evm.ethPrecision2ChainStandard(value.ToBig())
+			newValue := evm.ethPrecision2Chain33Standard(value.ToBig())
 			bigValue, overflow := uint256.FromBig(newValue)
 			if overflow {
 				panic("opCall: value wrong format")
@@ -799,7 +799,7 @@ func opCallCode(pc *uint64, evm *EVM, callContext *callCtx) ([]byte, error) {
 			//ethUnit := big.NewInt(1e18)
 			//bigV := new(big.Int).SetBytes(value.Bytes())
 			//newValue := new(big.Int).Div(bigV, ethUnit.Div(ethUnit, big.NewInt(1).SetInt64(evm.cfg.GetCoinPrecision())))
-			newValue := evm.ethPrecision2ChainStandard(value.ToBig())
+			newValue := evm.ethPrecision2Chain33Standard(value.ToBig())
 			bigValue, _ := uint256.FromBig(newValue)
 			value = *bigValue
 		}

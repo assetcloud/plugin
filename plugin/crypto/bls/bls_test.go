@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/assetcloud/chain/common"
+	"github.com/33cn/chain33/common"
 
-	"github.com/assetcloud/chain/common/crypto"
+	"github.com/33cn/chain33/common/crypto"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -117,7 +117,7 @@ func TestAggregate(t *testing.T) {
 	assert.Error(t, err)
 }
 
-// benchmark
+//benchmark
 func BenchmarkBLSAggregateSignature(b *testing.B) {
 	msg := []byte(">16 character identical message")
 	n := 200

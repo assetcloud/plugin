@@ -8,8 +8,8 @@ import (
 	"context"
 	"encoding/hex"
 
-	"github.com/assetcloud/chain/types"
-	bw "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
+	"github.com/33cn/chain33/types"
+	bw "github.com/33cn/plugin/plugin/dapp/blackwhite/types"
 )
 
 // BlackwhiteCreateTx 创建游戏RPC接口

@@ -6,9 +6,9 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/cakeToken"
-	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
-	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
+	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/cakeToken"
+	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
+	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"

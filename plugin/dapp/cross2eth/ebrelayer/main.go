@@ -15,19 +15,19 @@ import (
 	"path/filepath"
 	"syscall"
 
+	dbm "github.com/33cn/chain33/common/db"
+	logf "github.com/33cn/chain33/common/log"
+	"github.com/33cn/chain33/common/log/log15"
+	chain33Types "github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer"
+	chain33Relayer "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain33"
+	ethRelayer "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	relayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/version"
+	pluginVersion "github.com/33cn/plugin/version"
 	tml "github.com/BurntSushi/toml"
-	dbm "github.com/assetcloud/chain/common/db"
-	logf "github.com/assetcloud/chain/common/log"
-	"github.com/assetcloud/chain/common/log/log15"
-	chainTypes "github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer"
-	chainRelayer "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/chain"
-	ethRelayer "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/version"
-	pluginVersion "github.com/assetcloud/plugin/version"
 	"github.com/btcsuite/btcd/limits"
 )
 
@@ -75,7 +75,7 @@ func main() {
 		panic(err)
 	}
 	cfg := initCfg(*configPath)
-	mainlog.Info("Starting FUZAMEI Chain-X-Ethereum relayer software:", "\n     Name: ", cfg.Title)
+	mainlog.Info("Starting FUZAMEI Chain33-X-Ethereum relayer software:", "\n     Name: ", cfg.Title)
 	logf.SetFileLog(convertLogCfg(cfg.Log))
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -84,16 +84,16 @@ func main() {
 	db := dbm.NewDB("relayer_db_service", cfg.Dbdriver, cfg.DbPath, cfg.DbCache)
 
 	ethRelayerCnt := len(cfg.EthRelayerCfg)
-	chainMsgChan2Eths := make(map[string]chan<- *events.ChainMsg)
+	chain33MsgChan2Eths := make(map[string]chan<- *events.Chain33Msg)
 	ethBridgeClaimChan := make(chan *ebrelayerTypes.EthBridgeClaim, 1000)
-	txRelayAckChan2Chain := make(chan *ebrelayerTypes.TxRelayAck, 1000)
+	txRelayAckChan2Chain33 := make(chan *ebrelayerTypes.TxRelayAck, 1000)
 	txRelayAckChan2Eth := make(map[string]chan<- *ebrelayerTypes.TxRelayAck)
 
 	//启动多个以太坊系中继器
 	ethRelayerServices := make(map[string]*ethRelayer.Relayer4Ethereum)
 	for i := 0; i < ethRelayerCnt; i++ {
-		chainMsgChan := make(chan *events.ChainMsg, 1000)
-		chainMsgChan2Eths[cfg.EthRelayerCfg[i].EthChainName] = chainMsgChan
+		chain33MsgChan := make(chan *events.Chain33Msg, 1000)
+		chain33MsgChan2Eths[cfg.EthRelayerCfg[i].EthChainName] = chain33MsgChan
 
 		txRelayAckRecvChan := make(chan *ebrelayerTypes.TxRelayAck, 1000)
 		txRelayAckChan2Eth[cfg.EthRelayerCfg[i].EthChainName] = txRelayAckRecvChan
@@ -106,9 +106,9 @@ func main() {
 			Degree:               cfg.EthRelayerCfg[i].EthMaturityDegree,
 			BlockInterval:        cfg.EthRelayerCfg[i].EthBlockFetchPeriod,
 			EthBridgeClaimChan:   ethBridgeClaimChan,
-			TxRelayAckSendChan:   txRelayAckChan2Chain,
+			TxRelayAckSendChan:   txRelayAckChan2Chain33,
 			TxRelayAckRecvChan:   txRelayAckRecvChan,
-			ChainMsgChan:         chainMsgChan,
+			Chain33MsgChan:       chain33MsgChan,
 			ProcessWithDraw:      cfg.ProcessWithDraw,
 			Name:                 cfg.EthRelayerCfg[i].EthChainName,
 			StartListenHeight:    cfg.EthRelayerCfg[i].StartListenHeight,
@@ -126,29 +126,29 @@ func main() {
 		ethRelayerServices[ethStartPara.Name] = ethRelayerService
 	}
 
-	//启动chain中继器
-	chainStartPara := &chainRelayer.ChainStartPara{
-		ChainName:          cfg.ChainRelayerCfg.ChainName,
+	//启动chain33中继器
+	chain33StartPara := &chain33Relayer.Chain33StartPara{
+		ChainName:          cfg.Chain33RelayerCfg.ChainName,
 		Ctx:                ctx,
-		SyncTxConfig:       cfg.ChainRelayerCfg.SyncTxConfig,
-		BridgeRegistryAddr: cfg.ChainRelayerCfg.BridgeRegistryOnChain,
+		SyncTxConfig:       cfg.Chain33RelayerCfg.SyncTxConfig,
+		BridgeRegistryAddr: cfg.Chain33RelayerCfg.BridgeRegistryOnChain33,
 		DBHandle:           db,
 		EthBridgeClaimChan: ethBridgeClaimChan,
-		TxRelayAckRecvChan: txRelayAckChan2Chain,
+		TxRelayAckRecvChan: txRelayAckChan2Chain33,
 		TxRelayAckSendChan: txRelayAckChan2Eth,
-		ChainMsgChan:       chainMsgChan2Eths,
-		ChainID:            cfg.ChainRelayerCfg.ChainID4Chain,
+		Chain33MsgChan:     chain33MsgChan2Eths,
+		ChainID:            cfg.Chain33RelayerCfg.ChainID4Chain33,
 		ProcessWithDraw:    cfg.ProcessWithDraw,
 		DelayedSendTime:    cfg.DelayedSendTime,
 	}
 	if cfg.DelayedSendTime > 0 {
-		chainStartPara.DelayedSend = true
+		chain33StartPara.DelayedSend = true
 	} else {
-		chainStartPara.DelayedSend = false
+		chain33StartPara.DelayedSend = false
 	}
-	chainRelayerService := chainRelayer.StartChainRelayer(chainStartPara)
+	chain33RelayerService := chain33Relayer.StartChain33Relayer(chain33StartPara)
 
-	relayerManager := relayer.NewRelayerManager(chainRelayerService, ethRelayerServices, db)
+	relayerManager := relayer.NewRelayerManager(chain33RelayerService, ethRelayerServices, db)
 
 	go func() {
 		mainlog.Info("ebrelayer", "cfg.JrpcBindAddr = ", cfg.JrpcBindAddr)
@@ -169,8 +169,8 @@ func procSig(cancel context.CancelFunc) {
 	}
 }
 
-func convertLogCfg(log *relayerTypes.Log) *chainTypes.Log {
-	return &chainTypes.Log{
+func convertLogCfg(log *relayerTypes.Log) *chain33Types.Log {
+	return &chain33Types.Log{
 		Loglevel:        log.Loglevel,
 		LogConsoleLevel: log.LogConsoleLevel,
 		LogFile:         log.LogFile,
@@ -202,12 +202,12 @@ func initCfg(path string) *relayerTypes.RelayerConfig {
 	return &cfg
 }
 
-// IsIPWhiteListEmpty ...
+//IsIPWhiteListEmpty ...
 func IsIPWhiteListEmpty() bool {
 	return len(IPWhiteListMap) == 0
 }
 
-// IsInIPWhitelist 判断ipAddr是否在ip地址白名单中
+//IsInIPWhitelist 判断ipAddr是否在ip地址白名单中
 func IsInIPWhitelist(ipAddrPort string) bool {
 	ipAddr, _, err := net.SplitHostPort(ipAddrPort)
 	if err != nil {
@@ -223,12 +223,12 @@ func IsInIPWhitelist(ipAddrPort string) bool {
 	return false
 }
 
-// RPCServer ...
+//RPCServer ...
 type RPCServer struct {
 	*rpc.Server
 }
 
-// ServeHTTP ...
+//ServeHTTP ...
 func (r *RPCServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	mainlog.Info("ServeHTTP", "request address", req.RemoteAddr)
 	if !IsIPWhiteListEmpty() {
@@ -241,24 +241,24 @@ func (r *RPCServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	r.Server.ServeHTTP(w, req)
 }
 
-// HandleHTTP ...
+//HandleHTTP ...
 func (r *RPCServer) HandleHTTP(rpcPath, debugPath string) {
 	http.Handle(rpcPath, r)
 }
 
-// HTTPConn ...
+//HTTPConn ...
 type HTTPConn struct {
 	in  io.Reader
 	out io.Writer
 }
 
-// Read ...
+//Read ...
 func (c *HTTPConn) Read(p []byte) (n int, err error) { return c.in.Read(p) }
 
-// Write ...
+//Write ...
 func (c *HTTPConn) Write(d []byte) (n int, err error) { return c.out.Write(d) }
 
-// Close ...
+//Close ...
 func (c *HTTPConn) Close() error { return nil }
 
 func startRPCServer(address string, api interface{}) {

@@ -5,10 +5,10 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common/address"
-	drivers "github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/hashlock/types"
+	"github.com/33cn/chain33/common/address"
+	drivers "github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/hashlock/types"
 )
 
 // Exec_Hlock Action

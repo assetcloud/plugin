@@ -3,7 +3,7 @@
 
 
 SRC_CONTRACT := sol_contracts
-#SRC_CONTRACT := github.com/assetcloud/plugin/plugin/dapp/x2Ethereum/ebrelayer/ethcontract/sol_contracts
+#SRC_CONTRACT := github.com/33cn/plugin/plugin/dapp/x2Ethereum/ebrelayer/ethcontract/sol_contracts
 GO_OUT := generated
 PACKAGE := generated
 

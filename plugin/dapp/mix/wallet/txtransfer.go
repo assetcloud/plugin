@@ -12,13 +12,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/assetcloud/chain/common/address"
+	"github.com/33cn/chain33/common/address"
 
 	"github.com/pkg/errors"
 
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
 
-	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
+	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
 
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
@@ -95,7 +95,7 @@ func (p *mixPolicy) getTransferOutput(exec, symbol string, req *mixTy.DepositInf
 
 }
 
-// input = output+找零+交易费
+//input = output+找零+交易费
 func getShieldValue(inputAmounts []uint64, outAmount, change, minTxFee uint64, pointHX, pointHY string) (*mixTy.ShieldAmountRst, error) {
 	var sum uint64
 	for _, i := range inputAmounts {

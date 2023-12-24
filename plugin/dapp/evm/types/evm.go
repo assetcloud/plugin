@@ -7,9 +7,9 @@ package types
 import (
 	"strings"
 
-	"github.com/assetcloud/chain/common/address"
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common/address"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/types"
 )
 
 var (
@@ -28,7 +28,7 @@ func init() {
 }
 
 // InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork(ExecutorName, EVMEnable, 0)
 	// EVM合约中的数据分散存储，支持大数据量
 	cfg.RegisterDappFork(ExecutorName, ForkEVMState, 0)
@@ -51,7 +51,7 @@ func InitFork(cfg *types.ChainConfig) {
 }
 
 // InitExecutor ...
-func InitExecutor(cfg *types.ChainConfig) {
+func InitExecutor(cfg *types.Chain33Config) {
 	types.RegistorExecutor(ExecutorName, NewType(cfg))
 }
 
@@ -61,7 +61,7 @@ type EvmType struct {
 }
 
 // NewType 新建EVM类型对象
-func NewType(cfg *types.ChainConfig) *EvmType {
+func NewType(cfg *types.Chain33Config) *EvmType {
 	c := &EvmType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

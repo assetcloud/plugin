@@ -5,10 +5,10 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/common/db/table"
-	//"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/collateralize/types"
+	"github.com/33cn/chain33/common/db/table"
+	//"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/collateralize/types"
 )
 
 func (c *Collateralize) execLocal(tx *types.Transaction, receipt *types.ReceiptData) (*types.LocalDBSet, error) {

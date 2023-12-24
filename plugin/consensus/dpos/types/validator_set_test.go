@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

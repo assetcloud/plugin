@@ -5,8 +5,8 @@
 package executor
 
 import (
-	pty "github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/qbftNode/types"
 )
 
 // Query_GetQbftNodeByHeight method

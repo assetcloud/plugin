@@ -7,8 +7,8 @@ package types
 import (
 	"testing"
 
-	"github.com/assetcloud/chain/types"
-	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/33cn/chain33/types"
+	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
 	"github.com/stretchr/testify/assert"
 )
 

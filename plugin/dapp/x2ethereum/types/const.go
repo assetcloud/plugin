@@ -1,12 +1,12 @@
 package types
 
-// key
+//key
 var (
 	ProphecyKey                         = []byte("prefix_for_Prophecy")
-	Eth2ChainKey                        = []byte("prefix_for_Eth2Chain")
+	Eth2Chain33Key                      = []byte("prefix_for_Eth2Chain33")
 	WithdrawEthKey                      = []byte("prefix_for_WithdrawEth")
-	ChainToEthKey                       = []byte("prefix_for_ChainToEth")
-	WithdrawChainKey                    = []byte("prefix_for_WithdrawChain")
+	Chain33ToEthKey                     = []byte("prefix_for_Chain33ToEth")
+	WithdrawChain33Key                  = []byte("prefix_for_WithdrawChain33")
 	LastTotalPowerKey                   = []byte("prefix_for_LastTotalPower")
 	ValidatorMapsKey                    = []byte("prefix_for_ValidatorMaps")
 	ConsensusThresholdKey               = []byte("prefix_for_ConsensusThreshold")
@@ -18,10 +18,10 @@ var (
 // log类型id值
 const (
 	TyUnknownLog = iota + 100
-	TyEth2ChainLog
+	TyEth2Chain33Log
 	TyWithdrawEthLog
-	TyWithdrawChainLog
-	TyChainToEthLog
+	TyWithdrawChain33Log
+	TyChain33ToEthLog
 	TyAddValidatorLog
 	TyRemoveValidatorLog
 	TyModifyPowerLog
@@ -35,10 +35,10 @@ const (
 // action类型id和name，这些常量可以自定义修改
 const (
 	TyUnknowAction = iota + 100
-	TyEth2ChainAction
+	TyEth2Chain33Action
 	TyWithdrawEthAction
-	TyWithdrawChainAction
-	TyChainToEthAction
+	TyWithdrawChain33Action
+	TyChain33ToEthAction
 	TyAddValidatorAction
 	TyRemoveValidatorAction
 	TyModifyPowerAction
@@ -47,10 +47,10 @@ const (
 	TyTransferToExecAction
 	TyWithdrawFromExecAction
 
-	NameEth2ChainAction             = "Eth2ChainLock"
-	NameWithdrawEthAction           = "Eth2ChainBurn"
-	NameWithdrawChainAction         = "ChainToEthBurn"
-	NameChainToEthAction            = "ChainToEthLock"
+	NameEth2Chain33Action           = "Eth2Chain33Lock"
+	NameWithdrawEthAction           = "Eth2Chain33Burn"
+	NameWithdrawChain33Action       = "Chain33ToEthBurn"
+	NameChain33ToEthAction          = "Chain33ToEthLock"
 	NameAddValidatorAction          = "AddValidator"
 	NameRemoveValidatorAction       = "RemoveValidator"
 	NameModifyPowerAction           = "ModifyPower"
@@ -60,19 +60,19 @@ const (
 	NameWithdrawFromExecAction      = "WithdrawFromExec"
 )
 
-// DefaultConsensusNeeded ...
+//DefaultConsensusNeeded ...
 const DefaultConsensusNeeded = int64(70)
 
-// direct ...
+//direct ...
 const (
-	DirEth2Chain  = "eth2chain"
-	DirChainToEth = "chaintoeth"
-	LockClaim     = "lock"
-	BurnClaim     = "burn"
+	DirEth2Chain33  = "eth2chain33"
+	DirChain33ToEth = "chain33toeth"
+	LockClaim       = "lock"
+	BurnClaim       = "burn"
 )
 
-// DirectionType type
-var DirectionType = [3]string{"", DirEth2Chain, DirChainToEth}
+//DirectionType type
+var DirectionType = [3]string{"", DirEth2Chain33, DirChain33ToEth}
 
 // query function name
 const (
@@ -84,7 +84,7 @@ const (
 	FuncQueryRelayerBalance            = "GetRelayerBalance"
 )
 
-// lock type
+//lock type
 const (
 	LockClaimType = int32(1)
 	BurnClaimType = int32(2)

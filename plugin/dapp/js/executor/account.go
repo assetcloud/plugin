@@ -1,14 +1,14 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/common/address"
+	"github.com/33cn/chain33/types"
 	"github.com/robertkrimen/otto"
 )
 
 /*
-//chain 相关的账户操作函数 （操作某个execer 下面的 symbol）
+//chain33 相关的账户操作函数 （操作某个execer 下面的 symbol）
 function Account(execer, symbol) {
 	this.execer = execer
 	this.symbol = symbol

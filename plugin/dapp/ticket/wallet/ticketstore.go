@@ -5,11 +5,11 @@
 package wallet
 
 import (
-	"github.com/assetcloud/chain/common/db"
-	wcom "github.com/assetcloud/chain/wallet/common"
+	"github.com/33cn/chain33/common/db"
+	wcom "github.com/33cn/chain33/wallet/common"
 )
 
-// newStore new storage
+//newStore new storage
 func newStore(db db.DB) *ticketStore {
 	return &ticketStore{Store: wcom.NewStore(db)}
 }

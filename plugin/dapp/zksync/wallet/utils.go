@@ -5,19 +5,19 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/assetcloud/chain/common"
-	"github.com/assetcloud/chain/common/crypto"
-	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/33cn/chain33/common"
+	"github.com/33cn/chain33/common/crypto"
+	"github.com/33cn/chain33/system/crypto/secp256k1"
 	"github.com/pkg/errors"
 
-	"github.com/assetcloud/chain/types"
-	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/33cn/chain33/types"
+	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 )
 
 func CreateRawTx(actionTy int32, tokenId uint64, amount string, toEthAddress string,
-	chainAddr string, accountId uint64, toAccountId uint64) ([]byte, error) {
+	chain33Addr string, accountId uint64, toAccountId uint64) ([]byte, error) {
 	var payload []byte
 	switch actionTy {
 	case zt.TyWithdrawAction:
@@ -41,7 +41,7 @@ func CreateRawTx(actionTy int32, tokenId uint64, amount string, toEthAddress str
 			Amount:          amount,
 			FromAccountId:   accountId,
 			ToEthAddress:    toEthAddress,
-			ToLayer2Address: chainAddr,
+			ToLayer2Address: chain33Addr,
 		}
 		payload = types.MustPBToJSON(transferToNew)
 	case zt.TyProxyExitAction:
@@ -54,7 +54,7 @@ func CreateRawTx(actionTy int32, tokenId uint64, amount string, toEthAddress str
 
 	case zt.TySetVerifierAction:
 		verifier := &zt.ZkVerifier{
-			Verifiers: strings.Split(chainAddr, ","),
+			Verifiers: strings.Split(chain33Addr, ","),
 		}
 		payload = types.MustPBToJSON(verifier)
 
@@ -65,7 +65,7 @@ func CreateRawTx(actionTy int32, tokenId uint64, amount string, toEthAddress str
 	return payload, nil
 }
 
-// 11 => 00001011, 数组index0值为0，大端表示
+//11 => 00001011, 数组index0值为0，大端表示
 func getBigEndBitsWithFixLen(val *big.Int, n uint64) []uint {
 	l := val.BitLen()
 	if n < uint64(l) {
@@ -87,7 +87,7 @@ func getBigEndBitsWithFixLen(val *big.Int, n uint64) []uint {
 	return bits
 }
 
-// 把bits以小端模式构建big.Int
+//把bits以小端模式构建big.Int
 func setBeBitsToVal(bits []uint) string {
 	a := big.NewInt(0)
 	for i := 0; i < len(bits); i++ {
@@ -146,8 +146,8 @@ func GetDepositMsg(payload *zt.ZkDeposit) *zt.ZkMsg {
 	ethAddress := transferStr2Int(strings.ToLower(payload.EthAddress), 16)
 	pubData = append(pubData, getBigEndBitsWithFixLen(ethAddress, zt.AddrBitWidth)...)
 
-	chainAddress := transferStr2Int(payload.ChainAddr, 16)
-	pubData = append(pubData, getBigEndBitsWithFixLen(chainAddress, zt.HashBitWidth)...)
+	chain33Address := transferStr2Int(payload.Chain33Addr, 16)
+	pubData = append(pubData, getBigEndBitsWithFixLen(chain33Address, zt.HashBitWidth)...)
 
 	copy(binaryData, pubData)
 
@@ -258,8 +258,8 @@ func GetTransferToNewMsg(payload *zt.ZkTransferToNew) *zt.ZkMsg {
 	ethAddress, _ := new(big.Int).SetString(payload.ToEthAddress, 16)
 	pubData = append(pubData, getBigEndBitsWithFixLen(ethAddress, zt.AddrBitWidth)...)
 
-	chainAddress, _ := new(big.Int).SetString(payload.ToLayer2Address, 16)
-	pubData = append(pubData, getBigEndBitsWithFixLen(chainAddress, zt.HashBitWidth)...)
+	chain33Address, _ := new(big.Int).SetString(payload.ToLayer2Address, 16)
+	pubData = append(pubData, getBigEndBitsWithFixLen(chain33Address, zt.HashBitWidth)...)
 
 	copy(binaryData, pubData)
 
@@ -410,9 +410,9 @@ func GetMsgHash(msg *zt.ZkMsg) []byte {
 	return hash.Sum(nil)
 }
 
-// GetLayer2PrivateKeySeed 通过用户secp256k1私钥对特定信息的签名的hash产生layer2的eddsa签名的私钥种子来产生用户layer2的私钥
-// 在memtamask或钱包app可以不暴露用户私钥而只是内部签名的方式来产生layer2私钥，更加安全
-// refer to https://blogs.loopring.org/new-approach-to-generating-layer-2-account-keys-cn/
+//GetLayer2PrivateKeySeed 通过用户secp256k1私钥对特定信息的签名的hash产生layer2的eddsa签名的私钥种子来产生用户layer2的私钥
+//在memtamask或钱包app可以不暴露用户私钥而只是内部签名的方式来产生layer2私钥，更加安全
+//refer to https://blogs.loopring.org/new-approach-to-generating-layer-2-account-keys-cn/
 func GetLayer2PrivateKeySeed(privateKey, exchangeAddr, nonce string) ([]byte, error) {
 	c, err := crypto.Load(secp256k1.Name, -1)
 	if err != nil {

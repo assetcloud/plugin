@@ -36,7 +36,7 @@ message AccountProxyPubKeys {
 message AccountWitness {
   uint64 ID             = 1;
   string ethAddr        = 2;
-  string chainAddr    = 3;
+  string chain33Addr    = 3;
   string tokenTreeRoot  = 4; //sub chain token tree root
   ZkPubKey pubKey       = 5;
   SiblingPath sibling   = 6;

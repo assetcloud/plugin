@@ -1,9 +1,9 @@
 FROM ubuntu:18.04
 
 WORKDIR /root
-COPY chain chain
-COPY chain-cli chain-cli
-COPY chain.toml chain*.toml ./
+COPY chain33 chain33
+COPY chain33-cli chain33-cli
+COPY chain33.toml chain33*.toml ./
 ADD gnark gnark/
 
-CMD ["/root/chain", "-f", "/root/chain.toml"]
+CMD ["/root/chain33", "-f", "/root/chain33.toml"]

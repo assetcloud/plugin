@@ -7,13 +7,13 @@ package executor
 import (
 	"strconv"
 
-	"github.com/assetcloud/chain/account"
-	"github.com/assetcloud/chain/client"
-	"github.com/assetcloud/chain/common"
-	dbm "github.com/assetcloud/chain/common/db"
-	"github.com/assetcloud/chain/system/dapp"
-	"github.com/assetcloud/chain/types"
-	pty "github.com/assetcloud/plugin/plugin/dapp/lottery/types"
+	"github.com/33cn/chain33/account"
+	"github.com/33cn/chain33/client"
+	"github.com/33cn/chain33/common"
+	dbm "github.com/33cn/chain33/common/db"
+	"github.com/33cn/chain33/system/dapp"
+	"github.com/33cn/chain33/types"
+	pty "github.com/33cn/plugin/plugin/dapp/lottery/types"
 )
 
 const (

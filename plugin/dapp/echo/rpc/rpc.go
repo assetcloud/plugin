@@ -3,9 +3,9 @@ package rpc
 import (
 	"context"
 
-	rpctypes "github.com/assetcloud/chain/rpc/types"
-	"github.com/assetcloud/chain/types"
-	echotypes "github.com/assetcloud/plugin/plugin/dapp/echo/types/echo"
+	rpctypes "github.com/33cn/chain33/rpc/types"
+	"github.com/33cn/chain33/types"
+	echotypes "github.com/33cn/plugin/plugin/dapp/echo/types/echo"
 )
 
 // Jrpc 对外提供服务的RPC接口总体定义

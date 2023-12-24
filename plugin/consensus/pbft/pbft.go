@@ -9,7 +9,7 @@ import (
 	"net"
 	"strings"
 
-	pb "github.com/assetcloud/chain/types"
+	pb "github.com/33cn/chain33/types"
 	"github.com/golang/protobuf/proto"
 )
 

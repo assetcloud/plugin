@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/assetcloud/chain/types"
-	rTy "github.com/assetcloud/plugin/plugin/dapp/relay/types"
+	"github.com/33cn/chain33/types"
+	rTy "github.com/33cn/plugin/plugin/dapp/relay/types"
 )
 
 func (r *relay) Query_GetRelayOrderByStatus(in *rTy.ReqRelayAddrCoins) (types.Message, error) {

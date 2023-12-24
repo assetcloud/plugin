@@ -14,13 +14,13 @@ import (
 
 	"time"
 
-	dbm "github.com/assetcloud/chain/common/db"
-	clog "github.com/assetcloud/chain/common/log"
-	log "github.com/assetcloud/chain/common/log/log15"
-	"github.com/assetcloud/chain/queue"
-	drivers "github.com/assetcloud/chain/system/store"
-	mavl "github.com/assetcloud/chain/system/store/mavl/db"
-	"github.com/assetcloud/chain/types"
+	dbm "github.com/33cn/chain33/common/db"
+	clog "github.com/33cn/chain33/common/log"
+	log "github.com/33cn/chain33/common/log/log15"
+	"github.com/33cn/chain33/queue"
+	drivers "github.com/33cn/chain33/system/store"
+	mavl "github.com/33cn/chain33/system/store/mavl/db"
+	"github.com/33cn/chain33/types"
 	lru "github.com/hashicorp/golang-lru"
 )
 
@@ -66,7 +66,7 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.ChainConfig) {
+func InitFork(cfg *types.Chain33Config) {
 	cfg.RegisterDappFork("store-kvmvccmavl", "ForkKvmvccmavl", 0)
 }
 
@@ -120,7 +120,7 @@ type subConfig struct {
 }
 
 // New construct KVMVCCStore module
-func New(cfg *types.Store, sub []byte, chaincfg *types.ChainConfig) queue.Module {
+func New(cfg *types.Store, sub []byte, chain33cfg *types.Chain33Config) queue.Module {
 	var kvms *KVmMavlStore
 	var subcfg subConfig
 	var subKVMVCCcfg subKVMVCCConfig
@@ -163,8 +163,8 @@ func New(cfg *types.Store, sub []byte, chaincfg *types.ChainConfig) queue.Module
 	// 查询是否是删除裁剪版mavl
 	isPrunedMavl = isPrunedMavlDB(bs.GetDB())
 	// 读取fork高度
-	if chaincfg != nil {
-		kvmvccMavlFork = chaincfg.GetDappFork("store-kvmvccmavl", "ForkKvmvccmavl")
+	if chain33cfg != nil {
+		kvmvccMavlFork = chain33cfg.GetDappFork("store-kvmvccmavl", "ForkKvmvccmavl")
 	}
 	delMavlDataHeight = kvmvccMavlFork + 10000
 	bs.SetChild(kvms)

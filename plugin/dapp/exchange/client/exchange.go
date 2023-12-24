@@ -1,13 +1,13 @@
 package client
 
 import (
-	"github.com/assetcloud/chain/types"
-	et "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
+	"github.com/33cn/chain33/types"
+	et "github.com/33cn/plugin/plugin/dapp/exchange/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 )
 
-var cfg = types.NewChainConfig(types.GetDefaultCfgstring())
+var cfg = types.NewChain33Config(types.GetDefaultCfgstring())
 
 type ExchangeClient struct {
 	client   Cli
@@ -96,7 +96,7 @@ func (c *ExchangeClient) LimitOrder(msg proto.Message, hexKey string) (*et.Recei
 	return &resp, nil
 }
 
-// TODO marketOrder
+//TODO marketOrder
 func (c *ExchangeClient) MarketOrder(msg proto.Message, hexKey string) (*et.ReceiptExchange, error) {
 	return nil, errors.New("Unopen")
 	//ety := types.LoadExecutorType(et.ExchangeX)
