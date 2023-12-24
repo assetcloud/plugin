@@ -23,8 +23,8 @@ PWD=$(cd "$(dirname "$0")" && pwd)
 export PATH="$PWD:$PATH"
 
 SOLO_NODE="${1}_main_1"
-SOLO_CLI="docker exec ${SOLO_NODE} /root/chain33-cli --rpc_laddr http://localhost:8545"
-Chain33_CLI="docker exec ${SOLO_NODE} /root/chain33-cli"
+SOLO_CLI="docker exec ${SOLO_NODE} /root/chain-cli --rpc_laddr http://localhost:8545"
+Chain_CLI="docker exec ${SOLO_NODE} /root/chain-cli"
 DAPP="evm"
 evm_contractAddr=""
 MAIN_HTTP=""
@@ -107,7 +107,7 @@ function testcase_coinsTransfer(){
     fi
     echo "${hash}"
 
-    balance=$(${Chain33_CLI} account balance -a ${testAddr} -e coins | jq -r ".balance")
+    balance=$(${Chain_CLI} account balance -a ${testAddr} -e coins | jq -r ".balance")
     if [ "${balance}" != "12.0000" ]; then
         echo " balance  not correct, balance=${balance}"
         exit 1
@@ -210,16 +210,16 @@ function testcase_transferErc20() {
 function  token_finish() {
   echo "=======  token_finish ========="
 
-  local rawTx=$(${Chain33_CLI}  token finish  -s "${1}"  -a ${genesisAddr})
+  local rawTx=$(${Chain_CLI}  token finish  -s "${1}"  -a ${genesisAddr})
   echo "token_finish rawTx:${rawTx}"
   if [ "${rawTx}" == "" ]; then
     echo "token  create tx faild"
     exit 1
   fi
 
-  local signedTx=$(${Chain33_CLI} wallet sign -d "${rawTx}" -k ${genesisKey} -p 2)
+  local signedTx=$(${Chain_CLI} wallet sign -d "${rawTx}" -k ${genesisKey} -p 2)
   echo "token_finish signedTx:${signedTx}"
-  local hash=$(${Chain33_CLI} wallet send -d "${signedTx}"  )
+  local hash=$(${Chain_CLI} wallet send -d "${signedTx}"  )
   echo  "token_finish hash: ${hash}"
   queryTransaction "${hash}"  "jq -r .result.receipt.tyName" "ExecOk"
   echo "=== token_finish check token create success ==="
@@ -228,15 +228,15 @@ function  token_finish() {
 function token_preConfig() {
   echo "======= # token_preConfig ========="
     sleep 1
-    local rawTx=$(${Chain33_CLI}  config config_tx -c "token-blacklist" -o "add" -v "zzz")
+    local rawTx=$(${Chain_CLI}  config config_tx -c "token-blacklist" -o "add" -v "zzz")
      #如果返回空
     if [ -z "${rawTx}" ]; then
        exit 1
     fi
     echo "token_preConfig rawtx:${rawTx}"
-    local signedTx=$(${Chain33_CLI} wallet sign -d "${rawTx}" -k ${genesisKey} -p 2 -e 360)
+    local signedTx=$(${Chain_CLI} wallet sign -d "${rawTx}" -k ${genesisKey} -p 2 -e 360)
     echo "token_preConfig signedTx:${signedTx}"
-    local hash=$(${Chain33_CLI} wallet send -d "${signedTx}"  )
+    local hash=$(${Chain_CLI} wallet send -d "${signedTx}"  )
     echo "token_preConfig hash: ${hash}"
     sleep 1
     queryTransaction "${hash}"  "jq -r .result.receipt.tyName" "ExecOk"
@@ -248,15 +248,15 @@ function token_preCreate() {
   token_symbol=${1}
   owner=${2}
   echo "token_preCreate:symbol:${token_symbol}"
-  local unsignedTx=$(${Chain33_CLI}  token precreate  -c 1  -p 0 -s "${token_symbol}"  -n "${token_symbol}" -a "${2}"  -i "for test" --total 1000000000000 )
+  local unsignedTx=$(${Chain_CLI}  token precreate  -c 1  -p 0 -s "${token_symbol}"  -n "${token_symbol}" -a "${2}"  -i "for test" --total 1000000000000 )
   if [ "${unsignedTx}" == "" ]; then
      echo "token preCreate create tx"
      return
   fi
 
-  local signedTx=$(${Chain33_CLI} wallet sign -d "${unsignedTx}"  -p 2 -k ${genesisKey})
+  local signedTx=$(${Chain_CLI} wallet sign -d "${unsignedTx}"  -p 2 -k ${genesisKey})
   echo "token_preCreate signedTx:${signedTx}"
-  local hash=$(${Chain33_CLI} wallet send -d ${signedTx} )
+  local hash=$(${Chain_CLI} wallet send -d ${signedTx} )
   echo  token_preCreate hash: ${hash}
   queryTransaction "${hash}"  "jq -r .result.receipt.tyName" "ExecOk"
   echo  "=== finish token_preCreate ==="
@@ -313,7 +313,7 @@ function queryTransaction() {
     txHash=$1
     validators=$2
     expectRes=$3
-    res=$(${Chain33_CLI} tx query --hash  "${txHash}" |jq -r .receipt.tyName)
+    res=$(${Chain_CLI} tx query --hash  "${txHash}" |jq -r .receipt.tyName)
 
 
     if [ "${res}" != "${expectRes}" ]; then
@@ -382,7 +382,7 @@ function testcase_evmProxyExec() {
    #查询交易哈希
    queryTransaction "${hash}"  "jq -r .result.receipt.tyName" "ExecOk"
 
-   balance=$(${Chain33_CLI} account balance -a "0xa42431Da868c58877a627CC71Dc95F01bf40c196" -e coins | jq -r ".balance")
+   balance=$(${Chain_CLI} account balance -a "0xa42431Da868c58877a627CC71Dc95F01bf40c196" -e coins | jq -r ".balance")
    if [ "${balance}" != "1024.0000" ]; then
        echo " balance  not correct, balance=${balance}"
        exit 1
@@ -464,10 +464,10 @@ function main() {
     echo "#### start docker"
     start_docker
       ### test cases ###
-    ip=$(${Chain33_CLI} net info | jq -r ".externalAddr")
+    ip=$(${Chain_CLI} net info | jq -r ".externalAddr")
     ip=$(echo "$ip" | cut -d':' -f 1)
     if [ "$ip" == "127.0.0.1" ]; then
-        ip=$(${Chain33_CLI} net info | jq -r ".localAddr")
+        ip=$(${Chain_CLI} net info | jq -r ".localAddr")
         ip=$(echo "$ip" | cut -d':' -f 1)
     fi
    # ip="127.0.0.1"

@@ -24,11 +24,11 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/state"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/state"
 
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto"
 	"github.com/holiman/uint256"
 )
 
@@ -45,7 +45,7 @@ type twoOperandParams struct {
 
 var commonParams []*twoOperandParams
 var twoOpMethods map[string]executionFunc
-var chain33Cfg *types.Chain33Config
+var chainCfg *types.ChainConfig
 
 func init() {
 
@@ -92,13 +92,13 @@ func init() {
 		"sar":     opSAR,
 	}
 	cfgstring := types.GetDefaultCfgstring()
-	chain33Cfg = types.NewChain33Config(cfgstring)
+	chainCfg = types.NewChainConfig(cfgstring)
 }
 
 func testTwoOperandOp(t *testing.T, tests []TwoOperandTestcase, opFn executionFunc, name string) {
 
 	var (
-		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chain33Cfg)
+		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chainCfg)
 		stack = newstack()
 		pc    = uint64(0)
 		//evmInterpreter = env.Interpreter.(*Interpreter)
@@ -197,7 +197,7 @@ func TestSAR(t *testing.T) {
 
 func TestAddMod(t *testing.T) {
 	var (
-		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chain33Cfg)
+		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chainCfg)
 		stack = newstack()
 		//evmInterpreter = NewEVMInterpreter(env, env.vmConfig)
 		pc = uint64(0)
@@ -236,7 +236,7 @@ func TestAddMod(t *testing.T) {
 // getResult is a convenience function to generate the expected values
 func getResult(args []*twoOperandParams, opFn executionFunc) []TwoOperandTestcase {
 	var (
-		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chain33Cfg)
+		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chainCfg)
 		stack = newstack()
 		pc    = uint64(0)
 		//interpreter = env.interpreter.(*EVMInterpreter)
@@ -286,7 +286,7 @@ func TestJsonTestcases(t *testing.T) {
 
 func opBenchmark(bench *testing.B, op executionFunc, args ...string) {
 	var (
-		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chain33Cfg)
+		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chainCfg)
 		stack = newstack()
 		//evmInterpreter = NewEVMInterpreter(env, env.vmConfig)
 	)
@@ -520,7 +520,7 @@ func BenchmarkOpIsZero(b *testing.B) {
 
 func TestOpMstore(t *testing.T) {
 	var (
-		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chain33Cfg)
+		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chainCfg)
 		stack = newstack()
 		mem   = NewMemory()
 		//evmInterpreter = NewEVMInterpreter(env, env.vmConfig)
@@ -545,7 +545,7 @@ func TestOpMstore(t *testing.T) {
 
 func BenchmarkOpMstore(bench *testing.B) {
 	var (
-		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chain33Cfg)
+		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chainCfg)
 		stack = newstack()
 		mem   = NewMemory()
 		//evmInterpreter = NewEVMInterpreter(env, env.vmConfig)
@@ -566,7 +566,7 @@ func BenchmarkOpMstore(bench *testing.B) {
 
 func BenchmarkOpSHA3(bench *testing.B) {
 	var (
-		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chain33Cfg)
+		env   = NewEVM(Context{}, &state.MemoryStateDB{}, Config{}, chainCfg)
 		stack = newstack()
 		mem   = NewMemory()
 		//evmInterpreter = NewEVMInterpreter(env, env.vmConfig)

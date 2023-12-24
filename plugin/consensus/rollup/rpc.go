@@ -3,8 +3,8 @@ package rollup
 import (
 	"errors"
 
-	"github.com/33cn/chain33/types"
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	"github.com/assetcloud/chain/types"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 )
 
 func (r *RollUp) getValidatorPubKeys() *rtypes.ValidatorPubs {

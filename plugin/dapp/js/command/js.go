@@ -9,11 +9,11 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	jsty "github.com/33cn/plugin/plugin/dapp/js/types"
-	"github.com/33cn/plugin/plugin/dapp/js/types/jsproto"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	jsty "github.com/assetcloud/plugin/plugin/dapp/js/types"
+	"github.com/assetcloud/plugin/plugin/dapp/js/types/jsproto"
 
 	//"github.com/gojson"
 	"github.com/spf13/cobra"
@@ -76,7 +76,7 @@ func createJavaScriptContract(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -116,7 +116,7 @@ func callJavaScript(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -156,6 +156,6 @@ func queryJavaScript(cmd *cobra.Command, args []string) {
 	params.FuncName = "Query"
 	params.Payload = types.MustPBToJSON(req)
 	rep = &jsproto.QueryResult{}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, rep)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, rep)
 	ctx.Run()
 }

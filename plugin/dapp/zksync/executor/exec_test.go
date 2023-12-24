@@ -10,16 +10,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/chain33/account"
-	apimock "github.com/33cn/chain33/client/mocks"
-	chain33Common "github.com/33cn/chain33/common"
-	chain33Crypto "github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/system/crypto/secp256k1"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
-	"github.com/33cn/plugin/plugin/dapp/zksync/wallet"
+	"github.com/assetcloud/chain/account"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	chainCommon "github.com/assetcloud/chain/common"
+	chainCrypto "github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/assetcloud/plugin/plugin/dapp/zksync/wallet"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
 	"github.com/golang/protobuf/proto"
@@ -62,7 +62,7 @@ secp256k1=0
 loglevel = "debug"
 logConsoleLevel = "info"
 # 日志文件名，可带目录，所有生成的日志文件都放到此目录下
-logFile = "logs/chain33.log"
+logFile = "logs/chain.log"
 # 单个日志文件的最大值（单位：兆）
 maxFileSize = 300
 # 最多保存的历史日志文件个数
@@ -317,10 +317,10 @@ manager=[
 #运营方配置收交易费地址
 #可把二层交易费提取到ETH的地址
 ethFeeAddr="832367164346888E248bd58b9A5f480299F1e88d"
-#二层的基于zk的chain33地址，注意:非基于sep256k1的普通的chain33地址，而是基于私钥产生的可用于二层的地址
+#二层的基于zk的chain地址，注意:非基于sep256k1的普通的chain地址，而是基于私钥产生的可用于二层的地址
 layer2FeeAddr="2c4a5c378be2424fa7585320630eceba764833f1ec1ffb2fafc1af97f27baf5a"
 `
-	chain33TestCfg    = types.NewChain33Config(strings.Replace(cfgstring4execTest, "Title=\"local\"", "Title=\"chain33\"", 1))
+	chainTestCfg    = types.NewChainConfig(strings.Replace(cfgstring4execTest, "Title=\"local\"", "Title=\"chain\"", 1))
 	zksyncHandle      *zksync
 	dbHanleGlobal     db.DB
 	index             = 0
@@ -338,11 +338,11 @@ func initSetup() {
 	}
 
 	dir, dbHanle, kvdb := util.CreateTestDB()
-	accB := account.NewCoinsAccount(chain33TestCfg)
+	accB := account.NewCoinsAccount(chainTestCfg)
 	accB.SetDB(kvdb)
 
 	api := new(apimock.QueueProtocolAPI)
-	api.On("GetConfig", mock.Anything).Return(chain33TestCfg, nil)
+	api.On("GetConfig", mock.Anything).Return(chainTestCfg, nil)
 	driver := NewZksync()
 	driver.SetAPI(api)
 	driver.SetEnv(env.blockHeight, env.blockTime, env.difficulty)
@@ -353,13 +353,13 @@ func initSetup() {
 	dbDir = dir
 }
 
-//++ docker exec build_chain33_1 /root/chain33-cli zksync l2addr -k 19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4
-//+ chain33Addr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
+//++ docker exec build_chain_1 /root/chain-cli zksync l2addr -k 19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4
+//+ chainAddr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
 
-func TestOutputChain33L2AddrDecimal(t *testing.T) {
-	chain33AddrL2 := "2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1"
-	chain33AddrL2Decimal, _ := zksyncTypes.HexAddr2Decimal(chain33AddrL2)
-	fmt.Println("chain33AddrL2Decimal=", chain33AddrL2Decimal)
+func TestOutputChainL2AddrDecimal(t *testing.T) {
+	chainAddrL2 := "2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1"
+	chainAddrL2Decimal, _ := zksyncTypes.HexAddr2Decimal(chainAddrL2)
+	fmt.Println("chainAddrL2Decimal=", chainAddrL2Decimal)
 	//2c4a5c378be2424fa7585320630eceba764833f1ec1ffb2fafc1af97f27baf5a --->
 	//20033148478649779061292402960935477249437023394422514689332944628159941947226
 
@@ -378,7 +378,7 @@ func TestDeposit(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -408,7 +408,7 @@ func TestWithdraw(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -433,14 +433,14 @@ func TestWithdraw(t *testing.T) {
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
 	err = setPubKey(zksyncHandle, acc1privkey, accountID)
 	assert.Nil(t, err)
-	//leaf.Chain33Addr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
-	//calcChain33Addr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
+	//leaf.ChainAddr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
+	//calcChainAddr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
 
 	//测试提币
 	receipt, _, err = withdraw(zksyncHandle, acc1privkey, accountID, tokenId, "200")
@@ -466,7 +466,7 @@ func TestTransfer(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -493,7 +493,7 @@ func TestTransfer(t *testing.T) {
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
@@ -502,9 +502,9 @@ func TestTransfer(t *testing.T) {
 
 	//测试向新账户进行转币操作
 	toEthAddr := "12a0e25e62c1dbd32e505446062b26aecb65f028"
-	toL2Chain33Addr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
+	toL2ChainAddr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
 	//toAddrprivkey := "0x7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115"
-	receipt, _, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2Chain33Addr)
+	receipt, _, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2ChainAddr)
 	assert.Nil(t, err)
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 	assert.Greater(t, len(receipt.KV), 0)
@@ -543,7 +543,7 @@ func TestTransfer2New(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -566,7 +566,7 @@ func TestTransfer2New(t *testing.T) {
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
@@ -575,9 +575,9 @@ func TestTransfer2New(t *testing.T) {
 
 	//测试向新账户进行转币操作
 	toEthAddr := "12a0e25e62c1dbd32e505446062b26aecb65f028"
-	toL2Chain33Addr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
+	toL2ChainAddr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
 	//toAddrprivkey := "0x7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115"
-	receipt, _, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2Chain33Addr)
+	receipt, _, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2ChainAddr)
 	assert.Nil(t, err)
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 	assert.Greater(t, len(receipt.KV), 0)
@@ -609,7 +609,7 @@ func TestTree2contract(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -631,14 +631,14 @@ func TestTree2contract(t *testing.T) {
 	assert.Equal(t, acc4token1Balance.TokenId, uint64(0))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
 	err = setPubKey(zksyncHandle, acc1privkey, accountID)
 	assert.Nil(t, err)
-	//leaf.Chain33Addr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
-	//calcChain33Addr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
+	//leaf.ChainAddr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
+	//calcChainAddr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
 
 	symbol := "ETH"
 	receipt4SetToken, _, err := setTokenSymbol(zksyncHandle, mpriKey, symbol, "0", 18)
@@ -669,7 +669,7 @@ func TestTree2contract(t *testing.T) {
 	//确认合约余额
 	zkQueryReq := &zksyncTypes.ZkQueryReq{
 		TokenSymbol:       symbol,
-		Chain33WalletAddr: "1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR",
+		ChainWalletAddr: "1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR",
 	}
 	msg, err := zksyncHandle.Query_GetZkContractAccount(zkQueryReq)
 	assert.Nil(t, err)
@@ -688,7 +688,7 @@ func TestContract2Tree(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -710,14 +710,14 @@ func TestContract2Tree(t *testing.T) {
 	assert.Equal(t, acc4token1Balance.TokenId, uint64(0))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
 	err = setPubKey(zksyncHandle, acc1privkey, accountID)
 	assert.Nil(t, err)
-	//leaf.Chain33Addr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
-	//calcChain33Addr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
+	//leaf.ChainAddr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
+	//calcChainAddr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
 
 	symbol := "ETH"
 	receipt4SetToken, _, err := setTokenSymbol(zksyncHandle, mpriKey, symbol, "0", 18)
@@ -752,7 +752,7 @@ func TestContract2Tree(t *testing.T) {
 	//确认合约余额
 	zkQueryReq := &zksyncTypes.ZkQueryReq{
 		TokenSymbol:       symbol,
-		Chain33WalletAddr: "1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR",
+		ChainWalletAddr: "1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR",
 	}
 	msg, err := zksyncHandle.Query_GetZkContractAccount(zkQueryReq)
 	assert.Nil(t, err)
@@ -793,7 +793,7 @@ func TestProxyExitFaid(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -812,14 +812,14 @@ func TestProxyExitFaid(t *testing.T) {
 	assert.Equal(t, acc4token1Balance.TokenId, uint64(0))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
 	err = setPubKey(zksyncHandle, acc1privkey, targetAccountID)
 	assert.Nil(t, err)
-	//leaf.Chain33Addr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
-	//calcChain33Addr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
+	//leaf.ChainAddr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
+	//calcChainAddr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
 
 	// 再次铸币
 	// zkAddr0: 12HKLEn6g4FH39yUbHh4EVJWcFo5CXg22d *** l2addr0: 27f272f1adf1c12e0ea7c48d8ace0370610952f17666bdb11ea5a8d7ab980d97 *** key: 0x9d4f8ab11361be596468b265cb66946c87873d4a119713fd0c3d8302eae0a8e4
@@ -841,7 +841,7 @@ func TestProxyExitFaid(t *testing.T) {
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 
 	//设置公钥
-	acc1privkeySli, err = chain33Common.FromHex("0x9d4f8ab11361be596468b265cb66946c87873d4a119713fd0c3d8302eae0a8e4")
+	acc1privkeySli, err = chainCommon.FromHex("0x9d4f8ab11361be596468b265cb66946c87873d4a119713fd0c3d8302eae0a8e4")
 	assert.Nil(t, err)
 	acc1privkey, err = driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
@@ -862,7 +862,7 @@ func TestProxyExit(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -881,14 +881,14 @@ func TestProxyExit(t *testing.T) {
 	assert.Equal(t, acc4token1Balance.TokenId, uint64(0))
 
 	//设置公钥
-	//acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	//acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	//assert.Nil(t, err)
 	//acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	//assert.Nil(t, err)
 	//err = setPubKey(zksyncHandle, acc1privkey, targetAccountID)
 	//assert.Nil(t, err)
-	//leaf.Chain33Addr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
-	//calcChain33Addr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
+	//leaf.ChainAddr=2b8a83399ffc86cc88f0493f17c9698878dcf7caf0bf04a3a5321542a7a416d1
+	//calcChainAddr= 19694183066356799104974294716313078444659172842638956126168373945465009608401
 
 	// 再次铸币
 	// zkAddr0: 12HKLEn6g4FH39yUbHh4EVJWcFo5CXg22d *** l2addr0: 27f272f1adf1c12e0ea7c48d8ace0370610952f17666bdb11ea5a8d7ab980d97 *** key: 0x9d4f8ab11361be596468b265cb66946c87873d4a119713fd0c3d8302eae0a8e4
@@ -910,7 +910,7 @@ func TestProxyExit(t *testing.T) {
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x9d4f8ab11361be596468b265cb66946c87873d4a119713fd0c3d8302eae0a8e4")
+	acc1privkeySli, err := chainCommon.FromHex("0x9d4f8ab11361be596468b265cb66946c87873d4a119713fd0c3d8302eae0a8e4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
@@ -954,7 +954,7 @@ func TestMintNFT(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -977,7 +977,7 @@ func TestMintNFT(t *testing.T) {
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
@@ -1058,7 +1058,7 @@ func TestMintNFT(t *testing.T) {
 	assert.Equal(t, acc4token1Balance.TokenId, uint64(0))
 
 	//设置公钥
-	acc1privkeySli, err = chain33Common.FromHex("0x9d4f8ab11361be596468b265cb66946c87873d4a119713fd0c3d8302eae0a8e4")
+	acc1privkeySli, err = chainCommon.FromHex("0x9d4f8ab11361be596468b265cb66946c87873d4a119713fd0c3d8302eae0a8e4")
 	assert.Nil(t, err)
 	acc1privkey, err = driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
@@ -1133,7 +1133,7 @@ func TestWithdrawNFT(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -1156,7 +1156,7 @@ func TestWithdrawNFT(t *testing.T) {
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
@@ -1200,7 +1200,7 @@ func TestTransferNFT(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -1223,7 +1223,7 @@ func TestTransferNFT(t *testing.T) {
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
@@ -1232,9 +1232,9 @@ func TestTransferNFT(t *testing.T) {
 
 	//测试向新账户进行转币操作
 	toEthAddr := "12a0e25e62c1dbd32e505446062b26aecb65f028"
-	toL2Chain33Addr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
+	toL2ChainAddr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
 	//toAddrprivkey := "0x7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115"
-	receipt, _, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2Chain33Addr)
+	receipt, _, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2ChainAddr)
 	assert.Nil(t, err)
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 	assert.Greater(t, len(receipt.KV), 0)
@@ -1277,7 +1277,7 @@ func TestNFTMisc(t *testing.T) {
 	var driver secp256k1.Driver
 
 	//12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv
-	managerPrivateKeySli, err := chain33Common.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
+	managerPrivateKeySli, err := chainCommon.FromHex("4257D8692EF7FE13C68B65D6A52F03933DB2FA5CE8FAF210B5B8B80C721CED01")
 	assert.Nil(t, err)
 	mpriKey, err := driver.PrivKeyFromBytes(managerPrivateKeySli)
 	assert.Nil(t, err)
@@ -1296,7 +1296,7 @@ func TestNFTMisc(t *testing.T) {
 	assert.Equal(t, acc4token1Balance.TokenId, uint64(0))
 
 	//设置公钥
-	acc1privkeySli, err := chain33Common.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
+	acc1privkeySli, err := chainCommon.FromHex("0x19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4")
 	assert.Nil(t, err)
 	acc1privkey, err := driver.PrivKeyFromBytes(acc1privkeySli)
 	assert.Nil(t, err)
@@ -1305,15 +1305,15 @@ func TestNFTMisc(t *testing.T) {
 
 	//测试向新账户进行转币操作
 	toEthAddr := "12a0e25e62c1dbd32e505446062b26aecb65f028"
-	toL2Chain33Addr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
+	toL2ChainAddr := "2afff20cc3c20f9def369626463fb027ebeba0bd976025f68316bb8eab55d48c"
 	//toAddrprivkey := "0x7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115"
-	receipt, _, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2Chain33Addr)
+	receipt, _, err = transfer2New(zksyncHandle, acc1privkey, tokenId, accountID, "200", toEthAddr, toL2ChainAddr)
 	assert.Nil(t, err)
 	assert.Equal(t, receipt.Ty, int32(types.ExecOk))
 	assert.Greater(t, len(receipt.KV), 0)
 
 	//设置公钥,给账户４
-	acc4privkeySli, err := chain33Common.FromHex("0x7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115")
+	acc4privkeySli, err := chainCommon.FromHex("0x7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115")
 	assert.Nil(t, err)
 	acc4privkey, err := driver.PrivKeyFromBytes(acc4privkeySli)
 	assert.Nil(t, err)
@@ -1349,12 +1349,12 @@ func TestNFTMisc(t *testing.T) {
 	fmt.Println("TokenBalance for account ID", toAccountID, "tokenId", nftTokenId, toBalance.Balance)
 }
 
-func deposit(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, tokenId, queueId uint64, amount, ethAddress, chain33Addr string) (*types.Receipt, *types.LocalDBSet, error) {
+func deposit(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, tokenId, queueId uint64, amount, ethAddress, chainAddr string) (*types.Receipt, *types.LocalDBSet, error) {
 	deposit := &zksyncTypes.ZkDeposit{
 		TokenId:      tokenId,
 		Amount:       amount,
 		EthAddress:   ethAddress,
-		Chain33Addr:  chain33Addr,
+		ChainAddr:  chainAddr,
 		L1PriorityId: int64(queueId),
 	}
 
@@ -1365,7 +1365,7 @@ func deposit(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, tokenId, qu
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1395,7 +1395,7 @@ func deposit(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, tokenId, qu
 	return receipt, localDBSet, nil
 }
 
-func setPubKey(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountId uint64) error {
+func setPubKey(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, accountId uint64) error {
 	setPubKey := &zksyncTypes.ZkSetPubKey{
 		AccountId: accountId,
 		PubKeyTy:  0,
@@ -1408,7 +1408,7 @@ func setPubKey(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountId
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return err
 	}
@@ -1435,7 +1435,7 @@ func setPubKey(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountId
 	return err
 }
 
-func withdraw(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountID, tokenId uint64, amount string) (*types.Receipt, *types.LocalDBSet, error) {
+func withdraw(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, accountID, tokenId uint64, amount string) (*types.Receipt, *types.LocalDBSet, error) {
 	withdraw := &zksyncTypes.ZkWithdraw{
 		TokenId:   tokenId,
 		Amount:    amount,
@@ -1449,7 +1449,7 @@ func withdraw(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountID,
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1479,7 +1479,7 @@ func withdraw(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountID,
 	return receipt, localDBSet, nil
 }
 
-func setTxFee(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, tokenId uint64, amount string, actionTy int32) (*types.Receipt, *types.LocalDBSet, error) {
+func setTxFee(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, tokenId uint64, amount string, actionTy int32) (*types.Receipt, *types.LocalDBSet, error) {
 	//zksyncTypes.TyWithdrawAction
 	setFee := &zksyncTypes.ZkSetFee{
 		TokenId:  tokenId,
@@ -1494,7 +1494,7 @@ func setTxFee(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, tokenId ui
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1516,7 +1516,7 @@ func setTxFee(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, tokenId ui
 	return receipt, nil, nil
 }
 
-func transfer(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAccountId, toAccountId, tokenId uint64, amount string) (*types.Receipt, *types.LocalDBSet, error) {
+func transfer(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, fromAccountId, toAccountId, tokenId uint64, amount string) (*types.Receipt, *types.LocalDBSet, error) {
 	transfer := &zksyncTypes.ZkTransfer{
 		TokenId:       tokenId,
 		Amount:        amount,
@@ -1531,7 +1531,7 @@ func transfer(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAccoun
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1561,13 +1561,13 @@ func transfer(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAccoun
 	return receipt, localDBSet, nil
 }
 
-func transfer2New(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, tokenId, fromAccountId uint64, amount, toEthAddress, toChain33Address string) (*types.Receipt, *types.LocalDBSet, error) {
+func transfer2New(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, tokenId, fromAccountId uint64, amount, toEthAddress, toChainAddress string) (*types.Receipt, *types.LocalDBSet, error) {
 	transfer2New := &zksyncTypes.ZkTransferToNew{
 		TokenId:         tokenId,
 		Amount:          amount,
 		FromAccountId:   fromAccountId,
 		ToEthAddress:    toEthAddress,
-		ToLayer2Address: toChain33Address,
+		ToLayer2Address: toChainAddress,
 	}
 
 	action := &zksyncTypes.ZksyncAction{
@@ -1577,7 +1577,7 @@ func transfer2New(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, tokenI
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1607,7 +1607,7 @@ func transfer2New(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, tokenI
 	return receipt, localDBSet, nil
 }
 
-func tree2contract(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountID, tokenId uint64, amount string) (*types.Receipt, *types.LocalDBSet, error) {
+func tree2contract(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, accountID, tokenId uint64, amount string) (*types.Receipt, *types.LocalDBSet, error) {
 	tree2contract := &zksyncTypes.ZkTreeToContract{
 		TokenId:   tokenId,
 		Amount:    amount,
@@ -1622,7 +1622,7 @@ func tree2contract(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accou
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1652,7 +1652,7 @@ func tree2contract(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accou
 	return receipt, localDBSet, nil
 }
 
-func setTokenSymbol(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, symbol, tokenID string, decimal uint32) (*types.Receipt, *types.LocalDBSet, error) {
+func setTokenSymbol(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, symbol, tokenID string, decimal uint32) (*types.Receipt, *types.LocalDBSet, error) {
 	contract2tree := &zksyncTypes.ZkTokenSymbol{
 		Id:      tokenID,
 		Symbol:  symbol,
@@ -1666,7 +1666,7 @@ func setTokenSymbol(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, symb
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1687,7 +1687,7 @@ func setTokenSymbol(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, symb
 	return receipt, nil, nil
 }
 
-func contract2tree(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, toAccountID uint64, symbol, amount string) (*types.Receipt, *types.LocalDBSet, error) {
+func contract2tree(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, toAccountID uint64, symbol, amount string) (*types.Receipt, *types.LocalDBSet, error) {
 	contract2tree := &zksyncTypes.ZkContractToTree{
 		TokenSymbol: symbol,
 		Amount:      amount,
@@ -1701,7 +1701,7 @@ func contract2tree(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, toAcc
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1731,7 +1731,7 @@ func contract2tree(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, toAcc
 	return receipt, localDBSet, nil
 }
 
-func proxyExit(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, targetAccountID, proxyAccountID, tokenId uint64) (*types.Receipt, *types.LocalDBSet, error) {
+func proxyExit(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, targetAccountID, proxyAccountID, tokenId uint64) (*types.Receipt, *types.LocalDBSet, error) {
 	proxyExit := &zksyncTypes.ZkProxyExit{
 		TokenId:  tokenId,
 		ProxyId:  proxyAccountID,
@@ -1745,7 +1745,7 @@ func proxyExit(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, targetAcc
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1775,7 +1775,7 @@ func proxyExit(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, targetAcc
 	return receipt, localDBSet, nil
 }
 
-func fullExit(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountID, tokenId, priorityQueueId uint64) (*types.Receipt, *types.LocalDBSet, error) {
+func fullExit(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, accountID, tokenId, priorityQueueId uint64) (*types.Receipt, *types.LocalDBSet, error) {
 	fullExit := &zksyncTypes.ZkFullExit{
 		TokenId:            tokenId,
 		AccountId:          accountID,
@@ -1789,7 +1789,7 @@ func fullExit(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountID,
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1819,7 +1819,7 @@ func fullExit(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, accountID,
 	return receipt, localDBSet, nil
 }
 
-func mintNFT(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAccountId, recipientAccountId uint64, contentHash string) (*types.Receipt, *types.LocalDBSet, error) {
+func mintNFT(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, fromAccountId, recipientAccountId uint64, contentHash string) (*types.Receipt, *types.LocalDBSet, error) {
 	mintNFT := &zksyncTypes.ZkMintNFT{
 		FromAccountId: fromAccountId,
 		RecipientId:   recipientAccountId,
@@ -1835,7 +1835,7 @@ func mintNFT(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAccount
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1866,7 +1866,7 @@ func mintNFT(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAccount
 	return receipt, localDBSet, nil
 }
 
-func withdrawNFT(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAccountId, nftTokenId, amount uint64) (*types.Receipt, *types.LocalDBSet, error) {
+func withdrawNFT(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, fromAccountId, nftTokenId, amount uint64) (*types.Receipt, *types.LocalDBSet, error) {
 	withdrawNFT := &zksyncTypes.ZkWithdrawNFT{
 		FromAccountId: fromAccountId,
 		NFTTokenId:    nftTokenId,
@@ -1880,7 +1880,7 @@ func withdrawNFT(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAcc
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1910,7 +1910,7 @@ func withdrawNFT(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAcc
 	return receipt, localDBSet, nil
 }
 
-func transferNFT(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAccountId, recipientAccountId, ntTokenId, amount uint64) (*types.Receipt, *types.LocalDBSet, error) {
+func transferNFT(zksyncHandle *zksync, privateKey chainCrypto.PrivKey, fromAccountId, recipientAccountId, ntTokenId, amount uint64) (*types.Receipt, *types.LocalDBSet, error) {
 	transferNFT := &zksyncTypes.ZkTransferNFT{
 		FromAccountId: fromAccountId,
 		RecipientId:   recipientAccountId,
@@ -1925,7 +1925,7 @@ func transferNFT(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAcc
 		},
 	}
 
-	tx := createChain33Tx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
+	tx := createChainTx(privateKey, action, zksyncTypes.Zksync, int64(1e8))
 	if err := types.Decode(tx.Payload, action); nil != err {
 		return nil, nil, err
 	}
@@ -1955,7 +1955,7 @@ func transferNFT(zksyncHandle *zksync, privateKey chain33Crypto.PrivKey, fromAcc
 	return receipt, localDBSet, nil
 }
 
-func createChain33Tx(privateKey chain33Crypto.PrivKey, action proto.Message, execer string, fee int64) *types.Transaction {
+func createChainTx(privateKey chainCrypto.PrivKey, action proto.Message, execer string, fee int64) *types.Transaction {
 	tx := &types.Transaction{Execer: []byte(execer), Payload: types.Encode(action), Fee: fee}
 
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -1969,7 +1969,7 @@ func createChain33Tx(privateKey chain33Crypto.PrivKey, action proto.Message, exe
 	return tx
 }
 
-func SignTransaction(key chain33Crypto.PrivKey, tx *types.Transaction) (err error) {
+func SignTransaction(key chainCrypto.PrivKey, tx *types.Transaction) (err error) {
 	action := new(zksyncTypes.ZksyncAction)
 	if err = types.Decode(tx.Payload, action); err != nil {
 		return

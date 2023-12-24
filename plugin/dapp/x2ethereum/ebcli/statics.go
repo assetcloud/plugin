@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/33cn/chain33/rpc/jsonclient"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 	"github.com/spf13/cobra"
 )
 
@@ -10,7 +10,7 @@ import (
 func StaticsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "statics",
-		Short: "statics of lock/unlock Eth or ERC20,or deposit/burn chain33 asset ",
+		Short: "statics of lock/unlock Eth or ERC20,or deposit/burn chain asset ",
 		Args:  cobra.MinimumNArgs(1),
 	}
 
@@ -55,7 +55,7 @@ func ShowLockStatics(cmd *cobra.Command, args []string) {
 func ShowDepositStaticsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deposit",
-		Short: "show the deposit statics of chain33 asset",
+		Short: "show the deposit statics of chain asset",
 		Run:   ShowDepositStatics,
 	}
 	ShowDepositStaticsFlags(cmd)

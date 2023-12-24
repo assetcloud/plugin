@@ -4,4 +4,4 @@
 
 package rpc
 
-//"github.com/33cn/chain33/rpc/types"
+//"github.com/assetcloud/chain/rpc/types"

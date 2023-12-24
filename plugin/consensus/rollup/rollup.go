@@ -5,14 +5,14 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/33cn/chain33/common/address"
+	"github.com/assetcloud/chain/common/address"
 
-	"github.com/33cn/chain33/queue"
+	"github.com/assetcloud/chain/queue"
 
-	"github.com/33cn/chain33/common/log"
-	"github.com/33cn/chain33/rpc/grpcclient"
-	"github.com/33cn/chain33/system/consensus"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/log"
+	"github.com/assetcloud/chain/rpc/grpcclient"
+	"github.com/assetcloud/chain/system/consensus"
+	"github.com/assetcloud/chain/types"
 )
 
 const (
@@ -42,10 +42,10 @@ type RollUp struct {
 	ctx                  context.Context
 	cancel               context.CancelFunc
 	base                 *consensus.BaseClient
-	chainCfg             *types.Chain33Config
+	chainCfg             *types.ChainConfig
 	subChan              chan *types.TopicData
 	minBuildRoundInCache int64
-	mainChainGrpc        types.Chain33Client
+	mainChainGrpc        types.ChainClient
 	val                  *validator
 	cache                *commitCache
 	cross                *crossTxHandler

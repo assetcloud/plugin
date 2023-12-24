@@ -5,10 +5,10 @@ import (
 	"hash"
 	"math/big"
 
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/mix/executor/merkletree"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/merkletree"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/pkg/errors"
@@ -39,14 +39,14 @@ func getAccountProofInHistory(statedb dbm.KV, req *zt.ZkReqExistenceProof) (*zt.
 	return GetHistoryAccountProof(historyAccountInfo, req.AccountId, req.TokenId)
 }
 
-func getInitHistoryLeaf(ethFeeAddr, chain33FeeAddr string) []*zt.HistoryLeaf {
-	leaves := getInitAccountLeaf(ethFeeAddr, chain33FeeAddr)
+func getInitHistoryLeaf(ethFeeAddr, chainFeeAddr string) []*zt.HistoryLeaf {
+	leaves := getInitAccountLeaf(ethFeeAddr, chainFeeAddr)
 	var historyLeaf []*zt.HistoryLeaf
 	for _, l := range leaves {
 		history := &zt.HistoryLeaf{
 			EthAddress:  l.EthAddress,
 			AccountId:   l.AccountId,
-			Chain33Addr: l.Chain33Addr,
+			ChainAddr: l.ChainAddr,
 			TokenHash:   zt.Byte2Str(l.TokenHash),
 		}
 		if len(l.TokenIds) > 0 {
@@ -86,7 +86,7 @@ func BuildStateDbHistoryAccount(db dbm.KV, reqRootHash string) (*zt.HistoryAccou
 		history := &zt.HistoryLeaf{
 			AccountId:    id,
 			EthAddress:   leaf.EthAddress,
-			Chain33Addr:  leaf.Chain33Addr,
+			ChainAddr:  leaf.ChainAddr,
 			PubKey:       leaf.PubKey,
 			ProxyPubKeys: leaf.ProxyPubKeys,
 		}
@@ -219,7 +219,7 @@ func getAccountMapByOp(op *zt.ZkOperation, accountMap map[uint64]*zt.HistoryLeaf
 			fromLeaf = &zt.HistoryLeaf{
 				AccountId:   operation.GetAccountID(),
 				EthAddress:  operation.GetEthAddress(),
-				Chain33Addr: operation.GetLayer2Addr(),
+				ChainAddr: operation.GetLayer2Addr(),
 				Tokens: []*zt.TokenBalance{
 					{
 						TokenId: operation.TokenID,
@@ -363,7 +363,7 @@ func getAccountMapByOp(op *zt.ZkOperation, accountMap map[uint64]*zt.HistoryLeaf
 		toLeaf := &zt.HistoryLeaf{
 			AccountId:   operation.GetToAccountID(),
 			EthAddress:  operation.GetEthAddress(),
-			Chain33Addr: operation.GetLayer2Addr(),
+			ChainAddr: operation.GetLayer2Addr(),
 			Tokens: []*zt.TokenBalance{
 				{
 					TokenId: operation.TokenID,
@@ -645,7 +645,7 @@ func getAccountMapByOp(op *zt.ZkOperation, accountMap map[uint64]*zt.HistoryLeaf
 		toLeaf := &zt.HistoryLeaf{
 			AccountId:   operation.ToAccountID,
 			EthAddress:  operation.GetEthAddress(),
-			Chain33Addr: operation.GetLayer2Addr(),
+			ChainAddr: operation.GetLayer2Addr(),
 			Tokens: []*zt.TokenBalance{
 				{
 					TokenId: operation.TokenID,
@@ -967,7 +967,7 @@ func getHistoryLeafHash(leaf *zt.HistoryLeaf, h hash.Hash) []byte {
 	accountIdBytes := new(fr.Element).SetUint64(leaf.GetAccountId()).Bytes()
 	h.Write(accountIdBytes[:])
 	h.Write(zt.Str2Byte(leaf.GetEthAddress()))
-	h.Write(zt.Str2Byte(leaf.GetChain33Addr()))
+	h.Write(zt.Str2Byte(leaf.GetChainAddr()))
 
 	getLeafPubKeyHash(h, leaf.GetPubKey())
 	getLeafPubKeyHash(h, leaf.GetProxyPubKeys().GetNormal())
@@ -1074,7 +1074,7 @@ func GetHistoryAccountProof(historyAccountInfo *zt.HistoryAccountProofInfo, targ
 	accountW := &zt.AccountWitness{
 		ID:            targetAccountID,
 		EthAddr:       targetLeaf.EthAddress,
-		Chain33Addr:   targetLeaf.Chain33Addr,
+		ChainAddr:   targetLeaf.ChainAddr,
 		TokenTreeRoot: tokenMerkleProof.RootHash,
 		PubKey:        targetLeaf.PubKey,
 		ProxyPubKeys:  targetLeaf.ProxyPubKeys,

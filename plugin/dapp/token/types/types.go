@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 	"reflect"
 
-	log "github.com/33cn/chain33/common/log/log15"
+	log "github.com/assetcloud/chain/common/log/log15"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 )
 
 var tokenlog = log.New("module", "execs.token.types")
@@ -22,7 +22,7 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(TokenX, "Enable", 0)
 	cfg.RegisterDappFork(TokenX, ForkTokenBlackListX, 0)
 	cfg.RegisterDappFork(TokenX, ForkBadTokenSymbolX, 0)
@@ -33,7 +33,7 @@ func InitFork(cfg *types.Chain33Config) {
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(TokenX, NewType(cfg))
 }
 
@@ -43,7 +43,7 @@ type TokenType struct {
 }
 
 // NewType 创建执行器类型
-func NewType(cfg *types.Chain33Config) *TokenType {
+func NewType(cfg *types.ChainConfig) *TokenType {
 	c := &TokenType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

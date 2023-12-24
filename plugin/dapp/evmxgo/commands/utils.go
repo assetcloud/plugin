@@ -7,10 +7,10 @@ package commands
 import (
 	"strings"
 
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/types"
 )
 
 // GetExecAddr 获取执行器地址

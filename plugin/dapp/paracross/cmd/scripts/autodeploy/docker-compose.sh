@@ -8,7 +8,7 @@ export PATH="$PWD:$PATH"
 buildpath="temp"
 
 NODE1="$buildpath""_parachain1_1"
-CLI="docker exec ${NODE1} /root/chain33-cli"
+CLI="docker exec ${NODE1} /root/chain-cli"
 
 NODE2="$buildpath""_parachain2_1"
 
@@ -16,7 +16,7 @@ NODE3="$buildpath""_parachain3_1"
 
 NODE4="$buildpath""_parachain4_1"
 
-CHAIN33_CLI="chain33-cli"
+CHAIN_CLI="chain-cli"
 containers=("${NODE1}" "${NODE2}" "${NODE3}" "${NODE4}")
 ## global config ###
 sedfix=""
@@ -31,7 +31,7 @@ source config
 function para_init() {
     local index=1
     for auth in "${authAccount[@]}"; do
-        tomlfile="chain33.para.$index.toml"
+        tomlfile="chain.para.$index.toml"
         para_set_toml "$tomlfile"
         sed -i $sedfix 's/^authAccount=.*/authAccount="'''"$auth"'''"/g' "$tomlfile"
         ((index++))
@@ -39,7 +39,7 @@ function para_init() {
 }
 
 function para_set_toml() {
-    cp chain33.para.toml "${1}"
+    cp chain.para.toml "${1}"
 
     sed -i $sedfix 's/^Title.*/Title="user.p.'''"$paraName"'''."/g' "${1}"
     sed -i $sedfix 's/^startHeight=.*/startHeight='''"$mainStartHeight"'''/g' "${1}"
@@ -73,26 +73,26 @@ function para_import_wallet() {
     local key=$2
     local port=$1
     echo "=========== # save seed to wallet ============="
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" seed save -p 1314fuzamei -s "tortoise main civil member grace happy century convince father cage beach hip maid merry rib"
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" seed save -p 1314fuzamei -s "tortoise main civil member grace happy century convince father cage beach hip maid merry rib"
 
     echo "=========== # unlock wallet ============="
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" wallet unlock -p 1314fuzamei -t 0
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" wallet unlock -p 1314fuzamei -t 0
 
     echo "=========== # import private key ============="
     echo "key: ${key}"
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" account import_key -k "${key}" -l "paraAuthAccount"
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" account import_key -k "${key}" -l "paraAuthAccount"
 
     echo "=========== # close auto mining ============="
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" wallet auto_mine -f 0
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" wallet auto_mine -f 0
 
     echo "=========== # wallet status ============="
-    ./$CHAIN33_CLI --rpc_laddr "http://localhost:$port" wallet status
+    ./$CHAIN_CLI --rpc_laddr "http://localhost:$port" wallet status
 }
 
 function para_unlock_wallet() {
     for ((i = 0; i < ${#authPort[@]}; i++)); do
         echo "=========== # para unlock wallet ${authPort[$i]}============="
-        ./$CHAIN33_CLI --rpc_laddr "http://localhost:${authPort[$i]}" wallet unlock -p 1314fuzamei -t 0
+        ./$CHAIN_CLI --rpc_laddr "http://localhost:${authPort[$i]}" wallet unlock -p 1314fuzamei -t 0
     done
 
 }
@@ -114,7 +114,7 @@ function start() {
     echo "status"
     check_docker_status
 
-    #    ./chain33-cli --rpc_laddr http://localhost:18901 block last_header
+    #    ./chain-cli --rpc_laddr http://localhost:18901 block last_header
     $CLI --rpc_laddr http://localhost:8901 block last_header
 
 }
@@ -123,9 +123,9 @@ function check_docker_status() {
     status=$(docker-compose ps | grep parachain1_1 | awk '{print $6}')
     statusPara=$(docker-compose ps | grep parachain1_1 | awk '{print $3}')
     if [ "${status}" == "Exit" ] || [ "${statusPara}" == "Exit" ]; then
-        echo "=========== chain33 service Exit logs ========== "
+        echo "=========== chain service Exit logs ========== "
         docker-compose logs parachain1
-        echo "=========== chain33 service Exit logs End========== "
+        echo "=========== chain service Exit logs End========== "
     fi
 
 }
@@ -178,7 +178,7 @@ EOF
       context: .
     entrypoint: /root/entrypoint.sh
     environment:
-      PARAFILE: "/root/chain33.para.$i.toml"
+      PARAFILE: "/root/chain.para.$i.toml"
     ports:
      - "1890$i:8901"
     volumes:
@@ -205,7 +205,7 @@ function create_storage() {
 function create_build() {
     rm -rf $buildpath
     mkdir -p $buildpath
-    cp chain33* Dockerfile ./*.sh "$buildpath"/
+    cp chain* Dockerfile ./*.sh "$buildpath"/
     cd $buildpath
     create_yml
 }

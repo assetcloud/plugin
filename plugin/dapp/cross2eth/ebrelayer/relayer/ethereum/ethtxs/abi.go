@@ -3,15 +3,15 @@ package ethtxs
 import (
 	"strings"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
 //const
 const (
 	BridgeBankABI    = "BridgeBankABI"
-	Chain33BankABI   = "Chain33BankABI"
-	Chain33BridgeABI = "Chain33BridgeABI"
+	ChainBankABI   = "ChainBankABI"
+	ChainBridgeABI = "ChainBridgeABI"
 	EthereumBankABI  = "EthereumBankABI"
 	OracleABI        = "OracleABI"
 )
@@ -22,10 +22,10 @@ func LoadABI(contractName string) abi.ABI {
 	switch contractName {
 	case BridgeBankABI:
 		abiJSON = generated.BridgeBankABI
-	case Chain33BankABI:
-		abiJSON = generated.Chain33BankABI
-	case Chain33BridgeABI:
-		abiJSON = generated.Chain33BridgeABI
+	case ChainBankABI:
+		abiJSON = generated.ChainBankABI
+	case ChainBridgeABI:
+		abiJSON = generated.ChainBridgeABI
 	case EthereumBankABI:
 		abiJSON = generated.EthereumBankABI
 	case OracleABI:

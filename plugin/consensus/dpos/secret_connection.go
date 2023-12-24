@@ -20,8 +20,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/plugin/plugin/consensus/dpos/types"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/plugin/plugin/consensus/dpos/types"
 	"golang.org/x/crypto/nacl/box"
 	"golang.org/x/crypto/nacl/secretbox"
 	"golang.org/x/crypto/ripemd160"

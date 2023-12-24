@@ -7,8 +7,8 @@ package para
 import (
 	"errors"
 
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 func (client *client) setLocalDb(set *types.LocalDBSet) error {

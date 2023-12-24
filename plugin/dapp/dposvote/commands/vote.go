@@ -15,14 +15,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/33cn/chain33/common/crypto"
+	"github.com/assetcloud/chain/common/crypto"
 
-	vrf "github.com/33cn/chain33/common/vrf/secp256k1"
-	jsonrpc "github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	ttypes "github.com/33cn/plugin/plugin/consensus/dpos/types"
-	dty "github.com/33cn/plugin/plugin/dapp/dposvote/types"
+	vrf "github.com/assetcloud/chain/common/vrf/secp256k1"
+	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	ttypes "github.com/assetcloud/plugin/plugin/consensus/dpos/types"
+	dty "github.com/assetcloud/plugin/plugin/dapp/dposvote/types"
 	secp256k1 "github.com/btcsuite/btcd/btcec"
 	"github.com/spf13/cobra"
 )
@@ -101,7 +101,7 @@ func regist(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 
 }
@@ -140,7 +140,7 @@ func cancelRegist(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -180,7 +180,7 @@ func vote(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -218,7 +218,7 @@ func cancelVote(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -260,7 +260,7 @@ func reRegist(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 
 }
@@ -302,7 +302,7 @@ func candidatorQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCandidatorByTopN
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.CandidatorReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 
 	case "pubkeys":
@@ -312,7 +312,7 @@ func candidatorQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCandidatorByPubkeys
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.CandidatorReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 	}
 }
@@ -351,7 +351,7 @@ func voteQuery(cmd *cobra.Command, args []string) {
 	params.FuncName = dty.FuncNameQueryVote
 	params.Payload = types.MustPBToJSON(req)
 	var res dty.DposVoteReply
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 
 }
@@ -394,7 +394,7 @@ func vrfM(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -440,7 +440,7 @@ func vrfRP(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -493,7 +493,7 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByTime
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 
 	case "timestamp":
@@ -510,7 +510,7 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByTime
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 
 	case "cycle":
@@ -527,7 +527,7 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByCycle
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 
 	case "topN":
@@ -544,7 +544,7 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByCycleForTopN
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 
 	case "pubkeys":
@@ -564,7 +564,7 @@ func vrfQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryVrfByCycleForPubkeys
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposVrfReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 	}
 
@@ -629,7 +629,7 @@ func createFiles(cmd *cobra.Command, args []string) {
 
 	// genesis file
 	genDoc := ttypes.GenesisDoc{
-		ChainID:     fmt.Sprintf("chain33-%v", RandStr(6)),
+		ChainID:     fmt.Sprintf("chain-%v", RandStr(6)),
 		GenesisTime: time.Now(),
 	}
 
@@ -873,7 +873,7 @@ func recordCB(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -917,7 +917,7 @@ func cbQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCBInfoByCycle
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposCBReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 
 	case "height":
@@ -929,7 +929,7 @@ func cbQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCBInfoByHeight
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposCBReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 
 	case "hash":
@@ -941,7 +941,7 @@ func cbQuery(cmd *cobra.Command, args []string) {
 		params.FuncName = dty.FuncNameQueryCBInfoByHash
 		params.Payload = types.MustPBToJSON(req)
 		var res dty.DposCBReply
-		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+		ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 		ctx.Run()
 	}
 }
@@ -976,6 +976,6 @@ func topNQuery(cmd *cobra.Command, args []string) {
 	params.FuncName = dty.FuncNameQueryTopNByVersion
 	params.Payload = types.MustPBToJSON(req)
 	var res dty.TopNCandidatorsReply
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }

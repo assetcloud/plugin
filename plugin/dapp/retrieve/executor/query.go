@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	rt "github.com/33cn/plugin/plugin/dapp/retrieve/types"
+	"github.com/assetcloud/chain/types"
+	rt "github.com/assetcloud/plugin/plugin/dapp/retrieve/types"
 )
 
 // Query_GetRetrieveInfo get retrieve state

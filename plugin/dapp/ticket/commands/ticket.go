@@ -8,19 +8,19 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/33cn/chain33/common"
+	"github.com/assetcloud/chain/common"
 	"math/rand"
 	"os"
 	"strings"
 	"time"
 
-	cmdtypes "github.com/33cn/chain33/system/dapp/commands/types"
+	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 	"github.com/spf13/cobra"
 )
 
@@ -179,7 +179,7 @@ func listTicket(cmd *cobra.Command, args []string) {
 		params.Payload = types.MustPBToJSON(&req)
 		if returnAddr == "" {
 			var res ty.ReplyTicketList
-			ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+			ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 			ctx.Run()
 			return
 		}
@@ -190,7 +190,7 @@ func listTicket(cmd *cobra.Command, args []string) {
 			fmt.Fprintln(os.Stderr, err)
 			return
 		}
-		err = rpc.Call("Chain33.Query", params, &res)
+		err = rpc.Call("Chain.Query", params, &res)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return
@@ -308,7 +308,7 @@ func getWalletStatus(rpcAddr string) (interface{}, error) {
 		return nil, err
 	}
 	var res rpctypes.WalletStatus
-	err = rpc.Call("Chain33.GetWalletStatus", nil, &res)
+	err = rpc.Call("Chain.GetWalletStatus", nil, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return nil, err
@@ -345,7 +345,7 @@ func coldAddressOfMiner(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(reqaddr)
 
 	var res types.ReplyStrings
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -398,7 +398,7 @@ func createCloseTicket(cmd *cobra.Command, args []string) {
 		fmt.Fprintln(os.Stderr, err)
 		return
 	}
-	err = rpc.Call("Chain33.Query", params, &res)
+	err = rpc.Call("Chain.Query", params, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return

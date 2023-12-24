@@ -7,18 +7,18 @@ package executor
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/common/address"
+	"github.com/assetcloud/chain/common/address"
 
-	log "github.com/33cn/chain33/common/log/log15"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	pkt "github.com/33cn/plugin/plugin/dapp/pokerbull/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	pkt "github.com/assetcloud/plugin/plugin/dapp/pokerbull/types"
 )
 
 var logger = log.New("module", "execs.pokerbull")
 
 // Init 执行器初始化
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, newPBGame().GetName(), newPBGame, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

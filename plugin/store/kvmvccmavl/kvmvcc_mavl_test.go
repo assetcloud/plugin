@@ -15,12 +15,12 @@ import (
 
 	"bytes"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/common"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/queue"
-	drivers "github.com/33cn/chain33/system/store"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/common"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/queue"
+	drivers "github.com/assetcloud/chain/system/store"
+	"github.com/assetcloud/chain/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -402,7 +402,7 @@ func TestIterateRangeByStateHash(t *testing.T) {
 	addr2 := "26htvcBNSEA7fZhAdLJphDwQRQJaHpyHTp"
 	addr3 := "36htvcBNSEA7fZhAdLJphDwQRQJaHpyHTp"
 	addr4 := "46htvcBNSEA7fZhAdLJphDwQRQJaHpyHTp"
-	accCoin := account.NewCoinsAccount(types.NewChain33ConfigNoInit(types.GetDefaultCfgstring()))
+	accCoin := account.NewCoinsAccount(types.NewChainConfigNoInit(types.GetDefaultCfgstring()))
 
 	account1 := &types.Account{
 		Balance: 1000 * 1e8,

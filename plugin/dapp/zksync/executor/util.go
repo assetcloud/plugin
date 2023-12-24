@@ -4,9 +4,9 @@ import (
 	"math/big"
 	"strings"
 
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/pkg/errors"
 )
 

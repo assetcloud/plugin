@@ -22,13 +22,13 @@ function StartDockerRelayerDeploy_onlyETH() {
     # 启动 ebrelayer
     start_docker_ebrelayerA
 
-    docker cp "./deploy_chain33.toml" "${dockerNamePrefix}_ebrelayera_1":/root/deploy_chain33.toml
+    docker cp "./deploy_chain.toml" "${dockerNamePrefix}_ebrelayera_1":/root/deploy_chain.toml
     docker cp "./deploy_ethereum.toml" "${dockerNamePrefix}_ebrelayera_1":/root/deploy_ethereum.toml
 
     # 部署合约 设置 bridgeRegistry 地址
-    OfflineDeploy_chain33
+    OfflineDeploy_chain
     # 修改 relayer.toml 字段
-    sed -i 's/^BridgeRegistryOnChain33=.*/BridgeRegistryOnChain33="'"${chain33BridgeRegistry}"'"/g' "./relayer.toml"
+    sed -i 's/^BridgeRegistryOnChain=.*/BridgeRegistryOnChain="'"${chainBridgeRegistry}"'"/g' "./relayer.toml"
 
     # shellcheck disable=SC2154
     # shellcheck disable=SC2034
@@ -44,10 +44,10 @@ function StartDockerRelayerDeploy_onlyETH() {
     }
 
     # 向离线多签地址打点手续费
-    Chain33Cli=${MainCli}
-    initMultisignChain33Addr
-    transferChain33MultisignFee
-    Chain33Cli=${Para8901Cli}
+    ChainCli=${MainCli}
+    initMultisignChainAddr
+    transferChainMultisignFee
+    ChainCli=${Para8901Cli}
 
     docker cp "./relayer.toml" "${dockerNamePrefix}_ebrelayera_1":/root/relayer.toml
     InitRelayerA
@@ -60,10 +60,10 @@ function StartDockerRelayerDeploy_onlyETH() {
         Boss4xCLI=${Boss4xCLIeth}
         CLIA=${CLIAeth}
         ethereumBridgeBank="${ethereumBridgeBankOnETH}"
-        offline_create_bridge_token_chain33_symbol "USDT"
-        chain33USDTBridgeTokenAddrOnETH="${chain33MainBridgeTokenAddr}"
-        offline_create_bridge_token_chain33_symbol "ETH"
-        chain33MainBridgeTokenAddrETH="${chain33MainBridgeTokenAddr}"
+        offline_create_bridge_token_chain_symbol "USDT"
+        chainUSDTBridgeTokenAddrOnETH="${chainMainBridgeTokenAddr}"
+        offline_create_bridge_token_chain_symbol "ETH"
+        chainMainBridgeTokenAddrETH="${chainMainBridgeTokenAddr}"
         offline_create_bridge_token_eth_BTY
         ethereumBtyBridgeTokenAddrOnETH="${ethereumBtyBridgeTokenAddr}"
         offline_deploy_erc20_create_tether_usdt_USDT "USDT"
@@ -72,10 +72,10 @@ function StartDockerRelayerDeploy_onlyETH() {
 
     # shellcheck disable=SC2086
     {
-        docker cp "${chain33BridgeBank}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${chain33BridgeBank}.abi
-        docker cp "${chain33BridgeRegistry}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${chain33BridgeRegistry}.abi
-        docker cp "${chain33USDTBridgeTokenAddrOnETH}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${chain33USDTBridgeTokenAddrOnETH}.abi
-        docker cp "${chain33MainBridgeTokenAddrETH}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${chain33MainBridgeTokenAddrETH}.abi
+        docker cp "${chainBridgeBank}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${chainBridgeBank}.abi
+        docker cp "${chainBridgeRegistry}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${chainBridgeRegistry}.abi
+        docker cp "${chainUSDTBridgeTokenAddrOnETH}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${chainUSDTBridgeTokenAddrOnETH}.abi
+        docker cp "${chainMainBridgeTokenAddrETH}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${chainMainBridgeTokenAddrETH}.abi
         docker cp "${ethereumBridgeBankOnETH}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${ethereumBridgeBankOnETH}.abi
         docker cp "${ethereumBridgeRegistryOnETH}.abi" "${dockerNamePrefix}_ebrelayera_1":/root/${ethereumBridgeRegistryOnETH}.abi
     }
@@ -100,14 +100,14 @@ function AllRelayerMainTest() {
 
     # shellcheck disable=SC2120
     if [[ $# -ge 2 ]]; then
-        chain33ID="${2}"
+        chainID="${2}"
     fi
 
     get_cli
 
     # init
-    Chain33Cli=${MainCli}
-    InitChain33Validator
+    ChainCli=${MainCli}
+    InitChainValidator
     # para add
     initPara
 
@@ -117,10 +117,10 @@ function AllRelayerMainTest() {
     CLIA=${CLIAeth}
     ethereumBridgeBank="${ethereumBridgeBankOnETH}"
     ethereumMultisignAddr="${ethereumMultisignAddrOnETH}"
-    chain33MainBridgeTokenAddr="${chain33MainBridgeTokenAddrETH}"
+    chainMainBridgeTokenAddr="${chainMainBridgeTokenAddrETH}"
     ethereumBtyBridgeTokenAddr="${ethereumBtyBridgeTokenAddrOnETH}"
     ethereumUSDTERC20TokenAddr="${ethereumUSDTERC20TokenAddrOnETH}"
-    chain33USDTBridgeTokenAddr="${chain33USDTBridgeTokenAddrOnETH}"
+    chainUSDTBridgeTokenAddr="${chainUSDTBridgeTokenAddrOnETH}"
     test_lock_and_burn "ETH" "USDT"
 
     # TestRelayerProxy_onlyETH

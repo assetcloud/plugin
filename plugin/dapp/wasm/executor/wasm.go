@@ -1,18 +1,18 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/system/dapp"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	types2 "github.com/33cn/plugin/plugin/dapp/wasm/types"
+	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/system/dapp"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	types2 "github.com/assetcloud/plugin/plugin/dapp/wasm/types"
 	"github.com/perlin-network/life/exec"
 )
 
 var driverName = types2.WasmX
 var log = log15.New("module", "execs."+types2.WasmX)
 
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	if name != driverName {
 		panic("system dapp can not be rename")
 	}

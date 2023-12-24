@@ -3,7 +3,7 @@ package ethtxs
 import (
 	"math/big"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -22,12 +22,12 @@ type OracleClaim struct {
 // ProphecyClaim : contains data required to make an ProphecyClaim
 type ProphecyClaim struct {
 	ClaimType            events.ClaimType
-	Chain33Sender        []byte
+	ChainSender        []byte
 	EthereumReceiver     common.Address
 	TokenContractAddress common.Address
 	Symbol               string
 	Amount               *big.Int
-	Chain33TxHash        []byte
+	ChainTxHash        []byte
 }
 
 type WithdrawStatus int32

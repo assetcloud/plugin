@@ -3,8 +3,8 @@ package echo
 import (
 	"reflect"
 
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
 )
 
 // 定义本执行器支持的Action种类
@@ -43,12 +43,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(EchoX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(EchoX, NewType(cfg))
 }
 
@@ -58,7 +58,7 @@ type Type struct {
 }
 
 // NewType 初始化本执行器类型
-func NewType(cfg *types.Chain33Config) *Type {
+func NewType(cfg *types.ChainConfig) *Type {
 	c := &Type{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

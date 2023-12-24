@@ -7,10 +7,10 @@ package executor
 import (
 	"encoding/hex"
 
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	tokenty "github.com/33cn/plugin/plugin/dapp/token/types"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	tokenty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 )
 
 func (t *token) ExecLocal_Transfer(payload *types.AssetsTransfer, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {

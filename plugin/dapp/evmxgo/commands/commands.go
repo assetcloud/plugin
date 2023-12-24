@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	cmdtypes "github.com/33cn/chain33/system/dapp/commands/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/common/commands"
-	evmxgotypes "github.com/33cn/plugin/plugin/dapp/evmxgo/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
+	evmxgotypes "github.com/assetcloud/plugin/plugin/dapp/evmxgo/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -161,7 +161,7 @@ func getFinishCreatedTokens(cmd *cobra.Command, args []string) {
 	}
 
 	var res evmxgotypes.ReplyEvmxgos
-	err = rpc.Call("Chain33.Query", params, &res)
+	err = rpc.Call("Chain.Query", params, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -223,7 +223,7 @@ func tokenAssets(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res evmxgotypes.ReplyAccountEvmxgoAssets
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.SetResultCbExt(parseTokenAssetsRes)
 	ctx.RunExt(cfg)
 }
@@ -362,7 +362,7 @@ func getTokenLogs(cmd *cobra.Command, args []string) {
 		return
 	}
 	var res evmxgotypes.ReplyEvmxgoLogs
-	err = rpc.Call("Chain33.Query", params, &res)
+	err = rpc.Call("Chain.Query", params, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -415,7 +415,7 @@ func getToken(cmd *cobra.Command, args []string) {
 	}
 
 	var res evmxgotypes.LocalEvmxgo
-	err = rpc.Call("Chain33.Query", params, &res)
+	err = rpc.Call("Chain.Query", params, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
@@ -480,6 +480,6 @@ func queryTx(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res types.ReplyTxInfos
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }

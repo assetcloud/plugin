@@ -10,16 +10,16 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/33cn/chain33/system/address/eth"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/math"
+	"github.com/assetcloud/chain/system/address/eth"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/math"
 
-	"github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto/blake2b"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto/bls12381"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto/bn256"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/params"
+	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto/blake2b"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto/bls12381"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto/bn256"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/params"
 
 	"golang.org/x/crypto/ripemd160"
 )
@@ -35,7 +35,7 @@ type PrecompiledContract interface {
 	Run(input []byte) ([]byte, error)
 }
 
-// PrecompiledContractsByzantium chain33平台支持君士坦丁堡版本支持的所有预编译合约指令，并从此版本开始同步支持EVM黄皮书中的新增指令；
+// PrecompiledContractsByzantium chain平台支持君士坦丁堡版本支持的所有预编译合约指令，并从此版本开始同步支持EVM黄皮书中的新增指令；
 // 保存拜占庭版本支持的所有预编译合约（包括之前版本的合约）；
 // 后面如果有硬分叉，需要在此处考虑分叉逻辑，根据区块高度分别处理；
 // 下面的8个预编译指令，直接引用go-ethereum中的EVM实现
@@ -172,7 +172,7 @@ func (c *ecrecover) Run(input []byte) ([]byte, error) {
 	if driver.GetName() == eth.Name {
 		return common.LeftPadBytes(crypto.Keccak256(pubKey[1:])[12:], 32), nil
 	}
-	// compress pub key(chain33中需使用压缩格式)
+	// compress pub key(chain中需使用压缩格式)
 	compressedPub, _ := crypto.CompressPubKey(pubKey)
 	addrBytes, _ := driver.FromString(driver.PubKeyToAddr(compressedPub))
 	return common.LeftPadBytes(addrBytes, 32), nil

@@ -30,8 +30,8 @@ function exit_cp_file() {
         docker exec "${dockerNamePrefix}_ebrelayer${name}_1" tail -n 1000 /root/logs/x2Ethereum_relayer.log
     done
 
-    docker cp "${dockerNamePrefix}_chain33_1":/root/logs/chain33.log "${dirName}/chain33.log"
-    docker logs "${dockerNamePrefix}_chain33_1" | tail -n 1000
+    docker cp "${dockerNamePrefix}_chain_1":/root/logs/chain.log "${dirName}/chain.log"
+    docker logs "${dockerNamePrefix}_chain_1" | tail -n 1000
 
     exit 1
 }
@@ -54,8 +54,8 @@ function copyErrLogs() {
             docker cp "${dockerNamePrefix}_ebrelayer${name}_rpc_1":/root/logs/x2Ethereum_relayer.log "${dirName}/ebrelayer${name}_rpc.log"
             docker exec "${dockerNamePrefix}_ebrelayer${name}_rpc_1" tail -n 1000 /root/logs/x2Ethereum_relayer.log
         done
-        docker cp "${dockerNamePrefix}_chain33_1":/root/logs/chain33.log "${dirName}/chain33_rpc.log"
-        docker logs "${dockerNamePrefix}_chain33_1" | tail -n 1000
+        docker cp "${dockerNamePrefix}_chain_1":/root/logs/chain.log "${dirName}/chain_rpc.log"
+        docker logs "${dockerNamePrefix}_chain_1" | tail -n 1000
     fi
 }
 
@@ -90,7 +90,7 @@ function cli_ret() {
     echo "${msg}"
 }
 
-# 判断 chain33 金额是否正确
+# 判断 chain 金额是否正确
 function balance_ret() {
     set +x
     if [[ $# -lt 2 ]]; then
@@ -292,7 +292,7 @@ function kill_ebrelayer() {
     sleep 1
 }
 
-# chain33 区块等待 $1:cli 路径  $2:等待高度
+# chain 区块等待 $1:cli 路径  $2:等待高度
 function block_wait() {
     set +x
     local CLI=${1}
@@ -317,7 +317,7 @@ function block_wait() {
 
     count=$((count + 1))
     set -x
-    echo -e "${GRE}chain33 wait new block $count s, cur height=$expect,old=$cur_height${NOC}"
+    echo -e "${GRE}chain wait new block $count s, cur height=$expect,old=$cur_height${NOC}"
 }
 
 # 检查交易是否执行成功 $1:cli 路径  $2:交易hash
@@ -346,7 +346,7 @@ function check_tx() {
         sleep 1
 
         if [[ ${count} -ge 100 ]]; then
-            echo "chain33 query tx for too long"
+            echo "chain query tx for too long"
             break
         fi
     done
@@ -412,15 +412,15 @@ function updata_relayer_a_toml() {
     line=$(delete_line_show "${file}" "pushBind")
     sed -i ''"${line}"' a pushBind="'"${pushHost}"':20000"' "${file}"
 
-    local chain33Host=$(get_docker_addr "${dockerNamePrefix}_chain33_1")
-    if [[ ${chain33Host} == "" ]]; then
-        echo -e "${RED}chain33Host is empty${NOC}"
+    local chainHost=$(get_docker_addr "${dockerNamePrefix}_chain_1")
+    if [[ ${chainHost} == "" ]]; then
+        echo -e "${RED}chainHost is empty${NOC}"
         exit_cp_file
     fi
 
-    local line=$(delete_line_show "${file}" "chain33Host")
+    local line=$(delete_line_show "${file}" "chainHost")
     # 在第 line 行后面 新增合约地址
-    sed -i ''"${line}"' a chain33Host="http://'"${chain33Host}"':8801"' "${file}"
+    sed -i ''"${line}"' a chainHost="http://'"${chainHost}"':8801"' "${file}"
 
     sed -i 's/^EthBlockFetchPeriod=.*/EthBlockFetchPeriod=500/g' "${file}"
     sed -i 's/^fetchHeightPeriodMs=.*/fetchHeightPeriodMs=500/g' "${file}"
@@ -445,12 +445,12 @@ function updata_relayer_toml_ropston() {
     local maturityDegree=${2}
     local file=${3}
 
-    local chain33Host=127.0.0.1
+    local chainHost=127.0.0.1
     local pushHost=127.0.0.1
 
-    local line=$(delete_line_show "${file}" "chain33Host")
+    local line=$(delete_line_show "${file}" "chainHost")
     # 在第 line 行后面 新增合约地址
-    sed -i ''"${line}"' a chain33Host="http://'${chain33Host}':8801"' "${file}"
+    sed -i ''"${line}"' a chainHost="http://'${chainHost}':8801"' "${file}"
 
     line=$(delete_line_show "${file}" "pushHost")
     sed -i ''"${line}"' a pushHost="http://'${pushHost}':20000"' "${file}"

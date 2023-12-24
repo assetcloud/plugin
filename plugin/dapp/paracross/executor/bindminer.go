@@ -3,9 +3,9 @@ package executor
 import (
 	"github.com/pkg/errors"
 
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 const (

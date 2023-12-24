@@ -7,13 +7,13 @@ import (
 	"math/big"
 	"reflect"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/client"
-	dbm "github.com/33cn/chain33/common/db"
-	tab "github.com/33cn/chain33/common/db/table"
-	"github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	et "github.com/33cn/plugin/plugin/dapp/exchange/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/client"
+	dbm "github.com/assetcloud/chain/common/db"
+	tab "github.com/assetcloud/chain/common/db/table"
+	"github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	et "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 )
 
 // Action action struct
@@ -974,7 +974,7 @@ func calcMtfFee(cost int64, rate int32) int64 {
 	return fee.Int64()
 }
 
-func ParseConfig(cfg *types.Chain33Config, height int64) (*et.Econfig, error) {
+func ParseConfig(cfg *types.ChainConfig, height int64) (*et.Econfig, error) {
 	banks, err := ParseStrings(cfg, "banks", height)
 	if err != nil || len(banks) == 0 {
 		return nil, err
@@ -1005,7 +1005,7 @@ func ParseConfig(cfg *types.Chain33Config, height int64) (*et.Econfig, error) {
 	}, nil
 }
 
-func ParseStrings(cfg *types.Chain33Config, tradeKey string, height int64) (ret []string, err error) {
+func ParseStrings(cfg *types.ChainConfig, tradeKey string, height int64) (ret []string, err error) {
 	val, err := cfg.MG(et.MverPrefix+"."+tradeKey, height)
 	if err != nil {
 		return nil, err
@@ -1028,7 +1028,7 @@ func ParseStrings(cfg *types.Chain33Config, tradeKey string, height int64) (ret 
 	return
 }
 
-func ParseCoins(cfg *types.Chain33Config, tradeKey string, height int64) (coins []et.CoinCfg, err error) {
+func ParseCoins(cfg *types.ChainConfig, tradeKey string, height int64) (coins []et.CoinCfg, err error) {
 	coins = make([]et.CoinCfg, 0)
 
 	val, err := cfg.MG(et.MverPrefix+"."+tradeKey, height)
@@ -1059,7 +1059,7 @@ func ParseCoins(cfg *types.Chain33Config, tradeKey string, height int64) (coins 
 	return
 }
 
-func ParseSymbols(cfg *types.Chain33Config, tradeKey string, height int64) (symbols map[string]*et.Trade, err error) {
+func ParseSymbols(cfg *types.ChainConfig, tradeKey string, height int64) (symbols map[string]*et.Trade, err error) {
 	symbols = make(map[string]*et.Trade)
 
 	val, err := cfg.MG(et.MverPrefix+"."+tradeKey, height)

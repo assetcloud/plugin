@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/test/setup"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/test/setup"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -22,10 +22,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//"BridgeToken creation (Chain33 assets)"
+//"BridgeToken creation (Chain assets)"
 func TestBrigeTokenCreat(t *testing.T) {
 	ctx := context.Background()
-	println("TEST:BridgeToken creation (Chain33 assets)")
+	println("TEST:BridgeToken creation (Chain assets)")
 	//1st部署相关合约
 	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 	require.NoError(t, err)
@@ -109,14 +109,14 @@ func TestBrigeTokenCreat(t *testing.T) {
 	}
 }
 
-//测试在chain33上锁定资产,然后在以太坊上铸币
+//测试在chain上锁定资产,然后在以太坊上铸币
 //发行token="BTY"
 //铸币NewOracleClaim
 //铸币成功
-//Bridge token minting (for locked chain33 assets)
+//Bridge token minting (for locked chain assets)
 func TestBrigeTokenMint(t *testing.T) {
 	ctx := context.Background()
-	println("TEST:BridgeToken creation (Chain33 assets)")
+	println("TEST:BridgeToken creation (Chain assets)")
 	//1st部署相关合约
 	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 	require.NoError(t, err)
@@ -191,10 +191,10 @@ func TestBrigeTokenMint(t *testing.T) {
 	balance, _ := sim.BalanceAt(ctx, para.InitValidators[0], nil)
 	fmt.Println("InitValidators[0] addr,", para.InitValidators[0].String(), "balance =", balance.String())
 
-	chain33Sender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
+	chainSender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
 	amount := int64(99)
 	ethReceiver := para.InitValidators[2]
-	claimID := crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), logEvent.Token.Bytes(), big.NewInt(amount).Bytes())
+	claimID := crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), logEvent.Token.Bytes(), big.NewInt(amount).Bytes())
 
 	authOracle, err := ethtxs.PrepareAuth(sim, para.ValidatorPriKey[0], para.InitValidators[0])
 	require.Nil(t, err)
@@ -216,7 +216,7 @@ func TestBrigeTokenMint(t *testing.T) {
 	_, err = x2EthContracts.Oracle.NewOracleClaim(
 		authOracle,
 		uint8(events.ClaimTypeLock),
-		chain33Sender,
+		chainSender,
 		ethReceiver,
 		logEvent.Token,
 		logEvent.Symbol,
@@ -276,7 +276,7 @@ func TestBridgeDepositLock(t *testing.T) {
 	require.Nil(t, err)
 
 	mintAmount := int64(1000)
-	chain33Sender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
+	chainSender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
 	_, err = bridgeTokenInstance.Mint(operatorAuth, userOne, big.NewInt(mintAmount))
 	require.Nil(t, err)
 	sim.Commit()
@@ -299,7 +299,7 @@ func TestBridgeDepositLock(t *testing.T) {
 
 	//lock 100
 	lockAmount := big.NewInt(100)
-	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chain33Sender, bridgeTokenAddr, lockAmount)
+	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chainSender, bridgeTokenAddr, lockAmount)
 	require.Nil(t, err)
 	sim.Commit()
 
@@ -328,7 +328,7 @@ func TestBridgeDepositLock(t *testing.T) {
 	userOneAuth.Value = ethAmount
 
 	//lock 50 eth
-	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chain33Sender, common.Address{}, ethAmount)
+	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chainSender, common.Address{}, ethAmount)
 	require.Nil(t, err)
 	sim.Commit()
 
@@ -339,12 +339,12 @@ func TestBridgeDepositLock(t *testing.T) {
 }
 
 //测试在以太坊上unlock数字资产,包括Eth和Erc20,
-//即从chain33取回在eth上发行的的ETH或ERC20数字资产，之前通过lock操作发送到了chain33
+//即从chain取回在eth上发行的的ETH或ERC20数字资产，之前通过lock操作发送到了chain
 //现在则通过NewProphecyClaim 的burn操作将数字资产取回
-//Ethereum/ERC20 token unlocking (for burned chain33 assets)
+//Ethereum/ERC20 token unlocking (for burned chain assets)
 func TestBridgeBankUnlock(t *testing.T) {
 	ctx := context.Background()
-	println("TEST:Ethereum/ERC20 token unlocking (for burned chain33 assets)")
+	println("TEST:Ethereum/ERC20 token unlocking (for burned chain assets)")
 	//1st部署相关合约
 	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 	require.NoError(t, err)
@@ -355,9 +355,9 @@ func TestBridgeBankUnlock(t *testing.T) {
 
 	ethLockAmount := big.NewInt(150)
 	userOneAuth.Value = ethLockAmount
-	chain33Sender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
+	chainSender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
 	//lock 150 eth
-	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chain33Sender, common.Address{}, ethLockAmount)
+	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chainSender, common.Address{}, ethLockAmount)
 	require.Nil(t, err)
 	sim.Commit()
 
@@ -420,7 +420,7 @@ func TestBridgeBankUnlock(t *testing.T) {
 
 	//lock 100
 	lockAmount := big.NewInt(100)
-	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chain33Sender, bridgeTokenAddr, lockAmount)
+	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chainSender, bridgeTokenAddr, lockAmount)
 	require.Nil(t, err)
 	sim.Commit()
 
@@ -428,7 +428,7 @@ func TestBridgeBankUnlock(t *testing.T) {
 	newProphecyAmount := int64(55)
 	ethReceiver := para.InitValidators[2]
 	ethSym := "eth"
-	claimID := crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), ethAddr.Bytes(), big.NewInt(newProphecyAmount).Bytes())
+	claimID := crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), ethAddr.Bytes(), big.NewInt(newProphecyAmount).Bytes())
 
 	authOracle, err := ethtxs.PrepareAuth(sim, para.ValidatorPriKey[0], para.InitValidators[0])
 	require.Nil(t, err)
@@ -439,7 +439,7 @@ func TestBridgeBankUnlock(t *testing.T) {
 	_, err = x2EthContracts.Oracle.NewOracleClaim(
 		authOracle,
 		uint8(events.ClaimTypeBurn),
-		chain33Sender,
+		chainSender,
 		ethReceiver,
 		ethAddr,
 		ethSym,
@@ -462,7 +462,7 @@ func TestBridgeBankUnlock(t *testing.T) {
 	// newOracleClaim
 	newProphecyAmount = int64(100)
 	ethReceiver = para.InitValidators[2]
-	claimID = crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), bridgeTokenAddr.Bytes(), big.NewInt(newProphecyAmount).Bytes())
+	claimID = crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), bridgeTokenAddr.Bytes(), big.NewInt(newProphecyAmount).Bytes())
 
 	authOracle, err = ethtxs.PrepareAuth(sim, para.ValidatorPriKey[0], para.InitValidators[0])
 	require.Nil(t, err)
@@ -473,7 +473,7 @@ func TestBridgeBankUnlock(t *testing.T) {
 	_, err = x2EthContracts.Oracle.NewOracleClaim(
 		authOracle,
 		uint8(events.ClaimTypeBurn),
-		chain33Sender,
+		chainSender,
 		ethReceiver,
 		bridgeTokenAddr,
 		symbolUsdt,
@@ -489,10 +489,10 @@ func TestBridgeBankUnlock(t *testing.T) {
 }
 
 //测试在以太坊上多次unlock数字资产Eth
-//Ethereum/ERC20 token second unlocking (for burned chain33 assets)
+//Ethereum/ERC20 token second unlocking (for burned chain assets)
 func TestBridgeBankSecondUnlockEth(t *testing.T) {
 	ctx := context.Background()
-	println("TEST:to be unlocked incrementally by successive burn prophecies (for burned chain33 assets)")
+	println("TEST:to be unlocked incrementally by successive burn prophecies (for burned chain assets)")
 	//1st部署相关合约
 	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 	require.NoError(t, err)
@@ -504,9 +504,9 @@ func TestBridgeBankSecondUnlockEth(t *testing.T) {
 
 	ethLockAmount := big.NewInt(150)
 	userOneAuth.Value = ethLockAmount
-	chain33Sender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
+	chainSender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
 	//lock 150 eth
-	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chain33Sender, common.Address{}, ethLockAmount)
+	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chainSender, common.Address{}, ethLockAmount)
 	require.Nil(t, err)
 	sim.Commit()
 
@@ -569,7 +569,7 @@ func TestBridgeBankSecondUnlockEth(t *testing.T) {
 
 	//lock 100
 	lockAmount := big.NewInt(100)
-	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chain33Sender, bridgeTokenAddr, lockAmount)
+	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chainSender, bridgeTokenAddr, lockAmount)
 	require.Nil(t, err)
 	sim.Commit()
 
@@ -577,7 +577,7 @@ func TestBridgeBankSecondUnlockEth(t *testing.T) {
 	newProphecyAmount := int64(44)
 	ethReceiver := para.InitValidators[2]
 	ethSym := "eth"
-	claimID := crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), ethAddr.Bytes(), big.NewInt(newProphecyAmount).Bytes())
+	claimID := crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), ethAddr.Bytes(), big.NewInt(newProphecyAmount).Bytes())
 
 	authOracle, err := ethtxs.PrepareAuth(sim, para.ValidatorPriKey[0], para.InitValidators[0])
 	require.Nil(t, err)
@@ -588,7 +588,7 @@ func TestBridgeBankSecondUnlockEth(t *testing.T) {
 	_, err = x2EthContracts.Oracle.NewOracleClaim(
 		authOracle,
 		uint8(events.ClaimTypeBurn),
-		chain33Sender,
+		chainSender,
 		ethReceiver,
 		ethAddr,
 		ethSym,
@@ -608,7 +608,7 @@ func TestBridgeBankSecondUnlockEth(t *testing.T) {
 
 	//第二次 newOracleClaim
 	newProphecyAmountSecond := int64(33)
-	claimID = crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), ethAddr.Bytes(), big.NewInt(newProphecyAmountSecond).Bytes())
+	claimID = crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), ethAddr.Bytes(), big.NewInt(newProphecyAmountSecond).Bytes())
 	authOracle, err = ethtxs.PrepareAuth(sim, para.ValidatorPriKey[0], para.InitValidators[0])
 	require.Nil(t, err)
 
@@ -618,7 +618,7 @@ func TestBridgeBankSecondUnlockEth(t *testing.T) {
 	_, err = x2EthContracts.Oracle.NewOracleClaim(
 		authOracle,
 		uint8(events.ClaimTypeBurn),
-		chain33Sender,
+		chainSender,
 		ethReceiver,
 		ethAddr,
 		ethSym,
@@ -637,10 +637,10 @@ func TestBridgeBankSecondUnlockEth(t *testing.T) {
 }
 
 //测试在以太坊上多次unlock数字资产Erc20
-//Ethereum/ERC20 token unlocking (for burned chain33 assets)
+//Ethereum/ERC20 token unlocking (for burned chain assets)
 func TestBridgeBankSedondUnlockErc20(t *testing.T) {
 	ctx := context.Background()
-	println("TEST:ERC20 to be unlocked incrementally by successive burn prophecies (for burned chain33 assets))")
+	println("TEST:ERC20 to be unlocked incrementally by successive burn prophecies (for burned chain assets))")
 	//1st部署相关合约
 	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 	require.NoError(t, err)
@@ -650,9 +650,9 @@ func TestBridgeBankSedondUnlockErc20(t *testing.T) {
 	require.Nil(t, err)
 	ethLockAmount := big.NewInt(150)
 	userOneAuth.Value = ethLockAmount
-	chain33Sender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
+	chainSender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
 	//lock 150 eth
-	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chain33Sender, common.Address{}, ethLockAmount)
+	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chainSender, common.Address{}, ethLockAmount)
 	require.Nil(t, err)
 	sim.Commit()
 
@@ -711,14 +711,14 @@ func TestBridgeBankSedondUnlockErc20(t *testing.T) {
 	require.Nil(t, err)
 	//lock 100
 	lockAmount := big.NewInt(100)
-	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chain33Sender, bridgeTokenAddr, lockAmount)
+	_, err = x2EthContracts.BridgeBank.Lock(userOneAuth, chainSender, bridgeTokenAddr, lockAmount)
 	require.Nil(t, err)
 	sim.Commit()
 
 	// newOracleClaim
 	newProphecyAmount := int64(33)
 	ethReceiver := para.InitValidators[2]
-	claimID := crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), bridgeTokenAddr.Bytes(), big.NewInt(newProphecyAmount).Bytes())
+	claimID := crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), bridgeTokenAddr.Bytes(), big.NewInt(newProphecyAmount).Bytes())
 
 	userUSDTbalance0, err := bridgeTokenInstance.BalanceOf(callopts, ethReceiver)
 	require.Nil(t, err)
@@ -734,7 +734,7 @@ func TestBridgeBankSedondUnlockErc20(t *testing.T) {
 	_, err = x2EthContracts.Oracle.NewOracleClaim(
 		authOracle,
 		uint8(events.ClaimTypeBurn),
-		chain33Sender,
+		chainSender,
 		ethReceiver,
 		bridgeTokenAddr,
 		symbolUsdt,
@@ -750,7 +750,7 @@ func TestBridgeBankSedondUnlockErc20(t *testing.T) {
 
 	// newOracleClaim
 	newProphecyAmountSecond := int64(66)
-	claimID = crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), bridgeTokenAddr.Bytes(), big.NewInt(newProphecyAmountSecond).Bytes())
+	claimID = crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), bridgeTokenAddr.Bytes(), big.NewInt(newProphecyAmountSecond).Bytes())
 	authOracle, err = ethtxs.PrepareAuth(sim, para.ValidatorPriKey[0], para.InitValidators[0])
 	require.Nil(t, err)
 
@@ -759,7 +759,7 @@ func TestBridgeBankSedondUnlockErc20(t *testing.T) {
 	_, err = x2EthContracts.Oracle.NewOracleClaim(
 		authOracle,
 		uint8(events.ClaimTypeBurn),
-		chain33Sender,
+		chainSender,
 		ethReceiver,
 		bridgeTokenAddr,
 		symbolUsdt,

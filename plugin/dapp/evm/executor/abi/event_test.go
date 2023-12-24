@@ -25,8 +25,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

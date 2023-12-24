@@ -5,8 +5,8 @@
 package wallet
 
 import (
-	privacy "github.com/33cn/plugin/plugin/dapp/privacy/crypto"
-	privacytypes "github.com/33cn/plugin/plugin/dapp/privacy/types"
+	privacy "github.com/assetcloud/plugin/plugin/dapp/privacy/crypto"
+	privacytypes "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
 )
 
 type addrAndprivacy struct {

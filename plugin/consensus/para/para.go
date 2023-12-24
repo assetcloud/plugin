@@ -10,22 +10,22 @@ import (
 	"sort"
 	"sync"
 
-	log "github.com/33cn/chain33/common/log/log15"
+	log "github.com/assetcloud/chain/common/log/log15"
 
 	"sync/atomic"
 
 	"time"
 
-	"github.com/33cn/chain33/client/api"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/merkle"
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/rpc/grpcclient"
-	drivers "github.com/33cn/chain33/system/consensus"
-	cty "github.com/33cn/chain33/system/dapp/coins/types"
-	"github.com/33cn/chain33/types"
-	paracross "github.com/33cn/plugin/plugin/dapp/paracross/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/client/api"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/merkle"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/rpc/grpcclient"
+	drivers "github.com/assetcloud/chain/system/consensus"
+	cty "github.com/assetcloud/chain/system/dapp/coins/types"
+	"github.com/assetcloud/chain/types"
+	paracross "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 const (
@@ -51,7 +51,7 @@ func init() {
 
 type client struct {
 	*drivers.BaseClient
-	grpcClient      types.Chain33Client
+	grpcClient      types.ChainClient
 	execAPI         api.ExecutorAPI
 	caughtUp        int32
 	commitMsgClient *commitMsgClient

@@ -3,18 +3,18 @@ package executor
 import (
 	"testing"
 
-	"github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	"github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 	"github.com/stretchr/testify/require"
 )
 
-var cfg *types.Chain33Config
+var cfg *types.ChainConfig
 
 func init() {
 
-	cfg = types.NewChain33Config(types.ReadFile("../../../../chain33.toml"))
+	cfg = types.NewChainConfig(types.ReadFile("../../../../chain.toml"))
 	Init(driverName, cfg, nil)
 }
 
@@ -31,7 +31,7 @@ func TestRollup_Exec_Commit(t *testing.T) {
 	defer util.CloseTestDB(dir, state)
 	api := &mocks.QueueProtocolAPI{}
 	r.SetAPI(api)
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	api.On("GetConfig").Return(cfg)
 	r.SetStateDB(state)
 

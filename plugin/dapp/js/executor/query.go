@@ -3,8 +3,8 @@ package executor
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/js/types/jsproto"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/js/types/jsproto"
 )
 
 func (c *js) Query_Query(payload *jsproto.Call) (types.Message, error) {

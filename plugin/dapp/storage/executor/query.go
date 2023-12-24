@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	storagetypes "github.com/33cn/plugin/plugin/dapp/storage/types"
+	"github.com/assetcloud/chain/types"
+	storagetypes "github.com/assetcloud/plugin/plugin/dapp/storage/types"
 )
 
 //从statedb 读取原始数据

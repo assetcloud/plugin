@@ -6,34 +6,34 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-// Chain33Msg : contains data from MsgBurn and MsgLock events
-type Chain33Msg struct {
+// ChainMsg : contains data from MsgBurn and MsgLock events
+type ChainMsg struct {
 	ClaimType            Event
-	Chain33Sender        []byte
+	ChainSender        []byte
 	EthereumReceiver     common.Address
 	TokenContractAddress common.Address
 	Symbol               string
 	Amount               *big.Int
 }
 
-// NewChain33Msg : creates a new Chain33Msg
-func NewChain33Msg(
+// NewChainMsg : creates a new ChainMsg
+func NewChainMsg(
 	claimType Event,
-	chain33Sender []byte,
+	chainSender []byte,
 	ethereumReceiver common.Address,
 	symbol string,
 	amount *big.Int,
 	tokenContractAddress common.Address,
-) Chain33Msg {
-	// Package data into a Chain33Msg
-	chain33Msg := Chain33Msg{
+) ChainMsg {
+	// Package data into a ChainMsg
+	chainMsg := ChainMsg{
 		ClaimType:            claimType,
-		Chain33Sender:        chain33Sender,
+		ChainSender:        chainSender,
 		EthereumReceiver:     ethereumReceiver,
 		Symbol:               symbol,
 		Amount:               amount,
 		TokenContractAddress: tokenContractAddress,
 	}
 
-	return chain33Msg
+	return chainMsg
 }

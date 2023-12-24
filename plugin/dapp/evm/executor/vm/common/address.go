@@ -12,19 +12,19 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/33cn/chain33/system/address/btc"
+	"github.com/assetcloud/chain/system/address/btc"
 
 	"encoding/hex"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto/sha3"
-	"github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto/sha3"
+	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
 	"github.com/holiman/uint256"
 )
 
 var (
-	// 地址驱动, 适配chain33和evm间的地址格式差异
+	// 地址驱动, 适配chain和evm间的地址格式差异
 	evmAddressDriver address.Driver
 	lock             sync.RWMutex
 )
@@ -50,9 +50,9 @@ func GetEvmAddressDriver() address.Driver {
 
 // Address 封装evm内部地址对象
 // raw为地址原始数据
-// formatAddr为chain33框架中格式化地址, 相关转换格式由默认地址插件指定
-// chain33 => evm, 即将formatAddr转换为raw数据, [20]byte
-// evm => chain33, 即将原始数据raw格式化为formatAddr
+// formatAddr为chain框架中格式化地址, 相关转换格式由默认地址插件指定
+// chain => evm, 即将formatAddr转换为raw数据, [20]byte
+// evm => chain, 即将原始数据raw格式化为formatAddr
 type Address struct {
 	raw        [AddressLength]byte
 	formatAddr string
@@ -135,13 +135,13 @@ func (h Hash160Address) Hex() string {
 	return "0x" + string(result)
 }
 
-// ToAddress 返回Chain33格式的地址
+// ToAddress 返回Chain格式的地址
 func (h Hash160Address) ToAddress() Address {
 	return BytesToAddress(h[:])
 }
 
 // NewAddress xHash生成EVM合约地址
-func NewAddress(cfg *types.Chain33Config, txHash []byte) Address {
+func NewAddress(cfg *types.ChainConfig, txHash []byte) Address {
 	execPub := address.ExecPubKey(ToHash(append(txHash, []byte(cfg.ExecName("user.evm."))...)).Str())
 	return PubKey2Address(execPub)
 }

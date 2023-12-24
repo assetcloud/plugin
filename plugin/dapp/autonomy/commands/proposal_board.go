@@ -9,10 +9,10 @@ import (
 
 	"encoding/json"
 
-	jsonrpc "github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	auty "github.com/33cn/plugin/plugin/dapp/autonomy/types"
+	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	auty "github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
 	"github.com/spf13/cobra"
 )
 
@@ -143,7 +143,7 @@ func proposalBoard(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", pm, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -182,7 +182,7 @@ func revokeProposalBoard(cmd *cobra.Command, args []string) {
 		Payload:    payLoad,
 	}
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", pm, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -234,7 +234,7 @@ func voteProposalBoard(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", pm, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -274,7 +274,7 @@ func terminateProposalBoard(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", pm, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -337,7 +337,7 @@ func showProposalBoard(cmd *cobra.Command, args []string) {
 	}
 	rep = &auty.ReplyQueryProposalBoard{}
 
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, rep)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, rep)
 	ctx.Run()
 }
 
@@ -360,6 +360,6 @@ func showActiveBoard(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&types.ReqString{})
 	rep := &auty.ActiveBoard{}
 
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, rep)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, rep)
 	ctx.Run()
 }

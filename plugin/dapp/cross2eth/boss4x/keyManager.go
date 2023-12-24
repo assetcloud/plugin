@@ -5,13 +5,13 @@ import (
 	crand "crypto/rand"
 	"fmt"
 
-	chain33Address "github.com/33cn/chain33/common/address"
+	chainAddress "github.com/assetcloud/chain/common/address"
 
 	"github.com/ethereum/go-ethereum/common/math"
 
 	"github.com/ethereum/go-ethereum/crypto"
 
-	chain33Common "github.com/33cn/chain33/common"
+	chainCommon "github.com/assetcloud/chain/common"
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
@@ -23,58 +23,58 @@ func KeyManageCmd() *cobra.Command {
 		Short: "generate secp256k1 private key, show public key and address",
 	}
 	cmd.AddCommand(
-		chain33Cmd(),
+		chainCmd(),
 		ethereumCmd(),
 	)
 	return cmd
 }
 
-func chain33Cmd() *cobra.Command {
+func chainCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "chain33",
-		Short: "generate secp256k1 private key or show info for chain33",
+		Use:   "chain",
+		Short: "generate secp256k1 private key or show info for chain",
 	}
 	cmd.AddCommand(
-		generareChain33KeyCmd(),
-		showChain33pubCmd(),
+		generareChainKeyCmd(),
+		showChainpubCmd(),
 	)
 	return cmd
 }
 
-func generareChain33KeyCmd() *cobra.Command {
+func generareChainKeyCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "new",
-		Short: "create a private key for chain33",
-		Run:   generareChain33Key,
+		Short: "create a private key for chain",
+		Run:   generareChainKey,
 	}
 	return cmd
 }
 
-func generareChain33Key(cmd *cobra.Command, _ []string) {
+func generareChainKey(cmd *cobra.Command, _ []string) {
 
 	privateKey, err := btcec.NewPrivateKey(btcec.S256())
 	if nil != err {
-		fmt.Println("Failed to generate private key for chain33" + err.Error())
+		fmt.Println("Failed to generate private key for chain" + err.Error())
 		return
 	}
 
 	fmt.Println(common.Bytes2Hex(privateKey.Serialize()))
 }
 
-func showChain33pubCmd() *cobra.Command {
+func showChainpubCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show",
-		Short: "show public key(inluding uncompressed and compressed, chain33 address)",
-		Run:   showChain33Key,
+		Short: "show public key(inluding uncompressed and compressed, chain address)",
+		Run:   showChainKey,
 	}
 	addShowKeyFlags(cmd)
 	return cmd
 }
 
-func showChain33Key(cmd *cobra.Command, _ []string) {
+func showChainKey(cmd *cobra.Command, _ []string) {
 	key, _ := cmd.Flags().GetString("key")
-	privateKeySlice, err := chain33Common.FromHex(key)
+	privateKeySlice, err := chainCommon.FromHex(key)
 	if nil != err {
 		fmt.Println("convert string error due to:" + err.Error())
 		return
@@ -91,7 +91,7 @@ func showChain33Key(cmd *cobra.Command, _ []string) {
 	compressedKey := pubKey.SerializeCompressed()
 	fmt.Println("The uncompressed pub key = "+common.Bytes2Hex(uncompressedKey), "with length=", len(uncompressedKey))
 	fmt.Println("The compressed pub key = "+common.Bytes2Hex(compressedKey), "with length=", len(compressedKey))
-	fmt.Println("Chain33 address = " + chain33Address.PubKeyToAddr(chain33Address.DefaultID, compressedKey))
+	fmt.Println("Chain address = " + chainAddress.PubKeyToAddr(chainAddress.DefaultID, compressedKey))
 }
 
 ////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ func addShowKeyFlags(cmd *cobra.Command) {
 //Address:    crypto.PubkeyToAddress(privateKeyECDSA.PublicKey),
 func showEtheremKey(cmd *cobra.Command, _ []string) {
 	key, _ := cmd.Flags().GetString("key")
-	privateKeySlice, err := chain33Common.FromHex(key)
+	privateKeySlice, err := chainCommon.FromHex(key)
 	if nil != err {
 		fmt.Println("convert string error due to:" + err.Error())
 		return

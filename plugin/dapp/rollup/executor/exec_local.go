@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	rolluptypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	"github.com/assetcloud/chain/types"
+	rolluptypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 )
 
 /*

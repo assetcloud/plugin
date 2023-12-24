@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	pkt "github.com/33cn/plugin/plugin/dapp/pokerbull/types"
+	"github.com/assetcloud/chain/types"
+	pkt "github.com/assetcloud/plugin/plugin/dapp/pokerbull/types"
 )
 
 func (c *PokerBull) updateIndex(log *pkt.ReceiptPBGame) (kvs []*types.KeyValue) {

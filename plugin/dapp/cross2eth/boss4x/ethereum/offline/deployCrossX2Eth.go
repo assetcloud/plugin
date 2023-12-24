@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
-	gnosis "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
+	gnosis "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
@@ -66,17 +66,17 @@ func CreateEthBridgeBankRelated(cmd *cobra.Command, _ []string) {
 
 	var infos []*DeployInfo
 
-	//step1 chain33bridge
-	packData, err := deploychain33BridgePackData(deployerAddr, valSetAddr)
+	//step1 chainbridge
+	packData, err := deploychainBridgePackData(deployerAddr, valSetAddr)
 	if err != nil {
 		panic(err.Error())
 	}
-	chain33BridgeAddr := crypto.CreateAddress(deployerAddr, startNonce)
-	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: chain33BridgeAddr, Name: "chain33Bridge", Nonce: startNonce, To: nil})
+	chainBridgeAddr := crypto.CreateAddress(deployerAddr, startNonce)
+	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: chainBridgeAddr, Name: "chainBridge", Nonce: startNonce, To: nil})
 	startNonce = startNonce + 1
 
 	//step2 oracle
-	packData, err = deployOraclePackData(deployerAddr, valSetAddr, chain33BridgeAddr)
+	packData, err = deployOraclePackData(deployerAddr, valSetAddr, chainBridgeAddr)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -85,7 +85,7 @@ func CreateEthBridgeBankRelated(cmd *cobra.Command, _ []string) {
 	startNonce = startNonce + 1
 
 	//step3 bridgebank
-	packData, err = deployBridgeBankPackData(deployerAddr, chain33BridgeAddr, oracleAddr)
+	packData, err = deployBridgeBankPackData(deployerAddr, chainBridgeAddr, oracleAddr)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -98,7 +98,7 @@ func CreateEthBridgeBankRelated(cmd *cobra.Command, _ []string) {
 	if err != nil {
 		panic(err.Error())
 	}
-	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: common.Address{}, Name: "setbridgebank", Nonce: startNonce, To: &chain33BridgeAddr})
+	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: common.Address{}, Name: "setbridgebank", Nonce: startNonce, To: &chainBridgeAddr})
 	startNonce = startNonce + 1
 
 	//step5
@@ -106,11 +106,11 @@ func CreateEthBridgeBankRelated(cmd *cobra.Command, _ []string) {
 	if err != nil {
 		panic(err.Error())
 	}
-	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: common.Address{}, Name: "setoracle", Nonce: startNonce, To: &chain33BridgeAddr})
+	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: common.Address{}, Name: "setoracle", Nonce: startNonce, To: &chainBridgeAddr})
 	startNonce = startNonce + 1
 
 	//step6 bridgeRegistry
-	packData, err = deployBridgeRegistry(chain33BridgeAddr, bridgeBankAddr, oracleAddr, valSetAddr)
+	packData, err = deployBridgeRegistry(chainBridgeAddr, bridgeBankAddr, oracleAddr, valSetAddr)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -215,17 +215,17 @@ func createDeployTxs(url string, deployerAddr common.Address, validators, multis
 	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: valSetAddr, Name: "valSet", Nonce: startNonce, To: nil})
 	startNonce += 1
 
-	//step2 chain33bridge
-	packData, err = deploychain33BridgePackData(deployerAddr, valSetAddr)
+	//step2 chainbridge
+	packData, err = deploychainBridgePackData(deployerAddr, valSetAddr)
 	if err != nil {
 		return err
 	}
-	chain33BridgeAddr := crypto.CreateAddress(deployerAddr, startNonce)
-	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: chain33BridgeAddr, Name: "chain33Bridge", Nonce: startNonce, To: nil})
+	chainBridgeAddr := crypto.CreateAddress(deployerAddr, startNonce)
+	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: chainBridgeAddr, Name: "chainBridge", Nonce: startNonce, To: nil})
 	startNonce += 1
 
 	//step3 oracle
-	packData, err = deployOraclePackData(deployerAddr, valSetAddr, chain33BridgeAddr)
+	packData, err = deployOraclePackData(deployerAddr, valSetAddr, chainBridgeAddr)
 	if err != nil {
 		return err
 	}
@@ -234,7 +234,7 @@ func createDeployTxs(url string, deployerAddr common.Address, validators, multis
 	startNonce += 1
 
 	//step4 bridgebank
-	packData, err = deployBridgeBankPackData(deployerAddr, chain33BridgeAddr, oracleAddr)
+	packData, err = deployBridgeBankPackData(deployerAddr, chainBridgeAddr, oracleAddr)
 	if err != nil {
 		return err
 	}
@@ -247,7 +247,7 @@ func createDeployTxs(url string, deployerAddr common.Address, validators, multis
 	if err != nil {
 		return err
 	}
-	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: common.Address{}, Name: "setbridgebank", Nonce: startNonce, To: &chain33BridgeAddr})
+	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: common.Address{}, Name: "setbridgebank", Nonce: startNonce, To: &chainBridgeAddr})
 	startNonce += 1
 
 	//step6
@@ -255,7 +255,7 @@ func createDeployTxs(url string, deployerAddr common.Address, validators, multis
 	if err != nil {
 		return err
 	}
-	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: common.Address{}, Name: "setoracle", Nonce: startNonce, To: &chain33BridgeAddr})
+	infos = append(infos, &DeployInfo{PackData: packData, ContractorAddr: common.Address{}, Name: "setoracle", Nonce: startNonce, To: &chainBridgeAddr})
 	startNonce += 1
 
 	//step7 set symbol
@@ -267,7 +267,7 @@ func createDeployTxs(url string, deployerAddr common.Address, validators, multis
 	startNonce += 1
 
 	//step8 bridgeRegistry
-	packData, err = deployBridgeRegistry(chain33BridgeAddr, bridgeBankAddr, oracleAddr, valSetAddr)
+	packData, err = deployBridgeRegistry(chainBridgeAddr, bridgeBankAddr, oracleAddr, valSetAddr)
 	if err != nil {
 		return err
 	}
@@ -368,12 +368,12 @@ func deployValSetPackData(validators []common.Address, powers []*big.Int, deploy
 }
 
 //deploy contract step 2
-func deploychain33BridgePackData(deployerAddr, valSetAddr common.Address) ([]byte, error) {
-	parsed, err := abi.JSON(strings.NewReader(generated.Chain33BridgeABI))
+func deploychainBridgePackData(deployerAddr, valSetAddr common.Address) ([]byte, error) {
+	parsed, err := abi.JSON(strings.NewReader(generated.ChainBridgeABI))
 	if err != nil {
 		return nil, err
 	}
-	bin := common.FromHex(generated.Chain33BridgeBin)
+	bin := common.FromHex(generated.ChainBridgeBin)
 	input, err := parsed.Pack("", deployerAddr, valSetAddr)
 	if err != nil {
 		return nil, err
@@ -412,7 +412,7 @@ func deployBridgeBankPackData(deployerAddr, bridgeAddr, oracalAddr common.Addres
 ////deploy contract step 5
 func callSetBridgeBank(bridgeBankAddr common.Address) ([]byte, error) {
 	method := "setBridgeBank"
-	parsed, err := abi.JSON(strings.NewReader(generated.Chain33BridgeABI))
+	parsed, err := abi.JSON(strings.NewReader(generated.ChainBridgeABI))
 	if err != nil {
 		return nil, err
 	}
@@ -426,7 +426,7 @@ func callSetBridgeBank(bridgeBankAddr common.Address) ([]byte, error) {
 //deploy contract step 6
 func callSetOracal(oracalAddr common.Address) ([]byte, error) {
 	method := "setOracle"
-	parsed, err := abi.JSON(strings.NewReader(generated.Chain33BridgeABI))
+	parsed, err := abi.JSON(strings.NewReader(generated.ChainBridgeABI))
 	if err != nil {
 		return nil, err
 	}
@@ -438,13 +438,13 @@ func callSetOracal(oracalAddr common.Address) ([]byte, error) {
 }
 
 //deploy contract step 7
-func deployBridgeRegistry(chain33BridgeAddr, bridgeBankAddr, oracleAddr, valSetAddr common.Address) ([]byte, error) {
+func deployBridgeRegistry(chainBridgeAddr, bridgeBankAddr, oracleAddr, valSetAddr common.Address) ([]byte, error) {
 	parsed, err := abi.JSON(strings.NewReader(generated.BridgeRegistryABI))
 	if err != nil {
 		return nil, err
 	}
 	bin := common.FromHex(generated.BridgeRegistryBin)
-	packData, err := parsed.Pack("", chain33BridgeAddr, bridgeBankAddr, oracleAddr, valSetAddr)
+	packData, err := parsed.Pack("", chainBridgeAddr, bridgeBankAddr, oracleAddr, valSetAddr)
 	if err != nil {
 		return nil, err
 	}

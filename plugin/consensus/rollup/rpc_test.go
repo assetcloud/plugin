@@ -5,19 +5,19 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/33cn/chain33/rpc/grpcclient"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	"github.com/33cn/chain33/util/testnode"
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	"github.com/assetcloud/chain/rpc/grpcclient"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	"github.com/assetcloud/chain/util/testnode"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 	"github.com/stretchr/testify/require"
 
-	_ "github.com/33cn/plugin/plugin/dapp/init"
+	_ "github.com/assetcloud/plugin/plugin/dapp/init"
 )
 
-func newTestNode(t *testing.T) (*testnode.Chain33Mock, *RollUp) {
+func newTestNode(t *testing.T) (*testnode.ChainMock, *RollUp) {
 
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	cfg.GetModuleConfig().RPC.GrpcBindAddr = fmt.Sprintf("localhost:%d", 9965)
 	node := testnode.NewWithRPC(cfg, nil)
 	r := &RollUp{}

@@ -7,14 +7,14 @@ package executor
 import (
 	"time"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/common"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
-	token "github.com/33cn/plugin/plugin/dapp/token/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/common"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
+	token "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/pkg/errors"
 )
 
@@ -26,11 +26,11 @@ const (
 
 type relayLog struct {
 	ty.RelayOrder
-	*types.Chain33Config
+	*types.ChainConfig
 }
 
-func newRelayLog(order *ty.RelayOrder, cfg *types.Chain33Config) *relayLog {
-	return &relayLog{RelayOrder: *order, Chain33Config: cfg}
+func newRelayLog(order *ty.RelayOrder, cfg *types.ChainConfig) *relayLog {
+	return &relayLog{RelayOrder: *order, ChainConfig: cfg}
 }
 
 func (r *relayLog) save(db dbm.KV) []*types.KeyValue {

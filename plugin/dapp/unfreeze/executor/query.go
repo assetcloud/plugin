@@ -7,10 +7,10 @@ package executor
 import (
 	"time"
 
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/common/db/table"
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/unfreeze/types"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/db/table"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/unfreeze/types"
 )
 
 // Query_GetUnfreezeWithdraw 查询合约可提币量
@@ -35,7 +35,7 @@ func (u *Unfreeze) Query_ListUnfreezeByBeneficiary(in *pty.ReqUnfreezes) (types.
 }
 
 // QueryWithdraw 查询可提币状态
-func QueryWithdraw(cfg *types.Chain33Config, stateDB dbm.KV, id string) (types.Message, error) {
+func QueryWithdraw(cfg *types.ChainConfig, stateDB dbm.KV, id string) (types.Message, error) {
 	id = unfreezeIDFromHex(id)
 	unfreeze, err := loadUnfreeze(id, stateDB)
 	if err != nil {
@@ -53,7 +53,7 @@ func QueryWithdraw(cfg *types.Chain33Config, stateDB dbm.KV, id string) (types.M
 	return reply, nil
 }
 
-func getWithdrawAvailable(cfg *types.Chain33Config, unfreeze *pty.Unfreeze, calcTime int64) (int64, error) {
+func getWithdrawAvailable(cfg *types.ChainConfig, unfreeze *pty.Unfreeze, calcTime int64) (int64, error) {
 	means, err := newMeans(cfg, unfreeze.Means, 1500000)
 	if err != nil {
 		return 0, err

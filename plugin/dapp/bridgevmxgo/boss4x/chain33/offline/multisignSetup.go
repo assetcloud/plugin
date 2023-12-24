@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"strings"
 
-	gnosis "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	gnosis "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
 	"github.com/spf13/cobra"
 )
 
 /*
-./boss4x chain33 offline multisign_setup -m 1GrhufvPtnBCtfxDrFGcCoihmYMHJafuPn -o 168Sn1DXnLrZHTcAM9stD6t2P49fNuJfJ9,13KTf57aCkVVJYNJBXBBveiA5V811SrLcT,1JQwQWsShTHC4zxHzbUfYQK4kRBriUQdEe,1NHuKqoKe3hyv52PF8XBAyaTmJWAqA2Jbb -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae --chainID 33
-./boss4x chain33 offline send -f multisign_setup.txt
+./boss4x chain offline multisign_setup -m 1GrhufvPtnBCtfxDrFGcCoihmYMHJafuPn -o 168Sn1DXnLrZHTcAM9stD6t2P49fNuJfJ9,13KTf57aCkVVJYNJBXBBveiA5V811SrLcT,1JQwQWsShTHC4zxHzbUfYQK4kRBriUQdEe,1NHuKqoKe3hyv52PF8XBAyaTmJWAqA2Jbb -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae --chainID 33
+./boss4x chain offline send -f multisign_setup.txt
 */
 
 func SetupCmd() *cobra.Command {
@@ -39,14 +39,14 @@ func SetupOwner(cmd *cobra.Command, _ []string) {
 	owner, _ := cmd.Flags().GetString("owner")
 	owners := strings.Split(owner, ",")
 
-	BTYAddrChain33 := ebTypes.BTYAddrChain33
+	BTYAddrChain := ebTypes.BTYAddrChain
 	parameter := "setup(["
 	parameter += fmt.Sprintf("%s", owners[0])
 	for _, owner := range owners[1:] {
 		parameter += fmt.Sprintf(",%s", owner)
 	}
 	parameter += "], "
-	parameter += fmt.Sprintf("%d, %s, 0102, %s, %s, 0, %s)", len(owners), BTYAddrChain33, BTYAddrChain33, BTYAddrChain33, BTYAddrChain33)
+	parameter += fmt.Sprintf("%d, %s, 0102, %s, %s, 0, %s)", len(owners), BTYAddrChain, BTYAddrChain, BTYAddrChain, BTYAddrChain)
 	_, packData, err := evmAbi.Pack(parameter, gnosis.GnosisSafeABI, false)
 	if nil != err {
 		fmt.Println("multisign_setup", "Failed to do abi.Pack due to:", err.Error())

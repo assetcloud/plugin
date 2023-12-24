@@ -1,16 +1,16 @@
-package chain33
+package chain
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/33cn/chain33/common/address"
-	chain33Types "github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/address"
+	chainTypes "github.com/assetcloud/chain/types"
 
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	"github.com/spf13/cobra"
 )
 
@@ -107,7 +107,7 @@ func AddPool2Farm(cmd *cobra.Command, args []string) {
 		fmt.Println("AddPool2FarmHandle", "Failed to do abi.Pack due to:", err.Error())
 		return
 	}
-	exector := chain33Types.GetExecName("evm", paraName)
+	exector := chainTypes.GetExecName("evm", paraName)
 	action := evmtypes.EVMContractAction{Amount: 0, GasLimit: 0, GasPrice: 0, Note: parameter, Para: packData, ContractAddr: address.ExecAddress(exector)}
 
 	data, err := createEvmTx(chainID, &action, exector, caller, masterChefAddrStr, expire, rpcLaddr, feeInt64)
@@ -174,7 +174,7 @@ func UpdateAllocPoint(cmd *cobra.Command, args []string) {
 		fmt.Println("UpdateAllocPoint", "Failed to do abi.Pack due to:", err.Error())
 		return
 	}
-	exector := chain33Types.GetExecName("evm", paraName)
+	exector := chainTypes.GetExecName("evm", paraName)
 	action := evmtypes.EVMContractAction{Amount: 0, GasLimit: 0, GasPrice: 0, Note: parameter, Para: packData, ContractAddr: address.ExecAddress(exector)}
 
 	data, err := createEvmTx(chainID, &action, exector, caller, masterChefAddrStr, expire, rpcLaddr, feeInt64)
@@ -234,7 +234,7 @@ func TransferOwnerShip(cmd *cobra.Command, args []string) {
 		fmt.Println("TransferOwnerShip", "Failed to do abi.Pack due to:", err.Error())
 		return
 	}
-	exector := chain33Types.GetExecName("evm", paraName)
+	exector := chainTypes.GetExecName("evm", paraName)
 	action := evmtypes.EVMContractAction{Amount: 0, GasLimit: 0, GasPrice: 0, Note: parameter, Para: packData, ContractAddr: address.ExecAddress(exector)}
 
 	data, err := createEvmTx(chainID, &action, exector, caller, contract, expire, rpcLaddr, feeInt64)

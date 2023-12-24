@@ -11,12 +11,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	cmdtypes "github.com/33cn/chain33/system/dapp/commands/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/common/commands"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/common/commands"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -318,7 +318,7 @@ func createCrossAssetTransfer(cmd *cobra.Command, args []string) {
 	}
 
 	var res string
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, &res)
 	_, err = ctx.RunResult()
 	if err != nil {
 		fmt.Println(err)
@@ -404,7 +404,7 @@ func createNodeJoinTx(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -442,7 +442,7 @@ func createNodeVoteTx(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -478,7 +478,7 @@ func createNodeQuitTx(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -514,7 +514,7 @@ func createNodeCancelTx(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -553,7 +553,7 @@ func createNodeModifyTx(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -602,7 +602,7 @@ func createNodeBindTx(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -639,7 +639,7 @@ func minerBindInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&pt.ParaNodeMinerListReq{Node: node, Miner: miner, WithUnBind: unbind})
 
 	var res pt.ParaBindMinerList
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -672,7 +672,7 @@ func nodeBindInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&pt.ParaNodeMinerListReq{Miner: miner, WithUnBind: unbind})
 
 	var res types.ReplyStrings
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -708,7 +708,7 @@ func nodeInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.ParaNodeAddrIdStatus
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -744,7 +744,7 @@ func nodeIDInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.ParaNodeIdStatus
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -780,7 +780,7 @@ func nodeList(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.RespParacrossNodeAddrs
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -810,7 +810,7 @@ func selfConsStage(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -849,7 +849,7 @@ func createVoteTx(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -880,7 +880,7 @@ func stageCancelTx(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 
 }
@@ -989,7 +989,7 @@ func nodeGroupApply(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -1041,7 +1041,7 @@ func nodeGroupApprove(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -1077,7 +1077,7 @@ func nodeGroupQuit(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -1122,7 +1122,7 @@ func nodeGroupModify(cmd *cobra.Command, args []string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -1222,7 +1222,7 @@ func consusHeight(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.ParacrossConsensusStatus
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1259,7 +1259,7 @@ func blockInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.ParaBlock2MainInfo
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1323,7 +1323,7 @@ func paraInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.ParacrossHeightStatusRsp
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1359,7 +1359,7 @@ func paraList(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.RespParacrossTitles
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1392,7 +1392,7 @@ func paraAssetTransfer(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.ParacrossAsset
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1418,7 +1418,7 @@ func nodeGroup(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res types.ReplyConfig
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1445,7 +1445,7 @@ func nodeGroupStatus(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.ParaNodeGroupStatus
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1478,7 +1478,7 @@ func nodeGroupList(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.RespParacrossNodeGroups
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1492,7 +1492,7 @@ func stagesInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.SelfConsensStages
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1518,7 +1518,7 @@ func stageOneInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.SelfConsensStage
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1582,7 +1582,7 @@ func showSelfStages(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.ReplyQuerySelfStages
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1607,7 +1607,7 @@ func consensDoneInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.RespParacrossDone
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1658,7 +1658,7 @@ func createIssueCoinsTx(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -1717,7 +1717,7 @@ func supervisionNodeApply(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -1760,7 +1760,7 @@ func supervisionNodeApprove(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -1794,7 +1794,7 @@ func supervisionNodeQuit(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -1828,7 +1828,7 @@ func supervisionNodeCancel(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -1852,7 +1852,7 @@ func supervisionNodeGroup(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res types.ReplyConfig
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1888,7 +1888,7 @@ func supervisionNodeListInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.RespParacrossNodeGroups
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1924,7 +1924,7 @@ func supervisionNodeInfo(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(&req)
 
 	var res pt.ParaNodeAddrIdStatus
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.Run()
 }
 
@@ -1962,6 +1962,6 @@ func createSupervisionNodeModifyTx(cmd *cobra.Command, args []string) {
 	}
 
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }

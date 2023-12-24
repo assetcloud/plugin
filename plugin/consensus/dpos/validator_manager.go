@@ -9,9 +9,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/33cn/chain33/common/address"
-	ttypes "github.com/33cn/plugin/plugin/consensus/dpos/types"
-	dty "github.com/33cn/plugin/plugin/dapp/dposvote/types"
+	"github.com/assetcloud/chain/common/address"
+	ttypes "github.com/assetcloud/plugin/plugin/consensus/dpos/types"
+	dty "github.com/assetcloud/plugin/plugin/dapp/dposvote/types"
 )
 
 const (

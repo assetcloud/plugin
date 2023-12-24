@@ -5,7 +5,7 @@ services:
     build:
       context: .
     environment:
-      ChainConfig: "chain33.evm.test.toml"
+      ChainConfig: "chain.evm.test.toml"
 
     expose:
       - 8545

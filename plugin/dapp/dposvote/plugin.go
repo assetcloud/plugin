@@ -5,10 +5,10 @@
 package dposvote
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/dposvote/commands"
-	"github.com/33cn/plugin/plugin/dapp/dposvote/executor"
-	"github.com/33cn/plugin/plugin/dapp/dposvote/types"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/dposvote/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/dposvote/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/dposvote/types"
 )
 
 func init() {

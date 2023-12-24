@@ -6,21 +6,21 @@ import (
 	"testing"
 	"time"
 
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/system/consensus"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/system/consensus"
 
-	"github.com/33cn/chain33/rpc/grpcclient"
-	_ "github.com/33cn/chain33/system/consensus/init"
-	_ "github.com/33cn/chain33/system/dapp/init"
-	_ "github.com/33cn/chain33/system/mempool/init"
-	_ "github.com/33cn/chain33/system/store/init"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	"github.com/33cn/chain33/util/testnode"
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	"github.com/assetcloud/chain/rpc/grpcclient"
+	_ "github.com/assetcloud/chain/system/consensus/init"
+	_ "github.com/assetcloud/chain/system/dapp/init"
+	_ "github.com/assetcloud/chain/system/mempool/init"
+	_ "github.com/assetcloud/chain/system/store/init"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	"github.com/assetcloud/chain/util/testnode"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -84,7 +84,7 @@ func TestRemoveErrTx(t *testing.T) {
 
 func TestPullCrossTx(t *testing.T) {
 
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	cfg.GetModuleConfig().RPC.GrpcBindAddr = fmt.Sprintf("localhost:%d", 9965)
 	node := testnode.NewWithRPC(cfg, nil)
 	defer node.Close()

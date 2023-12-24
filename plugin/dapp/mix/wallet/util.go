@@ -20,14 +20,14 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/types"
 
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 
 	"github.com/consensys/gnark/backend"
 
-	"github.com/33cn/plugin/plugin/dapp/mix/executor/zksnark"
+	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/zksnark"
 )
 
 //产生随机秘钥和receivingPk对data DH加密，返回随机秘钥的公钥

@@ -9,11 +9,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	wcom "github.com/33cn/chain33/wallet/common"
-	privacy "github.com/33cn/plugin/plugin/dapp/privacy/crypto"
-	privacytypes "github.com/33cn/plugin/plugin/dapp/privacy/types"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	wcom "github.com/assetcloud/chain/wallet/common"
+	privacy "github.com/assetcloud/plugin/plugin/dapp/privacy/crypto"
+	privacytypes "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
 
 	"github.com/golang/protobuf/proto"
 )
@@ -23,13 +23,13 @@ const (
 	PRIVACYDBVERSION int64 = 1
 )
 
-func newStore(db db.DB, cfg *types.Chain33Config) *privacyStore {
-	return &privacyStore{Store: wcom.NewStore(db), Chain33Config: cfg}
+func newStore(db db.DB, cfg *types.ChainConfig) *privacyStore {
+	return &privacyStore{Store: wcom.NewStore(db), ChainConfig: cfg}
 }
 
 // privacyStore 隐私交易数据库存储操作类
 type privacyStore struct {
-	*types.Chain33Config
+	*types.ChainConfig
 	*wcom.Store
 }
 
@@ -253,7 +253,7 @@ func (store *privacyStore) getWalletPrivacyTxDetails(param *privacytypes.ReqPriv
 			return nil, types.ErrUnmarshal
 		}
 		txDetail.Txhash = txDetail.GetTx().Hash()
-		if txDetail.GetTx().IsWithdraw(store.Chain33Config.GetCoinExec()) {
+		if txDetail.GetTx().IsWithdraw(store.ChainConfig.GetCoinExec()) {
 			//swap from and to
 			txDetail.Fromaddr, txDetail.Tx.To = txDetail.Tx.To, txDetail.Fromaddr
 		}
@@ -552,7 +552,7 @@ func (store *privacyStore) selectCurrentWalletPrivacyTx(txDetal *types.Transacti
 	}
 
 	if assetExec == "" {
-		assetExec = store.Chain33Config.GetCoinExec()
+		assetExec = store.ChainConfig.GetCoinExec()
 	}
 
 	//处理output

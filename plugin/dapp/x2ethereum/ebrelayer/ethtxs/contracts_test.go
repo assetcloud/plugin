@@ -9,13 +9,13 @@ package ethtxs
 //	"strings"
 //	"testing"
 //
-//	chain33Types "github.com/33cn/chain33/types"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
-//	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
-//	x2ethTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+//	chainTypes "github.com/assetcloud/chain/types"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+//	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
+//	x2ethTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 //	"github.com/ethereum/go-ethereum"
 //	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
 //	"github.com/ethereum/go-ethereum/common"
@@ -28,7 +28,7 @@ package ethtxs
 //)
 //
 //var (
-//	chain33Addr  = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+//	chainAddr  = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
 //	ethAddr      = "0x92C8b16aFD6d423652559C6E266cBE1c29Bfd84f"
 //	ethTokenAddr = "0x0000000000000000000000000000000000000000"
 //)
@@ -72,13 +72,13 @@ package ethtxs
 //
 //func (c *suiteContracts) Test_IsProphecyPending() {
 //	claimID := crypto.Keccak256Hash(big.NewInt(50).Bytes())
-//	bret, err := IsProphecyPending(claimID, c.para.InitValidators[0], c.x2EthContracts.Chain33Bridge)
+//	bret, err := IsProphecyPending(claimID, c.para.InitValidators[0], c.x2EthContracts.ChainBridge)
 //	require.Nil(c.T(), err)
 //	assert.Equal(c.T(), bret, false)
 //}
 //
 //func (c *suiteContracts) Test_LogLockToEthBridgeClaim() {
-//	to := common.FromHex(chain33Addr)
+//	to := common.FromHex(chainAddr)
 //	event := &events.LockEvent{
 //		From:   c.para.InitValidators[0],
 //		To:     to,
@@ -95,7 +95,7 @@ package ethtxs
 //	assert.Equal(c.T(), witnessClaim.TokenAddr, ethTokenAddr)
 //	assert.Equal(c.T(), witnessClaim.Symbol, event.Symbol)
 //	assert.Equal(c.T(), witnessClaim.EthereumSender, event.From.String())
-//	assert.Equal(c.T(), witnessClaim.Chain33Receiver, string(event.To))
+//	assert.Equal(c.T(), witnessClaim.ChainReceiver, string(event.To))
 //	assert.Equal(c.T(), witnessClaim.Amount, "100")
 //	assert.Equal(c.T(), witnessClaim.Nonce, event.Nonce.Int64())
 //	assert.Equal(c.T(), witnessClaim.Decimal, int64(18))
@@ -107,10 +107,10 @@ package ethtxs
 //}
 //
 //func (c *suiteContracts) Test_LogBurnToEthBridgeClaim() {
-//	to := common.FromHex(chain33Addr)
+//	to := common.FromHex(chainAddr)
 //	event := &events.BurnEvent{
 //		OwnerFrom:       c.para.InitValidators[0],
-//		Chain33Receiver: to,
+//		ChainReceiver: to,
 //		Token:           common.HexToAddress(ethTokenAddr),
 //		Symbol:          "bty",
 //		Amount:          big.NewInt(100),
@@ -124,16 +124,16 @@ package ethtxs
 //	assert.Equal(c.T(), witnessClaim.TokenAddr, ethTokenAddr)
 //	assert.Equal(c.T(), witnessClaim.Symbol, event.Symbol)
 //	assert.Equal(c.T(), witnessClaim.EthereumSender, event.OwnerFrom.String())
-//	assert.Equal(c.T(), witnessClaim.Chain33Receiver, string(event.Chain33Receiver))
+//	assert.Equal(c.T(), witnessClaim.ChainReceiver, string(event.ChainReceiver))
 //	assert.Equal(c.T(), witnessClaim.Amount, "100")
 //	assert.Equal(c.T(), witnessClaim.Nonce, event.Nonce.Int64())
 //	assert.Equal(c.T(), witnessClaim.Decimal, int64(8))
 //}
 //
-//func (c *suiteContracts) Test_ParseBurnLockTxReceipt_Chain33MsgToProphecyClaim() {
+//func (c *suiteContracts) Test_ParseBurnLockTxReceipt_ChainMsgToProphecyClaim() {
 //	claimType := events.MsgBurn
-//	chain33ToEth := types.ReceiptChain33ToEth{
-//		Chain33Sender:    chain33Addr,
+//	chainToEth := types.ReceiptChainToEth{
+//		ChainSender:    chainAddr,
 //		EthereumReceiver: ethAddr,
 //		TokenContract:    ethTokenAddr,
 //		IssuerDotSymbol:  "bty",
@@ -141,35 +141,35 @@ package ethtxs
 //		Decimals:         8,
 //	}
 //
-//	log := &chain33Types.ReceiptLog{
-//		Ty:  types.TyWithdrawChain33Log,
-//		Log: chain33Types.Encode(&chain33ToEth),
+//	log := &chainTypes.ReceiptLog{
+//		Ty:  types.TyWithdrawChainLog,
+//		Log: chainTypes.Encode(&chainToEth),
 //	}
 //
-//	var logs []*chain33Types.ReceiptLog
+//	var logs []*chainTypes.ReceiptLog
 //	logs = append(logs, log)
 //
-//	receipt := &chain33Types.ReceiptData{
-//		Ty:   types.TyWithdrawChain33Log,
+//	receipt := &chainTypes.ReceiptData{
+//		Ty:   types.TyWithdrawChainLog,
 //		Logs: logs,
 //	}
 //
-//	chain33Msg := ParseBurnLockTxReceipt(claimType, receipt)
-//	require.NotNil(c.T(), chain33Msg)
-//	assert.Equal(c.T(), chain33Msg.ClaimType, claimType)
-//	assert.Equal(c.T(), chain33Msg.Chain33Sender, []byte(chain33ToEth.Chain33Sender))
-//	assert.Equal(c.T(), chain33Msg.EthereumReceiver, common.HexToAddress(chain33ToEth.EthereumReceiver))
-//	assert.Equal(c.T(), chain33Msg.TokenContractAddress, common.HexToAddress(chain33ToEth.TokenContract))
-//	assert.Equal(c.T(), chain33Msg.Symbol, chain33ToEth.IssuerDotSymbol)
-//	assert.Equal(c.T(), chain33Msg.Amount.String(), "100")
+//	chainMsg := ParseBurnLockTxReceipt(claimType, receipt)
+//	require.NotNil(c.T(), chainMsg)
+//	assert.Equal(c.T(), chainMsg.ClaimType, claimType)
+//	assert.Equal(c.T(), chainMsg.ChainSender, []byte(chainToEth.ChainSender))
+//	assert.Equal(c.T(), chainMsg.EthereumReceiver, common.HexToAddress(chainToEth.EthereumReceiver))
+//	assert.Equal(c.T(), chainMsg.TokenContractAddress, common.HexToAddress(chainToEth.TokenContract))
+//	assert.Equal(c.T(), chainMsg.Symbol, chainToEth.IssuerDotSymbol)
+//	assert.Equal(c.T(), chainMsg.Amount.String(), "100")
 //
-//	prophecyClaim := Chain33MsgToProphecyClaim(*chain33Msg)
-//	assert.Equal(c.T(), chain33Msg.ClaimType, prophecyClaim.ClaimType)
-//	assert.Equal(c.T(), chain33Msg.Chain33Sender, prophecyClaim.Chain33Sender)
-//	assert.Equal(c.T(), chain33Msg.EthereumReceiver, prophecyClaim.EthereumReceiver)
-//	assert.Equal(c.T(), chain33Msg.TokenContractAddress, prophecyClaim.TokenContractAddress)
-//	assert.Equal(c.T(), strings.ToLower(chain33Msg.Symbol), prophecyClaim.Symbol)
-//	assert.Equal(c.T(), chain33Msg.Amount, prophecyClaim.Amount)
+//	prophecyClaim := ChainMsgToProphecyClaim(*chainMsg)
+//	assert.Equal(c.T(), chainMsg.ClaimType, prophecyClaim.ClaimType)
+//	assert.Equal(c.T(), chainMsg.ChainSender, prophecyClaim.ChainSender)
+//	assert.Equal(c.T(), chainMsg.EthereumReceiver, prophecyClaim.EthereumReceiver)
+//	assert.Equal(c.T(), chainMsg.TokenContractAddress, prophecyClaim.TokenContractAddress)
+//	assert.Equal(c.T(), strings.ToLower(chainMsg.Symbol), prophecyClaim.Symbol)
+//	assert.Equal(c.T(), chainMsg.Amount, prophecyClaim.Amount)
 //}
 //
 //func (c *suiteContracts) Test_RecoverContractHandler() {
@@ -202,10 +202,10 @@ package ethtxs
 //	require.Nil(c.T(), err)
 //	assert.Equal(c.T(), addr, tokenAddr)
 //
-//	chain33Sender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
+//	chainSender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
 //	amount := int64(100)
 //	ethReceiver := c.para.InitValidators[2]
-//	claimID := crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), big.NewInt(amount).Bytes())
+//	claimID := crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), big.NewInt(amount).Bytes())
 //	authOracle, err := PrepareAuth(c.sim, c.para.ValidatorPriKey[0], c.para.InitValidators[0])
 //	require.Nil(c.T(), err)
 //	signature, err := SignClaim4Eth(claimID, c.para.ValidatorPriKey[0])
@@ -214,7 +214,7 @@ package ethtxs
 //	_, err = c.x2EthContracts.Oracle.NewOracleClaim(
 //		authOracle,
 //		events.ClaimTypeLock,
-//		chain33Sender,
+//		chainSender,
 //		ethReceiver,
 //		common.HexToAddress(tokenAddr),
 //		"bty",
@@ -228,12 +228,12 @@ package ethtxs
 //	require.Nil(c.T(), err)
 //	require.Equal(c.T(), balanceNew, "100")
 //
-//	chain33Receiver := "1GTxrmuWiXavhcvsaH5w9whgVxUrWsUMdV"
+//	chainReceiver := "1GTxrmuWiXavhcvsaH5w9whgVxUrWsUMdV"
 //	{
 //		amount := "10"
 //		bn := big.NewInt(1)
 //		bn, _ = bn.SetString(x2ethTypes.TrimZeroAndDot(amount), 10)
-//		txhash, err := Burn(hexutil.Encode(crypto.FromECDSA(c.para.ValidatorPriKey[2])), tokenAddr, chain33Receiver, c.x2EthDeployInfo.BridgeBank.Address, bn, c.x2EthContracts.BridgeBank, c.sim)
+//		txhash, err := Burn(hexutil.Encode(crypto.FromECDSA(c.para.ValidatorPriKey[2])), tokenAddr, chainReceiver, c.x2EthDeployInfo.BridgeBank.Address, bn, c.x2EthContracts.BridgeBank, c.sim)
 //		require.NoError(c.T(), err)
 //		c.sim.Commit()
 //
@@ -254,7 +254,7 @@ package ethtxs
 //		require.Nil(c.T(), err)
 //		c.sim.Commit()
 //
-//		_, err = BurnAsync(hexutil.Encode(crypto.FromECDSA(c.para.ValidatorPriKey[2])), tokenAddr, chain33Receiver, bn, c.x2EthContracts.BridgeBank, c.sim)
+//		_, err = BurnAsync(hexutil.Encode(crypto.FromECDSA(c.para.ValidatorPriKey[2])), tokenAddr, chainReceiver, bn, c.x2EthContracts.BridgeBank, c.sim)
 //		require.Nil(c.T(), err)
 //		c.sim.Commit()
 //
@@ -302,8 +302,8 @@ package ethtxs
 //		amount = "100"
 //		bn := big.NewInt(1)
 //		bn, _ = bn.SetString(x2ethTypes.TrimZeroAndDot(amount), 10)
-//		chain33Receiver := "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
-//		_, err = LockEthErc20Asset(hexutil.Encode(crypto.FromECDSA(c.para.DeployPrivateKey)), tokenAddr, chain33Receiver, bn, c.sim, c.x2EthContracts.BridgeBank, c.x2EthDeployInfo.BridgeBank.Address)
+//		chainReceiver := "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+//		_, err = LockEthErc20Asset(hexutil.Encode(crypto.FromECDSA(c.para.DeployPrivateKey)), tokenAddr, chainReceiver, bn, c.sim, c.x2EthContracts.BridgeBank, c.x2EthDeployInfo.BridgeBank.Address)
 //		require.Nil(c.T(), err)
 //		c.sim.Commit()
 //
@@ -321,8 +321,8 @@ package ethtxs
 //		require.Nil(c.T(), err)
 //		c.sim.Commit()
 //
-//		chain33Receiver := "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
-//		_, err = LockEthErc20AssetAsync(hexutil.Encode(crypto.FromECDSA(c.para.DeployPrivateKey)), tokenAddr, chain33Receiver, bn, c.sim, c.x2EthContracts.BridgeBank)
+//		chainReceiver := "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+//		_, err = LockEthErc20AssetAsync(hexutil.Encode(crypto.FromECDSA(c.para.DeployPrivateKey)), tokenAddr, chainReceiver, bn, c.sim, c.x2EthContracts.BridgeBank)
 //		require.Nil(c.T(), err)
 //		c.sim.Commit()
 //

@@ -2,10 +2,10 @@
 package commands
 
 import (
-	jsonrpc "github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	vty "github.com/33cn/plugin/plugin/dapp/vote/types"
+	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	vty "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 	"github.com/spf13/cobra"
 )
 
@@ -56,7 +56,7 @@ func sendCreateTxRPC(cmd *cobra.Command, actionName string, req types.Message) {
 	}
 
 	var res string
-	ctx := jsonrpc.NewRPCCtx(rpcAddr, "Chain33.CreateTransaction", pm, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcAddr, "Chain.CreateTransaction", pm, &res)
 	ctx.RunWithoutMarshal()
 }
 
@@ -70,6 +70,6 @@ func sendQueryRPC(cmd *cobra.Command, funcName string, req, reply types.Message)
 		Payload:  payLoad,
 	}
 
-	ctx := jsonrpc.NewRPCCtx(rpcAddr, "Chain33.Query", query, reply)
+	ctx := jsonrpc.NewRPCCtx(rpcAddr, "Chain.Query", query, reply)
 	ctx.Run()
 }

@@ -1,14 +1,14 @@
-package chain33
+package chain
 
 import (
-	"github.com/33cn/plugin/plugin/dapp/bridgevmxgo/boss4x/chain33/offline"
+	"github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/boss4x/chain/offline"
 	"github.com/spf13/cobra"
 )
 
-func Chain33Cmd() *cobra.Command {
+func ChainCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "chain33",
-		Short: "deploy to chain33",
+		Use:   "chain",
+		Short: "deploy to chain",
 	}
 	cmd.AddCommand(
 		offline.Boss4xOfflineCmd(),

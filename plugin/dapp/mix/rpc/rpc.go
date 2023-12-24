@@ -8,8 +8,8 @@ import (
 	"encoding/hex"
 	"encoding/json"
 
-	"github.com/33cn/chain33/types"
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	"github.com/assetcloud/chain/types"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	"golang.org/x/net/context"
 )
 

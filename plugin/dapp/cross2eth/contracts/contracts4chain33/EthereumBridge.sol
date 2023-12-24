@@ -37,7 +37,7 @@ contract EthereumBridge {
     struct ProphecyClaim {
         ClaimType claimType;
         bytes ethereumSender;
-        address payable chain33Receiver;
+        address payable chainReceiver;
         address originalValidator;
         address tokenAddress;
         string symbol;
@@ -60,7 +60,7 @@ contract EthereumBridge {
         uint256 _prophecyID,
         ClaimType _claimType,
         bytes _ethereumSender,
-        address payable _chain33Receiver,
+        address payable _chainReceiver,
         address _validatorAddress,
         address _tokenAddress,
         string _symbol,
@@ -206,7 +206,7 @@ contract EthereumBridge {
         bytes32 _claimID,
         uint8 _claimType,
         bytes memory _ethereumSender,
-        address payable _chain33Receiver,
+        address payable _chainReceiver,
         address _originalValidator,
         address _tokenAddress,
         string memory _symbol,
@@ -229,7 +229,7 @@ contract EthereumBridge {
         ProphecyClaim memory prophecyClaim = ProphecyClaim(
             claimType,
             _ethereumSender,
-            _chain33Receiver,
+            _chainReceiver,
             _originalValidator,
             _tokenAddress,
             _symbol,
@@ -244,7 +244,7 @@ contract EthereumBridge {
             prophecyClaimCount,
             claimType,
             _ethereumSender,
-            _chain33Receiver,
+            _chainReceiver,
             _originalValidator,
             _tokenAddress,
             _symbol,
@@ -297,7 +297,7 @@ contract EthereumBridge {
 
         bridgeBank.mintBridgeTokens(
             prophecyClaim.ethereumSender,
-            prophecyClaim.chain33Receiver,
+            prophecyClaim.chainReceiver,
             prophecyClaim.tokenAddress,
             prophecyClaim.symbol,
             prophecyClaim.amount
@@ -316,7 +316,7 @@ contract EthereumBridge {
         ProphecyClaim memory prophecyClaim = prophecyClaims[_claimID];
 
         bridgeBank.unlock(
-            prophecyClaim.chain33Receiver,
+            prophecyClaim.chainReceiver,
             prophecyClaim.tokenAddress,
             prophecyClaim.symbol,
             prophecyClaim.amount

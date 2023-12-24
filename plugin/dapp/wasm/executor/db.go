@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	types2 "github.com/33cn/plugin/plugin/dapp/wasm/types"
+	"github.com/assetcloud/chain/types"
+	types2 "github.com/assetcloud/plugin/plugin/dapp/wasm/types"
 )
 
 // "mavl-wasm-code-{name}"

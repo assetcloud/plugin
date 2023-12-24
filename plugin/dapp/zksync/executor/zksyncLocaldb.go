@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	"github.com/assetcloud/chain/types"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 )
 
 func (z *zksync) execAutoLocalZksync(tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
@@ -33,7 +33,7 @@ func (z *zksync) execLocalZksync(tx *types.Transaction, receiptData *types.Recei
 			leaf := &zt.Leaf{
 				AccountId:   receipt.AccountId,
 				EthAddress:  receipt.EthAddress,
-				Chain33Addr: receipt.Chain33Addr,
+				ChainAddr: receipt.ChainAddr,
 			}
 
 			err = infoTable.Replace(leaf)

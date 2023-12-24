@@ -7,12 +7,12 @@ package wallet_test
 import (
 	"testing"
 
-	"github.com/33cn/chain33/util"
+	"github.com/assetcloud/chain/util"
 
-	_ "github.com/33cn/chain33/system"
-	"github.com/33cn/chain33/types"
-	_ "github.com/33cn/plugin/plugin"
-	node "github.com/33cn/plugin/plugin/dapp/paracross/testnode"
+	_ "github.com/assetcloud/chain/system"
+	"github.com/assetcloud/chain/types"
+	_ "github.com/assetcloud/plugin/plugin"
+	node "github.com/assetcloud/plugin/plugin/dapp/paracross/testnode"
 )
 
 func TestParaQuery(t *testing.T) {

@@ -7,7 +7,7 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 )
 
 // blackwhite action type
@@ -29,13 +29,13 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(BlackwhiteX, "ForkBlackWhiteV2", 0)
 	cfg.RegisterDappFork(BlackwhiteX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(BlackwhiteX, NewType(cfg))
 }
 
@@ -45,7 +45,7 @@ type BlackwhiteType struct {
 }
 
 // NewType 创建执行器类型
-func NewType(cfg *types.Chain33Config) *BlackwhiteType {
+func NewType(cfg *types.ChainConfig) *BlackwhiteType {
 	c := &BlackwhiteType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

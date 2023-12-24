@@ -11,16 +11,16 @@ import (
 
 	"testing"
 
-	apimocks "github.com/33cn/chain33/client/mocks"
+	apimocks "github.com/assetcloud/chain/client/mocks"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/queue"
-	qmocks "github.com/33cn/chain33/queue/mocks"
-	drivers "github.com/33cn/chain33/system/consensus"
-	"github.com/33cn/chain33/types"
-	typesmocks "github.com/33cn/chain33/types/mocks"
-	paraexec "github.com/33cn/plugin/plugin/dapp/paracross/executor"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/queue"
+	qmocks "github.com/assetcloud/chain/queue/mocks"
+	drivers "github.com/assetcloud/chain/system/consensus"
+	"github.com/assetcloud/chain/types"
+	typesmocks "github.com/assetcloud/chain/types/mocks"
+	paraexec "github.com/assetcloud/plugin/plugin/dapp/paracross/executor"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -31,7 +31,7 @@ var (
 )
 
 func TestFilterTxsForPara(t *testing.T) {
-	cfg := types.NewChain33Config(types.ReadFile("../../../plugin/dapp/paracross/cmd/build/chain33.para.test.toml"))
+	cfg := types.NewChainConfig(types.ReadFile("../../../plugin/dapp/paracross/cmd/build/chain.para.test.toml"))
 
 	detail, filterTxs, _ := createTestTxs(cfg, t)
 	rst := paraexec.FilterTxsForPara(cfg, detail.FilterParaTxsByTitle(cfg, Title))
@@ -40,7 +40,7 @@ func TestFilterTxsForPara(t *testing.T) {
 
 }
 
-func createCrossParaTx(cfg *types.Chain33Config, to string, amount int64) (*types.Transaction, error) {
+func createCrossParaTx(cfg *types.ChainConfig, to string, amount int64) (*types.Transaction, error) {
 	param := types.CreateTx{
 		To:          to,
 		Amount:      amount,
@@ -56,7 +56,7 @@ func createCrossParaTx(cfg *types.Chain33Config, to string, amount int64) (*type
 	return tx, err
 }
 
-func createCrossParaTempTx(cfg *types.Chain33Config, to string, amount int64) (*types.Transaction, error) {
+func createCrossParaTempTx(cfg *types.ChainConfig, to string, amount int64) (*types.Transaction, error) {
 	param := types.CreateTx{
 		To:          to,
 		Amount:      amount,
@@ -72,7 +72,7 @@ func createCrossParaTempTx(cfg *types.Chain33Config, to string, amount int64) (*
 	return tx, err
 }
 
-func createTxsGroup(cfg *types.Chain33Config, txs []*types.Transaction) ([]*types.Transaction, error) {
+func createTxsGroup(cfg *types.ChainConfig, txs []*types.Transaction) ([]*types.Transaction, error) {
 
 	group, err := types.CreateTxGroup(txs, cfg.GetMinTxFeeRate())
 	if err != nil {
@@ -85,7 +85,7 @@ func createTxsGroup(cfg *types.Chain33Config, txs []*types.Transaction) ([]*type
 	return group.Txs, nil
 }
 
-func createTestTxs(cfg *types.Chain33Config, t *testing.T) (*types.BlockDetail, []*types.Transaction, []*types.Transaction) {
+func createTestTxs(cfg *types.ChainConfig, t *testing.T) (*types.BlockDetail, []*types.Transaction, []*types.Transaction) {
 	//all para tx group
 	tx5, err := createCrossParaTx(cfg, "toB", 5)
 	assert.Nil(t, err)
@@ -151,7 +151,7 @@ func createTestTxs(cfg *types.Chain33Config, t *testing.T) (*types.BlockDetail, 
 }
 
 func TestAddMinerTx(t *testing.T) {
-	cfg := types.NewChain33Config(types.ReadFile("../../../plugin/dapp/paracross/cmd/build/chain33.para.test.toml"))
+	cfg := types.NewChainConfig(types.ReadFile("../../../plugin/dapp/paracross/cmd/build/chain.para.test.toml"))
 	pk, err := hex.DecodeString(minerPrivateKey)
 	assert.Nil(t, err)
 
@@ -195,7 +195,7 @@ func getMockLastBlock(para *client, returnBlock *types.Block) {
 	para.BaseClient = baseCli
 
 	qClient := &qmocks.Client{}
-	qClient.On("GetConfig").Return(&types.Chain33Config{})
+	qClient.On("GetConfig").Return(&types.ChainConfig{})
 	para.InitClient(qClient, initBlock)
 
 	msg := queue.NewMessage(0, "", 1, returnBlock)
@@ -208,7 +208,7 @@ func getMockLastBlock(para *client, returnBlock *types.Block) {
 
 func TestGetLastBlockInfo(t *testing.T) {
 	para := new(client)
-	grpcClient := &typesmocks.Chain33Client{}
+	grpcClient := &typesmocks.ChainClient{}
 	para.grpcClient = grpcClient
 
 	block := &types.Block{Height: 0}

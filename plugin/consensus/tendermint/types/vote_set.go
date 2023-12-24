@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/33cn/chain33/common/crypto"
-	tmtypes "github.com/33cn/plugin/plugin/dapp/valnode/types"
+	"github.com/assetcloud/chain/common/crypto"
+	tmtypes "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
 	"github.com/pkg/errors"
 )
 

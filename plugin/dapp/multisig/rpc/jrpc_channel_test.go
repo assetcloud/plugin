@@ -8,17 +8,17 @@ import (
 	"strings"
 	"testing"
 
-	commonlog "github.com/33cn/chain33/common/log"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
-	mty "github.com/33cn/plugin/plugin/dapp/multisig/types"
+	commonlog "github.com/assetcloud/chain/common/log"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
+	mty "github.com/assetcloud/plugin/plugin/dapp/multisig/types"
 	"github.com/stretchr/testify/assert"
 
 	// 注册system和plugin 包
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	_ "github.com/33cn/chain33/system"
-	_ "github.com/33cn/plugin/plugin"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	_ "github.com/assetcloud/chain/system"
+	_ "github.com/assetcloud/plugin/plugin"
 )
 
 func init() {
@@ -124,7 +124,7 @@ func testGetMultiSigAccCountCmd(t *testing.T, jrpc *jsonclient.JSONClient) error
 		Payload:  types.MustPBToJSON(&types.ReqNil{}),
 	}
 	var res types.Int64
-	return jrpc.Call("Chain33.Query", params, &res)
+	return jrpc.Call("Chain.Query", params, &res)
 }
 
 func testGetMultiSigAccountsCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -134,7 +134,7 @@ func testGetMultiSigAccountsCmd(t *testing.T, jrpc *jsonclient.JSONClient) error
 		Payload:  types.MustPBToJSON(&mty.ReqMultiSigAccs{}),
 	}
 	var res mty.ReplyMultiSigAccs
-	return jrpc.Call("Chain33.Query", params, &res)
+	return jrpc.Call("Chain.Query", params, &res)
 }
 
 func testGetMultiSigAccountInfoCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -144,7 +144,7 @@ func testGetMultiSigAccountInfoCmd(t *testing.T, jrpc *jsonclient.JSONClient) er
 		Payload:  types.MustPBToJSON(&mty.ReqMultiSigAccInfo{}),
 	}
 	var res mty.MultiSig
-	return jrpc.Call("Chain33.Query", params, &res)
+	return jrpc.Call("Chain.Query", params, &res)
 }
 
 func testGetMultiSigAccTxCountCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -154,7 +154,7 @@ func testGetMultiSigAccTxCountCmd(t *testing.T, jrpc *jsonclient.JSONClient) err
 		Payload:  types.MustPBToJSON(&mty.ReqMultiSigAccInfo{}),
 	}
 	var res mty.Uint64
-	return jrpc.Call("Chain33.Query", params, &res)
+	return jrpc.Call("Chain.Query", params, &res)
 }
 
 func testGetMultiSigTxidsCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -164,7 +164,7 @@ func testGetMultiSigTxidsCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
 		Payload:  types.MustPBToJSON(&mty.ReqMultiSigTxids{}),
 	}
 	var res mty.ReplyMultiSigTxids
-	return jrpc.Call("Chain33.Query", params, &res)
+	return jrpc.Call("Chain.Query", params, &res)
 }
 
 func testGetMultiSigTxInfoCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -175,7 +175,7 @@ func testGetMultiSigTxInfoCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
 	params.FuncName = "MultiSigTxInfo"
 	params.Payload = types.MustPBToJSON(req)
 	rep = &mty.MultiSigTx{}
-	return jrpc.Call("Chain33.Query", &params, rep)
+	return jrpc.Call("Chain.Query", &params, rep)
 }
 
 func testGetGetMultiSigTxConfirmedWeightCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -186,7 +186,7 @@ func testGetGetMultiSigTxConfirmedWeightCmd(t *testing.T, jrpc *jsonclient.JSONC
 	params.FuncName = "MultiSigTxConfirmedWeight"
 	params.Payload = types.MustPBToJSON(req)
 	rep = &mty.Uint64{}
-	return jrpc.Call("Chain33.Query", &params, rep)
+	return jrpc.Call("Chain.Query", &params, rep)
 }
 
 func testGetGetMultiSigAccUnSpentTodayCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -198,7 +198,7 @@ func testGetGetMultiSigAccUnSpentTodayCmd(t *testing.T, jrpc *jsonclient.JSONCli
 	params.FuncName = "MultiSigAccUnSpentToday"
 	params.Payload = types.MustPBToJSON(req)
 	rep = &mty.ReplyUnSpentAssets{}
-	return jrpc.Call("Chain33.Query", &params, rep)
+	return jrpc.Call("Chain.Query", &params, rep)
 }
 
 func testGetMultiSigAccAssetsCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -211,7 +211,7 @@ func testGetMultiSigAccAssetsCmd(t *testing.T, jrpc *jsonclient.JSONClient) erro
 	params.FuncName = "MultiSigAccAssets"
 	params.Payload = types.MustPBToJSON(req)
 	rep = &mty.ReplyAccAssets{}
-	return jrpc.Call("Chain33.Query", &params, rep)
+	return jrpc.Call("Chain.Query", &params, rep)
 }
 
 func testGetMultiSigAccAllAddressCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -226,5 +226,5 @@ func testGetMultiSigAccAllAddressCmd(t *testing.T, jrpc *jsonclient.JSONClient) 
 	params.FuncName = "MultiSigAccAllAddress"
 	params.Payload = types.MustPBToJSON(&req)
 	rep = &mty.AccAddress{}
-	return jrpc.Call("Chain33.Query", &params, rep)
+	return jrpc.Call("Chain.Query", &params, rep)
 }

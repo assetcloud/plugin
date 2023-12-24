@@ -5,11 +5,11 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/client"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/state"
+	"github.com/assetcloud/chain/client"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/state"
 )
 
 // CanTransfer 检查合约调用账户是否有充足的金额进行转账交易操作

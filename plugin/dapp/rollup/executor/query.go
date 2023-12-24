@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	"github.com/assetcloud/chain/types"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 )
 
 func (r *rollup) Query_GetValidatorPubs(title *rtypes.ChainTitle) (types.Message, error) {

@@ -9,14 +9,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpcTypes "github.com/33cn/chain33/rpc/types"
-	commandtypes "github.com/33cn/chain33/system/dapp/commands/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpcTypes "github.com/assetcloud/chain/rpc/types"
+	commandtypes "github.com/assetcloud/chain/system/dapp/commands/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/spf13/cobra"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/types"
 )
 
 // CreateAssetSendToExec 通用的创建 send_exec 交易， 额外指定资产合约
@@ -62,7 +62,7 @@ func CreateAssetSendToExec(cmd *cobra.Command, args []string, fromExec string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -107,7 +107,7 @@ func CreateAssetWithdraw(cmd *cobra.Command, args []string, fromExec string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -143,7 +143,7 @@ func CreateAssetTransfer(cmd *cobra.Command, args []string, fromExec string) {
 		Payload:    types.MustPBToJSON(payload),
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 

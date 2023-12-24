@@ -12,11 +12,11 @@ GRE='\033[1;32m'
 NOC='\033[0m'
 
 #1ks returner chain31
-ZKSYNC_CLI31="docker exec ${NODE1} /root/chain33-cli "
+ZKSYNC_CLI31="docker exec ${NODE1} /root/chain-cli "
 #1jr  authorize chain32
-ZKSYNC_CLI32="docker exec ${NODE2} /root/chain33-cli "
+ZKSYNC_CLI32="docker exec ${NODE2} /root/chain-cli "
 #1nl receiver  chain30
-ZKSYNC_CLI30="docker exec ${NODE4} /root/chain33-cli "
+ZKSYNC_CLI30="docker exec ${NODE4} /root/chain-cli "
 
 TOKENID_0="0"
 TOKENID_1="1"
@@ -43,7 +43,7 @@ transferFee=100000000000000
 proxyExitFee=200000000000000
 tree2contractFee=100000000000000
 contract2treeFee=10000
-contractChain33Fee=0.0001
+contractChainFee=0.0001
 # token id 1 le8
 withdrawFee1=10000
 transferFee1=10000
@@ -93,7 +93,7 @@ function check_tx() {
         sleep 1
 
         if [[ ${count} -ge 100 ]]; then
-            echo "chain33 query tx for too long"
+            echo "chain query tx for too long"
             break
         fi
     done
@@ -156,15 +156,15 @@ function zksync_init() {
 function zksync_deposit() {
     echo -e "${GRE}=========== $FUNCNAME ===========${NOC}"
     #1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4 deposit amount 1000000000000
-    chain33Addr=$(${CLI} zksync l2 l2addr -k 6da92a632ab7deb67d38c0f6560bcfed28167998f6496db64c258d5e8393a81b)
-    hash=$(${CLI} send zksync l2 deposit -t "${TOKENID_0}" -a 8000000000000000000 -e 12a0E25E62C1dBD32E505446062B26AECB65F028 -c "$chain33Addr" -i ${queueId} -k "${management_key}")
+    chainAddr=$(${CLI} zksync l2 l2addr -k 6da92a632ab7deb67d38c0f6560bcfed28167998f6496db64c258d5e8393a81b)
+    hash=$(${CLI} send zksync l2 deposit -t "${TOKENID_0}" -a 8000000000000000000 -e 12a0E25E62C1dBD32E505446062B26AECB65F028 -c "$chainAddr" -i ${queueId} -k "${management_key}")
     check_tx "${CLI}" "${hash}"
     queueId=$((queueId + 1))
     query_account_balance "${TOKENID_0}" "${ZKSYNC_ACCOUNT_4}" 8000000000000000000
 
     #1JRNjdEqp4LJ5fqycUBm9ayCKSeeskgMKR deposit amount 1000000000
-    chain33Addr=$(${CLI} zksync l2 l2addr -k 19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4)
-    hash=$(${CLI} send zksync l2 deposit -t "${TOKENID_1}" -a 6000000000000000000 -e abcd68033A72978C1084E2d44D1Fa06DdC4A2d57 -c "$chain33Addr" -i ${queueId} -k "${management_key}")
+    chainAddr=$(${CLI} zksync l2 l2addr -k 19c069234f9d3e61135fefbeb7791b149cdf6af536f26bebb310d4cd22c3fee4)
+    hash=$(${CLI} send zksync l2 deposit -t "${TOKENID_1}" -a 6000000000000000000 -e abcd68033A72978C1084E2d44D1Fa06DdC4A2d57 -c "$chainAddr" -i ${queueId} -k "${management_key}")
     check_tx "${CLI}" "${hash}"
     queueId=$((queueId + 1))
     query_account_balance "${TOKENID_1}" "${ZKSYNC_ACCOUNT_5}" 6000000000000000000
@@ -220,7 +220,7 @@ function zksync_contractToTree() {
     balanceAf=$((balanceBf + 100000000000000000))
     query_account_balance "${TOKENID_0}" "${ZKSYNC_ACCOUNT_4}" ${balanceAf}
     balance=$(${CLI} asset balance -a "${account1}" --asset_exec zksync --asset_symbol "${TOKENID_SYMBOL_0}" | jq ".balance" | sed 's/\"//g')
-    balanceAf=$(echo "${balanceBfAsset} - 0.1 - ${contractChain33Fee}" | bc)
+    balanceAf=$(echo "${balanceBfAsset} - 0.1 - ${contractChainFee}" | bc)
     is_equal "${balance}" "${balanceAf}"
 }
 
@@ -245,8 +245,8 @@ function zksync_transferToNew() {
     #1KSBd17H7ZK8iT37aJztFB22XGwsPTdwE4 transferToNew to 1NLHPEcbTWWxxU3dGUZBhayjrCHD3psX7k amount 100000000
 
     balanceBf=$(${CLI} zksync query account balance id -a "${ZKSYNC_ACCOUNT_4}" -t "${TOKENID_0}" | jq ".tokenBalances[0].balance" | sed 's/\"//g')
-    chain33Addr=$(${CLI} zksync l2 l2addr -k 7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115)
-    hash=$(${CLI} send zksync l2 transfer2new -t "${TOKENID_0}" -a 100000000000000000 -f "${ZKSYNC_ACCOUNT_4}" -e 12a0E25E62C1dBD32E505446062B26AECB65F027 -c "$chain33Addr" -k "${accountKey1}")
+    chainAddr=$(${CLI} zksync l2 l2addr -k 7a80a1f75d7360c6123c32a78ecf978c1ac55636f87892df38d8b85a9aeff115)
+    hash=$(${CLI} send zksync l2 transfer2new -t "${TOKENID_0}" -a 100000000000000000 -f "${ZKSYNC_ACCOUNT_4}" -e 12a0E25E62C1dBD32E505446062B26AECB65F027 -c "$chainAddr" -k "${accountKey1}")
     check_tx "${CLI}" "${hash}"
 
     balanceAf=$((balanceBf - 100000000000000000 - transferFee))
@@ -337,9 +337,9 @@ function create_tx() {
         #loop deposit amount 1000000000000
         echo "=========== # zksync add new account test ============="
         privateKey=$(${CLI} account rand -l 1 | jq -r ".privateKey")
-        chain33Addr=$(${CLI} zksync l2 l2addr -k "$privateKey")
+        chainAddr=$(${CLI} zksync l2 l2addr -k "$privateKey")
 
-        hash=$(${CLI} send zksync l2 deposit -t "${TOKENID_0}" -a 1000000000000 -e abcd68033A72978C1084E2d44D1Fa06DdC4A2d57 -c "$chain33Addr" -i ${queueId} -k "${management_key}")
+        hash=$(${CLI} send zksync l2 deposit -t "${TOKENID_0}" -a 1000000000000 -e abcd68033A72978C1084E2d44D1Fa06DdC4A2d57 -c "$chainAddr" -i ${queueId} -k "${management_key}")
         check_tx "${CLI}" "${hash}"
         query_account_balance "${TOKENID_0}" $accountId 1000000000000
         accountId=$((accountId + 1))

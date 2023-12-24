@@ -7,19 +7,19 @@ import (
 	"strings"
 	"testing"
 
-	apimock "github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common/address"
-	dbm "github.com/33cn/chain33/common/db"
-	cty "github.com/33cn/chain33/system/dapp/coins/types"
-	vcomm "github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common/address"
+	dbm "github.com/assetcloud/chain/common/db"
+	cty "github.com/assetcloud/chain/system/dapp/coins/types"
+	vcomm "github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 
-	dbmock "github.com/33cn/chain33/common/db/mocks"
-	ctypes "github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/evm/types"
+	dbmock "github.com/assetcloud/chain/common/db/mocks"
+	ctypes "github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/33cn/chain33/common"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/assetcloud/chain/common"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
 	"gotest.tools/assert"
 )
 
@@ -78,8 +78,8 @@ func Test_UnpackEventLock(t *testing.T) {
 //UnpackLogLock module=cross2eth_relayer
 //value=500000000
 //symbol=BTY
-//token addr on chain33 evm=1111111111111111111114oLvT2
-//chain33 sender=1Cj1rqUenPmkeD6A8MGEzkBKQFN2H9yL3x
+//token addr on chain evm=1111111111111111111114oLvT2
+//chain sender=1Cj1rqUenPmkeD6A8MGEzkBKQFN2H9yL3x
 //ethereum recipient=0xbc333839E37bc7fAAD0137aBaE2275030555101f
 //nonce=1
 
@@ -139,7 +139,7 @@ func Test_UnpackInputLockOfBridgevmxgo(t *testing.T) {
 
 func TestEVMExecutor_Query_GetCode(t *testing.T) {
 	api := new(apimock.QueueProtocolAPI)
-	cfg := ctypes.NewChain33Config(ctypes.GetDefaultCfgstring())
+	cfg := ctypes.NewChainConfig(ctypes.GetDefaultCfgstring())
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	exec := initEvmExeccutor(t, api)
 	var contractorAddr = strings.ToLower("0xDe79A84DD3A16BB91044167075dE17a1CA4b1d6b")
@@ -163,7 +163,7 @@ func TestEVMExecutor_Query_GetCode(t *testing.T) {
 
 func TestNewEVMExecutor_Query_GetNonce(t *testing.T) {
 	api := new(apimock.QueueProtocolAPI)
-	cfg := ctypes.NewChain33Config(ctypes.GetDefaultCfgstring())
+	cfg := ctypes.NewChainConfig(ctypes.GetDefaultCfgstring())
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	exec := initEvmExeccutor(t, api)
 	localDB := new(dbmock.KVDB)
@@ -204,7 +204,7 @@ func initEvmExeccutor(t *testing.T, api *apimock.QueueProtocolAPI) *EVMExecutor 
 func TestEVMExecutor_Check(t *testing.T) {
 	api := new(apimock.QueueProtocolAPI)
 
-	cfg := ctypes.NewChain33Config(ctypes.GetDefaultCfgstring())
+	cfg := ctypes.NewChainConfig(ctypes.GetDefaultCfgstring())
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	pub := vcomm.FromHex("0x04715e4e07d983c2d98eeac7018bce6e68ef9de25835340f6455f1b1c9686132ac54904f5e04b07966a256140a5f487c4aef3ddc461e02d58f90cc8baa49f9c7ca")
 	sig := &ctypes.Signature{

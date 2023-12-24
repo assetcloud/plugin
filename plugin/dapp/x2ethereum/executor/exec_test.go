@@ -5,32 +5,32 @@ import (
 	"math"
 	"strconv"
 
-	//"github.com/33cn/chain33/client"
+	//"github.com/assetcloud/chain/client"
 	"testing"
 
-	apimock "github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/common/db/mocks"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	chain33types "github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	types2 "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/db/mocks"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	chaintypes "github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	types2 "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )
 
-var chainTestCfg = types.NewChain33Config(types.GetDefaultCfgstring())
+var chainTestCfg = types.NewChainConfig(types.GetDefaultCfgstring())
 
 func init() {
 	Init(types2.X2ethereumX, chainTestCfg, nil)
 }
 
 var (
-	chain33Receiver       = "1BqP2vHkYNjSgdnTqm7pGbnphLhtEhuJFi"
+	chainReceiver       = "1BqP2vHkYNjSgdnTqm7pGbnphLhtEhuJFi"
 	bridgeContractAddress = "0xC4cE93a5699c68241fc2fB503Fb0f21724A624BB"
 	symbol                = "eth"
 	tokenContractAddress  = "0x0000000000000000000000000000000000000000"
@@ -137,7 +137,7 @@ func (x *suiteX2Ethereum) Test_2_AddValidator() {
 
 func (x *suiteX2Ethereum) Test_3_ModifyAndRemoveValidator() {
 	add := &types2.MsgValidator{
-		Address: chain33Receiver,
+		Address: chainReceiver,
 		Power:   7,
 	}
 
@@ -152,7 +152,7 @@ func (x *suiteX2Ethereum) Test_3_ModifyAndRemoveValidator() {
 	x.NotEmpty(receipt)
 	x.setDb(receipt)
 
-	msg, err := x.x2eth.Query_GetValidators(&types2.QueryValidatorsParams{Validator: chain33Receiver})
+	msg, err := x.x2eth.Query_GetValidators(&types2.QueryValidatorsParams{Validator: chainReceiver})
 	x.NoError(err)
 	reply := msg.(*types2.ReceiptQueryValidator)
 	x.Equal(reply.Validators[0].Power, int64(8))
@@ -162,35 +162,35 @@ func (x *suiteX2Ethereum) Test_3_ModifyAndRemoveValidator() {
 	x.NotEmpty(receipt)
 	x.setDb(receipt)
 
-	_, err = x.x2eth.Query_GetValidators(&types2.QueryValidatorsParams{Validator: chain33Receiver})
+	_, err = x.x2eth.Query_GetValidators(&types2.QueryValidatorsParams{Validator: chainReceiver})
 	x.Equal(err, types2.ErrInvalidValidator)
 }
 
-func (x *suiteX2Ethereum) Test_4_Eth2Chain33() {
+func (x *suiteX2Ethereum) Test_4_Eth2Chain() {
 	_, err := x.x2eth.Query_GetTotalPower(&types2.QueryTotalPowerParams{})
 	if err == types.ErrNotFound {
 		x.Test_2_AddValidator()
 	}
 
-	payload := &types2.Eth2Chain33{
+	payload := &types2.Eth2Chain{
 		EthereumChainID:       0,
 		BridgeContractAddress: bridgeContractAddress,
 		Nonce:                 0,
 		IssuerDotSymbol:       symbol,
 		TokenContractAddress:  tokenContractAddress,
 		EthereumSender:        ethereumAddr,
-		Chain33Receiver:       addValidator1,
+		ChainReceiver:       addValidator1,
 		ValidatorAddress:      addValidator1,
 		Amount:                "10",
 		ClaimType:             int64(types2.LockClaimType),
 	}
 
-	receipt, err := x.action.procEth2Chain33_lock(payload)
+	receipt, err := x.action.procEth2Chain_lock(payload)
 	x.NoError(err)
 	x.setDb(receipt)
 
 	payload.ValidatorAddress = addValidator2
-	receipt, err = x.action.procEth2Chain33_lock(payload)
+	receipt, err = x.action.procEth2Chain_lock(payload)
 	x.NoError(err)
 	x.setDb(receipt)
 
@@ -201,16 +201,16 @@ func (x *suiteX2Ethereum) Test_4_Eth2Chain33() {
 	x.queryGetEthProphecy(ID, types2.EthBridgeStatus_SuccessStatusText)
 	x.queryGetSymbolTotalAmountByTxType(1, symbol, "lock", "", "10")
 
-	payload1 := &types2.Chain33ToEth{
+	payload1 := &types2.ChainToEth{
 		TokenContract:    tokenContractAddress,
-		Chain33Sender:    addValidator1,
+		ChainSender:    addValidator1,
 		EthereumReceiver: ethereumAddr,
 		Amount:           "3",
 		IssuerDotSymbol:  "eth",
 		Decimals:         8,
 	}
 
-	receipt, err = x.action.procChain33ToEth_burn(payload1)
+	receipt, err = x.action.procChainToEth_burn(payload1)
 	x.NoError(err)
 	x.setDb(receipt)
 
@@ -222,12 +222,12 @@ func (x *suiteX2Ethereum) Test_4_Eth2Chain33() {
 	payload.Nonce = 1
 	payload.ClaimType = int64(types2.LockClaimType)
 	payload.ValidatorAddress = addValidator1
-	receipt, err = x.action.procEth2Chain33_lock(payload)
+	receipt, err = x.action.procEth2Chain_lock(payload)
 	x.NoError(err)
 	x.setDb(receipt)
 
 	payload.ValidatorAddress = addValidator2
-	receipt, err = x.action.procEth2Chain33_lock(payload)
+	receipt, err = x.action.procEth2Chain_lock(payload)
 	x.NoError(err)
 	x.setDb(receipt)
 
@@ -235,44 +235,44 @@ func (x *suiteX2Ethereum) Test_4_Eth2Chain33() {
 	x.queryGetSymbolTotalAmountByTxType(1, symbol, "lock", "", "11")
 }
 
-func (x *suiteX2Ethereum) Test_5_Chain33ToEth() {
+func (x *suiteX2Ethereum) Test_5_ChainToEth() {
 	_, err := x.x2eth.Query_GetTotalPower(&types2.QueryTotalPowerParams{})
 	if err == types.ErrNotFound {
 		x.Test_2_AddValidator()
 	}
-	msgLock := &types2.Chain33ToEth{
+	msgLock := &types2.ChainToEth{
 		TokenContract:    tokenContractAddress,
-		Chain33Sender:    addValidator1,
+		ChainSender:    addValidator1,
 		EthereumReceiver: ethereumAddr,
 		Amount:           "5",
 		IssuerDotSymbol:  "coins.bty",
 	}
 
-	receipt, err := x.action.procChain33ToEth_lock(msgLock)
+	receipt, err := x.action.procChainToEth_lock(msgLock)
 	x.NoError(err)
 	x.setDb(receipt)
 
 	x.queryGetSymbolTotalAmount("coins.bty", tokenContractAddress, 5, false)
 	x.queryGetSymbolTotalAmountByTxType(2, "coins.bty", "lock", tokenContractAddress, "5")
 
-	payload := &types2.Eth2Chain33{
+	payload := &types2.Eth2Chain{
 		EthereumChainID:       0,
 		BridgeContractAddress: bridgeContractAddress,
 		Nonce:                 2,
 		IssuerDotSymbol:       "coins.bty",
 		TokenContractAddress:  tokenContractAddress,
 		EthereumSender:        ethereumAddr,
-		Chain33Receiver:       addValidator1,
+		ChainReceiver:       addValidator1,
 		ValidatorAddress:      addValidator1,
 		Amount:                "4",
 		ClaimType:             int64(types2.BurnClaimType),
 	}
-	receipt1, err := x.action.procEth2Chain33_burn(payload)
+	receipt1, err := x.action.procEth2Chain_burn(payload)
 	x.NoError(err)
 	x.setDb(receipt1)
 
 	payload.ValidatorAddress = addValidator2
-	receipt1, err = x.action.procEth2Chain33_burn(payload)
+	receipt1, err = x.action.procEth2Chain_burn(payload)
 	x.NoError(err)
 	x.setDb(receipt1)
 
@@ -308,7 +308,7 @@ func (x *suiteX2Ethereum) accountSetup() {
 	x.Equal(int64(200*1e8), account.Balance)
 }
 
-func (x *suiteX2Ethereum) setDb(receipt *chain33types.Receipt) {
+func (x *suiteX2Ethereum) setDb(receipt *chaintypes.Receipt) {
 	for _, kv := range receipt.KV {
 		_ = sdb.Set(kv.Key, kv.Value)
 	}
@@ -338,9 +338,9 @@ func (x *suiteX2Ethereum) queryGetSymbolTotalAmountByTxType(direction int64, tok
 	x.Equal(symbolAmount.Res[0].TotalAmount, equal)
 }
 
-func (x *suiteX2Ethereum) queryGetSymbolTotalAmount(tokenSymbol, tokenAddress string, equal int64, eth2chain33 bool) {
+func (x *suiteX2Ethereum) queryGetSymbolTotalAmount(tokenSymbol, tokenAddress string, equal int64, eth2chain bool) {
 	var lock, burn *types2.ReceiptQuerySymbolAssets
-	if eth2chain33 {
+	if eth2chain {
 		msg, _ := x.x2eth.Query_GetSymbolTotalAmountByTxType(&types2.QuerySymbolAssetsByTxTypeParams{TokenSymbol: tokenSymbol, TokenAddr: tokenAddress, Direction: 1, TxType: types2.LockClaim})
 		lock = msg.(*types2.ReceiptQuerySymbolAssets)
 

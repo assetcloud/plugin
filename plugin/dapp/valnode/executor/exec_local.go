@@ -7,8 +7,8 @@ package executor
 import (
 	"encoding/hex"
 
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/valnode/types"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
 )
 
 // ExecLocal_Node method

@@ -3,14 +3,14 @@ package offline
 import (
 	"fmt"
 
-	"github.com/33cn/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
 	"github.com/spf13/cobra"
 )
 
 /*
-./boss4x chain33 offline set_offline_addr -a 16skyHQA4YPPnhrDSSpZnexDzasS8BNx1R -c 1QD5pHMKZ9QWiNb9AsH3G1aG3Hashye83o -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae --chainID 33
-./boss4x chain33 offline send -f chain33_set_offline_addr.txt
+./boss4x chain offline set_offline_addr -a 16skyHQA4YPPnhrDSSpZnexDzasS8BNx1R -c 1QD5pHMKZ9QWiNb9AsH3G1aG3Hashye83o -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae --chainID 33
+./boss4x chain offline send -f chain_set_offline_addr.txt
 */
 
 func ConfigOfflineSaveAccountCmd() *cobra.Command {
@@ -44,5 +44,5 @@ func ConfigMultisignOfflineSaveAccount(cmd *cobra.Command, _ []string) {
 		fmt.Println("configOfflineSaveAccount", "Failed to do abi.Pack due to:", err.Error())
 		return
 	}
-	callContractAndSignWrite(cmd, packData, contract, "chain33_set_offline_addr")
+	callContractAndSignWrite(cmd, packData, contract, "chain_set_offline_addr")
 }

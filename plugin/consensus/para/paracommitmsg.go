@@ -9,7 +9,7 @@ import (
 	"encoding/hex"
 	"time"
 
-	"github.com/33cn/chain33/common/address"
+	"github.com/assetcloud/chain/common/address"
 
 	"strings"
 
@@ -22,11 +22,11 @@ import (
 
 	"bytes"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/types"
-	paracross "github.com/33cn/plugin/plugin/dapp/paracross/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/types"
+	paracross "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/pkg/errors"
 )
 

@@ -7,8 +7,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	oty "github.com/33cn/plugin/plugin/dapp/oracle/types"
+	"github.com/assetcloud/chain/types"
+	oty "github.com/assetcloud/plugin/plugin/dapp/oracle/types"
 )
 
 //从statedb 读取原始数据

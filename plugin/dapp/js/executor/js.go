@@ -6,11 +6,11 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/33cn/chain33/common"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	ptypes "github.com/33cn/plugin/plugin/dapp/js/types"
-	"github.com/33cn/plugin/plugin/dapp/js/types/jsproto"
+	"github.com/assetcloud/chain/common"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	ptypes "github.com/assetcloud/plugin/plugin/dapp/js/types"
+	"github.com/assetcloud/plugin/plugin/dapp/js/types/jsproto"
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/robertkrimen/otto"
 	"google.golang.org/grpc/codes"
@@ -24,7 +24,7 @@ var codecache *lru.Cache
 var isinit int64
 
 //Init 插件初始化
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	if atomic.CompareAndSwapInt64(&isinit, 0, 1) {
 		//最新的64个code做cache
 		var err error

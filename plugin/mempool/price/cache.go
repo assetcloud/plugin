@@ -1,8 +1,8 @@
 package price
 
 import (
-	"github.com/33cn/chain33/common/skiplist"
-	"github.com/33cn/chain33/system/mempool"
+	"github.com/assetcloud/chain/common/skiplist"
+	"github.com/assetcloud/chain/system/mempool"
 	"github.com/golang/protobuf/proto"
 )
 

@@ -7,12 +7,12 @@ package executor
 import (
 	"testing"
 
-	apimock "github.com/33cn/chain33/client/mocks"
-	dbm "github.com/33cn/chain33/common/db"
-	dbmock "github.com/33cn/chain33/common/db/mocks"
-	"github.com/33cn/chain33/types"
-	_ "github.com/33cn/plugin/plugin/crypto/bls"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	dbm "github.com/assetcloud/chain/common/db"
+	dbmock "github.com/assetcloud/chain/common/db/mocks"
+	"github.com/assetcloud/chain/types"
+	_ "github.com/assetcloud/plugin/plugin/crypto/bls"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )
@@ -36,7 +36,7 @@ func (suite *RewardTestSuite) SetupSuite() {
 	//suite.localDB, _ = dbm.NewGoMemDB("local", "local", 1024)
 	suite.localDB = new(dbmock.KVDB)
 	suite.api = new(apimock.QueueProtocolAPI)
-	suite.api.On("GetConfig", mock.Anything).Return(chain33TestCfg, nil)
+	suite.api.On("GetConfig", mock.Anything).Return(chainTestCfg, nil)
 
 	suite.exec = newParacross().(*Paracross)
 	suite.exec.SetAPI(suite.api)

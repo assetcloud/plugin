@@ -7,7 +7,7 @@ import "./BridgeToken.sol";
  * @title GoAssetBank
  * @dev Manages the deployment and minting of ERC20 compatible BridgeTokens
  *      which represent assets issued by Go contracts.
- * @dev 为chain33上的go合约发行的资产进行BridgeTokens合约部署，铸币和销毁
+ * @dev 为chain上的go合约发行的资产进行BridgeTokens合约部署，铸币和销毁
  **/
 
 contract GoAssetBank {
@@ -24,7 +24,7 @@ contract GoAssetBank {
 
     struct GoAssetDeposit {
         address goAssetSender;
-        address payable chain33Recipient;
+        address payable chainRecipient;
         address bridgeTokenAddress;
         uint256 amount;
         bool exist;
@@ -38,7 +38,7 @@ contract GoAssetBank {
 
     struct GoAssetBurn {
         address goAssetSender;
-        address payable chain33Owner;
+        address payable chainOwner;
         address bridgeTokenAddress;
         uint256 amount;
         uint256 nonce;
@@ -114,14 +114,14 @@ contract GoAssetBank {
     * @dev: Creates a new GoAssetDeposit with a unique ID
     *
     * @param _goAssetSender: The _goAssetSender sender's address.
-    * @param _chain33Recipient: The intended recipient's Chain33 address.
+    * @param _chainRecipient: The intended recipient's Chain address.
     * @param _token: The currency type
     * @param _amount: The amount in the deposit.
     * @return: The newly created GoAssetSenderDeposit's unique id.
     */
     function newGoAssetDeposit(
         address _goAssetSender,
-        address payable _chain33Recipient,
+        address payable _chainRecipient,
         address _token,
         uint256 _amount
     )
@@ -135,7 +135,7 @@ contract GoAssetBank {
         bytes32 depositID = keccak256(
             abi.encodePacked(
                 _goAssetSender,
-                _chain33Recipient,
+                _chainRecipient,
                 _token,
                 _amount,
                 depositBurnCount.depositCount
@@ -144,7 +144,7 @@ contract GoAssetBank {
 
         goAssetDeposits[depositID] = GoAssetDeposit(
             _goAssetSender,
-            _chain33Recipient,
+            _chainRecipient,
             _token,
             _amount,
             true,
@@ -158,7 +158,7 @@ contract GoAssetBank {
     * @dev: Creates a new GoAssetBurn with a unique ID
         *
         * @param _goAssetSender: The go Asset Sender address
-        * @param _chain33Owner: The owner's Chain33 address.
+        * @param _chainOwner: The owner's Chain address.
         * @param _token: The token Address
         * @param _amount: The amount to be burned.
         * @param _nonce: The nonce indicates the burn count for this token
@@ -166,7 +166,7 @@ contract GoAssetBank {
         */
         function newGoAssetBurn(
             address _goAssetSender,
-            address payable _chain33Owner,
+            address payable _chainOwner,
             address _token,
             uint256 _amount,
             uint256 nonce
@@ -177,7 +177,7 @@ contract GoAssetBank {
             bytes32 burnID = keccak256(
                 abi.encodePacked(
                     _goAssetSender,
-                    _chain33Owner,
+                    _chainOwner,
                     _token,
                     _amount,
                     nonce
@@ -186,7 +186,7 @@ contract GoAssetBank {
 
             goAssetBurns[burnID] = GoAssetBurn(
                 _goAssetSender,
-                _chain33Owner,
+                _chainOwner,
                 _token,
                 _amount,
                 nonce
@@ -235,7 +235,7 @@ contract GoAssetBank {
      * @dev: Mints new goAsset tokens
      *
      * @param _goAssetSender:  The _goAssetSender sender's address.
-     * @param _chain33Recipient: The intended recipient's Chain33 address.
+     * @param _chainRecipient: The intended recipient's Chain address.
      * @param _goAssetTokenAddress: The currency type
      * @param _symbol: goAsset token symbol
      * @param _amount: number of goAsset tokens to be minted
@@ -284,7 +284,7 @@ contract GoAssetBank {
      *
      * @param _from: The address to be burned from
      * @param _goAssetReceiver: The receiver's GoAsset address in bytes.
-     * @param _goAssetTokenAddress: The token address of goAsset asset issued on chain33
+     * @param _goAssetTokenAddress: The token address of goAsset asset issued on chain
      * @param _amount: number of goAsset tokens to be minted
      */
     function burnGoAssetTokens(
@@ -354,7 +354,7 @@ contract GoAssetBank {
     * @return: Sender's address.
     * @return: Recipient's address in bytes.
     * @return: Token address.
-    * @return: Amount of chain33/erc20 in the item.
+    * @return: Amount of chain/erc20 in the item.
     * @return: Unique nonce of the item.
     */
     function getGoAssetDeposit(
@@ -368,7 +368,7 @@ contract GoAssetBank {
 
         return(
             deposit.goAssetSender,
-            deposit.chain33Recipient,
+            deposit.chainRecipient,
             deposit.bridgeTokenAddress,
             deposit.amount
         );

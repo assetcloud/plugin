@@ -5,15 +5,7 @@ go 1.19
 require (
 	github.com/BurntSushi/toml v1.1.0
 	github.com/NebulousLabs/Sia v1.3.7
-<<<<<<< HEAD
 	github.com/assetcloud/chain v0.0.0-20231224042106-83caf689e3cf
-=======
-	github.com/NebulousLabs/errors v0.0.0-20181203160057-9f787ce8f69e // indirect
-	github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e // indirect
-	github.com/NebulousLabs/merkletree v0.0.0-20181203152040-08d5d54b07f5 // indirect
-	github.com/OneOfOne/xxhash v1.2.5 // indirect
-	github.com/assetcloud/chain v0.0.0-20230410073959-a48ccea448d6
->>>>>>> c7f90405aaee21be0ead6b9b99d81458fc46c947
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/btcsuite/btcd v0.22.3
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1
@@ -43,15 +35,9 @@ require (
 	github.com/stretchr/testify v1.8.2
 	github.com/tjfoc/gmsm v1.3.2
 	github.com/valyala/fasthttp v1.34.0
-<<<<<<< HEAD
 	golang.org/x/crypto v0.17.0
 	golang.org/x/net v0.17.0
 	golang.org/x/sys v0.15.0
-=======
-	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
-	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
-	golang.org/x/sys v0.0.0-20220422013727-9388b58f7150
->>>>>>> c7f90405aaee21be0ead6b9b99d81458fc46c947
 	google.golang.org/grpc v1.40.0
 	google.golang.org/protobuf v1.30.0
 	gopkg.in/yaml.v2 v2.4.0

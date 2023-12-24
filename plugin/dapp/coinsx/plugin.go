@@ -6,11 +6,11 @@
 package coinsx
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/coinsx/commands"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/coinsx/commands"
 
-	"github.com/33cn/plugin/plugin/dapp/coinsx/executor"
-	"github.com/33cn/plugin/plugin/dapp/coinsx/types"
+	"github.com/assetcloud/plugin/plugin/dapp/coinsx/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/coinsx/types"
 )
 
 func init() {

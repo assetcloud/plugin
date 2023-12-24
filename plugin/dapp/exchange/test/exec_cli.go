@@ -5,20 +5,20 @@ import (
 	"log"
 	"time"
 
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/plugin/plugin/dapp/exchange/executor"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/plugin/plugin/dapp/exchange/executor"
 	"github.com/golang/protobuf/proto"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/queue"
-	et "github.com/33cn/plugin/plugin/dapp/exchange/types"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/queue"
+	et "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 )
 
 //ExecCli ...
@@ -29,7 +29,7 @@ type ExecCli struct {
 	blockTime  int64
 	difficulty uint64
 	q          queue.Queue
-	cfg        *types.Chain33Config
+	cfg        *types.ChainConfig
 	execAddr   string
 
 	accA  *account.DB //exec account
@@ -60,8 +60,8 @@ func NewExecCli() *ExecCli {
 	dir, sdb, ldb := util.CreateTestDB()
 	log.Println(dir)
 
-	cfg := types.NewChain33Config(et.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(et.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 
 	executor.Init(et.ExchangeX, cfg, nil)
 	total := 100000000 * types.DefaultCoinPrecision

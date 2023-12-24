@@ -5,11 +5,11 @@
 package qbftNode
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/qbftNode/commands"
-	"github.com/33cn/plugin/plugin/dapp/qbftNode/executor"
-	"github.com/33cn/plugin/plugin/dapp/qbftNode/rpc"
-	"github.com/33cn/plugin/plugin/dapp/qbftNode/types"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/qbftNode/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/qbftNode/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/qbftNode/rpc"
+	"github.com/assetcloud/plugin/plugin/dapp/qbftNode/types"
 )
 
 func init() {

@@ -25,17 +25,17 @@ source ../dapp-test-common.sh
 PWD=$(cd "$(dirname "$0")" && pwd)
 export PATH="$PWD:$PATH"
 
-M1_NODE="${1}_chain33_1"
+M1_NODE="${1}_chain_1"
 M2_NODE="${1}_chain32_1"
 M3_NODE="${1}_chain31_1"
 M4_NODE="${1}_chain30_1"
 #测试节点
-M1_NODE_CLI="docker exec ${M1_NODE} /root/chain33-cli"
-ETH_CLI="docker exec ${M1_NODE} /root/chain33-cli --rpc_laddr http://localhost:8545"
+M1_NODE_CLI="docker exec ${M1_NODE} /root/chain-cli"
+ETH_CLI="docker exec ${M1_NODE} /root/chain-cli --rpc_laddr http://localhost:8545"
 #挖矿节点
-M2_NODE_CLI="docker exec ${M2_NODE} /root/chain33-cli"
-#M3_NODE_CLI="docker exec ${M3_NODE} /root/chain33-cli"
-#M4_NODE_CLI="docker exec ${M4_NODE} /root/chain33-cli"
+M2_NODE_CLI="docker exec ${M2_NODE} /root/chain-cli"
+#M3_NODE_CLI="docker exec ${M3_NODE} /root/chain-cli"
+#M4_NODE_CLI="docker exec ${M4_NODE} /root/chain-cli"
 
 DAPP="evm2"
 MAIN_HTTP=""
@@ -107,7 +107,7 @@ function init_nodes() {
     ### test cases ###
     containerName=${1}
     echo "init_nodes containerName:${containerName}"
-    cli="docker exec ${containerName} /root/chain33-cli"
+    cli="docker exec ${containerName} /root/chain-cli"
     ip=$( ${cli} net info | jq -r ".externalAddr")
     ip=$(echo "$ip" | cut -d':' -f 1)
     if [ "$ip" == "127.0.0.1" ]; then
@@ -150,7 +150,7 @@ function run_testcase(){
   ip=$( ${CLI} net info | jq -r ".externalAddr")
   MCli=http://${ip}:8801
   ECli=http://${ip}:8545
-  chain33_BlockWait 1  ${MCli}
+  chain_BlockWait 1  ${MCli}
   #先给genesisaddr 打一点币
   hash=$( ${M2_NODE_CLI} send coins transfer -t ${genesis} -k ${m2minerkey} -a 100 -n "send to genesisaddr" )
   echo "run_testcase hash:${hash},genesisaddr: ${genesis}"
@@ -158,10 +158,10 @@ function run_testcase(){
     echo "hash empty"
     exit 1
   fi
-  chain33_BlockWait 1  ${MCli}
-  chain33_QueryTx ${hash}  ${MCli}
+  chain_BlockWait 1  ${MCli}
+  chain_QueryTx ${hash}  ${MCli}
   #从创世地址导出部分币用于挖矿 110000 coins
-  chain33_BlockWait 10 ${MCli}
+  chain_BlockWait 10 ${MCli}
   targeBalance=110000
   while true; do
   result=$(${CLI} account balance -a "${genesis}" -e ticket | jq -r ".balance")
@@ -181,7 +181,7 @@ function run_testcase(){
   #发送交易
   local hash=$(${CLI} wallet  send -d ${signedRawTx})
   echo "withdraw coins hash:${hash}"
-  chain33_QueryTx ${hash} ${MCli}
+  chain_QueryTx ${hash} ${MCli}
 
   #发送一部分coins到测试地址上
   echo "send coins to testaddress:${m4normalAddr}"
@@ -191,14 +191,14 @@ function run_testcase(){
   #发送交易
   local hash=$(${CLI} wallet  send -d ${signedRawTx})
   echo "send coins hash:${hash}"
-  chain33_QueryTx  ${hash} ${MCli}
+  chain_QueryTx  ${hash} ${MCli}
   result=$(${CLI} account balance -a "${m4normalAddr}" -e coins)
   echo "query balance---->:${result}"
   balance_ret "${result}" "100001.0000"
   echo "balance check success"
   #发送一部分币到测试挖矿地址上
   local hash=$(${CLI}  send coins transfer -t ${m4minerAddr} -a 10 -k ${m2minerkey})
-  chain33_QueryTx ${hash} ${MCli}
+  chain_QueryTx ${hash} ${MCli}
   result=$(${CLI} account balance -a "${m4minerAddr}" -e coins)
   balance_ret "${result}" "10.0000"
 
@@ -237,7 +237,7 @@ function bindMiner(){
         exit 1
       fi
 
-      chain33_QueryTx ${hash} ${MCli}
+      chain_QueryTx ${hash} ${MCli}
       #检查节点的绑定挖矿的冷钱包地址
       coldAddrs=$(${CLI} ticket cold -m ${m4minerAddr} |jq ".datas")
       preCut=${coldAddrs#*[}
@@ -270,7 +270,7 @@ function closeBindMiner() {
           exit 1
       fi
 
-      chain33_QueryTx ${hash} ${MCli}
+      chain_QueryTx ${hash} ${MCli}
       #检查节点的绑定挖矿的冷钱包地址
       coldAddrs=$(${CLI} ticket cold -m ${m4minerAddr} |jq ".datas")
       preCut=${coldAddrs#*[}
@@ -302,7 +302,7 @@ function closeColdAddrTicket() {
       if [ -z "${realhash}" ]; then
           exit 1
       fi
-      chain33_QueryTx ${realhash} ${MCli}
+      chain_QueryTx ${realhash} ${MCli}
       #Check ticket balance/frozen
       while true; do
         result=$(${CLI} account balance -a "${m4normalAddr}" -e ticket)
@@ -345,7 +345,7 @@ function withdrawTicketBalance(){
       exit 1
    fi
    echo "withdraw hash:${hash}"
-   chain33_QueryTx ${hash} ${MCli}
+   chain_QueryTx ${hash} ${MCli}
    #check coins balance
    local result=$(${CLI} account balance -a "${m4normalAddr}" -e coins)
    local balance=$(echo "${result}" | jq -r ".balance")
@@ -376,7 +376,7 @@ function trans2Ticket() {
       if [ -z "${hash}" ]; then
           exit 1
       fi
-      chain33_QueryTx ${hash} ${MCli}
+      chain_QueryTx ${hash} ${MCli}
       #检查 m4normalAddr ticket余额
       result=$(${CLI} account balance -a "${m4normalAddr}" -e ticket)
       balance_ret "${result}" "100000.0000"
@@ -393,7 +393,7 @@ function trans2Ticket() {
         done
 }
 
-# 判断 chain33 金额是否正确
+# 判断 chain 金额是否正确
 function balance_ret() {
 
     if [[ $# -lt 2 ]]; then

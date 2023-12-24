@@ -5,13 +5,13 @@ import (
 	"errors"
 	"math/big"
 
-	dbm "github.com/33cn/chain33/common/db"
+	dbm "github.com/assetcloud/chain/common/db"
 
-	"github.com/33cn/chain33/types"
-	bridgevmxgo "github.com/33cn/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
-	chain33Abi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
-	evmxgotypes "github.com/33cn/plugin/plugin/dapp/evmxgo/types"
+	"github.com/assetcloud/chain/types"
+	bridgevmxgo "github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
+	chainAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
+	evmxgotypes "github.com/assetcloud/plugin/plugin/dapp/evmxgo/types"
 )
 
 const (
@@ -35,7 +35,7 @@ func checkMintPara(mint *evmxgotypes.EvmxgoMint, tx2lock *types.Transaction, db 
 		return errors.New("Not consistent bridgevmxgo address configured by manager")
 	}
 
-	unpack, err := chain33Abi.UnpackAllTypes(action.Para, LockMethod, bridgevmxgo.BridgeBankABI)
+	unpack, err := chainAbi.UnpackAllTypes(action.Para, LockMethod, bridgevmxgo.BridgeBankABI)
 	if err != nil {
 		return err
 	}

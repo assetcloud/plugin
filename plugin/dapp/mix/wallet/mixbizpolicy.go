@@ -8,17 +8,17 @@ import (
 	"encoding/hex"
 	"sync"
 
-	"github.com/33cn/chain33/common/address"
+	"github.com/assetcloud/chain/common/address"
 
-	"github.com/33cn/chain33/common"
+	"github.com/assetcloud/chain/common"
 
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/common/log/log15"
-	coins "github.com/33cn/chain33/system/dapp/coins/types"
-	"github.com/33cn/chain33/types"
-	wcom "github.com/33cn/chain33/wallet/common"
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/log/log15"
+	coins "github.com/assetcloud/chain/system/dapp/coins/types"
+	"github.com/assetcloud/chain/types"
+	wcom "github.com/assetcloud/chain/wallet/common"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	"github.com/pkg/errors"
 )
 
@@ -187,7 +187,7 @@ func (policy *mixPolicy) signatureTx(tx *types.Transaction, transfer *mixTy.MixT
 	}
 
 	//1.如果是coins 执行器，默认符号是BTY，扣mix执行器地址的手续费
-	//2.如果token执行器, 如果tokenFee=false,则不扣token,且不以token做交易费，需要从另一个特殊地址mixtoken扣bty交易费，chain33发交易费给mixtoken地址
+	//2.如果token执行器, 如果tokenFee=false,则不扣token,且不以token做交易费，需要从另一个特殊地址mixtoken扣bty交易费，chain发交易费给mixtoken地址
 	//  不然从mix执行器扣交易费会导致基于coins的隐私余额 入账和出账不平
 	//3.如果配置项tokenFee=true 则从以token扣手续费，地址是mix执行器的token资产
 	cfg := policy.getWalletOperate().GetAPI().GetConfig()

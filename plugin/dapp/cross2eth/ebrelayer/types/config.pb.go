@@ -21,7 +21,7 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type SyncTxConfig struct {
-	Chain33Host          string   `protobuf:"bytes,1,opt,name=chain33host,proto3" json:"chain33host,omitempty"`
+	ChainHost          string   `protobuf:"bytes,1,opt,name=chainhost,proto3" json:"chainhost,omitempty"`
 	PushHost             string   `protobuf:"bytes,2,opt,name=pushHost,proto3" json:"pushHost,omitempty"`
 	PushName             string   `protobuf:"bytes,3,opt,name=pushName,proto3" json:"pushName,omitempty"`
 	PushBind             string   `protobuf:"bytes,4,opt,name=pushBind,proto3" json:"pushBind,omitempty"`
@@ -31,7 +31,7 @@ type SyncTxConfig struct {
 	StartSyncSequence    int64    `protobuf:"varint,11,opt,name=startSyncSequence,proto3" json:"startSyncSequence,omitempty"`
 	StartSyncHash        string   `protobuf:"bytes,12,opt,name=startSyncHash,proto3" json:"startSyncHash,omitempty"`
 	KeepAliveDuration    int64    `protobuf:"varint,13,opt,name=keepAliveDuration,proto3" json:"keepAliveDuration,omitempty"`
-	Chain33RpcUrls       []string `protobuf:"bytes,14,rep,name=chain33RpcUrls,proto3" json:"chain33RpcUrls,omitempty"`
+	ChainRpcUrls       []string `protobuf:"bytes,14,rep,name=chainRpcUrls,proto3" json:"chainRpcUrls,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -62,9 +62,9 @@ func (m *SyncTxConfig) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_SyncTxConfig proto.InternalMessageInfo
 
-func (m *SyncTxConfig) GetChain33Host() string {
+func (m *SyncTxConfig) GetChainHost() string {
 	if m != nil {
-		return m.Chain33Host
+		return m.ChainHost
 	}
 	return ""
 }
@@ -132,9 +132,9 @@ func (m *SyncTxConfig) GetKeepAliveDuration() int64 {
 	return 0
 }
 
-func (m *SyncTxConfig) GetChain33RpcUrls() []string {
+func (m *SyncTxConfig) GetChainRpcUrls() []string {
 	if m != nil {
-		return m.Chain33RpcUrls
+		return m.ChainRpcUrls
 	}
 	return nil
 }
@@ -337,65 +337,65 @@ func (m *EthRelayerCfg) GetStartListenHeight() int64 {
 	return 0
 }
 
-type Chain33RelayerCfg struct {
+type ChainRelayerCfg struct {
 	SyncTxConfig            *SyncTxConfig `protobuf:"bytes,1,opt,name=syncTxConfig,proto3" json:"syncTxConfig,omitempty"`
-	BridgeRegistryOnChain33 string        `protobuf:"bytes,2,opt,name=bridgeRegistryOnChain33,proto3" json:"bridgeRegistryOnChain33,omitempty"`
+	BridgeRegistryOnChain string        `protobuf:"bytes,2,opt,name=bridgeRegistryOnChain,proto3" json:"bridgeRegistryOnChain,omitempty"`
 	ChainName               string        `protobuf:"bytes,3,opt,name=chainName,proto3" json:"chainName,omitempty"`
-	ChainID4Chain33         int32         `protobuf:"varint,4,opt,name=chainID4Chain33,proto3" json:"chainID4Chain33,omitempty"`
+	ChainID4Chain         int32         `protobuf:"varint,4,opt,name=chainID4Chain,proto3" json:"chainID4Chain,omitempty"`
 	XXX_NoUnkeyedLiteral    struct{}      `json:"-"`
 	XXX_unrecognized        []byte        `json:"-"`
 	XXX_sizecache           int32         `json:"-"`
 }
 
-func (m *Chain33RelayerCfg) Reset()         { *m = Chain33RelayerCfg{} }
-func (m *Chain33RelayerCfg) String() string { return proto.CompactTextString(m) }
-func (*Chain33RelayerCfg) ProtoMessage()    {}
-func (*Chain33RelayerCfg) Descriptor() ([]byte, []int) {
+func (m *ChainRelayerCfg) Reset()         { *m = ChainRelayerCfg{} }
+func (m *ChainRelayerCfg) String() string { return proto.CompactTextString(m) }
+func (*ChainRelayerCfg) ProtoMessage()    {}
+func (*ChainRelayerCfg) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3eaf2c85e69e9ea4, []int{3}
 }
 
-func (m *Chain33RelayerCfg) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Chain33RelayerCfg.Unmarshal(m, b)
+func (m *ChainRelayerCfg) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ChainRelayerCfg.Unmarshal(m, b)
 }
-func (m *Chain33RelayerCfg) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Chain33RelayerCfg.Marshal(b, m, deterministic)
+func (m *ChainRelayerCfg) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ChainRelayerCfg.Marshal(b, m, deterministic)
 }
-func (m *Chain33RelayerCfg) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Chain33RelayerCfg.Merge(m, src)
+func (m *ChainRelayerCfg) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ChainRelayerCfg.Merge(m, src)
 }
-func (m *Chain33RelayerCfg) XXX_Size() int {
-	return xxx_messageInfo_Chain33RelayerCfg.Size(m)
+func (m *ChainRelayerCfg) XXX_Size() int {
+	return xxx_messageInfo_ChainRelayerCfg.Size(m)
 }
-func (m *Chain33RelayerCfg) XXX_DiscardUnknown() {
-	xxx_messageInfo_Chain33RelayerCfg.DiscardUnknown(m)
+func (m *ChainRelayerCfg) XXX_DiscardUnknown() {
+	xxx_messageInfo_ChainRelayerCfg.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Chain33RelayerCfg proto.InternalMessageInfo
+var xxx_messageInfo_ChainRelayerCfg proto.InternalMessageInfo
 
-func (m *Chain33RelayerCfg) GetSyncTxConfig() *SyncTxConfig {
+func (m *ChainRelayerCfg) GetSyncTxConfig() *SyncTxConfig {
 	if m != nil {
 		return m.SyncTxConfig
 	}
 	return nil
 }
 
-func (m *Chain33RelayerCfg) GetBridgeRegistryOnChain33() string {
+func (m *ChainRelayerCfg) GetBridgeRegistryOnChain() string {
 	if m != nil {
-		return m.BridgeRegistryOnChain33
+		return m.BridgeRegistryOnChain
 	}
 	return ""
 }
 
-func (m *Chain33RelayerCfg) GetChainName() string {
+func (m *ChainRelayerCfg) GetChainName() string {
 	if m != nil {
 		return m.ChainName
 	}
 	return ""
 }
 
-func (m *Chain33RelayerCfg) GetChainID4Chain33() int32 {
+func (m *ChainRelayerCfg) GetChainID4Chain() int32 {
 	if m != nil {
-		return m.ChainID4Chain33
+		return m.ChainID4Chain
 	}
 	return 0
 }
@@ -404,7 +404,7 @@ type RelayerConfig struct {
 	Title                string             `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	JrpcBindAddr         string             `protobuf:"bytes,2,opt,name=jrpcBindAddr,proto3" json:"jrpcBindAddr,omitempty"`
 	EthRelayerCfg        []*EthRelayerCfg   `protobuf:"bytes,3,rep,name=ethRelayerCfg,proto3" json:"ethRelayerCfg,omitempty"`
-	Chain33RelayerCfg    *Chain33RelayerCfg `protobuf:"bytes,4,opt,name=chain33RelayerCfg,proto3" json:"chain33RelayerCfg,omitempty"`
+	ChainRelayerCfg    *ChainRelayerCfg `protobuf:"bytes,4,opt,name=chainRelayerCfg,proto3" json:"chainRelayerCfg,omitempty"`
 	Log                  *Log               `protobuf:"bytes,5,opt,name=log,proto3" json:"log,omitempty"`
 	Dbdriver             string             `protobuf:"bytes,6,opt,name=dbdriver,proto3" json:"dbdriver,omitempty"`
 	DbPath               string             `protobuf:"bytes,7,opt,name=dbPath,proto3" json:"dbPath,omitempty"`
@@ -465,9 +465,9 @@ func (m *RelayerConfig) GetEthRelayerCfg() []*EthRelayerCfg {
 	return nil
 }
 
-func (m *RelayerConfig) GetChain33RelayerCfg() *Chain33RelayerCfg {
+func (m *RelayerConfig) GetChainRelayerCfg() *ChainRelayerCfg {
 	if m != nil {
-		return m.Chain33RelayerCfg
+		return m.ChainRelayerCfg
 	}
 	return nil
 }
@@ -536,7 +536,7 @@ func (m *RelayerConfig) GetDelayedSendTime() int64 {
 }
 
 type SyncTxReceiptConfig struct {
-	Chain33Host          string   `protobuf:"bytes,1,opt,name=chain33host,proto3" json:"chain33host,omitempty"`
+	ChainHost          string   `protobuf:"bytes,1,opt,name=chainhost,proto3" json:"chainhost,omitempty"`
 	PushHost             string   `protobuf:"bytes,2,opt,name=pushHost,proto3" json:"pushHost,omitempty"`
 	PushName             string   `protobuf:"bytes,3,opt,name=pushName,proto3" json:"pushName,omitempty"`
 	PushBind             string   `protobuf:"bytes,4,opt,name=pushBind,proto3" json:"pushBind,omitempty"`
@@ -575,9 +575,9 @@ func (m *SyncTxReceiptConfig) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_SyncTxReceiptConfig proto.InternalMessageInfo
 
-func (m *SyncTxReceiptConfig) GetChain33Host() string {
+func (m *SyncTxReceiptConfig) GetChainHost() string {
 	if m != nil {
-		return m.Chain33Host
+		return m.ChainHost
 	}
 	return ""
 }
@@ -642,7 +642,7 @@ func init() {
 	proto.RegisterType((*SyncTxConfig)(nil), "types.SyncTxConfig")
 	proto.RegisterType((*Log)(nil), "types.Log")
 	proto.RegisterType((*EthRelayerCfg)(nil), "types.EthRelayerCfg")
-	proto.RegisterType((*Chain33RelayerCfg)(nil), "types.Chain33RelayerCfg")
+	proto.RegisterType((*ChainRelayerCfg)(nil), "types.ChainRelayerCfg")
 	proto.RegisterType((*RelayerConfig)(nil), "types.RelayerConfig")
 	proto.RegisterType((*SyncTxReceiptConfig)(nil), "types.SyncTxReceiptConfig")
 }

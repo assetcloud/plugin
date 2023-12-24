@@ -14,11 +14,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
-	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 )
 
@@ -83,7 +83,7 @@ func NewRelayd(config *Config) *Relayd {
 
 	log.Info("NewRelayd", "current btc hegiht: ", height)
 
-	client33 := NewClient33(&config.Chain33)
+	client33 := NewClient33(&config.Chain)
 	var btc BtcClient
 	if config.BtcdOrWeb == 0 {
 		btc, err = newBtcd(config.Btcd.BitConnConfig(), config.Btcd.ReconnectAttempts)
@@ -216,7 +216,7 @@ out:
 	}
 }
 
-func (r *Relayd) queryChain33WithBtcHeight() (*ty.ReplayRelayQryBTCHeadHeight, error) {
+func (r *Relayd) queryChainWithBtcHeight() (*ty.ReplayRelayQryBTCHeadHeight, error) {
 	payLoad := types.Encode(&ty.ReqRelayQryBTCHeadHeight{})
 	query := types.ChainExecutor{
 		Driver:   ty.RelayX,
@@ -241,13 +241,13 @@ func (r *Relayd) syncBlockHeaders() {
 
 	knownBtcHeight := atomic.LoadUint64(&r.knownBtcHeight)
 	if knownBtcHeight > r.firstHeaderHeight {
-		ret, err := r.queryChain33WithBtcHeight()
+		ret, err := r.queryChainWithBtcHeight()
 		if err != nil {
-			log.Error("syncBlockHeaders", "queryChain33WithBtcHeight error: ", err)
+			log.Error("syncBlockHeaders", "queryChainWithBtcHeight error: ", err)
 			return
 		}
 
-		log.Info("syncBlockHeaders", "queryChain33WithBtcHeight result: ", ret)
+		log.Info("syncBlockHeaders", "queryChainWithBtcHeight result: ", ret)
 		var initIterHeight uint64
 		if r.firstHeaderHeight != uint64(ret.BaseHeight) && !r.isResetBtcHeight {
 			r.isResetBtcHeight = true
@@ -321,10 +321,10 @@ func (r *Relayd) transaction(payload []byte) *types.Transaction {
 	var chainID int32
 	minFee := types.DefaultMinFee
 
-	//chain33的配置中获取chainID和minFee
-	if r.config.Chain33Cfg != nil {
-		chainID = r.config.Chain33Cfg.GetChainID()
-		minFee = r.config.Chain33Cfg.GetMinTxFeeRate()
+	//chain的配置中获取chainID和minFee
+	if r.config.ChainCfg != nil {
+		chainID = r.config.ChainCfg.GetChainID()
+		minFee = r.config.ChainCfg.GetMinTxFeeRate()
 	}
 
 	tx := &types.Transaction{

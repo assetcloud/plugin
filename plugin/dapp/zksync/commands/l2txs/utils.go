@@ -7,22 +7,22 @@ import (
 	"strings"
 	"time"
 
-	chain33Common "github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	chain33Crypto "github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/system/crypto/secp256k1"
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
-	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
-	"github.com/33cn/plugin/plugin/dapp/zksync/wallet"
+	chainCommon "github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	chainCrypto "github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
+	"github.com/assetcloud/plugin/plugin/dapp/zksync/wallet"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
 	"github.com/golang/protobuf/proto"
 )
 
-func createChain33Tx(privateKeyStr, execer string, action proto.Message) (*types.Transaction, error) {
+func createChainTx(privateKeyStr, execer string, action proto.Message) (*types.Transaction, error) {
 	var driver secp256k1.Driver
-	privateKeySli, err := chain33Common.FromHex(privateKeyStr)
+	privateKeySli, err := chainCommon.FromHex(privateKeyStr)
 	if nil != err {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func createChain33Tx(privateKeyStr, execer string, action proto.Message) (*types
 	return tx, nil
 }
 
-func SignTransaction(key chain33Crypto.PrivKey, tx *types.Transaction) (err error) {
+func SignTransaction(key chainCrypto.PrivKey, tx *types.Transaction) (err error) {
 	action := new(zksyncTypes.ZksyncAction)
 	if err = types.Decode(tx.Payload, action); err != nil {
 		return

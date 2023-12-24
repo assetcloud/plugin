@@ -20,7 +20,7 @@ import (
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend/groth16"
 
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	"github.com/pkg/errors"
 )
 

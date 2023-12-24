@@ -8,10 +8,10 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/stretchr/testify/assert"
 
-	rpctypes "github.com/33cn/chain33/rpc/types"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
 )
 
 func init() {

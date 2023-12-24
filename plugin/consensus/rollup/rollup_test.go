@@ -4,18 +4,18 @@ import (
 	"encoding/hex"
 	"testing"
 
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 	"github.com/stretchr/testify/require"
 
-	_ "github.com/33cn/chain33/system/dapp/init"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	"github.com/33cn/plugin/plugin/crypto/bls"
+	_ "github.com/assetcloud/chain/system/dapp/init"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	"github.com/assetcloud/plugin/plugin/crypto/bls"
 )
 
 func TestRollup(t *testing.T) {
 
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 
 	blsDrv := &bls.Driver{}
 

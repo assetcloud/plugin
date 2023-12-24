@@ -7,13 +7,13 @@ package executor
 import (
 	"strings"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/client"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/system/dapp"
-	manager "github.com/33cn/chain33/system/dapp/manage/types"
-	"github.com/33cn/chain33/types"
-	coinTy "github.com/33cn/plugin/plugin/dapp/coinsx/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/client"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/system/dapp"
+	manager "github.com/assetcloud/chain/system/dapp/manage/types"
+	"github.com/assetcloud/chain/types"
+	coinTy "github.com/assetcloud/plugin/plugin/dapp/coinsx/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 )
@@ -60,7 +60,7 @@ func makeManagerStatusReceipt(prev, current *coinTy.ManagerStatus) *types.Receip
 }
 
 // isSuperManager is supper manager or not
-func isSuperManager(cfg *types.Chain33Config, addr string) bool {
+func isSuperManager(cfg *types.ChainConfig, addr string) bool {
 	confManager := types.ConfSub(cfg, manager.ManageX)
 	for _, m := range confManager.GStrList("superManager") {
 		if addr == m {
@@ -70,7 +70,7 @@ func isSuperManager(cfg *types.Chain33Config, addr string) bool {
 	return false
 }
 
-func getSuperManager(cfg *types.Chain33Config) []string {
+func getSuperManager(cfg *types.ChainConfig) []string {
 	confManager := types.ConfSub(cfg, manager.ManageX)
 	return confManager.GStrList("superManager")
 }
@@ -219,7 +219,7 @@ func isManager(addr string, managers []string) bool {
 2. 如果未配置转账使能标志或配置为DISABLE，都受限制
 3. 配置ENABLE,则不受限
 */
-func checkTransferEnable(cfg *types.Chain33Config, db dbm.KV, from, to string) bool {
+func checkTransferEnable(cfg *types.ChainConfig, db dbm.KV, from, to string) bool {
 	//节点配置的超级管理员转账不受限
 	suppers := getSuperManager(cfg)
 	if isManager(from, suppers) || isManager(to, suppers) {

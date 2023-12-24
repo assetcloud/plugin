@@ -2,10 +2,10 @@
 package commands
 
 import (
-	jsonrpc "github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +38,7 @@ func sendQueryRPC(cmd *cobra.Command, funcName string, req, reply types.Message)
 		Payload:  payLoad,
 	}
 
-	ctx := jsonrpc.NewRPCCtx(rpcAddr, "Chain33.Query", query, reply)
+	ctx := jsonrpc.NewRPCCtx(rpcAddr, "Chain.Query", query, reply)
 	ctx.Run()
 }
 

@@ -5,9 +5,9 @@
 package cert
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/cert/executor"
-	"github.com/33cn/plugin/plugin/dapp/cert/types"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/cert/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/cert/types"
 )
 
 func init() {

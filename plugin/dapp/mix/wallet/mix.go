@@ -12,15 +12,15 @@ import (
 
 	"github.com/consensys/gnark/backend/groth16"
 
-	"github.com/33cn/chain33/system/dapp"
+	"github.com/assetcloud/chain/system/dapp"
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/types"
 
-	wcom "github.com/33cn/chain33/wallet/common"
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	wcom "github.com/assetcloud/chain/wallet/common"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 )
 
 func (p *mixPolicy) getPrivKeyByAddr(addr string) (crypto.PrivKey, error) {

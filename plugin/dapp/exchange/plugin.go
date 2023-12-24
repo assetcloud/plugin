@@ -1,11 +1,11 @@
 package types
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/exchange/commands"
-	"github.com/33cn/plugin/plugin/dapp/exchange/executor"
-	"github.com/33cn/plugin/plugin/dapp/exchange/rpc"
-	exchangetypes "github.com/33cn/plugin/plugin/dapp/exchange/types"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/exchange/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/exchange/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/exchange/rpc"
+	exchangetypes "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 )
 
 /*

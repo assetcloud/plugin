@@ -4,11 +4,11 @@ import "../../openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./BridgeToken.sol";
 
   /*
-   *  @title: Chain33Bank
-   *  @dev: Chain33 bank which locks Chain33/ERC20 token deposits, and unlocks
-   *        Chain33/ERC20 tokens once the prophecy has been successfully processed.
+   *  @title: ChainBank
+   *  @dev: Chain bank which locks Chain/ERC20 token deposits, and unlocks
+   *        Chain/ERC20 tokens once the prophecy has been successfully processed.
    */
-contract Chain33Bank {
+contract ChainBank {
 
     using SafeMath for uint256;
 
@@ -69,7 +69,7 @@ contract Chain33Bank {
         if(_token == address(0)) {
             require(
                 address(this).balance >= _amount,
-                'Insufficient Chain33 balance for delivery.'
+                'Insufficient Chain balance for delivery.'
             );
         } else {
             require(
@@ -172,12 +172,12 @@ contract Chain33Bank {
     }
 
     /*
-    * @dev: Creates a new Chain33 deposit with a unique id.
+    * @dev: Creates a new Chain deposit with a unique id.
     *
-    * @param _sender: The sender's Chain33 address.
-    * @param _recipient: The intended recipient's Chain33 address.
-    * @param _token: The currency type, either erc20 or Chain33.
-    * @param _amount: The amount of erc20 tokens/ Chain33 (in wei) to be itemized.
+    * @param _sender: The sender's Chain address.
+    * @param _recipient: The intended recipient's Chain address.
+    * @param _token: The currency type, either erc20 or Chain.
+    * @param _amount: The amount of erc20 tokens/ Chain (in wei) to be itemized.
     */
     function lockFunds(
         address payable _sender,
@@ -235,7 +235,7 @@ contract Chain33Bank {
     * @dev: Unlocks funds held on contract and sends them to the
     *       intended recipient
     *
-    * @param _recipient: recipient's Chain33 address
+    * @param _recipient: recipient's Chain address
     * @param _token: token contract address
     * @param _symbol: token symbol
     * @param _amount: wei amount or ERC20 token count

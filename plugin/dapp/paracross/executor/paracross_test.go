@@ -9,18 +9,18 @@ import (
 	"strings"
 	"testing"
 
-	apimock "github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	dbm "github.com/33cn/chain33/common/db"
-	dbmock "github.com/33cn/chain33/common/db/mocks"
-	"github.com/33cn/chain33/common/log"
-	mty "github.com/33cn/chain33/system/dapp/manage/types"
-	"github.com/33cn/chain33/types"
-	_ "github.com/33cn/plugin/plugin/crypto/bls"
-	"github.com/33cn/plugin/plugin/dapp/paracross/testnode"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	dbm "github.com/assetcloud/chain/common/db"
+	dbmock "github.com/assetcloud/chain/common/db/mocks"
+	"github.com/assetcloud/chain/common/log"
+	mty "github.com/assetcloud/chain/system/dapp/manage/types"
+	"github.com/assetcloud/chain/types"
+	_ "github.com/assetcloud/plugin/plugin/crypto/bls"
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/testnode"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
@@ -53,8 +53,8 @@ var (
 		[]byte("1JQjqDChawMYfG3yyxByrhJ467HorPVfFZ"),
 	}
 
-	chain33TestCfg     = types.NewChain33Config(testnode.DefaultConfig)
-	chain33TestMainCfg = types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"test\"", 1))
+	chainTestCfg     = types.NewChainConfig(testnode.DefaultConfig)
+	chainTestMainCfg = types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"test\"", 1))
 )
 
 type CommitTestSuite struct {
@@ -108,7 +108,7 @@ func makeSupervisionNodeInfo(suite *CommitTestSuite) {
 func init() {
 	log.SetFileLog(nil)
 	log.SetLogLevel("debug")
-	Init(pt.ParaX, chain33TestCfg, nil)
+	Init(pt.ParaX, chainTestCfg, nil)
 }
 
 func (suite *CommitTestSuite) SetupSuite() {
@@ -117,7 +117,7 @@ func (suite *CommitTestSuite) SetupSuite() {
 	//suite.localDB, _ = dbm.NewGoMemDB("local", "local", 1024)
 	suite.localDB = new(dbmock.KVDB)
 	suite.api = new(apimock.QueueProtocolAPI)
-	suite.api.On("GetConfig", mock.Anything).Return(chain33TestCfg, nil)
+	suite.api.On("GetConfig", mock.Anything).Return(chainTestCfg, nil)
 
 	suite.exec = newParacross().(*Paracross)
 	suite.exec.SetAPI(suite.api)
@@ -131,7 +131,7 @@ func (suite *CommitTestSuite) SetupSuite() {
 	blockDetail := &types.BlockDetail{
 		Block: &types.Block{},
 	}
-	MainBlockHash10 = blockDetail.Block.Hash(chain33TestCfg)
+	MainBlockHash10 = blockDetail.Block.Hash(chainTestCfg)
 	blockDetail.Block.MainHash = MainBlockHash10
 
 	// setup title nodes : len = 4
@@ -206,7 +206,7 @@ func fillRawCommitTx(suite suite.Suite) (*types.Transaction, error) {
 		CrossTxHashs:    [][]byte{},
 	}
 	act := &pt.ParacrossCommitAction{Status: st1}
-	tx, err := pt.CreateRawCommitTx4MainChain(chain33TestCfg, act, pt.GetExecName(chain33TestCfg), 0)
+	tx, err := pt.CreateRawCommitTx4MainChain(chainTestCfg, act, pt.GetExecName(chainTestCfg), 0)
 	if err != nil {
 		suite.T().Error("TestExec", "create tx failed", err)
 	}
@@ -406,7 +406,7 @@ func (s *VoteTestSuite) SetupSuite() {
 	//para_init(Title)
 	s.exec = newParacross().(*Paracross)
 	api := new(apimock.QueueProtocolAPI)
-	api.On("GetConfig", mock.Anything).Return(chain33TestCfg, nil)
+	api.On("GetConfig", mock.Anything).Return(chainTestCfg, nil)
 	s.exec.SetAPI(api)
 
 	s.stateDB, _ = dbm.NewGoMemDB("state", "state", 1024)
@@ -608,7 +608,7 @@ func (s *VoteTestSuite) TestVoteTxFork() {
 }
 
 func (s *VoteTestSuite) createVoteTx(status *pt.ParacrossNodeStatus, privFrom string) (*types.Transaction, error) {
-	tx, err := pt.CreateRawMinerTx(chain33TestCfg, &pt.ParacrossMinerAction{Status: status})
+	tx, err := pt.CreateRawMinerTx(chainTestCfg, &pt.ParacrossMinerAction{Status: status})
 	assert.Nil(s.T(), err, "create asset transfer failed")
 	if err != nil {
 		return nil, err
@@ -634,7 +634,7 @@ func createCrossParaTx(s suite.Suite, to []byte) (*types.Transaction, error) {
 		TokenSymbol: "",
 		ExecName:    Title + pt.ParaX,
 	}
-	tx, err := pt.CreateRawAssetTransferTx(chain33TestCfg, &param)
+	tx, err := pt.CreateRawAssetTransferTx(chainTestCfg, &param)
 	assert.Nil(s.T(), err, "create asset transfer failed")
 	if err != nil {
 		return nil, err
@@ -652,7 +652,7 @@ func createCrossParaTx(s suite.Suite, to []byte) (*types.Transaction, error) {
 func createCrossCommitTx(s suite.Suite) (*types.Transaction, error) {
 	status := &pt.ParacrossNodeStatus{MainBlockHash: []byte("hash"), MainBlockHeight: 0, Title: Title}
 	act := &pt.ParacrossCommitAction{Status: status}
-	tx, err := pt.CreateRawCommitTx4MainChain(chain33TestCfg, act, Title+pt.ParaX, 0)
+	tx, err := pt.CreateRawCommitTx4MainChain(chainTestCfg, act, Title+pt.ParaX, 0)
 	assert.Nil(s.T(), err, "create asset transfer failed")
 	if err != nil {
 		return nil, err
@@ -661,11 +661,11 @@ func createCrossCommitTx(s suite.Suite) (*types.Transaction, error) {
 }
 
 func createTxsGroup(s suite.Suite, txs []*types.Transaction) ([]*types.Transaction, error) {
-	group, err := types.CreateTxGroup(txs, chain33TestCfg.GetMinTxFeeRate())
+	group, err := types.CreateTxGroup(txs, chainTestCfg.GetMinTxFeeRate())
 	if err != nil {
 		return nil, err
 	}
-	err = group.Check(chain33TestCfg, 0, chain33TestCfg.GetMinTxFeeRate(), chain33TestCfg.GetMaxTxFee())
+	err = group.Check(chainTestCfg, 0, chainTestCfg.GetMinTxFeeRate(), chainTestCfg.GetMaxTxFee())
 	if err != nil {
 		return nil, err
 	}
@@ -697,7 +697,7 @@ func createParaNormalTx(s suite.Suite, privFrom string, to []byte) (*types.Trans
 		To:      address.ExecAddress(param.GetExecName()),
 		Fee:     param.Fee,
 	}
-	tx, err := types.FormatTx(chain33TestCfg, param.GetExecName(), tx)
+	tx, err := types.FormatTx(chainTestCfg, param.GetExecName(), tx)
 	if err != nil {
 		return nil, err
 	}

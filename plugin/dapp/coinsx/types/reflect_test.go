@@ -7,8 +7,8 @@ package types
 import (
 	"testing"
 
-	cty "github.com/33cn/chain33/system/dapp/coins/types"
-	"github.com/33cn/chain33/types"
+	cty "github.com/assetcloud/chain/system/dapp/coins/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -48,7 +48,7 @@ func BenchmarkDecodePayload(b *testing.B) {
 	action := &CoinsxAction{Value: &CoinsxAction_Transfer{Transfer: &types.AssetsTransfer{}}}
 	payload := types.Encode(action)
 	tx := &types.Transaction{Payload: payload}
-	ty := NewType(types.NewChain33Config(types.GetDefaultCfgstring()))
+	ty := NewType(types.NewChainConfig(types.GetDefaultCfgstring()))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		ty.DecodePayload(tx)
@@ -60,7 +60,7 @@ func BenchmarkDecodePayloadValue(b *testing.B) {
 	action := &CoinsxAction{Value: &CoinsxAction_Transfer{Transfer: &types.AssetsTransfer{}}, Ty: cty.CoinsActionTransfer}
 	payload := types.Encode(action)
 	tx := &types.Transaction{Payload: payload}
-	ty := NewType(types.NewChain33Config(types.GetDefaultCfgstring()))
+	ty := NewType(types.NewChainConfig(types.GetDefaultCfgstring()))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		ty.DecodePayloadValue(tx)

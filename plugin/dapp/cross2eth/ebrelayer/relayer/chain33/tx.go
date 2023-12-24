@@ -1,4 +1,4 @@
-package chain33
+package chain
 
 import (
 	"encoding/hex"
@@ -11,35 +11,35 @@ import (
 	"strings"
 	"time"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
 
-	erc20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
 	btcec_secp256k1 "github.com/btcsuite/btcd/btcec"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 
 	ethcommon "github.com/ethereum/go-ethereum/common"
 
-	"github.com/33cn/chain33/common"
-	chain33Common "github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	chain33Crypto "github.com/33cn/chain33/common/crypto"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/system/crypto/secp256k1"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4chain33/generated"
-	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/math"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/common"
+	chainCommon "github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	chainCrypto "github.com/assetcloud/chain/common/crypto"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4chain/generated"
+	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/math"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	ethSecp256k1 "github.com/ethereum/go-ethereum/crypto/secp256k1"
 	"github.com/golang/protobuf/proto"
 )
 
 //DeployPara ...
-type DeployPara4Chain33 struct {
+type DeployPara4Chain struct {
 	Deployer       address.Address
 	Operator       address.Address
 	InitValidators []address.Address
@@ -59,14 +59,14 @@ type X2EthDeployResult struct {
 	Oracle         *DeployResult
 }
 
-var chain33txLog = log.New("module", "chain33_txs")
+var chaintxLog = log.New("module", "chain_txs")
 var chainID int32
 
-func setChainID(chainID4Chain33 int32) {
-	chainID = chainID4Chain33
+func setChainID(chainID4Chain int32) {
+	chainID = chainID4Chain
 }
 
-func createEvmTx(privateKey chain33Crypto.PrivKey, action proto.Message, execer, to string, fee int64) string {
+func createEvmTx(privateKey chainCrypto.PrivKey, action proto.Message, execer, to string, fee int64) string {
 	tx := &types.Transaction{Execer: []byte(execer), Payload: types.Encode(action), Fee: fee, To: to, ChainID: chainID}
 
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -78,12 +78,12 @@ func createEvmTx(privateKey chain33Crypto.PrivKey, action proto.Message, execer,
 	return dataStr
 }
 
-func relayEvmTx2Chain33(privateKey chain33Crypto.PrivKey, claim *ebrelayerTypes.EthBridgeClaim, parameter, oracleAddr, chainName string, rpcURLs []string) (string, error) {
-	note := fmt.Sprintf("relay with type:%s, chain33-receiver:%s, ethereum-sender:%s, symbol:%s, amout:%s, ethTxHash:%s",
-		events.ClaimType(claim.ClaimType).String(), claim.Chain33Receiver, claim.EthereumSender, claim.Symbol, claim.Amount, claim.EthTxHash)
+func relayEvmTx2Chain(privateKey chainCrypto.PrivKey, claim *ebrelayerTypes.EthBridgeClaim, parameter, oracleAddr, chainName string, rpcURLs []string) (string, error) {
+	note := fmt.Sprintf("relay with type:%s, chain-receiver:%s, ethereum-sender:%s, symbol:%s, amout:%s, ethTxHash:%s",
+		events.ClaimType(claim.ClaimType).String(), claim.ChainReceiver, claim.EthereumSender, claim.Symbol, claim.Amount, claim.EthTxHash)
 	_, packData, err := evmAbi.Pack(parameter, generated.OracleABI, false)
 	if nil != err {
-		chain33txLog.Info("relayEvmTx2Chain33", "Failed to do abi.Pack due to:", err.Error())
+		chaintxLog.Info("relayEvmTx2Chain", "Failed to do abi.Pack due to:", err.Error())
 		return "", ebrelayerTypes.ErrPack
 	}
 
@@ -100,12 +100,12 @@ func relayEvmTx2Chain33(privateKey chain33Crypto.PrivKey, claim *ebrelayerTypes.
 		Data:  data,
 	}
 
-	// 存在发送交易成功, 但是由于chain33节点崩溃, 导致交易没有打包, 所以向多个节点发送交易, 提高可靠性
+	// 存在发送交易成功, 但是由于chain节点崩溃, 导致交易没有打包, 所以向多个节点发送交易, 提高可靠性
 	var txHash string
 	bExecuted := false
 	for _, rpcURL := range rpcURLs {
 		var txhash string
-		ctx := jsonclient.NewRPCCtx(rpcURL, "Chain33.SendTransaction", params, &txhash)
+		ctx := jsonclient.NewRPCCtx(rpcURL, "Chain.SendTransaction", params, &txhash)
 		_, err = ctx.RunResult()
 
 		// 如果成功 记录这笔哈希
@@ -153,11 +153,11 @@ func GetTxStatusByHashesRpc(txhex, rpcLaddr string) int32 {
 	}
 
 	var res rpctypes.TransactionDetails
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.GetTxByHashes", params2, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.GetTxByHashes", params2, &res)
 	ctx.SetResultCb(queryTxsByHashesRes)
 	result, err := ctx.RunResult()
 	if err != nil || result == nil {
-		return ebrelayerTypes.Invalid_Chain33Tx_Status
+		return ebrelayerTypes.Invalid_ChainTx_Status
 	}
 	return result.(int32)
 }
@@ -169,7 +169,7 @@ func getTxByHashesRpc(txhex, rpcLaddr string) (string, error) {
 	}
 
 	var res rpctypes.TransactionDetails
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.GetTxByHashes", params2, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.GetTxByHashes", params2, &res)
 	ctx.SetResultCb(queryTxsByHashesRes)
 	result, err := ctx.RunResult()
 	if err != nil || result == nil {
@@ -211,7 +211,7 @@ func deploySingleContract(code []byte, abi, constructorPara, contractName, paraC
 	if err != nil {
 		return "", errors.New(contractName + " send transaction error:" + err.Error())
 	}
-	chain33txLog.Info("deploySingleContract", "Deploy contract for", contractName, " with tx hash:", txhex)
+	chaintxLog.Info("deploySingleContract", "Deploy contract for", contractName, " with tx hash:", txhex)
 	return txhex, nil
 }
 
@@ -233,12 +233,12 @@ func createSignedEvmTx(action proto.Message, execer, caller, rpcLaddr, to string
 	var res string
 	client, err := jsonclient.NewJSONClient(rpcLaddr)
 	if err != nil {
-		chain33txLog.Error("createSignedEvmTx", "jsonclient.NewJSONClient", err.Error())
+		chaintxLog.Error("createSignedEvmTx", "jsonclient.NewJSONClient", err.Error())
 		return "", err
 	}
-	err = client.Call("Chain33.SignRawTx", unsignedTx, &res)
+	err = client.Call("Chain.SignRawTx", unsignedTx, &res)
 	if err != nil {
-		chain33txLog.Error("createSignedEvmTx", "Chain33.SignRawTx", err.Error())
+		chaintxLog.Error("createSignedEvmTx", "Chain.SignRawTx", err.Error())
 		return "", err
 	}
 
@@ -249,7 +249,7 @@ func sendTransactionRpc(data, rpcLaddr string) (string, error) {
 	params := rpctypes.RawParm{
 		Data: data,
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.SendTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.SendTransaction", params, nil)
 	var txhex string
 	rpc, err := jsonclient.NewJSONClient(ctx.Addr)
 	if err != nil {
@@ -282,20 +282,20 @@ func sendTx2Evm(parameter []byte, rpcURL, evmContractAddr, chainName, caller str
 	return txhex, nil
 }
 
-func approve(privateKey chain33Crypto.PrivKey, contractAddr, spender, chainName, rpcURL string, amount int64) (string, error) {
+func approve(privateKey chainCrypto.PrivKey, contractAddr, spender, chainName, rpcURL string, amount int64) (string, error) {
 	note := fmt.Sprintf("approve for spender:%s, amount:%d", spender, amount)
 
 	//approve(address spender, uint256 amount)
 	parameter := fmt.Sprintf("approve(%s, %d)", spender, amount)
 	_, packData, err := evmAbi.Pack(parameter, generated.BridgeTokenABI, false)
 	if nil != err {
-		chain33txLog.Info("approve", "Failed to do abi.Pack due to:", err.Error())
+		chaintxLog.Info("approve", "Failed to do abi.Pack due to:", err.Error())
 		return "", err
 	}
 	return sendEvmTx(privateKey, contractAddr, chainName, rpcURL, note, packData, 0)
 }
 
-func burn(privateKey chain33Crypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int64) (string, error) {
+func burn(privateKey chainCrypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int64) (string, error) {
 	//    function burnBridgeTokens(
 	//        bytes memory _ethereumReceiver,
 	//        address _ethereumTokenAddress,
@@ -305,30 +305,30 @@ func burn(privateKey chain33Crypto.PrivKey, contractAddr, ethereumReceiver, ethe
 	note := parameter
 	_, packData, err := evmAbi.Pack(parameter, generated.BridgeBankABI, false)
 	if nil != err {
-		chain33txLog.Info("burn", "Failed to do abi.Pack due to:", err.Error())
+		chaintxLog.Info("burn", "Failed to do abi.Pack due to:", err.Error())
 		return "", err
 	}
 
 	return sendEvmTx(privateKey, contractAddr, chainName, rpcURL, note, packData, 0)
 }
 
-func lockBty(privateKey chain33Crypto.PrivKey, contractAddr, ethereumReceiver, chainName, rpcURL string, amount int64) (string, error) {
+func lockBty(privateKey chainCrypto.PrivKey, contractAddr, ethereumReceiver, chainName, rpcURL string, amount int64) (string, error) {
 	//function lock(
 	//	bytes memory _recipient,
 	//	address _token,
 	//	uint256 _amount
 	//)
-	parameter := fmt.Sprintf("lock(%s, %s, %d)", ethereumReceiver, ebrelayerTypes.BTYAddrChain33, amount)
+	parameter := fmt.Sprintf("lock(%s, %s, %d)", ethereumReceiver, ebrelayerTypes.BTYAddrChain, amount)
 	note := parameter
 	_, packData, err := evmAbi.Pack(parameter, generated.BridgeBankABI, false)
 	if nil != err {
-		chain33txLog.Info("setOracle", "Failed to do abi.Pack due to:", err.Error())
+		chaintxLog.Info("setOracle", "Failed to do abi.Pack due to:", err.Error())
 		return "", ebrelayerTypes.ErrPack
 	}
 	return sendEvmTx(privateKey, contractAddr, chainName, rpcURL, note, packData, amount)
 }
 
-func sendEvmTx(privateKey chain33Crypto.PrivKey, contractAddr, chainName, rpcURL, note string, parameter []byte, amount int64) (string, error) {
+func sendEvmTx(privateKey chainCrypto.PrivKey, contractAddr, chainName, rpcURL, note string, parameter []byte, amount int64) (string, error) {
 	action := evmtypes.EVMContractAction{Amount: uint64(amount), GasLimit: 0, GasPrice: 0, Note: note, Para: parameter, ContractAddr: contractAddr}
 
 	feeInt64 := int64(1e7)
@@ -342,14 +342,14 @@ func sendEvmTx(privateKey chain33Crypto.PrivKey, contractAddr, chainName, rpcURL
 	}
 	var txhash string
 
-	ctx := jsonclient.NewRPCCtx(rpcURL, "Chain33.SendTransaction", params, &txhash)
+	ctx := jsonclient.NewRPCCtx(rpcURL, "Chain.SendTransaction", params, &txhash)
 	_, err := ctx.RunResult()
 	return txhash, err
 }
 
 func burnAsync(ownerPrivateKeyStr, tokenAddrstr, ethereumReceiver string, amount int64, bridgeBankAddr string, chainName, rpcURL string) (string, error) {
 	var driver secp256k1.Driver
-	privateKeySli, err := chain33Common.FromHex(ownerPrivateKeyStr)
+	privateKeySli, err := chainCommon.FromHex(ownerPrivateKeyStr)
 	if nil != err {
 		return "", err
 	}
@@ -360,25 +360,25 @@ func burnAsync(ownerPrivateKeyStr, tokenAddrstr, ethereumReceiver string, amount
 
 	approveTxHash, err := approve(ownerPrivateKey, tokenAddrstr, bridgeBankAddr, chainName, rpcURL, amount)
 	if err != nil {
-		chain33txLog.Error("BurnAsync", "failed to send approve tx due to:", err.Error())
+		chaintxLog.Error("BurnAsync", "failed to send approve tx due to:", err.Error())
 		return "", err
 	}
-	chain33txLog.Debug("BurnAsync", "approve with tx hash", approveTxHash)
+	chaintxLog.Debug("BurnAsync", "approve with tx hash", approveTxHash)
 
-	//privateKey chain33Crypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int6
+	//privateKey chainCrypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int6
 	burnTxHash, err := burn(ownerPrivateKey, bridgeBankAddr, ethereumReceiver, tokenAddrstr, chainName, rpcURL, amount)
 	if err != nil {
-		chain33txLog.Error("BurnAsync", "failed to send burn tx due to:", err.Error())
+		chaintxLog.Error("BurnAsync", "failed to send burn tx due to:", err.Error())
 		return "", err
 	}
-	chain33txLog.Debug("BurnAsync", "burn with tx hash", burnTxHash)
+	chaintxLog.Debug("BurnAsync", "burn with tx hash", burnTxHash)
 
 	return burnTxHash, err
 }
 
 func lockAsync(ownerPrivateKeyStr, ethereumReceiver string, amount int64, bridgeBankAddr string, chainName, rpcURL string) (string, error) {
 	var driver secp256k1.Driver
-	privateKeySli, err := chain33Common.FromHex(ownerPrivateKeyStr)
+	privateKeySli, err := chainCommon.FromHex(ownerPrivateKeyStr)
 	if nil != err {
 		return "", err
 	}
@@ -387,20 +387,20 @@ func lockAsync(ownerPrivateKeyStr, ethereumReceiver string, amount int64, bridge
 		return "", err
 	}
 
-	//privateKey chain33Crypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int6
+	//privateKey chainCrypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int6
 	lockBtyTxHash, err := lockBty(ownerPrivateKey, bridgeBankAddr, ethereumReceiver, chainName, rpcURL, amount)
 	if err != nil {
-		chain33txLog.Error("lockBty", "failed to send approve tx due to:", err.Error())
+		chaintxLog.Error("lockBty", "failed to send approve tx due to:", err.Error())
 		return "", err
 	}
-	chain33txLog.Debug("lockBty", "lockBty with tx hash", lockBtyTxHash)
+	chaintxLog.Debug("lockBty", "lockBty with tx hash", lockBtyTxHash)
 
 	return "", err
 }
 
 func setupMultiSign(ownerPrivateKeyStr, contractAddr, chainName, rpcURL string, owners []string) (string, error) {
 	var driver secp256k1.Driver
-	privateKeySli, err := chain33Common.FromHex(ownerPrivateKeyStr)
+	privateKeySli, err := chainCommon.FromHex(ownerPrivateKeyStr)
 	if nil != err {
 		return "", err
 	}
@@ -424,11 +424,11 @@ func setupMultiSign(ownerPrivateKeyStr, contractAddr, chainName, rpcURL string, 
 		parameter += fmt.Sprintf(",%s", owner)
 	}
 	parameter += "], "
-	parameter += fmt.Sprintf("%d, %s, 0102, %s, %s, 0, %s)", len(owners), ebrelayerTypes.BTYAddrChain33, ebrelayerTypes.BTYAddrChain33, ebrelayerTypes.BTYAddrChain33, ebrelayerTypes.BTYAddrChain33)
+	parameter += fmt.Sprintf("%d, %s, 0102, %s, %s, 0, %s)", len(owners), ebrelayerTypes.BTYAddrChain, ebrelayerTypes.BTYAddrChain, ebrelayerTypes.BTYAddrChain, ebrelayerTypes.BTYAddrChain)
 	note := parameter
 	_, packData, err := evmAbi.Pack(parameter, generated.GnosisSafeABI, false)
 	if nil != err {
-		chain33txLog.Info("burn", "Failed to do abi.Pack due to:", err.Error())
+		chaintxLog.Info("burn", "Failed to do abi.Pack due to:", err.Error())
 		return "", err
 	}
 
@@ -437,7 +437,7 @@ func setupMultiSign(ownerPrivateKeyStr, contractAddr, chainName, rpcURL string, 
 
 func safeTransfer(ownerPrivateKeyStr, mulSign, chainName, rpcURL, receiver, token string, privateKeys []string, amount float64) (string, error) {
 	var driver secp256k1.Driver
-	privateKeySli, err := chain33Common.FromHex(ownerPrivateKeyStr)
+	privateKeySli, err := chainCommon.FromHex(ownerPrivateKeyStr)
 	if nil != err {
 		return "", err
 	}
@@ -473,7 +473,7 @@ func safeTransfer(ownerPrivateKeyStr, mulSign, chainName, rpcURL, receiver, toke
 		if err != nil {
 			return "", err
 		}
-		chain33txLog.Info("safeTransfer", "evmAbi.Pack with parameter", parameter,
+		chaintxLog.Info("safeTransfer", "evmAbi.Pack with parameter", parameter,
 			"data", common.ToHex(data))
 		//对于其他erc20资产，直接将其设置为0
 		valueStr = "0"
@@ -498,21 +498,21 @@ func safeTransfer(ownerPrivateKeyStr, mulSign, chainName, rpcURL, receiver, toke
 	//)
 	parameter2getHash := fmt.Sprintf("getTransactionHash(%s, %s, %s, 0, %d, %d, %d, %s, %s, %d)", to, valueStr, dataStr,
 		safeTxGas, baseGas, gasPrice,
-		ebrelayerTypes.NilAddrChain33, ebrelayerTypes.NilAddrChain33, nonce)
+		ebrelayerTypes.NilAddrChain, ebrelayerTypes.NilAddrChain, nonce)
 
-	chain33txLog.Info("safeTransfer", "parameter2getHash", parameter2getHash)
+	chaintxLog.Info("safeTransfer", "parameter2getHash", parameter2getHash)
 	result := query(mulSign, parameter2getHash, mulSign, rpcURL, generated.GnosisSafeABI)
 	if nil == result {
 		return "", ebrelayerTypes.ErrGetTransactionHash
 	}
 	contentHashArray := result.([32]byte)
 	contentHash := contentHashArray[:]
-	chain33txLog.Info("safeTransfer", "contentHash", common.ToHex(contentHash))
+	chaintxLog.Info("safeTransfer", "contentHash", common.ToHex(contentHash))
 	var sigs []byte
 	for i, privateKey := range privateKeys {
-		chain33txLog.Info("safeTransfer", "index", i, "privateKey", privateKey)
+		chaintxLog.Info("safeTransfer", "index", i, "privateKey", privateKey)
 		var driver secp256k1.Driver
-		privateKeySli, err := chain33Common.FromHex(privateKey)
+		privateKeySli, err := chainCommon.FromHex(privateKey)
 		if nil != err {
 			return "", err
 		}
@@ -521,28 +521,28 @@ func safeTransfer(ownerPrivateKeyStr, mulSign, chainName, rpcURL, receiver, toke
 			return "", err
 		}
 		temp, _ := btcec_secp256k1.PrivKeyFromBytes(btcec_secp256k1.S256(), ownerPrivateKey.Bytes())
-		privateKey4Chain33_ecdsa := temp.ToECDSA()
+		privateKey4Chain_ecdsa := temp.ToECDSA()
 
-		sig, err := ethSecp256k1.Sign(contentHash, math.PaddedBigBytes(privateKey4Chain33_ecdsa.D, 32))
+		sig, err := ethSecp256k1.Sign(contentHash, math.PaddedBigBytes(privateKey4Chain_ecdsa.D, 32))
 		if nil != err {
-			chain33txLog.Error("safeTransfer", "Failed to do ethSecp256k1.Sign to:", err.Error())
+			chaintxLog.Error("safeTransfer", "Failed to do ethSecp256k1.Sign to:", err.Error())
 			return "", err
 		}
 
 		sig[64] += 27
-		chain33txLog.Info("safeTransfer", "single signature", common.ToHex(sig))
+		chaintxLog.Info("safeTransfer", "single signature", common.ToHex(sig))
 		sigs = append(sigs, sig...)
 	}
 
 	//构造execTransaction参数
 	parameter2Exec := fmt.Sprintf("execTransaction(%s, %s, %s, 0, %d, %d, %d, %s, %s, %s)", to, valueStr, dataStr,
 		safeTxGas, baseGas, gasPrice,
-		ebrelayerTypes.NilAddrChain33, ebrelayerTypes.NilAddrChain33, common.ToHex(sigs))
+		ebrelayerTypes.NilAddrChain, ebrelayerTypes.NilAddrChain, common.ToHex(sigs))
 	note := parameter2Exec
-	chain33txLog.Info("safeTransfer", "parameter2Exec", parameter2Exec)
+	chaintxLog.Info("safeTransfer", "parameter2Exec", parameter2Exec)
 	_, packData, err := evmAbi.Pack(parameter2Exec, generated.GnosisSafeABI, false)
 	if nil != err {
-		chain33txLog.Error("safeTransfer", "Failed to do abi.Pack due to:", err.Error())
+		chaintxLog.Error("safeTransfer", "Failed to do abi.Pack due to:", err.Error())
 		return "", err
 	}
 
@@ -605,7 +605,7 @@ func Query(contractAddr, input, caller, rpcLaddr, abiData string) interface{} {
 func query(contractAddr, input, caller, rpcLaddr, abiData string) interface{} {
 	methodName, packedinput, err := evmAbi.Pack(input, abiData, true)
 	if err != nil {
-		chain33txLog.Debug("query", "Failed to do para pack due to", err.Error())
+		chaintxLog.Debug("query", "Failed to do para pack due to", err.Error())
 		return nil
 	}
 
@@ -636,7 +636,7 @@ func query(contractAddr, input, caller, rpcLaddr, abiData string) interface{} {
 		fmt.Println("outputs len = ", len(outputs))
 		return nil
 	}
-	chain33txLog.Debug("query", "outputs", outputs)
+	chaintxLog.Debug("query", "outputs", outputs)
 
 	return outputs[0].Value
 }
@@ -654,7 +654,7 @@ func sendQuery(rpcAddr, funcName string, request types.Message, result proto.Mes
 		return false
 	}
 
-	err = jsonrpc.Call("Chain33.Query", params, result)
+	err = jsonrpc.Call("Chain.Query", params, result)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return false
@@ -664,7 +664,7 @@ func sendQuery(rpcAddr, funcName string, request types.Message, result proto.Mes
 
 func withdrawAsync(ownerPrivateKeyStr, tokenAddrstr, ethereumReceiver string, amount int64, bridgeBankAddr string, chainName, rpcURL string) (string, error) {
 	var driver secp256k1.Driver
-	privateKeySli, err := chain33Common.FromHex(ownerPrivateKeyStr)
+	privateKeySli, err := chainCommon.FromHex(ownerPrivateKeyStr)
 	if nil != err {
 		return "", err
 	}
@@ -675,22 +675,22 @@ func withdrawAsync(ownerPrivateKeyStr, tokenAddrstr, ethereumReceiver string, am
 
 	approveTxHash, err := approve(ownerPrivateKey, tokenAddrstr, bridgeBankAddr, chainName, rpcURL, amount)
 	if err != nil {
-		chain33txLog.Error("withdrawAsync", "failed to send approve tx due to:", err.Error())
+		chaintxLog.Error("withdrawAsync", "failed to send approve tx due to:", err.Error())
 		return "", err
 	}
-	chain33txLog.Debug("withdrawAsync", "approve with tx hash", approveTxHash)
+	chaintxLog.Debug("withdrawAsync", "approve with tx hash", approveTxHash)
 
 	withdrawTxHash, err := withdrawViaProxy(ownerPrivateKey, bridgeBankAddr, ethereumReceiver, tokenAddrstr, chainName, rpcURL, amount)
 	if err != nil {
-		chain33txLog.Error("withdrawAsync", "failed to send withdraw tx due to:", err.Error())
+		chaintxLog.Error("withdrawAsync", "failed to send withdraw tx due to:", err.Error())
 		return "", err
 	}
-	chain33txLog.Debug("withdrawAsync", "withdraw with tx hash", withdrawTxHash)
+	chaintxLog.Debug("withdrawAsync", "withdraw with tx hash", withdrawTxHash)
 
 	return withdrawTxHash, err
 }
 
-func withdrawViaProxy(privateKey chain33Crypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int64) (string, error) {
+func withdrawViaProxy(privateKey chainCrypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int64) (string, error) {
 	//function withdrawViaProxy(
 	//	bytes memory _ethereumReceiver,
 	//	address _bridgeTokenAddress,
@@ -700,7 +700,7 @@ func withdrawViaProxy(privateKey chain33Crypto.PrivKey, contractAddr, ethereumRe
 	note := parameter
 	_, packData, err := evmAbi.Pack(parameter, generated.BridgeBankABI, false)
 	if nil != err {
-		chain33txLog.Info("withdraw", "Failed to do abi.Pack due to:", err.Error())
+		chaintxLog.Info("withdraw", "Failed to do abi.Pack due to:", err.Error())
 		return "", err
 	}
 
@@ -709,7 +709,7 @@ func withdrawViaProxy(privateKey chain33Crypto.PrivKey, contractAddr, ethereumRe
 
 func burnWithIncreaseAsync(ownerPrivateKeyStr, tokenAddrstr, ethereumReceiver string, amount int64, bridgeBankAddr string, chainName, rpcURL string) (string, error) {
 	var driver secp256k1.Driver
-	privateKeySli, err := chain33Common.FromHex(ownerPrivateKeyStr)
+	privateKeySli, err := chainCommon.FromHex(ownerPrivateKeyStr)
 	if nil != err {
 		return "", err
 	}
@@ -720,30 +720,30 @@ func burnWithIncreaseAsync(ownerPrivateKeyStr, tokenAddrstr, ethereumReceiver st
 
 	approveTxHash, err := increaseApprove(ownerPrivateKey, tokenAddrstr, bridgeBankAddr, chainName, rpcURL, amount)
 	if err != nil {
-		chain33txLog.Error("burnWithIncreaseAsync", "failed to send approve tx due to:", err.Error())
+		chaintxLog.Error("burnWithIncreaseAsync", "failed to send approve tx due to:", err.Error())
 		return "", err
 	}
-	chain33txLog.Debug("burnWithIncreaseAsync", "approve with tx hash", approveTxHash)
+	chaintxLog.Debug("burnWithIncreaseAsync", "approve with tx hash", approveTxHash)
 
-	//privateKey chain33Crypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int6
+	//privateKey chainCrypto.PrivKey, contractAddr, ethereumReceiver, ethereumTokenAddress, chainName, rpcURL string, amount int6
 	burnTxHash, err := burn(ownerPrivateKey, bridgeBankAddr, ethereumReceiver, tokenAddrstr, chainName, rpcURL, amount)
 	if err != nil {
-		chain33txLog.Error("burnWithIncreaseAsync", "failed to send burn tx due to:", err.Error())
+		chaintxLog.Error("burnWithIncreaseAsync", "failed to send burn tx due to:", err.Error())
 		return "", err
 	}
-	chain33txLog.Debug("burnWithIncreaseAsync", "burn with tx hash", burnTxHash)
+	chaintxLog.Debug("burnWithIncreaseAsync", "burn with tx hash", burnTxHash)
 
 	return burnTxHash, err
 }
 
-func increaseApprove(privateKey chain33Crypto.PrivKey, contractAddr, spender, chainName, rpcURL string, amount int64) (string, error) {
+func increaseApprove(privateKey chainCrypto.PrivKey, contractAddr, spender, chainName, rpcURL string, amount int64) (string, error) {
 	note := fmt.Sprintf("increaseAllowance for spender:%s, amount:%d", spender, amount)
 
 	//approve(address spender, uint256 amount)
 	parameter := fmt.Sprintf("increaseAllowance(%s, %d)", spender, amount)
 	_, packData, err := evmAbi.Pack(parameter, generated.BridgeTokenABI, false)
 	if nil != err {
-		chain33txLog.Info("increaseAllowance", "Failed to do abi.Pack due to:", err.Error())
+		chaintxLog.Info("increaseAllowance", "Failed to do abi.Pack due to:", err.Error())
 		return "", err
 	}
 	return sendEvmTx(privateKey, contractAddr, chainName, rpcURL, note, packData, 0)

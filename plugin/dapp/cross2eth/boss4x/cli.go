@@ -6,24 +6,24 @@ import (
 	"os"
 	"strings"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/boss4x/buildFlags"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/boss4x/chain33"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/boss4x/ethereum"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/boss4x/buildFlags"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/boss4x/chain"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/boss4x/ethereum"
 	"github.com/spf13/cobra"
 )
 
 func main() {
-	if buildFlags.RPCAddr4Chain33 == "" {
-		buildFlags.RPCAddr4Chain33 = "http://localhost:8801"
+	if buildFlags.RPCAddr4Chain == "" {
+		buildFlags.RPCAddr4Chain = "http://localhost:8801"
 	}
-	buildFlags.RPCAddr4Chain33 = testTLS(buildFlags.RPCAddr4Chain33)
+	buildFlags.RPCAddr4Chain = testTLS(buildFlags.RPCAddr4Chain)
 
 	if buildFlags.RPCAddr4Ethereum == "" {
 		buildFlags.RPCAddr4Ethereum = "http://localhost:7545"
 	}
 
 	rootCmd := RootCmd()
-	rootCmd.PersistentFlags().String("rpc_laddr", buildFlags.RPCAddr4Chain33, "http url")
+	rootCmd.PersistentFlags().String("rpc_laddr", buildFlags.RPCAddr4Chain, "http url")
 	rootCmd.PersistentFlags().String("rpc_laddr_ethereum", buildFlags.RPCAddr4Ethereum, "http url")
 	rootCmd.PersistentFlags().String("paraName", "", "para chain name,Eg:user.p.fzm.")
 	rootCmd.PersistentFlags().String("expire", "120m", "transaction expire time (optional)")
@@ -43,7 +43,7 @@ func RootCmd() *cobra.Command {
 		Short: "manage create offline tx or deploy contracts(dex) for test",
 	}
 	cmd.AddCommand(
-		chain33.Chain33Cmd(),
+		chain.ChainCmd(),
 		ethereum.EthCmd(),
 		KeyManageCmd(),
 		sm2Cmd(),

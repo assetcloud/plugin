@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/33cn/chain33/cmd/autotest/types"
+	"github.com/assetcloud/chain/cmd/autotest/types"
 )
 
 type unfreezeTerminateCase struct {

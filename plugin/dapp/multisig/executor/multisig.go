@@ -18,16 +18,16 @@ import (
 	"bytes"
 	"encoding/hex"
 
-	"github.com/33cn/chain33/system/address/btc"
+	"github.com/assetcloud/chain/system/address/btc"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/common/address"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/system/dapp"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	mty "github.com/33cn/plugin/plugin/dapp/multisig/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/common/address"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/system/dapp"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	mty "github.com/assetcloud/plugin/plugin/dapp/multisig/types"
 )
 
 var multisiglog = log.New("module", "execs.multisig")
@@ -35,7 +35,7 @@ var multisiglog = log.New("module", "execs.multisig")
 var driverName = "multisig"
 
 // Init multisig模块初始化
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newMultiSig, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

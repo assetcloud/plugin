@@ -3,8 +3,8 @@ package types
 import (
 	"reflect"
 
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
 )
 
 /*
@@ -68,12 +68,12 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(EvmxgoX, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(EvmxgoX, NewType(cfg))
 }
 
@@ -81,7 +81,7 @@ type evmxgoType struct {
 	types.ExecTypeBase
 }
 
-func NewType(cfg *types.Chain33Config) *evmxgoType {
+func NewType(cfg *types.ChainConfig) *evmxgoType {
 	c := &evmxgoType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

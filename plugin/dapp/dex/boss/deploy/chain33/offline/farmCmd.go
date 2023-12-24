@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/33cn/chain33/system/crypto/secp256k1"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
 
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/cakeToken"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
-	"github.com/33cn/plugin/plugin/dapp/dex/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/cakeToken"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/masterChef"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-farm/src/syrupBar"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,7 @@ func farmofflineCmd() *cobra.Command {
 	return cmd
 }
 
-func createCakeToken(cmd *cobra.Command, from common.Address) (*utils.Chain33OfflineTx, error) {
+func createCakeToken(cmd *cobra.Command, from common.Address) (*utils.ChainOfflineTx, error) {
 	privateKey, _ := cmd.Flags().GetString("key")
 	expire, _ := cmd.Flags().GetString("expire")
 	note, _ := cmd.Flags().GetString("note")
@@ -54,7 +54,7 @@ func createCakeToken(cmd *cobra.Command, from common.Address) (*utils.Chain33Off
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	cakeTokenTx := &utils.Chain33OfflineTx{
+	cakeTokenTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -64,7 +64,7 @@ func createCakeToken(cmd *cobra.Command, from common.Address) (*utils.Chain33Off
 	return cakeTokenTx, nil
 }
 
-func createSyrupBar(cmd *cobra.Command, from common.Address, cakeToken string) (*utils.Chain33OfflineTx, error) {
+func createSyrupBar(cmd *cobra.Command, from common.Address, cakeToken string) (*utils.ChainOfflineTx, error) {
 	privateKey, _ := cmd.Flags().GetString("key")
 	expire, _ := cmd.Flags().GetString("expire")
 	note, _ := cmd.Flags().GetString("note")
@@ -89,7 +89,7 @@ func createSyrupBar(cmd *cobra.Command, from common.Address, cakeToken string) (
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	cakeTokenTx := &utils.Chain33OfflineTx{
+	cakeTokenTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -99,7 +99,7 @@ func createSyrupBar(cmd *cobra.Command, from common.Address, cakeToken string) (
 	return cakeTokenTx, nil
 }
 
-func TransferOwnerShip(cmd *cobra.Command, from common.Address, masterChef, contractAddr, operationName string) (*utils.Chain33OfflineTx, error) {
+func TransferOwnerShip(cmd *cobra.Command, from common.Address, masterChef, contractAddr, operationName string) (*utils.ChainOfflineTx, error) {
 	privateKey, _ := cmd.Flags().GetString("key")
 	expire, _ := cmd.Flags().GetString("expire")
 	note, _ := cmd.Flags().GetString("note")
@@ -131,7 +131,7 @@ func TransferOwnerShip(cmd *cobra.Command, from common.Address, masterChef, cont
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	transferOwnerShipTx := &utils.Chain33OfflineTx{
+	transferOwnerShipTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -178,7 +178,7 @@ func createMasterChef(cmd *cobra.Command, args []string) {
 	}
 	from := common.PubKey2Address(privateKey.PubKey().Bytes())
 
-	var txs []*utils.Chain33OfflineTx
+	var txs []*utils.ChainOfflineTx
 	i := 1
 	fmt.Printf("%d: Going to create cake token\n", i)
 	i += 1
@@ -226,7 +226,7 @@ func createMasterChef(cmd *cobra.Command, args []string) {
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	masterChefTx := &utils.Chain33OfflineTx{
+	masterChefTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -329,7 +329,7 @@ func addPool(cmd *cobra.Command, args []string) {
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	addPoolTx := &utils.Chain33OfflineTx{
+	addPoolTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -412,7 +412,7 @@ func updateAllocPoint(cmd *cobra.Command, args []string) {
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	addPoolTx := &utils.Chain33OfflineTx{
+	addPoolTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,

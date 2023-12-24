@@ -7,7 +7,7 @@ package wallet
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/33cn/chain33/system/address/eth"
+	"github.com/assetcloud/chain/system/address/eth"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -15,15 +15,15 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
-	wcom "github.com/33cn/chain33/wallet/common"
-	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
+	wcom "github.com/assetcloud/chain/wallet/common"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 )
 
 var (
@@ -429,8 +429,8 @@ func (policy *ticketPolicy) forceCloseTicketList(height int64, priv crypto.PrivK
 	var ids []string
 	var tl []*ty.Ticket
 	now := types.Now().Unix()
-	chain33Cfg := policy.walletOperate.GetAPI().GetConfig()
-	cfg := ty.GetTicketMinerParam(chain33Cfg, height)
+	chainCfg := policy.walletOperate.GetAPI().GetConfig()
+	cfg := ty.GetTicketMinerParam(chainCfg, height)
 
 	for _, t := range tlist {
 		if !t.IsGenesis {
@@ -525,8 +525,8 @@ func (policy *ticketPolicy) closeTicketsByAddr(height int64, priv crypto.PrivKey
 	var ids []string
 	var tl []*ty.Ticket
 	now := types.Now().Unix()
-	chain33Cfg := policy.walletOperate.GetAPI().GetConfig()
-	cfg := ty.GetTicketMinerParam(chain33Cfg, height)
+	chainCfg := policy.walletOperate.GetAPI().GetConfig()
+	cfg := ty.GetTicketMinerParam(chainCfg, height)
 	for _, t := range tlist {
 		if !t.IsGenesis {
 			if now-t.GetCreateTime() < cfg.TicketWithdrawTime {
@@ -685,9 +685,9 @@ func (policy *ticketPolicy) buyTicketOne(height int64, priv crypto.PrivKey, addr
 	}
 	//留一个币作为手续费，如果手续费不够了，不能挖矿
 	//判断手续费是否足够，如果不足要及时补充。
-	chain33Cfg := policy.walletOperate.GetAPI().GetConfig()
-	cfg := ty.GetTicketMinerParam(chain33Cfg, height)
-	fee := chain33Cfg.GetCoinPrecision()
+	chainCfg := policy.walletOperate.GetAPI().GetConfig()
+	cfg := ty.GetTicketMinerParam(chainCfg, height)
+	fee := chainCfg.GetCoinPrecision()
 	if acc1.Balance+acc2.Balance-2*fee >= cfg.TicketPrice {
 		// 如果可用余额+冻结余额，可以凑成新票，则转币到冻结余额
 		if (acc1.Balance+acc2.Balance-2*fee)/cfg.TicketPrice > acc2.Balance/cfg.TicketPrice {
@@ -800,8 +800,8 @@ func (policy *ticketPolicy) buyMinerAddrTicketOne(height int64, priv crypto.Priv
 	}
 	total := 0
 	var hashes [][]byte
-	chain33Cfg := policy.walletOperate.GetAPI().GetConfig()
-	cfg := ty.GetTicketMinerParam(chain33Cfg, height)
+	chainCfg := policy.walletOperate.GetAPI().GetConfig()
+	cfg := ty.GetTicketMinerParam(chainCfg, height)
 	for i := 0; i < len(addrs); i++ {
 		bizlog.Info("sourceaddr", "addr", addrs[i])
 		ok := checkMinerWhiteList(addrs[i])

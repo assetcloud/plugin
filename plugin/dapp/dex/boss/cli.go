@@ -6,19 +6,19 @@ import (
 	"os"
 	"strings"
 
-	"github.com/33cn/plugin/plugin/dapp/dex/boss/buildFlags"
-	"github.com/33cn/plugin/plugin/dapp/dex/boss/deploy/chain33"
-	"github.com/33cn/plugin/plugin/dapp/dex/boss/deploy/chain33/offline"
-	"github.com/33cn/plugin/plugin/dapp/dex/boss/deploy/ethereum"
-	ethoffline "github.com/33cn/plugin/plugin/dapp/dex/boss/deploy/ethereum/offline"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/boss/buildFlags"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/boss/deploy/chain"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/boss/deploy/chain/offline"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/boss/deploy/ethereum"
+	ethoffline "github.com/assetcloud/plugin/plugin/dapp/dex/boss/deploy/ethereum/offline"
 	"github.com/spf13/cobra"
 )
 
 func main() {
-	if buildFlags.RPCAddr4Chain33 == "" {
-		buildFlags.RPCAddr4Chain33 = "http://localhost:8801"
+	if buildFlags.RPCAddr4Chain == "" {
+		buildFlags.RPCAddr4Chain = "http://localhost:8801"
 	}
-	buildFlags.RPCAddr4Chain33 = testTLS(buildFlags.RPCAddr4Chain33)
+	buildFlags.RPCAddr4Chain = testTLS(buildFlags.RPCAddr4Chain)
 
 	if buildFlags.RPCAddr4Ethereum == "" {
 		buildFlags.RPCAddr4Ethereum = "https://data-seed-prebsc-1-s1.binance.org:8545"
@@ -26,7 +26,7 @@ func main() {
 	}
 
 	rootCmd := RootCmd()
-	rootCmd.PersistentFlags().String("rpc_laddr", buildFlags.RPCAddr4Chain33, "http url")
+	rootCmd.PersistentFlags().String("rpc_laddr", buildFlags.RPCAddr4Chain, "http url")
 	rootCmd.PersistentFlags().String("rpc_laddr_ethereum", buildFlags.RPCAddr4Ethereum, "http url")
 	rootCmd.PersistentFlags().String("paraName", "", "para chain name,Eg:user.p.fzm.")
 	rootCmd.PersistentFlags().String("expire", "120m", "transaction expire time (optional)")
@@ -54,10 +54,10 @@ func RootCmd() *cobra.Command {
 func OfflineCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "offline",
-		Short: "create and sign offline tx to deploy and set dex contracts to ethereum or chain33",
+		Short: "create and sign offline tx to deploy and set dex contracts to ethereum or chain",
 	}
 	cmd.AddCommand(
-		offline.Chain33OfflineCmd(),
+		offline.ChainOfflineCmd(),
 		ethoffline.EthOfflineCmd(),
 	)
 	return cmd
@@ -67,11 +67,11 @@ func OfflineCmd() *cobra.Command {
 func DeployCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deploy",
-		Short: "deploy dex to ethereum or chain33",
+		Short: "deploy dex to ethereum or chain",
 	}
 	cmd.AddCommand(
 		ethereum.EthCmd(),
-		chain33.Chain33Cmd(),
+		chain.ChainCmd(),
 	)
 	return cmd
 }

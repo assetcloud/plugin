@@ -13,22 +13,22 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/chain33/blockchain"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/common/limits"
-	"github.com/33cn/chain33/common/log"
-	"github.com/33cn/chain33/executor"
-	"github.com/33cn/chain33/p2p"
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/store"
-	cty "github.com/33cn/chain33/system/dapp/coins/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/wallet"
+	"github.com/assetcloud/chain/blockchain"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/common/limits"
+	"github.com/assetcloud/chain/common/log"
+	"github.com/assetcloud/chain/executor"
+	"github.com/assetcloud/chain/p2p"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/store"
+	cty "github.com/assetcloud/chain/system/dapp/coins/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/wallet"
 
-	_ "github.com/33cn/chain33/system"
-	_ "github.com/33cn/plugin/plugin/dapp/init"
-	_ "github.com/33cn/plugin/plugin/store/init"
+	_ "github.com/assetcloud/chain/system"
+	_ "github.com/assetcloud/plugin/plugin/dapp/init"
+	_ "github.com/assetcloud/plugin/plugin/store/init"
 )
 
 var (
@@ -62,25 +62,25 @@ func TestPbft(t *testing.T) {
 
 func initEnvPbft() (queue.Queue, *blockchain.BlockChain, *p2p.Manager, queue.Module, *executor.Executor, queue.Module, queue.Module) {
 	flag.Parse()
-	chain33Cfg := types.NewChain33Config(types.ReadFile("chain33.test.toml"))
+	chainCfg := types.NewChainConfig(types.ReadFile("chain.test.toml"))
 	var q = queue.New("channel")
-	q.SetConfig(chain33Cfg)
-	cfg := chain33Cfg.GetModuleConfig()
+	q.SetConfig(chainCfg)
+	cfg := chainCfg.GetModuleConfig()
 	cfg.Log.LogFile = ""
-	sub := chain33Cfg.GetSubConfig()
+	sub := chainCfg.GetSubConfig()
 
-	chain := blockchain.New(chain33Cfg)
+	chain := blockchain.New(chainCfg)
 	chain.SetQueueClient(q.Client())
-	exec := executor.New(chain33Cfg)
+	exec := executor.New(chainCfg)
 	exec.SetQueueClient(q.Client())
-	chain33Cfg.SetMinFee(0)
-	s := store.New(chain33Cfg)
+	chainCfg.SetMinFee(0)
+	s := store.New(chainCfg)
 	s.SetQueueClient(q.Client())
 	cs := NewPbft(cfg.Consensus, sub.Consensus["pbft"])
 	cs.SetQueueClient(q.Client())
-	p2pnet := p2p.NewP2PMgr(chain33Cfg)
+	p2pnet := p2p.NewP2PMgr(chainCfg)
 	p2pnet.SetQueueClient(q.Client())
-	walletm := wallet.New(chain33Cfg)
+	walletm := wallet.New(chainCfg)
 	walletm.SetQueueClient(q.Client())
 
 	return q, chain, p2pnet, s, exec, cs, walletm
@@ -123,7 +123,7 @@ func getprivkey(key string) crypto.PrivKey {
 	return priv
 }
 
-func createReplyList(cfg *types.Chain33Config, account string) {
+func createReplyList(cfg *types.ChainConfig, account string) {
 
 	var result []*types.Transaction
 	for j := 0; j < txSize; j++ {

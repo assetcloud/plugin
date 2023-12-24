@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/33cn/chain33/rpc/grpcclient"
+	"github.com/assetcloud/chain/rpc/grpcclient"
 
-	"github.com/33cn/chain33/types"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	"github.com/assetcloud/chain/types"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 
-	//"gitlab.33.cn/zkrelayer/relayer/chain33/calcwitness"
+	//"gitlab.33.cn/zkrelayer/relayer/chain/calcwitness"
 	//"gitlab.33.cn/zkrelayer/relayer/common"
-	chain33Ty "github.com/33cn/chain33/types"
+	chainTy "github.com/assetcloud/chain/types"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 	"io/ioutil"
@@ -44,7 +44,7 @@ var (
 	}
 )
 
-func NewMainChainClient(paraRemoteGrpcClient string) chain33Ty.Chain33Client {
+func NewMainChainClient(paraRemoteGrpcClient string) chainTy.ChainClient {
 	// paraChainGrpcRecSize 平行链receive最大100M
 	const paraChainGrpcRecSize = 100 * 1024 * 1024
 	if paraRemoteGrpcClient == "" {
@@ -61,12 +61,12 @@ func NewMainChainClient(paraRemoteGrpcClient string) chain33Ty.Chain33Client {
 	if err != nil {
 		return nil
 	}
-	grpcClient := chain33Ty.NewChain33Client(conn)
+	grpcClient := chainTy.NewChainClient(conn)
 	return grpcClient
 }
 
 //该命令用于从区块链获取包含l2交易的区块
-//./chain33-cli zksync sendl2 fetch -s 800 -e 6015 -p . --rpc_laddr 172.18.0.6:8902
+//./chain-cli zksync sendl2 fetch -s 800 -e 6015 -p . --rpc_laddr 172.18.0.6:8902
 func fetchL2BlockCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "fetch",

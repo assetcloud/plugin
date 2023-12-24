@@ -1,10 +1,10 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/common/address"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	et "github.com/33cn/plugin/plugin/dapp/exchange/types"
+	"github.com/assetcloud/chain/common/address"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	et "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 )
 
 var (

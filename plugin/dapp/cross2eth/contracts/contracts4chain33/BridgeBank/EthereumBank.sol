@@ -24,7 +24,7 @@ contract EthereumBank {
 
     struct EthereumDeposit {
         bytes ethereumSender;
-        address payable chain33Recipient;
+        address payable chainRecipient;
         address bridgeTokenAddress;
         uint256 amount;
         bool exist;
@@ -40,7 +40,7 @@ contract EthereumBank {
 
     struct EthereumBurn {
         bytes ethereumSender;
-        address payable chain33Owner;
+        address payable chainOwner;
         address bridgeTokenAddress;
         uint256 amount;
         uint256 nonce;
@@ -126,14 +126,14 @@ contract EthereumBank {
     * @dev: Creates a new EthereumDeposit with a unique ID
     *
     * @param _ethereumSender: The sender's Ethereum address in bytes.
-    * @param _chain33Recipient: The intended recipient's Chain33 address.
+    * @param _chainRecipient: The intended recipient's Chain address.
     * @param _token: The currency type
     * @param _amount: The amount in the deposit.
     * @return: The newly created EthereumDeposit's unique id.
     */
     function newEthereumDeposit(
         bytes memory _ethereumSender,
-        address payable _chain33Recipient,
+        address payable _chainRecipient,
         address _token,
         uint256 _amount
     )
@@ -147,7 +147,7 @@ contract EthereumBank {
         bytes32 depositID = keccak256(
             abi.encodePacked(
                 _ethereumSender,
-                _chain33Recipient,
+                _chainRecipient,
                 _token,
                 _amount,
                 depositBurnCount.depositCount
@@ -156,7 +156,7 @@ contract EthereumBank {
 
         ethereumDeposits[depositID] = EthereumDeposit(
             _ethereumSender,
-            _chain33Recipient,
+            _chainRecipient,
             _token,
             _amount,
             true,
@@ -170,7 +170,7 @@ contract EthereumBank {
     * @dev: Creates a new EthereumBurn with a unique ID
         *
         * @param _ethereumSender: The sender's Ethereum address in bytes.
-        * @param _chain33Owner: The owner's Chain33 address.
+        * @param _chainOwner: The owner's Chain address.
         * @param _token: The token Address
         * @param _amount: The amount to be burned.
         * @param _nonce: The nonce indicates the burn count for this token
@@ -178,7 +178,7 @@ contract EthereumBank {
         */
         function newEthereumBurn(
             bytes memory _ethereumSender,
-            address payable _chain33Owner,
+            address payable _chainOwner,
             address _token,
             uint256 _amount,
             uint256 nonce
@@ -189,7 +189,7 @@ contract EthereumBank {
             bytes32 burnID = keccak256(
                 abi.encodePacked(
                     _ethereumSender,
-                    _chain33Owner,
+                    _chainOwner,
                     _token,
                     _amount,
                     nonce
@@ -198,7 +198,7 @@ contract EthereumBank {
 
             ethereumBurns[burnID] = EthereumBurn(
                 _ethereumSender,
-                _chain33Owner,
+                _chainOwner,
                 _token,
                 _amount,
                 nonce
@@ -248,7 +248,7 @@ contract EthereumBank {
      * @dev: Mints new ethereum tokens
      *
      * @param _ethereumSender: The sender's Ethereum address in bytes.
-     * @param _chain33Recipient: The intended recipient's Chain33 address.
+     * @param _chainRecipient: The intended recipient's Chain address.
      * @param _ethereumTokenAddress: The currency type
      * @param _symbol: ethereum token symbol
      * @param _amount: number of ethereum tokens to be minted
@@ -297,7 +297,7 @@ contract EthereumBank {
      *
      * @param _from: The address to be burned from
      * @param _ethereumReceiver: The receiver's Ethereum address in bytes.
-     * @param _ethereumTokenAddress: The token address of ethereum asset issued on chain33
+     * @param _ethereumTokenAddress: The token address of ethereum asset issued on chain
      * @param _amount: number of ethereum tokens to be burned
      */
     function burnEthereumTokens(
@@ -349,7 +349,7 @@ contract EthereumBank {
      *
      * @param _from: The address to be withdrew from
      * @param _ethereumReceiver: The receiver's Ethereum address in bytes.
-     * @param _bridgeTokenAddress: The token address of ethereum asset issued on chain33
+     * @param _bridgeTokenAddress: The token address of ethereum asset issued on chain
      * @param _amount: number of ethereum tokens to be withdrew
      */
     function withdrawEthereumTokens(
@@ -410,7 +410,7 @@ contract EthereumBank {
     * @return: Sender's address.
     * @return: Recipient's address in bytes.
     * @return: Token address.
-    * @return: Amount of chain33/erc20 in the item.
+    * @return: Amount of chain/erc20 in the item.
     * @return: Unique nonce of the item.
     */
     function getEthereumDeposit(
@@ -424,7 +424,7 @@ contract EthereumBank {
 
         return(
             deposit.ethereumSender,
-            deposit.chain33Recipient,
+            deposit.chainRecipient,
             deposit.bridgeTokenAddress,
             deposit.amount
         );

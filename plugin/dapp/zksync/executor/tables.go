@@ -3,12 +3,12 @@ package executor
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/common/address"
+	"github.com/assetcloud/chain/common/address"
 
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/common/db/table"
-	"github.com/33cn/chain33/types"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/db/table"
+	"github.com/assetcloud/chain/types"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 )
 
 const (
@@ -22,7 +22,7 @@ var opt_account_tree = &table.Option{
 	Prefix:  KeyPrefixLocalDB,
 	Name:    "tree",
 	Primary: "address",
-	Index:   []string{"chain33_address", "eth_address"},
+	Index:   []string{"chain_address", "eth_address"},
 }
 
 // NewAccountTreeTable ...
@@ -61,9 +61,9 @@ func (r *AccountTreeRow) SetPayload(data types.Message) error {
 //Get 按照indexName 查询 indexValue
 func (r *AccountTreeRow) Get(key string) ([]byte, error) {
 	if key == "address" {
-		return GetLocalChain33EthPrimaryKey(r.GetChain33Addr(), r.GetEthAddress()), nil
-	} else if key == "chain33_address" {
-		return []byte(fmt.Sprintf("%s", address.FormatAddrKey(r.GetChain33Addr()))), nil
+		return GetLocalChainEthPrimaryKey(r.GetChainAddr(), r.GetEthAddress()), nil
+	} else if key == "chain_address" {
+		return []byte(fmt.Sprintf("%s", address.FormatAddrKey(r.GetChainAddr()))), nil
 	} else if key == "eth_address" {
 		return []byte(fmt.Sprintf("%s", address.FormatAddrKey(r.GetEthAddress()))), nil
 	}

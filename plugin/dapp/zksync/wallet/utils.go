@@ -5,19 +5,19 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/system/crypto/secp256k1"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/types"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	"github.com/assetcloud/chain/types"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 )
 
 func CreateRawTx(actionTy int32, tokenId uint64, amount string, toEthAddress string,
-	chain33Addr string, accountId uint64, toAccountId uint64) ([]byte, error) {
+	chainAddr string, accountId uint64, toAccountId uint64) ([]byte, error) {
 	var payload []byte
 	switch actionTy {
 	case zt.TyWithdrawAction:
@@ -41,7 +41,7 @@ func CreateRawTx(actionTy int32, tokenId uint64, amount string, toEthAddress str
 			Amount:          amount,
 			FromAccountId:   accountId,
 			ToEthAddress:    toEthAddress,
-			ToLayer2Address: chain33Addr,
+			ToLayer2Address: chainAddr,
 		}
 		payload = types.MustPBToJSON(transferToNew)
 	case zt.TyProxyExitAction:
@@ -54,7 +54,7 @@ func CreateRawTx(actionTy int32, tokenId uint64, amount string, toEthAddress str
 
 	case zt.TySetVerifierAction:
 		verifier := &zt.ZkVerifier{
-			Verifiers: strings.Split(chain33Addr, ","),
+			Verifiers: strings.Split(chainAddr, ","),
 		}
 		payload = types.MustPBToJSON(verifier)
 
@@ -146,8 +146,8 @@ func GetDepositMsg(payload *zt.ZkDeposit) *zt.ZkMsg {
 	ethAddress := transferStr2Int(strings.ToLower(payload.EthAddress), 16)
 	pubData = append(pubData, getBigEndBitsWithFixLen(ethAddress, zt.AddrBitWidth)...)
 
-	chain33Address := transferStr2Int(payload.Chain33Addr, 16)
-	pubData = append(pubData, getBigEndBitsWithFixLen(chain33Address, zt.HashBitWidth)...)
+	chainAddress := transferStr2Int(payload.ChainAddr, 16)
+	pubData = append(pubData, getBigEndBitsWithFixLen(chainAddress, zt.HashBitWidth)...)
 
 	copy(binaryData, pubData)
 
@@ -258,8 +258,8 @@ func GetTransferToNewMsg(payload *zt.ZkTransferToNew) *zt.ZkMsg {
 	ethAddress, _ := new(big.Int).SetString(payload.ToEthAddress, 16)
 	pubData = append(pubData, getBigEndBitsWithFixLen(ethAddress, zt.AddrBitWidth)...)
 
-	chain33Address, _ := new(big.Int).SetString(payload.ToLayer2Address, 16)
-	pubData = append(pubData, getBigEndBitsWithFixLen(chain33Address, zt.HashBitWidth)...)
+	chainAddress, _ := new(big.Int).SetString(payload.ToLayer2Address, 16)
+	pubData = append(pubData, getBigEndBitsWithFixLen(chainAddress, zt.HashBitWidth)...)
 
 	copy(binaryData, pubData)
 

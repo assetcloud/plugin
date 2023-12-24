@@ -9,7 +9,7 @@
 package bn256 //nolint
 
 import (
-	bn256cf "github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common/crypto/bn256/cloudflare"
+	bn256cf "github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common/crypto/bn256/cloudflare"
 )
 
 // G1 is an abstract cyclic group. The zero value is suitable for use as the

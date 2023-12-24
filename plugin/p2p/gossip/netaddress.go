@@ -15,7 +15,7 @@ import (
 
 	"google.golang.org/grpc/credentials"
 
-	pb "github.com/33cn/chain33/types"
+	pb "github.com/assetcloud/chain/types"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/keepalive"

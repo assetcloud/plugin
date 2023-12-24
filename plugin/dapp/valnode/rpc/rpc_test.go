@@ -12,11 +12,11 @@ import (
 
 	"strings"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/client/mocks"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	vt "github.com/33cn/plugin/plugin/dapp/valnode/types"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/client/mocks"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	vt "github.com/assetcloud/plugin/plugin/dapp/valnode/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"golang.org/x/net/context"
@@ -33,7 +33,7 @@ func newJrpc(api client.QueueProtocolAPI) *Jrpc {
 }
 
 func TestChannelClient_IsSync(t *testing.T) {
-	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 	api := new(mocks.QueueProtocolAPI)
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	client := newGrpc(api)
@@ -57,7 +57,7 @@ func TestJrpc_IsSync(t *testing.T) {
 }
 
 func TestChannelClient_GetNodeInfo(t *testing.T) {
-	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 	api := new(mocks.QueueProtocolAPI)
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	client := newGrpc(api)

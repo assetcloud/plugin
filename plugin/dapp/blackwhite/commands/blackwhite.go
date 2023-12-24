@@ -10,14 +10,14 @@ import (
 	"strconv"
 	"strings"
 
-	cmdtypes "github.com/33cn/chain33/system/dapp/commands/types"
+	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/common"
-	jsonrpc "github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	gt "github.com/33cn/plugin/plugin/dapp/blackwhite/types"
+	"github.com/assetcloud/chain/common"
+	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	gt "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
 	"github.com/spf13/cobra"
 )
 
@@ -307,6 +307,6 @@ func showBlackwhiteInfo(cmd *cobra.Command, args []string) {
 		rep = &gt.ReplyLoopResults{}
 	}
 
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, rep)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, rep)
 	ctx.Run()
 }

@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 )
 
 func (t *trade) Exec_SellLimit(sell *pty.TradeForSell, tx *types.Transaction, index int) (*types.Receipt, error) {

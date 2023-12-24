@@ -118,7 +118,7 @@ contract Oracle {
     *       if the required vote power reached,just make it processed
     * @param _claimType: burn or lock,
     * @param _ethereumSender: ethereum sender,
-    * @param _chain33Receiver: receiver on chain33
+    * @param _chainReceiver: receiver on chain
     * @param _tokenAddress: token address
     * @param _symbol: token symbol
     * @param _amount: amount
@@ -129,7 +129,7 @@ contract Oracle {
     function newOracleClaim(
         ClaimType _claimType,
         bytes memory _ethereumSender,
-        address payable _chain33Receiver,
+        address payable _chainReceiver,
         address _tokenAddress,
         string memory _symbol,
         uint256 _amount,
@@ -162,7 +162,7 @@ contract Oracle {
                             _claimID,
                             uint8(_claimType),
                             _ethereumSender,
-                            _chain33Receiver,
+                            _chainReceiver,
                             validatorAddress,
                             _tokenAddress,
                             _symbol,

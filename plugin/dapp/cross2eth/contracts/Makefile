@@ -4,7 +4,7 @@
 SRC_BEP := bep20
 SRC_ERC20 := erc20
 SRC_USDT := usdt
-SRC_CONTRACT0 := contracts4chain33
+SRC_CONTRACT0 := contracts4chain
 SRC_CONTRACT1 := contracts4eth
 SRC_MULTISIGN := gnosis/safe-contracts/contracts
 

@@ -5,7 +5,7 @@
 package types
 
 import (
-	"github.com/33cn/chain33/common/log/log15"
+	"github.com/assetcloud/chain/common/log/log15"
 )
 
 var tlog = log15.New("module", MixX)

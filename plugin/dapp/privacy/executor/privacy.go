@@ -26,12 +26,12 @@ import (
 	"sort"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/db"
-	log "github.com/33cn/chain33/common/log/log15"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/privacy/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/db"
+	log "github.com/assetcloud/chain/common/log/log15"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/privacy/types"
 )
 
 var privacylog = log.New("module", "execs.privacy")
@@ -39,7 +39,7 @@ var privacylog = log.New("module", "execs.privacy")
 var driverName = "privacy"
 
 // Init initialize executor driver
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newPrivacy, cfg.GetDappFork(driverName, "Enable"))
 	// 如果需要在开发环境下使用隐私交易，则需要使用下面这行代码，否则用上面的代码
 	//drivers.Register(newPrivacy().GetName(), newPrivacy, 0)

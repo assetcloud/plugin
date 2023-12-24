@@ -5,11 +5,11 @@ import (
 	"strings"
 	"time"
 
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 
-	"github.com/33cn/plugin/plugin/dapp/paracross/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/executor"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 	"github.com/pkg/errors"
 )
 
@@ -106,7 +106,7 @@ func shortHash(hash []byte) string {
 	return types.CalcTxShortHash(hash)
 }
 
-func filterParaTx(cfg *types.Chain33Config, detail *types.ParaTxDetail) []*types.Transaction {
+func filterParaTx(cfg *types.ChainConfig, detail *types.ParaTxDetail) []*types.Transaction {
 	return executor.FilterTxsForPara(cfg, detail)
 }
 

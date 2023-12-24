@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	votetypes "github.com/33cn/plugin/plugin/dapp/vote/types"
+	"github.com/assetcloud/chain/types"
+	votetypes "github.com/assetcloud/plugin/plugin/dapp/vote/types"
 )
 
 /*

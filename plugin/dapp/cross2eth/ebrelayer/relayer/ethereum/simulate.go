@@ -3,11 +3,11 @@ package ethereum
 import (
 	"math/big"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 	ethcommon "github.com/ethereum/go-ethereum/common"
 )
 
@@ -18,7 +18,7 @@ func (ethRelayer *Relayer4Ethereum) SimLockFromEth(lock *ebTypes.LockEthErc20) e
 	amount := big.NewInt(1)
 	amount, _ = amount.SetString(utils.TrimZeroAndDot(lock.Amount), 10)
 
-	addr, err := address.NewBtcAddress(lock.Chain33Receiver)
+	addr, err := address.NewBtcAddress(lock.ChainReceiver)
 	if nil != err {
 		return err
 	}
@@ -46,7 +46,7 @@ func (ethRelayer *Relayer4Ethereum) SimBurnFromEth(burn *ebTypes.Burn) error {
 	amount := big.NewInt(1)
 	amount, _ = amount.SetString(utils.TrimZeroAndDot(burn.Amount), 10)
 
-	addr, err := address.NewBtcAddress(burn.Chain33Receiver)
+	addr, err := address.NewBtcAddress(burn.ChainReceiver)
 	if nil != err {
 		return err
 	}
@@ -56,7 +56,7 @@ func (ethRelayer *Relayer4Ethereum) SimBurnFromEth(burn *ebTypes.Burn) error {
 		Symbol:          "BTY",
 		Amount:          amount,
 		OwnerFrom:       ethcommon.HexToAddress(burn.OwnerKey), //将owner 作为地址来用，只是为了测试使用
-		Chain33Receiver: addr.Hash160[:],                       //[]byte
+		ChainReceiver: addr.Hash160[:],                       //[]byte
 		Nonce:           big.NewInt(1),                         //*big.Int
 	}
 	// Parse the LogLock event's payload into a struct
@@ -64,7 +64,7 @@ func (ethRelayer *Relayer4Ethereum) SimBurnFromEth(burn *ebTypes.Burn) error {
 	if err != nil {
 		return err
 	}
-	relayerLog.Info("SimBurnFromEth", "Chain33Receiver", prophecyClaim.Chain33Receiver)
+	relayerLog.Info("SimBurnFromEth", "ChainReceiver", prophecyClaim.ChainReceiver)
 
 	ethRelayer.ethBridgeClaimChan <- prophecyClaim
 

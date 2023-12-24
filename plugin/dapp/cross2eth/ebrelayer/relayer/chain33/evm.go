@@ -1,26 +1,26 @@
-package chain33
+package chain
 
 import (
 	"strings"
 
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
 
-	chain33Evm "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4chain33/generated"
+	chainEvm "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4chain/generated"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-func (relayer *Relayer4Chain33) prePareSubscribeEvent() {
+func (relayer *Relayer4Chain) prePareSubscribeEvent() {
 	var eventName string
-	contractABI, err := abi.JSON(strings.NewReader(chain33Evm.BridgeBankABI))
+	contractABI, err := abi.JSON(strings.NewReader(chainEvm.BridgeBankABI))
 	if err != nil {
 		panic(err)
 	}
 
-	eventName = events.Chain33EventLogLock.String()
+	eventName = events.ChainEventLogLock.String()
 	relayer.bridgeBankEventLockSig = contractABI.Events[eventName].ID.Hex()
-	eventName = events.Chain33EventLogBurn.String()
+	eventName = events.ChainEventLogBurn.String()
 	relayer.bridgeBankEventBurnSig = contractABI.Events[eventName].ID.Hex()
-	eventName = events.Chain33EventLogWithdraw.String()
+	eventName = events.ChainEventLogWithdraw.String()
 	relayer.bridgeBankEventWithdrawSig = contractABI.Events[eventName].ID.Hex()
 
 	relayer.bridgeBankAbi = contractABI

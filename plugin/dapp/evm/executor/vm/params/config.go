@@ -3,7 +3,7 @@ package params
 import (
 	"math/big"
 
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 )
 
 // ChainConfig is the core config which determines the blockchain settings.

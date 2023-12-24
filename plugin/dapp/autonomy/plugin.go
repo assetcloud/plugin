@@ -5,10 +5,10 @@
 package autonomy
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/autonomy/commands"
-	"github.com/33cn/plugin/plugin/dapp/autonomy/executor"
-	"github.com/33cn/plugin/plugin/dapp/autonomy/types"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/autonomy/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/autonomy/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
 )
 
 func init() {

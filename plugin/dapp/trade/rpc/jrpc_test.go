@@ -8,16 +8,16 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/33cn/chain33/client/mocks"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
+	"github.com/assetcloud/chain/client/mocks"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
-func newTestChain33() (*mocks.QueueProtocolAPI, *Jrpc) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+func newTestChain() (*mocks.QueueProtocolAPI, *Jrpc) {
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	api := new(mocks.QueueProtocolAPI)
 	api.On("GetConfig", mock.Anything).Return(cfg, nil)
 	cli := &channelClient{
@@ -28,8 +28,8 @@ func newTestChain33() (*mocks.QueueProtocolAPI, *Jrpc) {
 	return api, &Jrpc{cli: cli}
 }
 
-func TestChain33_CreateRawTradeSellTx(t *testing.T) {
-	_, client := newTestChain33()
+func TestChain_CreateRawTradeSellTx(t *testing.T) {
+	_, client := newTestChain()
 	var testResult interface{}
 	err := client.CreateRawTradeSellTx(nil, &testResult)
 	assert.NotNil(t, err)
@@ -49,8 +49,8 @@ func TestChain33_CreateRawTradeSellTx(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestChain33_CreateRawTradeBuyTx(t *testing.T) {
-	_, client := newTestChain33()
+func TestChain_CreateRawTradeBuyTx(t *testing.T) {
+	_, client := newTestChain()
 	var testResult interface{}
 	err := client.CreateRawTradeBuyTx(nil, &testResult)
 	assert.NotNil(t, err)
@@ -67,8 +67,8 @@ func TestChain33_CreateRawTradeBuyTx(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestChain33_CreateRawTradeRevokeTx(t *testing.T) {
-	_, client := newTestChain33()
+func TestChain_CreateRawTradeRevokeTx(t *testing.T) {
+	_, client := newTestChain()
 	var testResult interface{}
 	err := client.CreateRawTradeRevokeTx(nil, &testResult)
 	assert.NotNil(t, err)
@@ -85,8 +85,8 @@ func TestChain33_CreateRawTradeRevokeTx(t *testing.T) {
 
 }
 
-func TestChain33_CreateRawTradeBuyLimitTx(t *testing.T) {
-	_, client := newTestChain33()
+func TestChain_CreateRawTradeBuyLimitTx(t *testing.T) {
+	_, client := newTestChain()
 	var testResult interface{}
 	err := client.CreateRawTradeBuyLimitTx(nil, &testResult)
 	assert.NotNil(t, err)
@@ -107,8 +107,8 @@ func TestChain33_CreateRawTradeBuyLimitTx(t *testing.T) {
 
 }
 
-func TestChain33_CreateRawTradeSellMarketTx(t *testing.T) {
-	_, client := newTestChain33()
+func TestChain_CreateRawTradeSellMarketTx(t *testing.T) {
+	_, client := newTestChain()
 	var testResult interface{}
 	err := client.CreateRawTradeSellMarketTx(nil, &testResult)
 	assert.NotNil(t, err)
@@ -126,8 +126,8 @@ func TestChain33_CreateRawTradeSellMarketTx(t *testing.T) {
 
 }
 
-func TestChain33_CreateRawTradeRevokeBuyTx(t *testing.T) {
-	_, client := newTestChain33()
+func TestChain_CreateRawTradeRevokeBuyTx(t *testing.T) {
+	_, client := newTestChain()
 	var testResult interface{}
 	err := client.CreateRawTradeRevokeBuyTx(nil, &testResult)
 	assert.NotNil(t, err)
@@ -275,8 +275,8 @@ func TestDecodeLogTradeBuyMarket(t *testing.T) {
 	assert.Equal(t, "LogTradeBuyMarket", result.Logs[0].TyName)
 }
 
-func TestChain33_GetLastMemPoolOk(t *testing.T) {
-	api, testChain33 := newTestChain33()
+func TestChain_GetLastMemPoolOk(t *testing.T) {
+	api, testChain := newTestChain()
 	cfg := api.GetConfig()
 
 	var txlist types.ReplyTxList
@@ -294,7 +294,7 @@ func TestChain33_GetLastMemPoolOk(t *testing.T) {
 
 	var testResult interface{}
 	actual := types.ReqNil{}
-	err := testChain33.GetLastMemPool(actual, &testResult)
+	err := testChain.GetLastMemPool(actual, &testResult)
 	assert.Nil(t, err)
 	assert.Equal(t, testResult.(*rpctypes.ReplyTxList).Txs[0].Execer, string(tx.Execer))
 

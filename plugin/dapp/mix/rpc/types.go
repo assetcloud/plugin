@@ -5,9 +5,9 @@
 package rpc
 
 import (
-	"github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/rpc/types"
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/rpc/types"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 )
 
 var log = log15.New("module", "mix.rpc")

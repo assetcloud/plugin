@@ -7,19 +7,19 @@ package executor
 import (
 	"testing"
 
-	apimock "github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/common/db/mocks"
-	"github.com/33cn/chain33/types"
-	ty "github.com/33cn/plugin/plugin/dapp/relay/types"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/common/db/mocks"
+	"github.com/assetcloud/chain/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 
-	_ "github.com/33cn/chain33/system"
+	_ "github.com/assetcloud/chain/system"
 )
 
-var chainTestCfg = types.NewChain33Config(types.GetDefaultCfgstring())
+var chainTestCfg = types.NewChainConfig(types.GetDefaultCfgstring())
 
 func init() {
 	Init(ty.RelayX, chainTestCfg, nil)

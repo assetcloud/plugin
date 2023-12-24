@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 )
 
@@ -26,10 +26,10 @@ func transferManyToNewFlag(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("amount")
 	cmd.Flags().StringP("ethAddress", "e", "", "transferToNew toEthAddress")
 	_ = cmd.MarkFlagRequired("ethAddress")
-	cmd.Flags().StringP("fromIDs", "f", "0", "from account ids on chain33, use ',' separate")
+	cmd.Flags().StringP("fromIDs", "f", "0", "from account ids on chain, use ',' separate")
 	_ = cmd.MarkFlagRequired("fromIDs")
-	cmd.Flags().StringP("chain33Addrs", "d", "0", "transferToNew toChain33Addrs, use ',' separate")
-	_ = cmd.MarkFlagRequired("chain33Addrs")
+	cmd.Flags().StringP("chainAddrs", "d", "0", "transferToNew toChainAddrs, use ',' separate")
+	_ = cmd.MarkFlagRequired("chainAddrs")
 	cmd.Flags().StringP("keys", "k", "", "private keys, use ',' separate")
 	_ = cmd.MarkFlagRequired("keys")
 }
@@ -40,12 +40,12 @@ func transferManyToNew(cmd *cobra.Command, _ []string) {
 	amount, _ := cmd.Flags().GetString("amount")
 	toEthAddress, _ := cmd.Flags().GetString("ethAddress")
 	fromIDs, _ := cmd.Flags().GetString("fromIDs")
-	chain33Addrs, _ := cmd.Flags().GetString("chain33Addrs")
+	chainAddrs, _ := cmd.Flags().GetString("chainAddrs")
 	privateKeys, _ := cmd.Flags().GetString("keys")
 	paraName, _ := cmd.Flags().GetString("paraName")
 
 	fids := strings.Split(fromIDs, ",")
-	addrs := strings.Split(chain33Addrs, ",")
+	addrs := strings.Split(chainAddrs, ",")
 	keys := strings.Split(privateKeys, ",")
 
 	if len(fids) != len(addrs) || len(fids) != len(keys) {
@@ -70,9 +70,9 @@ func transferManyToNew(cmd *cobra.Command, _ []string) {
 			},
 		}
 
-		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
+			fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)
@@ -98,8 +98,8 @@ func transferToNewManyFlag(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("ethAddress")
 	cmd.Flags().StringP("fromID", "f", "0", "account id")
 	_ = cmd.MarkFlagRequired("fromID")
-	cmd.Flags().StringP("chain33Addrs", "d", "0", "transferToNew toChain33Addrs, use ',' separate")
-	_ = cmd.MarkFlagRequired("chain33Addrs")
+	cmd.Flags().StringP("chainAddrs", "d", "0", "transferToNew toChainAddrs, use ',' separate")
+	_ = cmd.MarkFlagRequired("chainAddrs")
 	cmd.Flags().StringP("key", "k", "", "private key")
 	_ = cmd.MarkFlagRequired("key")
 }
@@ -110,11 +110,11 @@ func transferToNewMany(cmd *cobra.Command, _ []string) {
 	amount, _ := cmd.Flags().GetString("amount")
 	toEthAddress, _ := cmd.Flags().GetString("ethAddress")
 	fromID, _ := cmd.Flags().GetString("fromID")
-	chain33Addrs, _ := cmd.Flags().GetString("chain33Addrs")
+	chainAddrs, _ := cmd.Flags().GetString("chainAddrs")
 	key, _ := cmd.Flags().GetString("key")
 	paraName, _ := cmd.Flags().GetString("paraName")
 
-	addrs := strings.Split(chain33Addrs, ",")
+	addrs := strings.Split(chainAddrs, ",")
 	fid, _ := strconv.ParseInt(fromID, 10, 64)
 
 	for i := 0; i < len(addrs); i++ {
@@ -133,9 +133,9 @@ func transferToNewMany(cmd *cobra.Command, _ []string) {
 			},
 		}
 
-		tx, err := createChain33Tx(key, getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChainTx(key, getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
+			fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)

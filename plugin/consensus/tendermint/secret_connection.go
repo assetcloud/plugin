@@ -21,8 +21,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/33cn/chain33/common/crypto"
-	ttypes "github.com/33cn/plugin/plugin/consensus/tendermint/types"
+	"github.com/assetcloud/chain/common/crypto"
+	ttypes "github.com/assetcloud/plugin/plugin/consensus/tendermint/types"
 	"golang.org/x/crypto/nacl/box"
 	"golang.org/x/crypto/nacl/secretbox"
 	"golang.org/x/crypto/ripemd160"

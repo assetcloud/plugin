@@ -5,9 +5,9 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	pty "github.com/33cn/plugin/plugin/dapp/trade/types"
+	"github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	pty "github.com/assetcloud/plugin/plugin/dapp/trade/types"
 )
 
 func (t *trade) ExecLocal_SellLimit(sell *pty.TradeForSell, tx *types.Transaction, receipt *types.ReceiptData, index int) (*types.LocalDBSet, error) {

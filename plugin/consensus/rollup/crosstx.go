@@ -5,12 +5,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/33cn/chain33/client"
+	"github.com/assetcloud/chain/client"
 
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 // cross tx handler

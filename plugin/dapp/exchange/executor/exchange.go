@@ -1,10 +1,10 @@
 package executor
 
 import (
-	log "github.com/33cn/chain33/common/log/log15"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	exchangetypes "github.com/33cn/plugin/plugin/dapp/exchange/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	exchangetypes "github.com/assetcloud/plugin/plugin/dapp/exchange/types"
 )
 
 /*
@@ -20,7 +20,7 @@ var (
 var driverName = exchangetypes.ExchangeX
 
 // Init register dapp
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), NewExchange, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

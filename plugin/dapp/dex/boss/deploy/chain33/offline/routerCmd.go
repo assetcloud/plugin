@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/33cn/chain33/system/crypto/secp256k1"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeFactory"
-	"github.com/33cn/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeRouter"
-	"github.com/33cn/plugin/plugin/dapp/dex/utils"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeFactory"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/contracts/pancake-swap-periphery/src/pancakeRouter"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 
-	erc20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
 
 	"github.com/spf13/cobra"
 )
@@ -78,7 +78,7 @@ func createERC20Contract(cmd *cobra.Command, args []string) {
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	routerTx := &utils.Chain33OfflineTx{
+	routerTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -92,7 +92,7 @@ func createERC20Contract(cmd *cobra.Command, args []string) {
 func createRouterContract(cmd *cobra.Command, args []string) {
 	privateKeyStr, _ := cmd.Flags().GetString("key")
 
-	var txs []*utils.Chain33OfflineTx
+	var txs []*utils.ChainOfflineTx
 	var driver secp256k1.Driver
 	privateKeySli := common.FromHex(privateKeyStr)
 	privateKey, err := driver.PrivKeyFromBytes(privateKeySli)
@@ -144,7 +144,7 @@ func createRouterContract(cmd *cobra.Command, args []string) {
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	routerTx := &utils.Chain33OfflineTx{
+	routerTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -155,7 +155,7 @@ func createRouterContract(cmd *cobra.Command, args []string) {
 	utils.WriteToFileInJson("./router.txt", txs)
 }
 
-func createWeth9(cmd *cobra.Command, from common.Address) (*utils.Chain33OfflineTx, error) {
+func createWeth9(cmd *cobra.Command, from common.Address) (*utils.ChainOfflineTx, error) {
 	privateKeyStr, _ := cmd.Flags().GetString("key")
 	expire, _ := cmd.Flags().GetString("expire")
 	note, _ := cmd.Flags().GetString("note")
@@ -178,7 +178,7 @@ func createWeth9(cmd *cobra.Command, from common.Address) (*utils.Chain33Offline
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	weth9Tx := &utils.Chain33OfflineTx{
+	weth9Tx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -188,7 +188,7 @@ func createWeth9(cmd *cobra.Command, from common.Address) (*utils.Chain33Offline
 	return weth9Tx, nil
 }
 
-func createFactoryContract(cmd *cobra.Command, from common.Address) (*utils.Chain33OfflineTx, error) {
+func createFactoryContract(cmd *cobra.Command, from common.Address) (*utils.ChainOfflineTx, error) {
 	feeToSetter, _ := cmd.Flags().GetString("feeToSetter")
 
 	privateKeyStr, _ := cmd.Flags().GetString("key")
@@ -214,7 +214,7 @@ func createFactoryContract(cmd *cobra.Command, from common.Address) (*utils.Chai
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	factoryTx := &utils.Chain33OfflineTx{
+	factoryTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,

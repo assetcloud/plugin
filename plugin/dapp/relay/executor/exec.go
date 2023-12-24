@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	rty "github.com/33cn/plugin/plugin/dapp/relay/types"
+	"github.com/assetcloud/chain/types"
+	rty "github.com/assetcloud/plugin/plugin/dapp/relay/types"
 )
 
 func (r *relay) Exec_Create(payload *rty.RelayCreate, tx *types.Transaction, index int) (*types.Receipt, error) {

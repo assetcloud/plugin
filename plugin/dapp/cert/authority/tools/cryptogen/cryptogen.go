@@ -9,18 +9,18 @@ import (
 	"os"
 	"path/filepath"
 
-	log "github.com/33cn/chain33/common/log/log15"
+	log "github.com/assetcloud/chain/common/log/log15"
 	"gopkg.in/yaml.v2"
 
-	"github.com/33cn/chain33/types"
-	_ "github.com/33cn/plugin/plugin/crypto/init"
-	"github.com/33cn/plugin/plugin/dapp/cert/authority/tools/cryptogen/generator"
+	"github.com/assetcloud/chain/types"
+	_ "github.com/assetcloud/plugin/plugin/crypto/init"
+	"github.com/assetcloud/plugin/plugin/dapp/cert/authority/tools/cryptogen/generator"
 	"github.com/spf13/cobra"
 )
 
 const (
 	// CONFIGFILENAME 配置文件名
-	CONFIGFILENAME = "chain33.cryptogen.yaml"
+	CONFIGFILENAME = "chain.cryptogen.yaml"
 	// OUTPUTDIR 证书文件输出路径
 	OUTPUTDIR = "./authdir/crypto"
 )
@@ -28,7 +28,7 @@ const (
 var (
 	cmd = &cobra.Command{
 		Use:   "cryptogen [-f configfile] [-o output directory]",
-		Short: "chain33 crypto tool for generating key and certificate",
+		Short: "chain crypto tool for generating key and certificate",
 		Run:   generate,
 	}
 	cfg    *generator.GenConfig

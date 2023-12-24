@@ -13,15 +13,15 @@ import (
 
 	"strings"
 
-	"github.com/33cn/chain33/account"
-	apimock "github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	pty "github.com/33cn/plugin/plugin/dapp/unfreeze/types"
+	"github.com/assetcloud/chain/account"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	pty "github.com/assetcloud/plugin/plugin/dapp/unfreeze/types"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -46,11 +46,11 @@ var (
 		[]byte("1NLHPEcbTWWxxU3dGUZBhayjrCHD3psX7k"),
 		[]byte("1MCftFynyvG2F4ED5mdHYgziDxx6vDrScs"),
 	}
-	chain33TestCfg = types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	chainTestCfg = types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 )
 
 func init() {
-	Init(pty.UnfreezeX, chain33TestCfg, nil)
+	Init(pty.UnfreezeX, chainTestCfg, nil)
 }
 
 func TestUnfreeze(t *testing.T) {
@@ -70,19 +70,19 @@ func TestUnfreeze(t *testing.T) {
 	stateDB, _ := dbm.NewGoMemDB("1", "2", 100)
 	_, ldb, kvdb := util.CreateTestDB()
 
-	accA, _ := account.NewAccountDB(chain33TestCfg, AssetExecPara, Symbol, stateDB)
+	accA, _ := account.NewAccountDB(chainTestCfg, AssetExecPara, Symbol, stateDB)
 	accA.SaveExecAccount(execAddr, &accountA)
 
-	accB, _ := account.NewAccountDB(chain33TestCfg, AssetExecPara, Symbol, stateDB)
+	accB, _ := account.NewAccountDB(chainTestCfg, AssetExecPara, Symbol, stateDB)
 	accB.SaveExecAccount(execAddr, &accountB)
 
 	env := execEnv{
 		10,
-		chain33TestCfg.GetDappFork(pty.UnfreezeX, pty.ForkUnfreezeIDX),
+		chainTestCfg.GetDappFork(pty.UnfreezeX, pty.ForkUnfreezeIDX),
 		1539918074,
 	}
 	ty := pty.UnfreezeType{}
-	ty.SetConfig(chain33TestCfg)
+	ty.SetConfig(chainTestCfg)
 
 	// 创建
 	opt := &pty.FixAmount{Period: 10, Amount: 2}
@@ -104,7 +104,7 @@ func TestUnfreeze(t *testing.T) {
 		t.Error("RPC_UnfreezeCreateTx sign", "err", err)
 	}
 	api := new(apimock.QueueProtocolAPI)
-	api.On("GetConfig", mock.Anything).Return(chain33TestCfg, nil)
+	api.On("GetConfig", mock.Anything).Return(chainTestCfg, nil)
 	exec := newUnfreeze()
 	exec.SetAPI(api)
 	exec.SetStateDB(stateDB)

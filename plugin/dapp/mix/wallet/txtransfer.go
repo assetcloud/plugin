@@ -12,13 +12,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/33cn/chain33/common/address"
+	"github.com/assetcloud/chain/common/address"
 
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"

@@ -3,8 +3,8 @@ package executor
 import (
 	"strconv"
 
-	"github.com/33cn/chain33/types"
-	x2eTy "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	"github.com/assetcloud/chain/types"
+	x2eTy "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 )
 
 /*
@@ -12,7 +12,7 @@ import (
  * 非关键数据，本地存储(localDB), 用于辅助查询，效率高
  */
 
-func (x *x2ethereum) ExecLocal_Eth2Chain33Lock(payload *x2eTy.Eth2Chain33, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
+func (x *x2ethereum) ExecLocal_Eth2ChainLock(payload *x2eTy.Eth2Chain, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	set, err := x.execLocal(receiptData)
 	if err != nil {
 		return set, err
@@ -20,7 +20,7 @@ func (x *x2ethereum) ExecLocal_Eth2Chain33Lock(payload *x2eTy.Eth2Chain33, tx *t
 	return x.addAutoRollBack(tx, set.KV), nil
 }
 
-func (x *x2ethereum) ExecLocal_Eth2Chain33Burn(payload *x2eTy.Eth2Chain33, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
+func (x *x2ethereum) ExecLocal_Eth2ChainBurn(payload *x2eTy.Eth2Chain, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	set, err := x.execLocal(receiptData)
 	if err != nil {
 		return set, err
@@ -28,7 +28,7 @@ func (x *x2ethereum) ExecLocal_Eth2Chain33Burn(payload *x2eTy.Eth2Chain33, tx *t
 	return x.addAutoRollBack(tx, set.KV), nil
 }
 
-func (x *x2ethereum) ExecLocal_Chain33ToEthBurn(payload *x2eTy.Chain33ToEth, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
+func (x *x2ethereum) ExecLocal_ChainToEthBurn(payload *x2eTy.ChainToEth, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	set, err := x.execLocal(receiptData)
 	if err != nil {
 		return set, err
@@ -36,7 +36,7 @@ func (x *x2ethereum) ExecLocal_Chain33ToEthBurn(payload *x2eTy.Chain33ToEth, tx 
 	return x.addAutoRollBack(tx, set.KV), nil
 }
 
-func (x *x2ethereum) ExecLocal_Chain33ToEthLock(payload *x2eTy.Chain33ToEth, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
+func (x *x2ethereum) ExecLocal_ChainToEthLock(payload *x2eTy.ChainToEth, tx *types.Transaction, receiptData *types.ReceiptData, index int) (*types.LocalDBSet, error) {
 	set, err := x.execLocal(receiptData)
 	if err != nil {
 		return set, err
@@ -79,14 +79,14 @@ func (x *x2ethereum) execLocal(receiptData *types.ReceiptData) (*types.LocalDBSe
 	dbSet := &types.LocalDBSet{}
 	for _, log := range receiptData.Logs {
 		switch log.Ty {
-		case x2eTy.TyEth2Chain33Log:
-			var receiptEth2Chain33 x2eTy.ReceiptEth2Chain33
-			err := types.Decode(log.Log, &receiptEth2Chain33)
+		case x2eTy.TyEth2ChainLog:
+			var receiptEth2Chain x2eTy.ReceiptEth2Chain
+			err := types.Decode(log.Log, &receiptEth2Chain)
 			if err != nil {
 				return nil, err
 			}
 
-			nb, err := x.GetLocalDB().Get(x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptEth2Chain33.IssuerDotSymbol, receiptEth2Chain33.TokenAddress, x2eTy.DirEth2Chain33, "lock"))
+			nb, err := x.GetLocalDB().Get(x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptEth2Chain.IssuerDotSymbol, receiptEth2Chain.TokenAddress, x2eTy.DirEth2Chain, "lock"))
 			if err != nil && err != types.ErrNotFound {
 				return nil, err
 			}
@@ -96,19 +96,19 @@ func (x *x2ethereum) execLocal(receiptData *types.ReceiptData) (*types.LocalDBSe
 				return nil, err
 			}
 			preAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(now.TotalAmount), 64)
-			nowAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(receiptEth2Chain33.Amount), 64)
+			nowAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(receiptEth2Chain.Amount), 64)
 			TokenAssetsByTxTypeBytes := types.Encode(&x2eTy.ReceiptQuerySymbolAssetsByTxType{
-				TokenSymbol: receiptEth2Chain33.IssuerDotSymbol,
+				TokenSymbol: receiptEth2Chain.IssuerDotSymbol,
 				TxType:      "lock",
 				TotalAmount: strconv.FormatFloat(preAmount+nowAmount, 'f', 4, 64),
 				Direction:   1,
 			})
 			dbSet.KV = append(dbSet.KV, &types.KeyValue{
-				Key:   x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptEth2Chain33.IssuerDotSymbol, receiptEth2Chain33.TokenAddress, x2eTy.DirEth2Chain33, "lock"),
+				Key:   x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptEth2Chain.IssuerDotSymbol, receiptEth2Chain.TokenAddress, x2eTy.DirEth2Chain, "lock"),
 				Value: TokenAssetsByTxTypeBytes,
 			})
 
-			nb, err = x.GetLocalDB().Get(x2eTy.CalTokenSymbolToTokenAddress(receiptEth2Chain33.IssuerDotSymbol))
+			nb, err = x.GetLocalDB().Get(x2eTy.CalTokenSymbolToTokenAddress(receiptEth2Chain.IssuerDotSymbol))
 			if err != nil && err != types.ErrNotFound {
 				return nil, err
 			}
@@ -119,28 +119,28 @@ func (x *x2ethereum) execLocal(receiptData *types.ReceiptData) (*types.LocalDBSe
 			}
 			var exist bool
 			for _, addr := range t.TokenAddress {
-				if addr == receiptEth2Chain33.TokenAddress {
+				if addr == receiptEth2Chain.TokenAddress {
 					exist = true
 				}
 			}
 			if !exist {
-				t.TokenAddress = append(t.TokenAddress, receiptEth2Chain33.TokenAddress)
+				t.TokenAddress = append(t.TokenAddress, receiptEth2Chain.TokenAddress)
 			}
 			TokenToTokenAddressBytes := types.Encode(&x2eTy.ReceiptTokenToTokenAddress{
 				TokenAddress: t.TokenAddress,
 			})
 			dbSet.KV = append(dbSet.KV, &types.KeyValue{
-				Key:   x2eTy.CalTokenSymbolToTokenAddress(receiptEth2Chain33.IssuerDotSymbol),
+				Key:   x2eTy.CalTokenSymbolToTokenAddress(receiptEth2Chain.IssuerDotSymbol),
 				Value: TokenToTokenAddressBytes,
 			})
 		case x2eTy.TyWithdrawEthLog:
-			var receiptEth2Chain33 x2eTy.ReceiptEth2Chain33
-			err := types.Decode(log.Log, &receiptEth2Chain33)
+			var receiptEth2Chain x2eTy.ReceiptEth2Chain
+			err := types.Decode(log.Log, &receiptEth2Chain)
 			if err != nil {
 				return nil, err
 			}
 
-			nb, err := x.GetLocalDB().Get(x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptEth2Chain33.IssuerDotSymbol, receiptEth2Chain33.TokenAddress, x2eTy.DirEth2Chain33, "withdraw"))
+			nb, err := x.GetLocalDB().Get(x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptEth2Chain.IssuerDotSymbol, receiptEth2Chain.TokenAddress, x2eTy.DirEth2Chain, "withdraw"))
 			if err != nil && err != types.ErrNotFound {
 				return nil, err
 			}
@@ -151,25 +151,25 @@ func (x *x2ethereum) execLocal(receiptData *types.ReceiptData) (*types.LocalDBSe
 			}
 
 			preAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(now.TotalAmount), 64)
-			nowAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(receiptEth2Chain33.Amount), 64)
+			nowAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(receiptEth2Chain.Amount), 64)
 			TokenAssetsByTxTypeBytes := types.Encode(&x2eTy.ReceiptQuerySymbolAssetsByTxType{
-				TokenSymbol: receiptEth2Chain33.IssuerDotSymbol,
+				TokenSymbol: receiptEth2Chain.IssuerDotSymbol,
 				TxType:      "withdraw",
 				TotalAmount: strconv.FormatFloat(preAmount+nowAmount, 'f', 4, 64),
 				Direction:   2,
 			})
 			dbSet.KV = append(dbSet.KV, &types.KeyValue{
-				Key:   x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptEth2Chain33.IssuerDotSymbol, receiptEth2Chain33.TokenAddress, x2eTy.DirEth2Chain33, "withdraw"),
+				Key:   x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptEth2Chain.IssuerDotSymbol, receiptEth2Chain.TokenAddress, x2eTy.DirEth2Chain, "withdraw"),
 				Value: TokenAssetsByTxTypeBytes,
 			})
-		case x2eTy.TyChain33ToEthLog:
-			var receiptChain33ToEth x2eTy.ReceiptChain33ToEth
-			err := types.Decode(log.Log, &receiptChain33ToEth)
+		case x2eTy.TyChainToEthLog:
+			var receiptChainToEth x2eTy.ReceiptChainToEth
+			err := types.Decode(log.Log, &receiptChainToEth)
 			if err != nil {
 				return nil, err
 			}
 
-			nb, err := x.GetLocalDB().Get(x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptChain33ToEth.IssuerDotSymbol, receiptChain33ToEth.TokenContract, x2eTy.DirChain33ToEth, "lock"))
+			nb, err := x.GetLocalDB().Get(x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptChainToEth.IssuerDotSymbol, receiptChainToEth.TokenContract, x2eTy.DirChainToEth, "lock"))
 			if err != nil && err != types.ErrNotFound {
 				return nil, err
 			}
@@ -180,25 +180,25 @@ func (x *x2ethereum) execLocal(receiptData *types.ReceiptData) (*types.LocalDBSe
 			}
 
 			preAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(now.TotalAmount), 64)
-			nowAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(receiptChain33ToEth.Amount), 64)
+			nowAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(receiptChainToEth.Amount), 64)
 			TokenAssetsByTxTypeBytes := types.Encode(&x2eTy.ReceiptQuerySymbolAssetsByTxType{
-				TokenSymbol: receiptChain33ToEth.IssuerDotSymbol,
+				TokenSymbol: receiptChainToEth.IssuerDotSymbol,
 				TxType:      "lock",
 				TotalAmount: strconv.FormatFloat(preAmount+nowAmount, 'f', 4, 64),
 				Direction:   1,
 			})
 			dbSet.KV = append(dbSet.KV, &types.KeyValue{
-				Key:   x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptChain33ToEth.IssuerDotSymbol, receiptChain33ToEth.TokenContract, x2eTy.DirChain33ToEth, "lock"),
+				Key:   x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptChainToEth.IssuerDotSymbol, receiptChainToEth.TokenContract, x2eTy.DirChainToEth, "lock"),
 				Value: TokenAssetsByTxTypeBytes,
 			})
-		case x2eTy.TyWithdrawChain33Log:
-			var receiptChain33ToEth x2eTy.ReceiptChain33ToEth
-			err := types.Decode(log.Log, &receiptChain33ToEth)
+		case x2eTy.TyWithdrawChainLog:
+			var receiptChainToEth x2eTy.ReceiptChainToEth
+			err := types.Decode(log.Log, &receiptChainToEth)
 			if err != nil {
 				return nil, err
 			}
 
-			nb, err := x.GetLocalDB().Get(x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptChain33ToEth.IssuerDotSymbol, receiptChain33ToEth.TokenContract, x2eTy.DirChain33ToEth, ""))
+			nb, err := x.GetLocalDB().Get(x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptChainToEth.IssuerDotSymbol, receiptChainToEth.TokenContract, x2eTy.DirChainToEth, ""))
 			if err != nil && err != types.ErrNotFound {
 				return nil, err
 			}
@@ -209,15 +209,15 @@ func (x *x2ethereum) execLocal(receiptData *types.ReceiptData) (*types.LocalDBSe
 			}
 
 			preAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(now.TotalAmount), 64)
-			nowAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(receiptChain33ToEth.Amount), 64)
+			nowAmount, _ := strconv.ParseFloat(x2eTy.TrimZeroAndDot(receiptChainToEth.Amount), 64)
 			TokenAssetsByTxTypeBytes := types.Encode(&x2eTy.ReceiptQuerySymbolAssetsByTxType{
-				TokenSymbol: receiptChain33ToEth.IssuerDotSymbol,
+				TokenSymbol: receiptChainToEth.IssuerDotSymbol,
 				TxType:      "withdraw",
 				TotalAmount: strconv.FormatFloat(preAmount+nowAmount, 'f', 4, 64),
 				Direction:   2,
 			})
 			dbSet.KV = append(dbSet.KV, &types.KeyValue{
-				Key:   x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptChain33ToEth.IssuerDotSymbol, receiptChain33ToEth.TokenContract, x2eTy.DirChain33ToEth, "withdraw"),
+				Key:   x2eTy.CalTokenSymbolTotalLockOrBurnAmount(receiptChainToEth.IssuerDotSymbol, receiptChainToEth.TokenContract, x2eTy.DirChainToEth, "withdraw"),
 				Value: TokenAssetsByTxTypeBytes,
 			})
 		default:

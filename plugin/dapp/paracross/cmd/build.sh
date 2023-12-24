@@ -6,9 +6,9 @@ strapp=${strcmd%/cmd*}
 
 OUT_DIR="${1}/$strapp"
 
-#PARACLI="${OUT_DIR}/chain33-para-cli"
+#PARACLI="${OUT_DIR}/chain-para-cli"
 #PARANAME=para
-#SRC_CLI=github.com/33cn/plugin/cli
+#SRC_CLI=github.com/assetcloud/plugin/cli
 #go build -v -o "${PARACLI}" -ldflags "-X ${SRC_CLI}/buildflags.ParaName=user.p.${PARANAME}. -X ${SRC_CLI}/buildflags.RPCAddr=http://localhost:8901" "${SRC_CLI}"
 
 mkdir -p "${OUT_DIR}"

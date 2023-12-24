@@ -1,4 +1,4 @@
-package chain33
+package chain
 
 //
 //import (
@@ -14,18 +14,18 @@ package chain33
 //	"testing"
 //	"time"
 //
-//	dbm "github.com/33cn/chain33/common/db"
-//	"github.com/33cn/chain33/types"
-//	"github.com/33cn/chain33/util/testnode"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/test/setup"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
-//	relayerTx "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
-//	"github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
-//	syncTx "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain33/transceiver/sync"
-//	ebTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
-//	relayerTypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+//	dbm "github.com/assetcloud/chain/common/db"
+//	"github.com/assetcloud/chain/types"
+//	"github.com/assetcloud/chain/util/testnode"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/generated"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethcontract/test/setup"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethinterface"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
+//	relayerTx "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/ethtxs"
+//	"github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/events"
+//	syncTx "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/relayer/chain/transceiver/sync"
+//	ebTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
+//	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/ebrelayer/types"
 //	tml "github.com/BurntSushi/toml"
 //	"github.com/ethereum/go-ethereum"
 //	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -37,8 +37,8 @@ package chain33
 //	"github.com/stretchr/testify/require"
 //
 //	// 需要显示引用系统插件，以加载系统内置合约
-//	"github.com/33cn/chain33/client/mocks"
-//	_ "github.com/33cn/chain33/system"
+//	"github.com/assetcloud/chain/client/mocks"
+//	_ "github.com/assetcloud/chain/system"
 //	"github.com/stretchr/testify/mock"
 //)
 //
@@ -70,20 +70,20 @@ package chain33
 //func test_HandleRequest(t *testing.T) {
 //	_, sim, _, x2EthDeployInfo, err := deployContracts()
 //	require.NoError(t, err)
-//	chain33Relayer := newChain33Relayer(sim, x2EthDeployInfo, "127.0.0.1:60002", t)
-//	_, err = chain33Relayer.ImportPrivateKey(passphrase, privateKeyStr)
+//	chainRelayer := newChainRelayer(sim, x2EthDeployInfo, "127.0.0.1:60002", t)
+//	_, err = chainRelayer.ImportPrivateKey(passphrase, privateKeyStr)
 //	assert.NoError(t, err)
 //
 //	body, err := hex.DecodeString(test)
 //	assert.NoError(t, err)
 //
-//	chain33Relayer.statusCheckedIndex = 1220
+//	chainRelayer.statusCheckedIndex = 1220
 //	err = syncTx.HandleRequest(body)
 //	assert.NoError(t, err)
 //
 //	time.Sleep(200 * time.Millisecond)
 //
-//	ret := chain33Relayer.QueryTxhashRelay2Eth()
+//	ret := chainRelayer.QueryTxhashRelay2Eth()
 //	assert.NotEmpty(t, ret)
 //
 //	event := getOracleClaimType(events.MsgLock.String())
@@ -93,30 +93,30 @@ package chain33
 //func test_ImportPrivateKey(t *testing.T) {
 //	_, sim, _, x2EthDeployInfo, err := setup.DeployContracts()
 //	require.NoError(t, err)
-//	chain33Relayer := newChain33Relayer(sim, x2EthDeployInfo, "127.0.0.1:60000", t)
+//	chainRelayer := newChainRelayer(sim, x2EthDeployInfo, "127.0.0.1:60000", t)
 //
-//	addr, err := chain33Relayer.ImportPrivateKey(passphrase, privateKeyStr)
+//	addr, err := chainRelayer.ImportPrivateKey(passphrase, privateKeyStr)
 //	assert.NoError(t, err)
 //	assert.Equal(t, addr, accountAddr)
 //
 //	time.Sleep(50 * time.Millisecond)
 //
-//	addr, err = chain33Relayer.GetAccountAddr()
+//	addr, err = chainRelayer.GetAccountAddr()
 //	assert.NoError(t, err)
 //	assert.Equal(t, addr, accountAddr)
 //
-//	key, _, _ := chain33Relayer.GetAccount("123")
+//	key, _, _ := chainRelayer.GetAccount("123")
 //	assert.NotEqual(t, key, privateKeyStr)
 //
-//	key, _, _ = chain33Relayer.GetAccount(passphrase)
+//	key, _, _ = chainRelayer.GetAccount(passphrase)
 //	assert.Equal(t, key, privateKeyStr)
 //}
 //
 //func test_Lockbty(t *testing.T) {
 //	para, sim, x2EthContracts, x2EthDeployInfo, err := setup.DeployContracts()
 //	require.NoError(t, err)
-//	chain33Relayer := newChain33Relayer(sim, x2EthDeployInfo, "127.0.0.1:60001", t)
-//	_, err = chain33Relayer.ImportPrivateKey(passphrase, privateKeyStr)
+//	chainRelayer := newChainRelayer(sim, x2EthDeployInfo, "127.0.0.1:60001", t)
+//	_, err = chainRelayer.ImportPrivateKey(passphrase, privateKeyStr)
 //	assert.NoError(t, err)
 //
 //	//Test_1_ImportPrivateKey()
@@ -179,10 +179,10 @@ package chain33
 //	balance, _ := sim.BalanceAt(ctx, para.InitValidators[0], nil)
 //	fmt.Println("InitValidators[0] addr,", para.InitValidators[0].String(), "balance =", balance.String())
 //
-//	chain33Sender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
+//	chainSender := []byte("14KEKbYtKKQm4wMthSK9J4La4nAiidGozt")
 //	amount := int64(99)
 //	ethReceiver := para.InitValidators[2]
-//	claimID := crypto.Keccak256Hash(chain33Sender, ethReceiver.Bytes(), logEvent.Token.Bytes(), big.NewInt(amount).Bytes())
+//	claimID := crypto.Keccak256Hash(chainSender, ethReceiver.Bytes(), logEvent.Token.Bytes(), big.NewInt(amount).Bytes())
 //
 //	authOracle, err := ethtxs.PrepareAuth(sim, para.ValidatorPriKey[0], para.InitValidators[0])
 //	require.Nil(t, err)
@@ -204,7 +204,7 @@ package chain33
 //	tx, err := x2EthContracts.Oracle.NewOracleClaim(
 //		authOracle,
 //		events.ClaimTypeLock,
-//		chain33Sender,
+//		chainSender,
 //		ethReceiver,
 //		logEvent.Token,
 //		logEvent.Symbol,
@@ -221,19 +221,19 @@ package chain33
 //
 //	txhash := tx.Hash().Hex()
 //
-//	chain33Relayer.rwLock.Lock()
-//	chain33Relayer.statusCheckedIndex = 1
-//	chain33Relayer.totalTx4Chain33ToEth = 2
-//	chain33Relayer.rwLock.Unlock()
-//	_ = chain33Relayer.setLastestRelay2EthTxhash(relayerTx.EthTxPending.String(), txhash, 2)
+//	chainRelayer.rwLock.Lock()
+//	chainRelayer.statusCheckedIndex = 1
+//	chainRelayer.totalTx4ChainToEth = 2
+//	chainRelayer.rwLock.Unlock()
+//	_ = chainRelayer.setLastestRelay2EthTxhash(relayerTx.EthTxPending.String(), txhash, 2)
 //
 //	time.Sleep(200 * time.Millisecond)
 //
-//	chain33Relayer.rwLock.Lock()
-//	chain33Relayer.statusCheckedIndex = 9
-//	chain33Relayer.totalTx4Chain33ToEth = 11
-//	chain33Relayer.rwLock.Unlock()
-//	_ = chain33Relayer.setLastestRelay2EthTxhash(relayerTx.EthTxPending.String(), "", 11)
+//	chainRelayer.rwLock.Lock()
+//	chainRelayer.statusCheckedIndex = 9
+//	chainRelayer.totalTx4ChainToEth = 11
+//	chainRelayer.rwLock.Unlock()
+//	_ = chainRelayer.setLastestRelay2EthTxhash(relayerTx.EthTxPending.String(), "", 11)
 //
 //	time.Sleep(200 * time.Millisecond)
 //}
@@ -241,37 +241,37 @@ package chain33
 //func test_restorePrivateKeys(t *testing.T) {
 //	_, sim, _, x2EthDeployInfo, err := setup.DeployContracts()
 //	require.NoError(t, err)
-//	chain33Relayer := newChain33Relayer(sim, x2EthDeployInfo, "127.0.0.1:60003", t)
-//	_, err = chain33Relayer.ImportPrivateKey(passphrase, privateKeyStr)
+//	chainRelayer := newChainRelayer(sim, x2EthDeployInfo, "127.0.0.1:60003", t)
+//	_, err = chainRelayer.ImportPrivateKey(passphrase, privateKeyStr)
 //	assert.NoError(t, err)
 //
 //	go func() {
-//		for range chain33Relayer.unlock {
+//		for range chainRelayer.unlock {
 //		}
 //	}()
-//	temp := chain33Relayer.ethSender
+//	temp := chainRelayer.ethSender
 //
-//	err = chain33Relayer.RestorePrivateKeys("123")
-//	assert.NotEqual(t, hex.EncodeToString(temp.Bytes()), hex.EncodeToString(chain33Relayer.ethSender.Bytes()))
+//	err = chainRelayer.RestorePrivateKeys("123")
+//	assert.NotEqual(t, hex.EncodeToString(temp.Bytes()), hex.EncodeToString(chainRelayer.ethSender.Bytes()))
 //	assert.NoError(t, err)
 //
-//	err = chain33Relayer.RestorePrivateKeys(passphrase)
-//	assert.Equal(t, hex.EncodeToString(temp.Bytes()), hex.EncodeToString(chain33Relayer.ethSender.Bytes()))
+//	err = chainRelayer.RestorePrivateKeys(passphrase)
+//	assert.Equal(t, hex.EncodeToString(temp.Bytes()), hex.EncodeToString(chainRelayer.ethSender.Bytes()))
 //	assert.NoError(t, err)
 //
-//	err = chain33Relayer.StoreAccountWithNewPassphase("new123", passphrase)
+//	err = chainRelayer.StoreAccountWithNewPassphase("new123", passphrase)
 //	assert.NoError(t, err)
 //
-//	err = chain33Relayer.RestorePrivateKeys("new123")
-//	assert.Equal(t, hex.EncodeToString(temp.Bytes()), hex.EncodeToString(chain33Relayer.ethSender.Bytes()))
+//	err = chainRelayer.RestorePrivateKeys("new123")
+//	assert.Equal(t, hex.EncodeToString(temp.Bytes()), hex.EncodeToString(chainRelayer.ethSender.Bytes()))
 //	assert.NoError(t, err)
 //
 //	time.Sleep(200 * time.Millisecond)
 //}
 //
-//func newChain33Relayer(sim *ethinterface.SimExtend, x2EthDeployInfo *ethtxs.X2EthDeployInfo, pushBind string, t *testing.T) *Relayer4Chain33 {
+//func newChainRelayer(sim *ethinterface.SimExtend, x2EthDeployInfo *ethtxs.X2EthDeployInfo, pushBind string, t *testing.T) *Relayer4Chain {
 //	cfg := initCfg(*configPath)
-//	cfg.SyncTxConfig.Chain33Host = "http://127.0.0.1:8801"
+//	cfg.SyncTxConfig.ChainHost = "http://127.0.0.1:8801"
 //	cfg.BridgeRegistry = x2EthDeployInfo.BridgeRegistry.Address.String()
 //	cfg.SyncTxConfig.PushBind = pushBind
 //	cfg.SyncTxConfig.FetchHeightPeriodMs = 50
@@ -281,8 +281,8 @@ package chain33
 //	ctx, cancel := context.WithCancel(context.Background())
 //	var wg sync.WaitGroup
 //
-//	relayer := &Relayer4Chain33{
-//		rpcLaddr:            cfg.SyncTxConfig.Chain33Host,
+//	relayer := &Relayer4Chain{
+//		rpcLaddr:            cfg.SyncTxConfig.ChainHost,
 //		fetchHeightPeriodMs: cfg.SyncTxConfig.FetchHeightPeriodMs,
 //		unlock:              make(chan int),
 //		db:                  db,
@@ -293,12 +293,12 @@ package chain33
 //	assert.NoError(t, err)
 //
 //	relayer.ethClient = sim
-//	relayer.totalTx4Chain33ToEth = relayer.getTotalTxAmount2Eth()
+//	relayer.totalTx4ChainToEth = relayer.getTotalTxAmount2Eth()
 //	relayer.statusCheckedIndex = relayer.getStatusCheckedIndex()
 //	assert.Equal(t, relayer.statusCheckedIndex, int64(1))
 //
 //	syncCfg := &ebTypes.SyncTxReceiptConfig{
-//		Chain33Host:       cfg.SyncTxConfig.Chain33Host,
+//		ChainHost:       cfg.SyncTxConfig.ChainHost,
 //		PushHost:          cfg.SyncTxConfig.PushHost,
 //		PushName:          cfg.SyncTxConfig.PushName,
 //		PushBind:          pushBind,
@@ -359,7 +359,7 @@ package chain33
 //	return &cfg
 //}
 //
-//func newMock33() *testnode.Chain33Mock {
+//func newMock33() *testnode.ChainMock {
 //	var ret = types.ReplySubscribePush{IsOk: true, Msg: ""}
 //	var he = types.Header{Height: 10000}
 //

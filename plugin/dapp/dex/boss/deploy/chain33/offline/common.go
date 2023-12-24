@@ -1,21 +1,21 @@
 package offline
 
 import (
-	"github.com/33cn/plugin/plugin/dapp/dex/utils"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/utils"
 	"github.com/spf13/cobra"
 )
 
-func Chain33OfflineCmd() *cobra.Command {
+func ChainOfflineCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "chain33",
-		Short: "create and sign offline tx to deploy and set dex contracts to chain33",
+		Use:   "chain",
+		Short: "create and sign offline tx to deploy and set dex contracts to chain",
 		Args:  cobra.MinimumNArgs(1),
 	}
 	cmd.AddCommand(
 		createERC20ContractCmd(),
 		createRouterCmd(),
 		farmofflineCmd(),
-		sendSignTxs2Chain33Cmd(),
+		sendSignTxs2ChainCmd(),
 	)
 	return cmd
 }
@@ -42,26 +42,26 @@ func addCreateRouterFlags(cmd *cobra.Command) {
 
 }
 
-func sendSignTxs2Chain33Cmd() *cobra.Command {
+func sendSignTxs2ChainCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "send",
-		Short: "send one or serval dex txs to chain33 in serial",
-		Run:   sendSignTxs2Chain33,
+		Short: "send one or serval dex txs to chain in serial",
+		Run:   sendSignTxs2Chain,
 	}
-	addSendSignTxs2Chain33Flags(cmd)
+	addSendSignTxs2ChainFlags(cmd)
 	return cmd
 }
 
-func addSendSignTxs2Chain33Flags(cmd *cobra.Command) {
+func addSendSignTxs2ChainFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("path", "p", "./", "(optional)path of txs file,default to current directroy")
-	cmd.Flags().StringP("file", "f", "", "file name which contains the txs to be sent to chain33")
+	cmd.Flags().StringP("file", "f", "", "file name which contains the txs to be sent to chain")
 	_ = cmd.MarkFlagRequired("file")
 }
 
-func sendSignTxs2Chain33(cmd *cobra.Command, args []string) {
+func sendSignTxs2Chain(cmd *cobra.Command, args []string) {
 	filePath, _ := cmd.Flags().GetString("path")
 	file, _ := cmd.Flags().GetString("file")
 	url, _ := cmd.Flags().GetString("rpc_laddr")
 	filePath += file
-	utils.SendSignTxs2Chain33(filePath, url)
+	utils.SendSignTxs2Chain(filePath, url)
 }

@@ -8,14 +8,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/33cn/chain33/common"
-	chain33Common "github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	relayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	"github.com/assetcloud/chain/common"
+	chainCommon "github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 	ethTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/spf13/cobra"
@@ -34,7 +34,7 @@ func EthereumRelayerCmd() *cobra.Command {
 		GenEthPrivateKeyCmd(),
 		GetAddressFromPrivateKeyCmd(),
 		ShowValidatorsAddrCmd(),
-		ShowChain33TxsHashCmd(),
+		ShowChainTxsHashCmd(),
 		IsValidatorActiveCmd(),
 		ShowOperatorCmd(),
 		ShowTxReceiptCmd(),
@@ -164,7 +164,7 @@ func GetAddressFromPrivateKeyCmd() *cobra.Command {
 
 func getAddressFromPrivateKey(cmd *cobra.Command, args []string) {
 	key, _ := cmd.Flags().GetString("key")
-	privateKeySlice, err := chain33Common.FromHex(key)
+	privateKeySlice, err := chainCommon.FromHex(key)
 	if nil != err {
 		fmt.Println("private key error: ", err)
 		return
@@ -201,7 +201,7 @@ func generateEthereumPrivateKey(cmd *cobra.Command, args []string) {
 func ShowValidatorsAddrCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show_validator",
-		Short: "show me the validators including ethereum and chain33",
+		Short: "show me the validators including ethereum and chain",
 		Run:   showValidatorsAddr,
 	}
 	return cmd
@@ -216,21 +216,21 @@ func showValidatorsAddr(cmd *cobra.Command, args []string) {
 	ctx.Run()
 }
 
-//ShowChain33TxsHashCmd ...
-func ShowChain33TxsHashCmd() *cobra.Command {
+//ShowChainTxsHashCmd ...
+func ShowChainTxsHashCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show_chain33_tx",
-		Short: "show me the chain33 tx hashes",
-		Run:   showChain33Txs,
+		Use:   "show_chain_tx",
+		Short: "show me the chain tx hashes",
+		Run:   showChainTxs,
 	}
 	return cmd
 }
 
-func showChain33Txs(cmd *cobra.Command, args []string) {
+func showChainTxs(cmd *cobra.Command, args []string) {
 	rpcLaddr, _ := cmd.Flags().GetString("rpc_laddr")
 
 	var res ebTypes.Txhashes
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowEthRelayer2Chain33Txs", nil, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.ShowEthRelayer2ChainTxs", nil, &res)
 	if _, err := ctx.RunResult(); nil != err {
 		errInfo := err.Error()
 		fmt.Println("errinfo:" + errInfo)
@@ -419,7 +419,7 @@ func ApproveAllowance(cmd *cobra.Command, args []string) {
 func BurnCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "burn",
-		Short: "burn(including approve) the asset to make it unlocked on chain33",
+		Short: "burn(including approve) the asset to make it unlocked on chain",
 		Run:   Burn,
 	}
 	BurnFlags(cmd)
@@ -432,7 +432,7 @@ func BurnFlags(cmd *cobra.Command) {
 	_ = cmd.MarkFlagRequired("key")
 	cmd.Flags().StringP("token", "t", "", "token address")
 	_ = cmd.MarkFlagRequired("token")
-	cmd.Flags().StringP("receiver", "r", "", "receiver address on chain33")
+	cmd.Flags().StringP("receiver", "r", "", "receiver address on chain")
 	_ = cmd.MarkFlagRequired("receiver")
 	cmd.Flags().Float64P("amount", "m", float64(0), "amount")
 	_ = cmd.MarkFlagRequired("amount")
@@ -442,7 +442,7 @@ func BurnFlags(cmd *cobra.Command) {
 func BurnAsyncCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "burn-async",
-		Short: "async burn the asset to make it unlocked on chain33",
+		Short: "async burn the asset to make it unlocked on chain",
 		Run:   BurnAsync,
 	}
 	BurnFlags(cmd)
@@ -468,7 +468,7 @@ func Burn(cmd *cobra.Command, args []string) {
 		OwnerKey:        key,
 		TokenAddr:       tokenAddr,
 		Amount:          utils.ToWei(amount, d).String(),
-		Chain33Receiver: receiver,
+		ChainReceiver: receiver,
 		ChainName:       ethChainName,
 	}
 	var res rpctypes.Reply
@@ -494,7 +494,7 @@ func BurnAsync(cmd *cobra.Command, args []string) {
 		OwnerKey:        key,
 		TokenAddr:       tokenAddr,
 		Amount:          utils.ToWei(amount, d).String(),
-		Chain33Receiver: receiver,
+		ChainReceiver: receiver,
 	}
 	var res rpctypes.Reply
 	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.BurnAsync", para, &res)
@@ -505,7 +505,7 @@ func BurnAsync(cmd *cobra.Command, args []string) {
 func LockSyncCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "lock",
-		Short: "lock(including approve) eth or erc20 and cross-chain transfer to chain33",
+		Short: "lock(including approve) eth or erc20 and cross-chain transfer to chain",
 		Run:   LockEthErc20Asset,
 	}
 	LockEthErc20AssetFlags(cmd)
@@ -516,7 +516,7 @@ func LockSyncCmd() *cobra.Command {
 func LockAsyncCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "lock-async",
-		Short: "async lock eth or erc20 and cross-chain transfer to chain33",
+		Short: "async lock eth or erc20 and cross-chain transfer to chain",
 		Run:   LockEthErc20AssetAsync,
 	}
 	LockEthErc20AssetFlags(cmd)
@@ -530,7 +530,7 @@ func LockEthErc20AssetFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("token", "t", "", "token address, optional, nil for ETH")
 	cmd.Flags().Float64P("amount", "m", float64(0), "amount")
 	_ = cmd.MarkFlagRequired("amount")
-	cmd.Flags().StringP("receiver", "r", "", "chain33 receiver address")
+	cmd.Flags().StringP("receiver", "r", "", "chain receiver address")
 	_ = cmd.MarkFlagRequired("receiver")
 }
 
@@ -556,7 +556,7 @@ func LockEthErc20Asset(cmd *cobra.Command, args []string) {
 		OwnerKey:        key,
 		TokenAddr:       tokenAddr,
 		Amount:          realAmount.String(),
-		Chain33Receiver: receiver,
+		ChainReceiver: receiver,
 		ChainName:       ethChainName,
 	}
 	var res rpctypes.Reply
@@ -599,7 +599,7 @@ func LockEthErc20AssetAsync(cmd *cobra.Command, args []string) {
 		OwnerKey:        key,
 		TokenAddr:       tokenAddr,
 		Amount:          realAmount.String(),
-		Chain33Receiver: receiver,
+		ChainReceiver: receiver,
 	}
 	var res rpctypes.Reply
 	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Manager.LockEthErc20AssetAsync", para, &res)
@@ -1141,7 +1141,7 @@ func GetCfgWithdraw(cmd *cobra.Command, _ []string) {
 func ResendEthLockEventCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "resendLockEvent",
-		Short: "resend lock Event to chain33 process goroutine",
+		Short: "resend lock Event to chain process goroutine",
 		Run:   resendLockEvent,
 	}
 	addResendLockEventFlags(cmd)
@@ -1149,7 +1149,7 @@ func ResendEthLockEventCmd() *cobra.Command {
 }
 
 func addResendLockEventFlags(cmd *cobra.Command) {
-	cmd.Flags().Int64P("height", "g", 0, "height begin to resend chain33 event ")
+	cmd.Flags().Int64P("height", "g", 0, "height begin to resend chain event ")
 	_ = cmd.MarkFlagRequired("height")
 	cmd.Flags().Int32P("index", "i", 0, "tx index")
 	_ = cmd.MarkFlagRequired("index")
@@ -1174,7 +1174,7 @@ func resendLockEvent(cmd *cobra.Command, args []string) {
 func RegetEthLockEventCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "regetLockEvent",
-		Short: "reget lock Event to chain33 process goroutine",
+		Short: "reget lock Event to chain process goroutine",
 		Run:   reGetEthereumEvent,
 	}
 	addRegetEventFlags(cmd)
@@ -1218,7 +1218,7 @@ func CreateLockEventCmd() *cobra.Command {
 func addcreateLockEventFlags(cmd *cobra.Command) {
 	cmd.Flags().StringP("from", "f", "", "Ethereum from address")
 	_ = cmd.MarkFlagRequired("from")
-	cmd.Flags().StringP("receiver", "r", "", "chain33 receiver address")
+	cmd.Flags().StringP("receiver", "r", "", "chain receiver address")
 	_ = cmd.MarkFlagRequired("receiver")
 
 	cmd.Flags().StringP("token", "t", "", "Ethereum token address")

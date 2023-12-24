@@ -5,11 +5,11 @@
 package echo
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/echo/commands"
-	"github.com/33cn/plugin/plugin/dapp/echo/executor"
-	"github.com/33cn/plugin/plugin/dapp/echo/rpc"
-	echotypes "github.com/33cn/plugin/plugin/dapp/echo/types/echo"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/echo/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/echo/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/echo/rpc"
+	echotypes "github.com/assetcloud/plugin/plugin/dapp/echo/types/echo"
 )
 
 func init() {

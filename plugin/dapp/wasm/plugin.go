@@ -1,11 +1,11 @@
 package wasm
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/wasm/commands"
-	"github.com/33cn/plugin/plugin/dapp/wasm/executor"
-	"github.com/33cn/plugin/plugin/dapp/wasm/rpc"
-	"github.com/33cn/plugin/plugin/dapp/wasm/types"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/wasm/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/wasm/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/wasm/rpc"
+	"github.com/assetcloud/plugin/plugin/dapp/wasm/types"
 )
 
 func init() {

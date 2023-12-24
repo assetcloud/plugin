@@ -8,15 +8,15 @@ import (
 	"math/big"
 	"sync/atomic"
 
-	log "github.com/33cn/chain33/common/log/log15"
+	log "github.com/assetcloud/chain/common/log/log15"
 
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/gas"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/model"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/params"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/state"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/gas"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/model"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/params"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/state"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 )
 
 type (
@@ -111,15 +111,15 @@ type EVM struct {
 	// 支持的最长合约代码大小
 	maxCodeSize int
 
-	// chain33配置
-	cfg        *types.Chain33Config
+	// chain配置
+	cfg        *types.ChainConfig
 	isEthTx    bool
 	evmChainID int32
 }
 
 // NewEVM 创建一个新的EVM实例对象
 // 在同一个节点中，一个EVM实例对象只服务于一个交易执行的生命周期
-func NewEVM(ctx Context, statedb state.EVMStateDB, vmConfig Config, cfg *types.Chain33Config) *EVM {
+func NewEVM(ctx Context, statedb state.EVMStateDB, vmConfig Config, cfg *types.ChainConfig) *EVM {
 	evm := &EVM{
 		Context:     ctx,
 		StateDB:     statedb,
@@ -408,7 +408,7 @@ func (evm *EVM) StaticCall(caller ContractRef, addr common.Address, input []byte
 
 	//precompiles := PrecompiledContractsByzantium
 	if !evm.StateDB.Exist(addr.String()) {
-		//预编译分叉处理： chain33中目前只存在拜占庭和最新的黄皮书v1版本（兼容伊斯坦布尔版本）
+		//预编译分叉处理： chain中目前只存在拜占庭和最新的黄皮书v1版本（兼容伊斯坦布尔版本）
 
 		// 是否是黄皮书v1分叉
 		/*if evm.cfg.IsDappFork(evm.StateDB.GetBlockHeight(), "evm", evmtypes.ForkEVMYoloV1) {
@@ -473,7 +473,7 @@ func (evm *EVM) StaticCall(caller ContractRef, addr common.Address, input []byte
 
 // Create 此方法提供合约外部创建入口；
 // 使用传入的部署代码创建新的合约；
-// 目前chain33为了保证账户安全，不允许合约中涉及到外部账户的转账操作，
+// 目前chain为了保证账户安全，不允许合约中涉及到外部账户的转账操作，
 // 所以，本步骤不接收转账金额参数
 func (evm *EVM) Create(caller ContractRef, contractAddr common.Address, code []byte, gas uint64, execName, alias string, value uint64) (ret []byte, snapshot int, leftOverGas uint64, err error) {
 	pass, err := evm.preCheck(caller, value)
@@ -566,8 +566,8 @@ func (evm *EVM) conversion2EthPrecision(num *big.Int) *big.Int {
 	return new(big.Int).Mul(num, mulUnit)
 }
 
-// ethPrecision2Chain33Standard 把eth 表示的精度值转换为底层精度值
-func (evm *EVM) ethPrecision2Chain33Standard(num *big.Int) *big.Int {
+// ethPrecision2ChainStandard 把eth 表示的精度值转换为底层精度值
+func (evm *EVM) ethPrecision2ChainStandard(num *big.Int) *big.Int {
 	ethUnit := big.NewInt(1e18)
 	return new(big.Int).Div(num, ethUnit.Div(ethUnit, big.NewInt(1).SetInt64(evm.cfg.GetCoinPrecision())))
 }

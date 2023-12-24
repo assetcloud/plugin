@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	zksyncTypes "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	zksyncTypes "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +24,7 @@ func treeManyToContractFlag(cmd *cobra.Command) {
 	cmd.MarkFlagRequired("tokenId")
 	cmd.Flags().StringP("amount", "m", "0", "treeToContract amount")
 	cmd.MarkFlagRequired("amount")
-	cmd.Flags().StringP("accountIDs", "a", "0", "L2 account ids on chain33, use ',' separate")
+	cmd.Flags().StringP("accountIDs", "a", "0", "L2 account ids on chain, use ',' separate")
 	_ = cmd.MarkFlagRequired("accountIDs")
 	cmd.Flags().StringP("keys", "k", "", "private keys, use ',' separate")
 	_ = cmd.MarkFlagRequired("keys")
@@ -61,9 +61,9 @@ func treeManyToContract(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
+			fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)
@@ -85,7 +85,7 @@ func contractManyToTreeFlag(cmd *cobra.Command) {
 	cmd.MarkFlagRequired("tokenSymbol")
 	cmd.Flags().StringP("amount", "m", "", "contractToTree amount")
 	cmd.MarkFlagRequired("amount")
-	cmd.Flags().StringP("accountIDs", "a", "", "L2 account ids on chain33, use ',' separate")
+	cmd.Flags().StringP("accountIDs", "a", "", "L2 account ids on chain, use ',' separate")
 	_ = cmd.MarkFlagRequired("accountIDs")
 
 	cmd.Flags().StringP("ethAddr", "e", "", "eth address, use ',' separate")
@@ -138,9 +138,9 @@ func contractManyToTree(cmd *cobra.Command, args []string) {
 			},
 		}
 
-		tx, err := createChain33Tx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
+		tx, err := createChainTx(keys[i], getRealExecName(paraName, zksyncTypes.Zksync), action)
 		if nil != err {
-			fmt.Println("sendDeposit failed to createChain33Tx due to err:", err.Error())
+			fmt.Println("sendDeposit failed to createChainTx due to err:", err.Error())
 			return
 		}
 		sendTx(rpcLaddr, tx)

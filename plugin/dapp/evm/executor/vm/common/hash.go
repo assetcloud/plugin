@@ -9,7 +9,7 @@ import (
 
 	"github.com/holiman/uint256"
 
-	"github.com/33cn/chain33/common"
+	"github.com/assetcloud/chain/common"
 )
 
 const (

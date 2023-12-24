@@ -3,21 +3,21 @@ package executor
 import (
 	"testing"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	dbm "github.com/33cn/chain33/common/db"
-	pty "github.com/33cn/plugin/plugin/dapp/token/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	dbm "github.com/assetcloud/chain/common/db"
+	pty "github.com/assetcloud/plugin/plugin/dapp/token/types"
 	"github.com/stretchr/testify/assert"
 
-	//"github.com/33cn/chain33/types/jsonpb"
+	//"github.com/assetcloud/chain/types/jsonpb"
 	"strings"
 
-	apimock "github.com/33cn/chain33/client/mocks"
+	apimock "github.com/assetcloud/chain/client/mocks"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -45,7 +45,7 @@ var (
 )
 
 func TestToken(t *testing.T) {
-	cfg := types.NewChain33Config(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain33\"", 1))
+	cfg := types.NewChainConfig(strings.Replace(types.GetDefaultCfgstring(), "Title=\"local\"", "Title=\"chain\"", 1))
 	cfg.SetDappFork(pty.TokenX, pty.ForkTokenCheckX, 1600000)
 	Init(pty.TokenX, cfg, nil)
 	tokenTotal := int64(10000 * 1e8)

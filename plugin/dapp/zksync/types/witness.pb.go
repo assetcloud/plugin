@@ -327,7 +327,7 @@ type AccountWitness struct {
 
 	ID            uint64               `protobuf:"varint,1,opt,name=ID,proto3" json:"ID,omitempty"`
 	EthAddr       string               `protobuf:"bytes,2,opt,name=ethAddr,proto3" json:"ethAddr,omitempty"`
-	Chain33Addr   string               `protobuf:"bytes,3,opt,name=chain33Addr,proto3" json:"chain33Addr,omitempty"`
+	ChainAddr   string               `protobuf:"bytes,3,opt,name=chainAddr,proto3" json:"chainAddr,omitempty"`
 	TokenTreeRoot string               `protobuf:"bytes,4,opt,name=tokenTreeRoot,proto3" json:"tokenTreeRoot,omitempty"` //sub chain token tree root
 	PubKey        *ZkPubKey            `protobuf:"bytes,5,opt,name=pubKey,proto3" json:"pubKey,omitempty"`
 	Sibling       *SiblingPath         `protobuf:"bytes,6,opt,name=sibling,proto3" json:"sibling,omitempty"`
@@ -380,9 +380,9 @@ func (x *AccountWitness) GetEthAddr() string {
 	return ""
 }
 
-func (x *AccountWitness) GetChain33Addr() string {
+func (x *AccountWitness) GetChainAddr() string {
 	if x != nil {
-		return x.Chain33Addr
+		return x.ChainAddr
 	}
 	return ""
 }

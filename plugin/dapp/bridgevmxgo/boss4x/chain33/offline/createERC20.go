@@ -4,29 +4,29 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/33cn/chain33/system/crypto/secp256k1"
-	"github.com/33cn/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
-	erc20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
-	"github.com/33cn/plugin/plugin/dapp/dex/utils"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
+	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/utils"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 	"github.com/spf13/cobra"
 )
 
 /*
-./boss4x chain33 offline create_erc20 -s YCC -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -o 1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ --chainID 33
-./boss4x chain33 offline send -f deployErc20YCCChain33.txt
+./boss4x chain offline create_erc20 -s YCC -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -o 1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ --chainID 33
+./boss4x chain offline send -f deployErc20YCCChain.txt
 
-./boss4x chain33 offline approve_erc20 -a 330000000000 -s 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -c 1998HqVnt4JUirhC9KL5V71xYU8cFRn82c -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae  --chainID 33
-./boss4x chain33 offline send -f approve_erc20.txt
+./boss4x chain offline approve_erc20 -a 330000000000 -s 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -c 1998HqVnt4JUirhC9KL5V71xYU8cFRn82c -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae  --chainID 33
+./boss4x chain offline send -f approve_erc20.txt
 
-./boss4x chain33 offline create_add_lock_list -c 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -t 1998HqVnt4JUirhC9KL5V71xYU8cFRn82c --chainID 33 -s YCC
-./boss4x chain33 offline send -f create_add_lock_list.txt
+./boss4x chain offline create_add_lock_list -c 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -t 1998HqVnt4JUirhC9KL5V71xYU8cFRn82c --chainID 33 -s YCC
+./boss4x chain offline send -f create_add_lock_list.txt
 
-./boss4x chain33 offline create_bridge_token -c 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -s YCC --chainID 33
-./boss4x chain33 offline send -f create_bridge_token.txt
-${Chain33Cli} evm abi call -a "${chain33BridgeBank}" -c "${chain33DeployAddr}" -b "getToken2address(YCC)"
-./chain33-cli evm abi call -a 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -c 1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ -b 'getToken2address(YCC)'
+./boss4x chain offline create_bridge_token -c 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -s YCC --chainID 33
+./boss4x chain offline send -f create_bridge_token.txt
+${ChainCli} evm abi call -a "${chainBridgeBank}" -c "${chainDeployAddr}" -b "getToken2address(YCC)"
+./chain-cli evm abi call -a 1JmWVu1GEdQYSN1opxS9C39aS4NvG57yTr -c 1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ -b 'getToken2address(YCC)'
 */
 
 func CreateERC20Cmd() *cobra.Command {
@@ -77,7 +77,7 @@ func CreateERC20(cmd *cobra.Command, _ []string) {
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	Erc20Tx := &utils.Chain33OfflineTx{
+	Erc20Tx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -91,10 +91,10 @@ func CreateERC20(cmd *cobra.Command, _ []string) {
 	}
 	fmt.Println(string(data))
 
-	var txs []*utils.Chain33OfflineTx
+	var txs []*utils.ChainOfflineTx
 	txs = append(txs, Erc20Tx)
 
-	fileName := fmt.Sprintf("deployErc20%sChain33.txt", symbol)
+	fileName := fmt.Sprintf("deployErc20%sChain.txt", symbol)
 	fmt.Printf("Write all the txs to file:   %s \n", fileName)
 	utils.WriteToFileInJson(fileName, txs)
 }
@@ -176,7 +176,7 @@ func AddToken2LockList(cmd *cobra.Command, _ []string) {
 func CreateNewBridgeTokenCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create_bridge_token",
-		Short: "create new token as ethereum asset on chain33, and it's should be done by operator",
+		Short: "create new token as ethereum asset on chain, and it's should be done by operator",
 		Run:   CreateNewBridgeToken, //配置账户
 	}
 	addCreateNewBridgeTokenFlags(cmd)

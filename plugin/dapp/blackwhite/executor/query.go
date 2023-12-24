@@ -5,8 +5,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	gt "github.com/33cn/plugin/plugin/dapp/blackwhite/types"
+	"github.com/assetcloud/chain/types"
+	gt "github.com/assetcloud/plugin/plugin/dapp/blackwhite/types"
 )
 
 // Query_GetBlackwhiteRoundInfo 查询游戏信息

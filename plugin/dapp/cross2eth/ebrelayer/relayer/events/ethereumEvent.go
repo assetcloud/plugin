@@ -8,9 +8,9 @@ package events
 import (
 	"math/big"
 
-	chain33Address "github.com/33cn/chain33/common/address"
+	chainAddress "github.com/assetcloud/chain/common/address"
 
-	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -35,13 +35,13 @@ type LockEvent struct {
 	Nonce  *big.Int
 }
 
-//chain33Bank.sol
-//event LogChain33TokenBurn(
+//chainBank.sol
+//event LogChainTokenBurn(
 //address _token,
 //string _symbol,
 //uint256 _amount,
 //address _ownerFrom,
-//bytes _chain33Receiver,
+//bytes _chainReceiver,
 //uint256 _nonce
 //);
 
@@ -51,7 +51,7 @@ type BurnEvent struct {
 	Symbol          string
 	Amount          *big.Int
 	OwnerFrom       common.Address
-	Chain33Receiver []byte
+	ChainReceiver []byte
 	Nonce           *big.Int
 }
 
@@ -59,7 +59,7 @@ type BurnEvent struct {
 type NewProphecyClaimEvent struct {
 	ProphecyID       *big.Int
 	ClaimType        uint8
-	Chain33Sender    []byte
+	ChainSender    []byte
 	EthereumReceiver common.Address
 	ValidatorAddress common.Address
 	TokenAddress     common.Address
@@ -91,12 +91,12 @@ func UnpackLogLock(contractAbi abi.ABI, eventName string, eventData []byte) (loc
 		return nil, ebrelayerTypes.ErrUnpack
 	}
 
-	chain33Receiver := chain33Address.Address{}
-	chain33Receiver.SetBytes(event.To)
+	chainReceiver := chainAddress.Address{}
+	chainReceiver.SetBytes(event.To)
 
 	eventsLog.Info("UnpackLogLock", "value", event.Value.String(), "symbol", event.Symbol,
 		"token addr", event.Token.Hex(), "sender", event.From.Hex(),
-		"recipient", chain33Receiver.String(), "nonce", event.Nonce.String())
+		"recipient", chainReceiver.String(), "nonce", event.Nonce.String())
 
 	return event, nil
 }
@@ -113,7 +113,7 @@ func UnpackLogBurn(contractAbi abi.ABI, eventName string, eventData []byte) (bur
 
 	eventsLog.Info("UnpackLogBurn", "token addr", event.Token.Hex(), "symbol", event.Symbol,
 		"Amount", event.Amount.String(), "OwnerFrom", event.OwnerFrom.String(),
-		"Chain33Receiver", string(event.Chain33Receiver), "nonce", event.Nonce.String())
+		"ChainReceiver", string(event.ChainReceiver), "nonce", event.Nonce.String())
 	return event, nil
 }
 

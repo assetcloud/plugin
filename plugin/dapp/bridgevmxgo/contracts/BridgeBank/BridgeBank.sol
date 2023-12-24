@@ -10,8 +10,8 @@ import "../GoAssetBridge.sol";
  * @dev Bank contract which coordinates asset-related functionality.
  *      GoAssetBank manages the minting and burning of tokens which
  *      represent go contract issued assets, while EvmAssetBank manages
- *      the locking and unlocking of Chain33 and ERC20 token assets
- *      based on Chain33.
+ *      the locking and unlocking of Chain and ERC20 token assets
+ *      based on Chain.
  **/
 
 contract BridgeBank is GoAssetBank, EvmAssetBank {
@@ -120,7 +120,7 @@ contract BridgeBank is GoAssetBank, EvmAssetBank {
      * @dev: Mints new BankTokens
      *
      * @param _goAssetSender: The goAsset sender's address.
-     * @param _chain33Recipient: The intended recipient's Chain33 address.
+     * @param _chainRecipient: The intended recipient's Chain address.
      * @param _bridgeTokenAddress: The bridge token address
      * @param _symbol: goAsset token symbol
      * @param _amount: number of goAsset tokens to be minted
@@ -217,10 +217,10 @@ contract BridgeBank is GoAssetBank, EvmAssetBank {
     }
 
     /*
-    * @dev: Locks received Chain33 funds.
+    * @dev: Locks received Chain funds.
     *
     * @param _recipient: bytes representation of destination address.
-    * @param _token: token address in origin chain (0x0 if chain33)
+    * @param _token: token address in origin chain (0x0 if chain)
     * @param _amount: value of deposit
     */
     function lock(
@@ -242,7 +242,7 @@ contract BridgeBank is GoAssetBank, EvmAssetBank {
         symbol = BridgeToken(_token).symbol();
         require(
            tokenAllow2Lock[keccak256(abi.encodePacked(symbol))] == _token,
-              'The token is not allowed to be locked from Chain33.'
+              'The token is not allowed to be locked from Chain.'
         );
 
         lockFunds(
@@ -255,9 +255,9 @@ contract BridgeBank is GoAssetBank, EvmAssetBank {
     }
 
    /*
-    * @dev: Unlocks Chain33 and ERC20 tokens held on the contract.
+    * @dev: Unlocks Chain and ERC20 tokens held on the contract.
     *
-    * @param _recipient: recipient's Chain33 address
+    * @param _recipient: recipient's Chain address
     * @param _token: token contract address
     * @param _symbol: token symbol
     * @param _amount: wei amount or ERC20 token count
@@ -307,7 +307,7 @@ contract BridgeBank is GoAssetBank, EvmAssetBank {
     * @dev: Allows access to a GoAsset deposit's information via its unique identifier.
     *
     * @param _id: The deposit to be viewed.
-    * @return: Original sender's Chain33 address.
+    * @return: Original sender's Chain address.
     * @return: Intended GoAsset recipient's address in bytes.
     * @return: The lock deposit's currency, denoted by a token address.
     * @return: The amount locked in the deposit.

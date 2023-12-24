@@ -9,12 +9,12 @@ import (
 
 	"encoding/json"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	_ "github.com/33cn/chain33/system"
-	"github.com/33cn/chain33/types"
-	_ "github.com/33cn/plugin/plugin"
-	auty "github.com/33cn/plugin/plugin/dapp/autonomy/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	_ "github.com/assetcloud/chain/system"
+	"github.com/assetcloud/chain/types"
+	_ "github.com/assetcloud/plugin/plugin"
+	auty "github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
 )
 
 func testPropProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -29,7 +29,7 @@ func testPropProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
 		Payload:    payLoad,
 	}
 	var res string
-	return jrpc.Call("Chain33.CreateTransaction", pm, &res)
+	return jrpc.Call("Chain.CreateTransaction", pm, &res)
 }
 
 func testRevokeProposalProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -44,7 +44,7 @@ func testRevokeProposalProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) e
 		Payload:    payLoad,
 	}
 	var res string
-	return jrpc.Call("Chain33.CreateTransaction", pm, &res)
+	return jrpc.Call("Chain.CreateTransaction", pm, &res)
 }
 
 func testVoteProposalProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -59,7 +59,7 @@ func testVoteProposalProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) err
 		Payload:    payLoad,
 	}
 	var res string
-	return jrpc.Call("Chain33.CreateTransaction", pm, &res)
+	return jrpc.Call("Chain.CreateTransaction", pm, &res)
 }
 
 func testPubVoteProposalProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -74,7 +74,7 @@ func testPubVoteProposalProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) 
 		Payload:    payLoad,
 	}
 	var res string
-	return jrpc.Call("Chain33.CreateTransaction", pm, &res)
+	return jrpc.Call("Chain.CreateTransaction", pm, &res)
 }
 
 func testTerminateProposalProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -89,7 +89,7 @@ func testTerminateProposalProjectTxCmd(t *testing.T, jrpc *jsonclient.JSONClient
 		Payload:    payLoad,
 	}
 	var res string
-	return jrpc.Call("Chain33.CreateTransaction", pm, &res)
+	return jrpc.Call("Chain.CreateTransaction", pm, &res)
 }
 
 func testGetProposalProjectCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -99,7 +99,7 @@ func testGetProposalProjectCmd(t *testing.T, jrpc *jsonclient.JSONClient) error 
 	params.FuncName = auty.GetProposalProject
 	params.Payload = types.MustPBToJSON(req)
 	rep = &auty.ReplyQueryProposalProject{}
-	return jrpc.Call("Chain33.Query", params, rep)
+	return jrpc.Call("Chain.Query", params, rep)
 }
 
 func testListProposalProjectCmd(t *testing.T, jrpc *jsonclient.JSONClient) error {
@@ -109,5 +109,5 @@ func testListProposalProjectCmd(t *testing.T, jrpc *jsonclient.JSONClient) error
 	params.FuncName = auty.ListProposalProject
 	params.Payload = types.MustPBToJSON(req)
 	rep = &auty.ReplyQueryProposalProject{}
-	return jrpc.Call("Chain33.Query", params, rep)
+	return jrpc.Call("Chain.Query", params, rep)
 }

@@ -5,16 +5,16 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/client"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/system/dapp"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/client"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/system/dapp"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 
 	"github.com/golang/protobuf/proto"
 
-	token "github.com/33cn/plugin/plugin/dapp/token/types"
+	token "github.com/assetcloud/plugin/plugin/dapp/token/types"
 )
 
 type action struct {
@@ -38,7 +38,7 @@ func newAction(t *Mix, tx *types.Transaction) *action {
 		t.GetBlockTime(), t.GetHeight(), dapp.ExecAddress(string(tx.Execer)), t.GetAPI(), tx, t}
 }
 
-func createAccount(cfg *types.Chain33Config, execer, symbol string, db dbm.KV) (*account.DB, error) {
+func createAccount(cfg *types.ChainConfig, execer, symbol string, db dbm.KV) (*account.DB, error) {
 	var accDB *account.DB
 	if symbol == "" {
 		accDB = account.NewCoinsAccount(cfg)

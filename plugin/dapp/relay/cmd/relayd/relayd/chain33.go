@@ -10,34 +10,34 @@ import (
 	"io"
 	"time"
 
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
 
-// Client33 to connect with chain33
+// Client33 to connect with chain
 type Client33 struct {
-	config     *Chain33
+	config     *Chain
 	isSyncing  bool
 	isClosed   bool
 	lastHeight int64
-	types.Chain33Client
+	types.ChainClient
 	closer io.Closer
 }
 
 // NewClient33 new client instance
-func NewClient33(cfg *Chain33) *Client33 {
+func NewClient33(cfg *Chain) *Client33 {
 	conn, err := grpc.Dial(cfg.Host, grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
 
-	client := types.NewChain33Client(conn)
+	client := types.NewChainClient(conn)
 	c := &Client33{
 		config:        cfg,
 		closer:        conn,
-		Chain33Client: client,
+		ChainClient: client,
 	}
 	return c
 }
@@ -46,7 +46,7 @@ func (c *Client33) heartbeat(ctx context.Context) {
 	reconnectAttempts := c.config.ReconnectAttempts
 out:
 	for {
-		log.Info("chain33 heartbeat.......")
+		log.Info("chain heartbeat.......")
 		select {
 		case <-ctx.Done():
 			break out
@@ -54,7 +54,7 @@ out:
 		case <-time.After(time.Second * 60):
 			err := c.ping(ctx)
 			if err != nil {
-				log.Error("heartbeat", "heartbeat chain33 error: ", err.Error(), "reconnectAttempts: ", reconnectAttempts)
+				log.Error("heartbeat", "heartbeat chain error: ", err.Error(), "reconnectAttempts: ", reconnectAttempts)
 				c.autoReconnect(ctx)
 				reconnectAttempts--
 			} else {
@@ -68,7 +68,7 @@ out:
 	}
 }
 
-// Start begin heartbeat to chain33
+// Start begin heartbeat to chain
 func (c *Client33) Start(ctx context.Context) {
 	go c.heartbeat(ctx)
 }
@@ -104,23 +104,23 @@ func (c *Client33) autoReconnect(ctx context.Context) {
 			panic(err)
 		}
 
-		client := types.NewChain33Client(conn)
+		client := types.NewChainClient(conn)
 		c.closer = conn
-		c.Chain33Client = client
+		c.ChainClient = client
 		c.isClosed = true
 		c.Start(ctx)
 	}
 }
 
-// SendTransaction send tx to chain33
+// SendTransaction send tx to chain
 func (c *Client33) SendTransaction(ctx context.Context, in *types.Transaction) (*types.Reply, error) {
 	if c.isSyncing {
 		return nil, errors.New("node is syncing")
 	}
-	return c.Chain33Client.SendTransaction(ctx, in)
+	return c.ChainClient.SendTransaction(ctx, in)
 }
 
-// Close chain33 close
+// Close chain close
 func (c *Client33) Close() error {
 	return c.closer.Close()
 }

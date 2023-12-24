@@ -5,8 +5,8 @@
 package rpc
 
 import (
-	"github.com/33cn/chain33/rpc/types"
-	ty "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/chain/rpc/types"
+	ty "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 )
 
 // Jrpc json rpc type

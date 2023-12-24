@@ -3,11 +3,11 @@ package executor
 import (
 	"bytes"
 
-	"github.com/33cn/chain33/common"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/mix/executor/zksnark"
-	zt "github.com/33cn/plugin/plugin/dapp/zksync/types"
+	"github.com/assetcloud/chain/common"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/mix/executor/zksnark"
+	zt "github.com/assetcloud/plugin/plugin/dapp/zksync/types"
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr/mimc"
 	"github.com/consensys/gnark/backend/witness"
@@ -113,7 +113,7 @@ func isNotFound(err error) bool {
 }
 
 // IsSuperManager is supper manager or not
-func isSuperManager(cfg *types.Chain33Config, addr string) bool {
+func isSuperManager(cfg *types.ChainConfig, addr string) bool {
 	confManager := types.ConfSub(cfg, zt.Zksync)
 	for _, m := range confManager.GStrList(zt.ZkManagerKey) {
 		if addr == m {

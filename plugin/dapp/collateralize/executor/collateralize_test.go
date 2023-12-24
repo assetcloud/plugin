@@ -4,19 +4,19 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/chain33/client"
+	"github.com/assetcloud/chain/client"
 
-	"github.com/33cn/chain33/account"
-	apimock "github.com/33cn/chain33/client/mocks"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/system/dapp"
-	pty "github.com/33cn/chain33/system/dapp/manage/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	pkt "github.com/33cn/plugin/plugin/dapp/collateralize/types"
-	tokenE "github.com/33cn/plugin/plugin/dapp/token/executor"
+	"github.com/assetcloud/chain/account"
+	apimock "github.com/assetcloud/chain/client/mocks"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/system/dapp"
+	pty "github.com/assetcloud/chain/system/dapp/manage/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	pkt "github.com/assetcloud/plugin/plugin/dapp/collateralize/types"
+	tokenE "github.com/assetcloud/plugin/plugin/dapp/token/executor"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -29,7 +29,7 @@ type execEnv struct {
 	api         client.QueueProtocolAPI
 	db          dbm.KV
 	execAddr    string
-	cfg         *types.Chain33Config
+	cfg         *types.ChainConfig
 	ldb         dbm.DB
 }
 
@@ -75,8 +75,8 @@ func addrKeySet(value string, db dbm.KV) {
 }
 
 func initEnv() *execEnv {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	cfg.RegisterDappFork(pkt.CollateralizeX, pkt.ForkCollateralizeTableUpdate, 0)
 	Init(pkt.CollateralizeX, cfg, nil)
 	_, ldb, kvdb := util.CreateTestDB()

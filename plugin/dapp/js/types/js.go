@@ -4,8 +4,8 @@ import (
 	"errors"
 	"reflect"
 
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/js/types/jsproto"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/js/types/jsproto"
 )
 
 // action for executor
@@ -42,14 +42,14 @@ var (
 	ErrJsReturnKVSFormat  = errors.New("ErrJsReturnKVSFormat")
 	ErrJsReturnLogsFormat = errors.New("ErrJsReturnLogsFormat")
 	//ErrInvalidFuncFormat 错误的函数调用格式(没有_)
-	ErrInvalidFuncFormat = errors.New("chain33.js: invalid function name format")
+	ErrInvalidFuncFormat = errors.New("chain.js: invalid function name format")
 	//ErrInvalidFuncPrefix not exec_ execloal_ query_
-	ErrInvalidFuncPrefix = errors.New("chain33.js: invalid function prefix format")
+	ErrInvalidFuncPrefix = errors.New("chain.js: invalid function prefix format")
 	//ErrFuncNotFound 函数没有找到
-	ErrFuncNotFound = errors.New("chain33.js: invalid function name not found")
-	ErrSymbolName   = errors.New("chain33.js: ErrSymbolName")
-	ErrExecerName   = errors.New("chain33.js: ErrExecerName")
-	ErrDBType       = errors.New("chain33.js: ErrDBType")
+	ErrFuncNotFound = errors.New("chain.js: invalid function name not found")
+	ErrSymbolName   = errors.New("chain.js: ErrSymbolName")
+	ErrExecerName   = errors.New("chain.js: ErrExecerName")
+	ErrDBType       = errors.New("chain.js: ErrDBType")
 	// ErrJsCreator
 	ErrJsCreator = errors.New("ErrJsCreator")
 )
@@ -61,12 +61,12 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(JsX, "Enable", 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(JsX, NewType(cfg))
 }
 
@@ -76,7 +76,7 @@ type JsType struct {
 }
 
 //NewType 新建一个plugin 类型
-func NewType(cfg *types.Chain33Config) *JsType {
+func NewType(cfg *types.ChainConfig) *JsType {
 	c := &JsType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

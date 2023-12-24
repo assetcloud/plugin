@@ -5,7 +5,7 @@ services:
     build:
       context: .
     environment:
-      ChainConfig: "chain33.test.toml"
+      ChainConfig: "chain.test.toml"
 #    expose:
 #      - "8802"
 
@@ -13,10 +13,10 @@ services:
     build:
       context: .
     environment:
-      ChainConfig: "chain33.para1.toml"
+      ChainConfig: "chain.para1.toml"
 
   para2:
     build:
       context: .
     environment:
-      ChainConfig: "chain33.para2.toml"
+      ChainConfig: "chain.para2.toml"

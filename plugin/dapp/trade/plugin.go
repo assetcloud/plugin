@@ -5,12 +5,12 @@
 package trade
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	_ "github.com/33cn/plugin/plugin/dapp/trade/autotest" // register autotest package
-	"github.com/33cn/plugin/plugin/dapp/trade/commands"
-	"github.com/33cn/plugin/plugin/dapp/trade/executor"
-	"github.com/33cn/plugin/plugin/dapp/trade/rpc"
-	"github.com/33cn/plugin/plugin/dapp/trade/types"
+	"github.com/assetcloud/chain/pluginmgr"
+	_ "github.com/assetcloud/plugin/plugin/dapp/trade/autotest" // register autotest package
+	"github.com/assetcloud/plugin/plugin/dapp/trade/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/trade/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/trade/rpc"
+	"github.com/assetcloud/plugin/plugin/dapp/trade/types"
 )
 
 func init() {

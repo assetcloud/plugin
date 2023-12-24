@@ -12,21 +12,21 @@ import (
 	"os"
 	"time"
 
-	cmdtypes "github.com/33cn/chain33/system/dapp/commands/types"
+	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/pkg/errors"
 
 	"encoding/json"
 	"strings"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto/sha3"
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	evmCommon "github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto/sha3"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	evmCommon "github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/spf13/cobra"
 )
@@ -68,7 +68,7 @@ func evmToolsCmd() *cobra.Command {
 	return cmd
 }
 
-// transfer address format between ethereum and chain33
+// transfer address format between ethereum and chain
 func evmToolsAddressCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "address",
@@ -170,7 +170,7 @@ func evmBalance(cmd *cobra.Command, args []string) {
 		StateHash: "",
 	}
 	var res []*rpctypes.Account
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.GetBalance", params, &res)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.GetBalance", params, &res)
 	ctx.SetResultCbExt(parseGetBalanceRes)
 	ctx.RunExt(cfg)
 }
@@ -343,7 +343,7 @@ func createEvmTx(cfg *rpctypes.ChainConfigInfo, action proto.Message, execer, ca
 		fmt.Fprintln(os.Stderr, err)
 		return "", err
 	}
-	err = client.Call("Chain33.SignRawTx", unsignedTx, &res)
+	err = client.Call("Chain.SignRawTx", unsignedTx, &res)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return "", err
@@ -710,7 +710,7 @@ func evmTransfer(cmd *cobra.Command, args []string) {
 		Data: data,
 	}
 
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.SendTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.SendTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -727,7 +727,7 @@ func sendQuery(rpcAddr, funcName string, request types.Message, result proto.Mes
 		return false
 	}
 
-	err = jsonrpc.Call("Chain33.Query", params, result)
+	err = jsonrpc.Call("Chain.Query", params, result)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return false

@@ -9,10 +9,10 @@ import (
 	"encoding/hex"
 	"math/big"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 //ExecLocal_Commit commit tx local db process
@@ -213,7 +213,7 @@ func (e *Paracross) ExecLocal_CrossAssetTransfer(payload *pt.CrossAssetTransfer,
 	return &set, nil
 }
 
-func setMinerTxResult(cfg *types.Chain33Config, payload *pt.ParacrossMinerAction, txs []*types.Transaction, receipts []*types.ReceiptData) error {
+func setMinerTxResult(cfg *types.ChainConfig, payload *pt.ParacrossMinerAction, txs []*types.Transaction, receipts []*types.ReceiptData) error {
 	isCommitTx := make(map[string]bool)
 	var curTxHashs, paraTxHashs, crossTxHashs [][]byte
 	for _, tx := range txs {
@@ -265,7 +265,7 @@ func getCrossAssetTxBitMap(crossAssetTxHashs, allTxHashs [][]byte, receipts []*t
 	return rst
 }
 
-func setMinerTxResultFork(cfg *types.Chain33Config, status *pt.ParacrossNodeStatus, txs []*types.Transaction, receipts []*types.ReceiptData) error {
+func setMinerTxResultFork(cfg *types.ChainConfig, status *pt.ParacrossNodeStatus, txs []*types.Transaction, receipts []*types.ReceiptData) error {
 	isCommitTx := make(map[string]bool)
 	var allTxHashs [][]byte
 	for _, tx := range txs {

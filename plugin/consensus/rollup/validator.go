@@ -5,15 +5,15 @@ import (
 	"encoding/hex"
 	"sync"
 
-	"github.com/33cn/chain33/common/address"
+	"github.com/assetcloud/chain/common/address"
 
-	"github.com/33cn/chain33/system/crypto/secp256k1"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/crypto/bls"
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/crypto/bls"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 )
 
 type validator struct {

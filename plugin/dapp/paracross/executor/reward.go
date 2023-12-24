@@ -3,10 +3,10 @@ package executor
 import (
 	"bytes"
 
-	"github.com/33cn/plugin/plugin/dapp/paracross/executor/minerrewards"
+	"github.com/assetcloud/plugin/plugin/dapp/paracross/executor/minerrewards"
 
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 func (a *action) rewardSuperNode(coinReward int64, miners []string, statusHeight int64) (*types.Receipt, int64, error) {

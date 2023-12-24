@@ -1,11 +1,11 @@
 package types
 
 import (
-	"github.com/33cn/chain33/pluginmgr"
-	"github.com/33cn/plugin/plugin/dapp/rollup/commands"
-	"github.com/33cn/plugin/plugin/dapp/rollup/executor"
-	"github.com/33cn/plugin/plugin/dapp/rollup/rpc"
-	rolluptypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	"github.com/assetcloud/chain/pluginmgr"
+	"github.com/assetcloud/plugin/plugin/dapp/rollup/commands"
+	"github.com/assetcloud/plugin/plugin/dapp/rollup/executor"
+	"github.com/assetcloud/plugin/plugin/dapp/rollup/rpc"
+	rolluptypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 )
 
 /*

@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/types"
-	aty "github.com/33cn/plugin/plugin/dapp/accountmanager/types"
+	"github.com/assetcloud/chain/types"
+	aty "github.com/assetcloud/plugin/plugin/dapp/accountmanager/types"
 )
 
 /*

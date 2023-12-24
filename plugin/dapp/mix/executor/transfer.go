@@ -5,14 +5,14 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/common/address"
+	"github.com/assetcloud/chain/common/address"
 	"github.com/consensys/gnark-crypto/ecc"
 
-	"github.com/33cn/chain33/types"
-	mixTy "github.com/33cn/plugin/plugin/dapp/mix/types"
+	"github.com/assetcloud/chain/types"
+	mixTy "github.com/assetcloud/plugin/plugin/dapp/mix/types"
 	"github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
 
-	dbm "github.com/33cn/chain33/common/db"
+	dbm "github.com/assetcloud/chain/common/db"
 	"github.com/pkg/errors"
 )
 
@@ -21,7 +21,7 @@ import (
 2. check if exist in authorize pool and nullifier pool
 
 */
-func transferInput(cfg *types.Chain33Config, db dbm.KV, execer, symbol string, proof *mixTy.ZkProofInfo) (*mixTy.TransferInputCircuit, error) {
+func transferInput(cfg *types.ChainConfig, db dbm.KV, execer, symbol string, proof *mixTy.ZkProofInfo) (*mixTy.TransferInputCircuit, error) {
 	var input mixTy.TransferInputCircuit
 	err := mixTy.ConstructCircuitPubInput(proof.PublicInput, &input)
 	if err != nil {
@@ -60,7 +60,7 @@ func transferInput(cfg *types.Chain33Config, db dbm.KV, execer, symbol string, p
 2. check if exist in authorize pool and nullifier pool
 
 */
-func transferOutputVerify(cfg *types.Chain33Config, db dbm.KV, proof *mixTy.ZkProofInfo) (*mixTy.TransferOutputCircuit, error) {
+func transferOutputVerify(cfg *types.ChainConfig, db dbm.KV, proof *mixTy.ZkProofInfo) (*mixTy.TransferOutputCircuit, error) {
 	var input mixTy.TransferOutputCircuit
 	err := mixTy.ConstructCircuitPubInput(proof.PublicInput, &input)
 	if err != nil {
@@ -122,7 +122,7 @@ func VerifyCommitValues(inputs []*mixTy.TransferInputCircuit, outputs []*mixTy.T
 	return false
 }
 
-func MixTransferInfoVerify(cfg *types.Chain33Config, db dbm.KV, transfer *mixTy.MixTransferAction) ([]*mixTy.TransferInputCircuit, []*mixTy.TransferOutputCircuit, error) {
+func MixTransferInfoVerify(cfg *types.ChainConfig, db dbm.KV, transfer *mixTy.MixTransferAction) ([]*mixTy.TransferInputCircuit, []*mixTy.TransferOutputCircuit, error) {
 	var inputs []*mixTy.TransferInputCircuit
 	var outputs []*mixTy.TransferOutputCircuit
 

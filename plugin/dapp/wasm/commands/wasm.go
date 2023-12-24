@@ -5,10 +5,10 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	wasmtypes "github.com/33cn/plugin/plugin/dapp/wasm/types"
+	"github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	wasmtypes "github.com/assetcloud/plugin/plugin/dapp/wasm/types"
 	"github.com/spf13/cobra"
 )
 
@@ -45,7 +45,7 @@ func cmdCheckContract() *cobra.Command {
 func cmdCreateContract() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "publish a new contract on chain33",
+		Short: "publish a new contract on chain",
 		Run:   createContract,
 	}
 	cmd.Flags().StringP("name", "n", "", "contract name")
@@ -58,7 +58,7 @@ func cmdCreateContract() *cobra.Command {
 func cmdUpdateContract() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update",
-		Short: "update an existing contract on chain33",
+		Short: "update an existing contract on chain",
 		Run:   updateContract,
 	}
 	cmd.Flags().StringP("name", "n", "", "contract name")
@@ -71,7 +71,7 @@ func cmdUpdateContract() *cobra.Command {
 func cmdCallContract() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "call",
-		Short: "call contract on chain33",
+		Short: "call contract on chain",
 		Run:   callContract,
 	}
 	cmd.Flags().StringP("name", "n", "", "contract name")
@@ -145,7 +145,7 @@ func createContract(cmd *cobra.Command, args []string) {
 		ActionName: "Create",
 		Payload:    types.MustPBToJSON(&payload),
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -170,7 +170,7 @@ func updateContract(cmd *cobra.Command, args []string) {
 		ActionName: "Update",
 		Payload:    types.MustPBToJSON(&payload),
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -196,7 +196,7 @@ func callContract(cmd *cobra.Command, args []string) {
 		ActionName: "Call",
 		Payload:    types.MustPBToJSON(&payload),
 	}
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.CreateTransaction", params, nil)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.CreateTransaction", params, nil)
 	ctx.RunWithoutMarshal()
 }
 
@@ -213,7 +213,7 @@ func checkContract(cmd *cobra.Command, args []string) {
 	}
 
 	var resp types.Reply
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -232,7 +232,7 @@ func queryStateDB(cmd *cobra.Command, args []string) {
 	}
 
 	var resp types.ReplyString
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }
 
@@ -251,6 +251,6 @@ func queryLocalDB(cmd *cobra.Command, args []string) {
 	}
 
 	var resp types.ReplyString
-	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &resp)
+	ctx := jsonclient.NewRPCCtx(rpcLaddr, "Chain.Query", params, &resp)
 	ctx.Run()
 }

@@ -5,14 +5,14 @@ import (
 	"encoding/hex"
 	"errors"
 
-	rexec "github.com/33cn/plugin/plugin/dapp/rollup/executor"
+	rexec "github.com/assetcloud/plugin/plugin/dapp/rollup/executor"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/util"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/util"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 //Exec_RollupCrossTx exec commit rollup

@@ -5,10 +5,10 @@
 package executor
 
 import (
-	log "github.com/33cn/chain33/common/log/log15"
-	drivers "github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	uf "github.com/33cn/plugin/plugin/dapp/unfreeze/types"
+	log "github.com/assetcloud/chain/common/log/log15"
+	drivers "github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	uf "github.com/assetcloud/plugin/plugin/dapp/unfreeze/types"
 )
 
 var uflog = log.New("module", "execs.unfreeze")
@@ -16,7 +16,7 @@ var uflog = log.New("module", "execs.unfreeze")
 var driverName = uf.UnfreezeX
 
 // Init 重命名执行器名称
-func Init(name string, cfg *types.Chain33Config, sub []byte) {
+func Init(name string, cfg *types.ChainConfig, sub []byte) {
 	drivers.Register(cfg, GetName(), newUnfreeze, cfg.GetDappFork(driverName, "Enable"))
 	InitExecType()
 }

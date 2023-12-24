@@ -7,7 +7,7 @@ package types
 import (
 	"reflect"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 )
 
 var name string
@@ -27,19 +27,19 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(AutonomyX, "Enable", 0)
 	cfg.RegisterDappFork(AutonomyX, ForkAutonomyDelRule, 0)
 	cfg.RegisterDappFork(AutonomyX, ForkAutonomyEnableItem, 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(AutonomyX, NewType(cfg))
 }
 
 // NewType 生成新的基础类型
-func NewType(cfg *types.Chain33Config) *AutonomyType {
+func NewType(cfg *types.ChainConfig) *AutonomyType {
 	c := &AutonomyType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

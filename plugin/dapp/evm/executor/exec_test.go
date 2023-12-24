@@ -3,14 +3,14 @@ package executor
 import (
 	"testing"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/system/crypto/secp256k1eth"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/system/crypto/secp256k1eth"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -26,7 +26,7 @@ func newEvmTestTx(nonce int64, priv crypto.PrivKey) *types.Transaction {
 
 func TestExecNonce(t *testing.T) {
 
-	testCfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	testCfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	util.ResetDatadir(testCfg.GetModuleConfig(), "$TEMP/")
 	dbDir, stateDB, localDB := util.CreateTestDB()
 	defer util.CloseTestDB(dbDir, stateDB)

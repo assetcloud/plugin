@@ -1,7 +1,7 @@
 package runtime
 
 import (
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
 )
 
 //TOKEN 预编译地址

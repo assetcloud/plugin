@@ -9,10 +9,10 @@ import (
 	"fmt"
 	"sync/atomic"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/merkle"
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/merkle"
+	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 const (

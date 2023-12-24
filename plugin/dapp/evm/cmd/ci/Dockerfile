@@ -1,8 +1,8 @@
 FROM ubuntu:20.04
 
 WORKDIR /root
-COPY chain33 chain33
-COPY chain33-cli chain33-cli
+COPY chain chain
+COPY chain-cli chain-cli
 COPY *.toml ./
 
-CMD /root/chain33 -f /root/chain33.evm.test.toml
+CMD /root/chain -f /root/chain.evm.test.toml

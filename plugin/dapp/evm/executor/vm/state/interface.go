@@ -5,9 +5,9 @@
 package state
 
 import (
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/model"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/model"
 )
 
 // EVMStateDB 状态数据库封装，面向EVM业务执行逻辑；
@@ -84,7 +84,7 @@ type EVMStateDB interface {
 	//GetAccount return contract address info
 	GetAccount(addr string) *ContractAccount
 	// GetConfig 获取系统配置
-	GetConfig() *types.Chain33Config
+	GetConfig() *types.ChainConfig
 
 	// EVM 转移Token
 	TransferToToken(from, recipient, symbol string, amount int64) (bool, error)

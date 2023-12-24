@@ -9,14 +9,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/33cn/chain33/system/address/btc"
+	"github.com/assetcloud/chain/system/address/btc"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/system/address/eth"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/system/address/eth"
 
-	"github.com/33cn/chain33/common"
+	"github.com/assetcloud/chain/common"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 
 	"github.com/holiman/uint256"
 
@@ -62,7 +62,7 @@ func TestNewContractAddress(t *testing.T) {
 	assert.Equal(t, hexHash, hex.EncodeToString(hash))
 	assert.Equal(t, "1DgSnASfaE2J4xcD9ghDs6zptXPq68SwAf", addr1.String())
 
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 
 	addr2 := NewAddress(cfg, hash)
 	assert.Equal(t, hexHash, hex.EncodeToString(hash))

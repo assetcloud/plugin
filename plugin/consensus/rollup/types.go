@@ -1,8 +1,8 @@
 package rollup
 
 import (
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 )
 
 // Config rollup 配置

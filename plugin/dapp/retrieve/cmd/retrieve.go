@@ -8,14 +8,14 @@ import (
 	"fmt"
 	"os"
 
-	cmdtypes "github.com/33cn/chain33/system/dapp/commands/types"
+	cmdtypes "github.com/assetcloud/chain/system/dapp/commands/types"
 	"github.com/pkg/errors"
 
-	jsonrpc "github.com/33cn/chain33/rpc/jsonclient"
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/dapp/retrieve/rpc"
-	rt "github.com/33cn/plugin/plugin/dapp/retrieve/types"
+	jsonrpc "github.com/assetcloud/chain/rpc/jsonclient"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/dapp/retrieve/rpc"
+	rt "github.com/assetcloud/plugin/plugin/dapp/retrieve/types"
 	"github.com/spf13/cobra"
 )
 
@@ -322,7 +322,7 @@ func queryRetrieveCmd(cmd *cobra.Command, args []string) {
 	params.Payload = types.MustPBToJSON(req)
 
 	var res rt.RetrieveQuery
-	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain33.Query", params, &res)
+	ctx := jsonrpc.NewRPCCtx(rpcLaddr, "Chain.Query", params, &res)
 	ctx.SetResultCb(parseRerieveDetail)
 	ctx.Run()
 }

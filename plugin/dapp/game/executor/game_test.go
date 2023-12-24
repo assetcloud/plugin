@@ -3,17 +3,17 @@ package executor
 import (
 	"testing"
 
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/crypto"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/queue"
-	pty "github.com/33cn/plugin/plugin/dapp/game/types"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/crypto"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/queue"
+	pty "github.com/assetcloud/plugin/plugin/dapp/game/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -37,8 +37,8 @@ var (
 )
 
 func TestGame(t *testing.T) {
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
-	cfg.SetTitleOnlyForTest("chain33")
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
+	cfg.SetTitleOnlyForTest("chain")
 	Init(pty.GameX, cfg, nil)
 	total := 100 * types.DefaultCoinPrecision
 	accountA := types.Account{

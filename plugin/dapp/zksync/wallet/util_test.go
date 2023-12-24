@@ -3,7 +3,7 @@ package wallet
 import (
 	"testing"
 
-	"github.com/33cn/chain33/common"
+	"github.com/assetcloud/chain/common"
 	"github.com/stretchr/testify/assert"
 )
 

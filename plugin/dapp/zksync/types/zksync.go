@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/33cn/chain33/common/log/log15"
+	"github.com/assetcloud/chain/common/log/log15"
 
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/types"
 )
 
 var ztlog = log15.New("module", Zksync)
@@ -317,12 +317,12 @@ func init() {
 }
 
 // InitFork defines register fork
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(Zksync, "Enable", 0)
 }
 
 // InitExecutor defines register executor
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(Zksync, NewType(cfg))
 }
 
@@ -332,7 +332,7 @@ type ZksyncType struct {
 }
 
 //NewType ...
-func NewType(cfg *types.Chain33Config) *ZksyncType {
+func NewType(cfg *types.ChainConfig) *ZksyncType {
 	c := &ZksyncType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)

@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	rpctypes "github.com/33cn/chain33/rpc/types"
-	x2ethereumtypes "github.com/33cn/plugin/plugin/dapp/x2ethereum/types"
+	rpctypes "github.com/assetcloud/chain/rpc/types"
+	x2ethereumtypes "github.com/assetcloud/plugin/plugin/dapp/x2ethereum/types"
 )
 
 /*

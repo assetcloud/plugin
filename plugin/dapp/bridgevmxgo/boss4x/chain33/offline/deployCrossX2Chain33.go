@@ -4,25 +4,25 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/33cn/chain33/system/crypto/secp256k1"
-	"github.com/33cn/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
-	gnosis "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
-	"github.com/33cn/plugin/plugin/dapp/dex/utils"
-	evmAbi "github.com/33cn/plugin/plugin/dapp/evm/executor/abi"
-	"github.com/33cn/plugin/plugin/dapp/evm/executor/vm/common"
-	evmtypes "github.com/33cn/plugin/plugin/dapp/evm/types"
+	"github.com/assetcloud/chain/system/crypto/secp256k1"
+	"github.com/assetcloud/plugin/plugin/dapp/bridgevmxgo/contracts/generated"
+	gnosis "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/gnosis/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/dex/utils"
+	evmAbi "github.com/assetcloud/plugin/plugin/dapp/evm/executor/abi"
+	"github.com/assetcloud/plugin/plugin/dapp/evm/executor/vm/common"
+	evmtypes "github.com/assetcloud/plugin/plugin/dapp/evm/types"
 	"github.com/spf13/cobra"
 )
 
 /*
-./boss4x chain33 offline create -f 1 -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -n 'deploy crossx to chain33' -r '1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ, [1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ, 155ooMPBTF8QQsGAknkK7ei5D78rwDEFe6, 13zBdQwuyDh7cKN79oT2odkxYuDbgQiXFv, 113ZzVamKfAtGt9dq45fX1mNsEoDiN95HG], [25, 25, 25, 25]' --chainID 33
-./boss4x chain33 offline send -f deployCrossX2Chain33.txt
+./boss4x chain offline create -f 1 -k 0x027ca96466c71c7e7c5d73b7e1f43cb889b3bd65ebd2413eefd31c6709c262ae -n 'deploy crossx to chain' -r '1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ, [1N6HstkyLFS8QCeVfdvYxx1xoryXoJtvvZ, 155ooMPBTF8QQsGAknkK7ei5D78rwDEFe6, 13zBdQwuyDh7cKN79oT2odkxYuDbgQiXFv, 113ZzVamKfAtGt9dq45fX1mNsEoDiN95HG], [25, 25, 25, 25]' --chainID 33
+./boss4x chain offline send -f deployCrossX2Chain.txt
 */
 
 func CreateBridgevmxgoCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "create and sign all the offline txs to deploy bridgevmxgo contracts to chain33 evm (include valset,goAssetBridge,bridgeBank,oracle,bridgeRegistry,mulSign)",
+		Short: "create and sign all the offline txs to deploy bridgevmxgo contracts to chain evm (include valset,goAssetBridge,bridgeBank,oracle,bridgeRegistry,mulSign)",
 		Run:   createBridgevmxgo,
 	}
 	addCreateCrossBridgeFlags(cmd)
@@ -40,7 +40,7 @@ func addCreateCrossBridgeFlags(cmd *cobra.Command) {
 
 func createBridgevmxgo(cmd *cobra.Command, args []string) {
 	_ = args
-	var txs []*utils.Chain33OfflineTx
+	var txs []*utils.ChainOfflineTx
 	privateKeyStr, _ := cmd.Flags().GetString("key")
 	var driver secp256k1.Driver
 	privateKeySli := common.FromHex(privateKeyStr)
@@ -119,7 +119,7 @@ func createBridgevmxgo(cmd *cobra.Command, args []string) {
 	utils.WriteToFileInJson(crossXfileName, txs)
 }
 
-func createBridgeRegistryTxAndSign(cmd *cobra.Command, from common.Address, ethereumBridge, valset, bridgeBank, oracle string) (*utils.Chain33OfflineTx, error) {
+func createBridgeRegistryTxAndSign(cmd *cobra.Command, from common.Address, ethereumBridge, valset, bridgeBank, oracle string) (*utils.ChainOfflineTx, error) {
 	createPara := fmt.Sprintf("%s,%s,%s,%s", ethereumBridge, bridgeBank, oracle, valset)
 	content, txHash, err := utils.CreateContractAndSign(getTxInfo(cmd), generated.BridgeRegistryBin, generated.BridgeRegistryABI, createPara, "BridgeRegistry")
 	if nil != err {
@@ -127,7 +127,7 @@ func createBridgeRegistryTxAndSign(cmd *cobra.Command, from common.Address, ethe
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	bridgeRegistryTx := &utils.Chain33OfflineTx{
+	bridgeRegistryTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -137,7 +137,7 @@ func createBridgeRegistryTxAndSign(cmd *cobra.Command, from common.Address, ethe
 	return bridgeRegistryTx, nil
 }
 
-func setOracle2GoAssetBridgeTxAndSign(cmd *cobra.Command, ethbridge, oracle string) (*utils.Chain33OfflineTx, error) {
+func setOracle2GoAssetBridgeTxAndSign(cmd *cobra.Command, ethbridge, oracle string) (*utils.ChainOfflineTx, error) {
 	parameter := fmt.Sprintf("setOracle(%s)", oracle)
 	_, packData, err := evmAbi.Pack(parameter, generated.GoAssetBridgeABI, false)
 	if nil != err {
@@ -150,7 +150,7 @@ func setOracle2GoAssetBridgeTxAndSign(cmd *cobra.Command, ethbridge, oracle stri
 		return nil, err
 	}
 
-	setOracle2EthBridgeTx := &utils.Chain33OfflineTx{
+	setOracle2EthBridgeTx := &utils.ChainOfflineTx{
 		ContractAddr:  ethbridge,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -160,7 +160,7 @@ func setOracle2GoAssetBridgeTxAndSign(cmd *cobra.Command, ethbridge, oracle stri
 	return setOracle2EthBridgeTx, nil
 }
 
-func setBridgeBank2GoAssetBridgeTxAndSign(cmd *cobra.Command, ethbridge, bridgebank string) (*utils.Chain33OfflineTx, error) {
+func setBridgeBank2GoAssetBridgeTxAndSign(cmd *cobra.Command, ethbridge, bridgebank string) (*utils.ChainOfflineTx, error) {
 	parameter := fmt.Sprintf("setBridgeBank(%s)", bridgebank)
 	_, packData, err := evmAbi.Pack(parameter, generated.GoAssetBridgeABI, false)
 	if nil != err {
@@ -173,7 +173,7 @@ func setBridgeBank2GoAssetBridgeTxAndSign(cmd *cobra.Command, ethbridge, bridgeb
 		return nil, err
 	}
 
-	setBridgeBank2EthBridgeTx := &utils.Chain33OfflineTx{
+	setBridgeBank2EthBridgeTx := &utils.ChainOfflineTx{
 		ContractAddr:  ethbridge,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -183,7 +183,7 @@ func setBridgeBank2GoAssetBridgeTxAndSign(cmd *cobra.Command, ethbridge, bridgeb
 	return setBridgeBank2EthBridgeTx, nil
 }
 
-func createBridgeBankTxAndSign(cmd *cobra.Command, from common.Address, oracle, ethereumBridge string) (*utils.Chain33OfflineTx, error) {
+func createBridgeBankTxAndSign(cmd *cobra.Command, from common.Address, oracle, ethereumBridge string) (*utils.ChainOfflineTx, error) {
 	operator := from.String()
 	createPara := fmt.Sprintf("%s,%s,%s", operator, oracle, ethereumBridge)
 	content, txHash, err := utils.CreateContractAndSign(getTxInfo(cmd), generated.BridgeBankBin, generated.BridgeBankABI, createPara, "bridgeBank")
@@ -192,7 +192,7 @@ func createBridgeBankTxAndSign(cmd *cobra.Command, from common.Address, oracle, 
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	bridgeBankTx := &utils.Chain33OfflineTx{
+	bridgeBankTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -202,7 +202,7 @@ func createBridgeBankTxAndSign(cmd *cobra.Command, from common.Address, oracle, 
 	return bridgeBankTx, nil
 }
 
-func createOracleTxAndSign(cmd *cobra.Command, from common.Address, valset, ethereumBridge string) (*utils.Chain33OfflineTx, error) {
+func createOracleTxAndSign(cmd *cobra.Command, from common.Address, valset, ethereumBridge string) (*utils.ChainOfflineTx, error) {
 	operator := from.String()
 	createPara := fmt.Sprintf("%s,%s,%s", operator, valset, ethereumBridge)
 	content, txHash, err := utils.CreateContractAndSign(getTxInfo(cmd), generated.OracleBin, generated.OracleABI, createPara, "oralce")
@@ -211,7 +211,7 @@ func createOracleTxAndSign(cmd *cobra.Command, from common.Address, valset, ethe
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	oracleTx := &utils.Chain33OfflineTx{
+	oracleTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -221,7 +221,7 @@ func createOracleTxAndSign(cmd *cobra.Command, from common.Address, valset, ethe
 	return oracleTx, nil
 }
 
-func createValsetTxAndSign(cmd *cobra.Command, from common.Address) (*utils.Chain33OfflineTx, error) {
+func createValsetTxAndSign(cmd *cobra.Command, from common.Address) (*utils.ChainOfflineTx, error) {
 	contructParameter, _ := cmd.Flags().GetString("valset")
 	createPara := contructParameter
 	content, txHash, err := utils.CreateContractAndSign(getTxInfo(cmd), generated.ValsetBin, generated.ValsetABI, createPara, "valset")
@@ -230,7 +230,7 @@ func createValsetTxAndSign(cmd *cobra.Command, from common.Address) (*utils.Chai
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	valsetTx := &utils.Chain33OfflineTx{
+	valsetTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -240,7 +240,7 @@ func createValsetTxAndSign(cmd *cobra.Command, from common.Address) (*utils.Chai
 	return valsetTx, nil
 }
 
-func createGoAssetBridgeAndSign(cmd *cobra.Command, from common.Address, valset string) (*utils.Chain33OfflineTx, error) {
+func createGoAssetBridgeAndSign(cmd *cobra.Command, from common.Address, valset string) (*utils.ChainOfflineTx, error) {
 	operator := from.String()
 	createPara := fmt.Sprintf("%s,%s", operator, valset)
 	content, txHash, err := utils.CreateContractAndSign(getTxInfo(cmd), generated.GoAssetBridgeBin, generated.GoAssetBridgeABI, createPara, "goAssetBridge")
@@ -249,7 +249,7 @@ func createGoAssetBridgeAndSign(cmd *cobra.Command, from common.Address, valset 
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	goAssetBridgeTx := &utils.Chain33OfflineTx{
+	goAssetBridgeTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
@@ -259,19 +259,19 @@ func createGoAssetBridgeAndSign(cmd *cobra.Command, from common.Address, valset 
 	return goAssetBridgeTx, nil
 }
 
-func createMulSignAndSign(cmd *cobra.Command, from common.Address) (*utils.Chain33OfflineTx, error) {
-	content, txHash, err := utils.CreateContractAndSign(getTxInfo(cmd), gnosis.GnosisSafeBin, gnosis.GnosisSafeABI, "", "mulSign2chain33")
+func createMulSignAndSign(cmd *cobra.Command, from common.Address) (*utils.ChainOfflineTx, error) {
+	content, txHash, err := utils.CreateContractAndSign(getTxInfo(cmd), gnosis.GnosisSafeBin, gnosis.GnosisSafeABI, "", "mulSign2chain")
 	if nil != err {
 		return nil, err
 	}
 
 	newContractAddr := common.NewContractAddress(from, txHash).String()
-	mulSign2chain33Tx := &utils.Chain33OfflineTx{
+	mulSign2chainTx := &utils.ChainOfflineTx{
 		ContractAddr:  newContractAddr,
 		TxHash:        common.Bytes2Hex(txHash),
 		SignedRawTx:   content,
-		OperationName: "deploy mulSign2chain33",
+		OperationName: "deploy mulSign2chain",
 		Interval:      time.Second * 5,
 	}
-	return mulSign2chain33Tx, nil
+	return mulSign2chainTx, nil
 }

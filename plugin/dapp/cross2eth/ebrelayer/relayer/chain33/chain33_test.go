@@ -1,4 +1,4 @@
-package chain33
+package chain
 
 import (
 	"context"
@@ -11,24 +11,24 @@ import (
 	"testing"
 	"time"
 
-	chain33Common "github.com/33cn/chain33/common"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/chain33/util/testnode"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/test/setup"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
-	ebTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	ebrelayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
-	relayerTypes "github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	chainCommon "github.com/assetcloud/chain/common"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/chain/util/testnode"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/test/setup"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethtxs"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/events"
+	ebTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	ebrelayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
+	relayerTypes "github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/types"
 	tml "github.com/BurntSushi/toml"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	_ "github.com/33cn/chain33/system"
+	_ "github.com/assetcloud/chain/system"
 
 	// 需要显示引用系统插件，以加载系统内置合约
-	"github.com/33cn/chain33/client/mocks"
+	"github.com/assetcloud/chain/client/mocks"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -58,62 +58,62 @@ func Test_ImportRestorePrivateKey(t *testing.T) {
 
 	_, _, _, x2EthDeployInfo, err := setup.DeployContracts()
 	require.NoError(t, err)
-	chain33Relayer := newChain33Relayer(x2EthDeployInfo, "127.0.0.1:60000")
+	chainRelayer := newChainRelayer(x2EthDeployInfo, "127.0.0.1:60000")
 
-	err = chain33Relayer.ImportPrivateKey(passphrase, privateKeyStr)
+	err = chainRelayer.ImportPrivateKey(passphrase, privateKeyStr)
 	assert.NoError(t, err)
 
 	time.Sleep(10 * time.Millisecond)
 
-	addr, err := chain33Relayer.GetAccountAddr()
+	addr, err := chainRelayer.GetAccountAddr()
 	assert.NoError(t, err)
 	assert.Equal(t, addr, accountAddr)
 
-	key, _, _ := chain33Relayer.GetAccount("123")
+	key, _, _ := chainRelayer.GetAccount("123")
 	assert.NotEqual(t, key, privateKeyStr)
 
-	key, _, _ = chain33Relayer.GetAccount(passphrase)
+	key, _, _ = chainRelayer.GetAccount(passphrase)
 	assert.Equal(t, key, privateKeyStr)
 
 	//////////////restore part//////////
 	go func() {
-		for range chain33Relayer.unlockChan {
+		for range chainRelayer.unlockChan {
 		}
 	}()
 
-	err = chain33Relayer.RestorePrivateKeys("123")
-	assert.NotEqual(t, chain33Common.ToHex(chain33Relayer.privateKey4Chain33.Bytes()), privateKeyStr)
+	err = chainRelayer.RestorePrivateKeys("123")
+	assert.NotEqual(t, chainCommon.ToHex(chainRelayer.privateKey4Chain.Bytes()), privateKeyStr)
 	fmt.Println("err", err)
 	assert.NoError(t, err)
 
-	err = chain33Relayer.RestorePrivateKeys(passphrase)
-	assert.Equal(t, chain33Common.ToHex(chain33Relayer.privateKey4Chain33.Bytes()), privateKeyStr)
+	err = chainRelayer.RestorePrivateKeys(passphrase)
+	assert.Equal(t, chainCommon.ToHex(chainRelayer.privateKey4Chain.Bytes()), privateKeyStr)
 	assert.NoError(t, err)
 
-	err = chain33Relayer.StoreAccountWithNewPassphase("new123", passphrase)
+	err = chainRelayer.StoreAccountWithNewPassphase("new123", passphrase)
 	assert.NoError(t, err)
 
-	err = chain33Relayer.RestorePrivateKeys("new123")
-	assert.Equal(t, chain33Common.ToHex(chain33Relayer.privateKey4Chain33.Bytes()), privateKeyStr)
+	err = chainRelayer.RestorePrivateKeys("new123")
+	assert.Equal(t, chainCommon.ToHex(chainRelayer.privateKey4Chain.Bytes()), privateKeyStr)
 	assert.NoError(t, err)
 
 	time.Sleep(20 * time.Millisecond)
 }
 
-func newChain33Relayer(x2EthDeployInfo *ethtxs.X2EthDeployInfo, pushBind string) *Relayer4Chain33 {
+func newChainRelayer(x2EthDeployInfo *ethtxs.X2EthDeployInfo, pushBind string) *Relayer4Chain {
 	cfg := initCfg(*configPath)
 
-	chain33MsgChan2Eths := make(map[string]chan<- *events.Chain33Msg)
+	chainMsgChan2Eths := make(map[string]chan<- *events.ChainMsg)
 	ethBridgeClaimChan := make(chan *ebrelayerTypes.EthBridgeClaim, 100)
 
 	for i := range cfg.EthRelayerCfg {
 		cfg.EthRelayerCfg[i].BridgeRegistry = x2EthDeployInfo.BridgeRegistry.Address.String()
-		chain33MsgChan := make(chan *events.Chain33Msg, 100)
-		chain33MsgChan2Eths[cfg.EthRelayerCfg[i].EthChainName] = chain33MsgChan
+		chainMsgChan := make(chan *events.ChainMsg, 100)
+		chainMsgChan2Eths[cfg.EthRelayerCfg[i].EthChainName] = chainMsgChan
 	}
-	cfg.Chain33RelayerCfg.SyncTxConfig.PushBind = pushBind
-	cfg.Chain33RelayerCfg.SyncTxConfig.FetchHeightPeriodMs = 50
-	cfg.Chain33RelayerCfg.SyncTxConfig.Chain33Host = "http://127.0.0.1:8801"
+	cfg.ChainRelayerCfg.SyncTxConfig.PushBind = pushBind
+	cfg.ChainRelayerCfg.SyncTxConfig.FetchHeightPeriodMs = 50
+	cfg.ChainRelayerCfg.SyncTxConfig.ChainHost = "http://127.0.0.1:8801"
 	cfg.Dbdriver = "memdb"
 
 	db := dbm.NewDB("relayer_db_service", cfg.Dbdriver, cfg.DbPath, cfg.DbCache)
@@ -121,19 +121,19 @@ func newChain33Relayer(x2EthDeployInfo *ethtxs.X2EthDeployInfo, pushBind string)
 
 	var wg sync.WaitGroup
 
-	startPara := &Chain33StartPara{
-		ChainName:          cfg.Chain33RelayerCfg.ChainName,
+	startPara := &ChainStartPara{
+		ChainName:          cfg.ChainRelayerCfg.ChainName,
 		Ctx:                ctx,
-		SyncTxConfig:       cfg.Chain33RelayerCfg.SyncTxConfig,
-		BridgeRegistryAddr: cfg.Chain33RelayerCfg.BridgeRegistryOnChain33,
+		SyncTxConfig:       cfg.ChainRelayerCfg.SyncTxConfig,
+		BridgeRegistryAddr: cfg.ChainRelayerCfg.BridgeRegistryOnChain,
 		DBHandle:           db,
 		EthBridgeClaimChan: ethBridgeClaimChan,
-		Chain33MsgChan:     chain33MsgChan2Eths,
-		ChainID:            cfg.Chain33RelayerCfg.ChainID4Chain33,
+		ChainMsgChan:     chainMsgChan2Eths,
+		ChainID:            cfg.ChainRelayerCfg.ChainID4Chain,
 	}
 
-	relayer := &Relayer4Chain33{
-		rpcLaddr:                startPara.SyncTxConfig.Chain33Host,
+	relayer := &Relayer4Chain{
+		rpcLaddr:                startPara.SyncTxConfig.ChainHost,
 		chainName:               startPara.ChainName,
 		chainID:                 startPara.ChainID,
 		fetchHeightPeriodMs:     startPara.SyncTxConfig.FetchHeightPeriodMs,
@@ -142,13 +142,13 @@ func newChain33Relayer(x2EthDeployInfo *ethtxs.X2EthDeployInfo, pushBind string)
 		ctx:                     startPara.Ctx,
 		bridgeRegistryAddr:      startPara.BridgeRegistryAddr,
 		ethBridgeClaimChan:      startPara.EthBridgeClaimChan,
-		chain33MsgChan:          startPara.Chain33MsgChan,
+		chainMsgChan:          startPara.ChainMsgChan,
 		totalTx4RelayEth2chai33: 0,
 		symbol2Addr:             make(map[string]string),
 	}
 
 	syncCfg := &ebTypes.SyncTxReceiptConfig{
-		Chain33Host:       startPara.SyncTxConfig.Chain33Host,
+		ChainHost:       startPara.SyncTxConfig.ChainHost,
 		PushHost:          startPara.SyncTxConfig.PushHost,
 		PushName:          startPara.SyncTxConfig.PushName,
 		PushBind:          startPara.SyncTxConfig.PushBind,

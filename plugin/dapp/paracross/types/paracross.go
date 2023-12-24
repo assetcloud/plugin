@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
 )
 
 var tlog = log15.New("module", ParaX)
@@ -239,11 +239,11 @@ func CalcMinerHeightKey(title string, height int64) []byte {
 }
 
 // CreateRawCommitTx4MainChain create commit tx to main chain
-func CreateRawCommitTx4MainChain(cfg *types.Chain33Config, status *ParacrossCommitAction, name string, fee int64) (*types.Transaction, error) {
+func CreateRawCommitTx4MainChain(cfg *types.ChainConfig, status *ParacrossCommitAction, name string, fee int64) (*types.Transaction, error) {
 	return createRawCommitTx(cfg, status, name, fee)
 }
 
-func createRawCommitTx(cfg *types.Chain33Config, commit *ParacrossCommitAction, name string, feeRate int64) (*types.Transaction, error) {
+func createRawCommitTx(cfg *types.ChainConfig, commit *ParacrossCommitAction, name string, feeRate int64) (*types.Transaction, error) {
 	action := &ParacrossAction{
 		Ty:    ParacrossActionCommit,
 		Value: &ParacrossAction_Commit{commit},
@@ -268,7 +268,7 @@ func createRawCommitTx(cfg *types.Chain33Config, commit *ParacrossCommitAction, 
 }
 
 // CreateRawAssetTransferTx create asset transfer tx
-func CreateRawAssetTransferTx(cfg *types.Chain33Config, param *types.CreateTx) (*types.Transaction, error) {
+func CreateRawAssetTransferTx(cfg *types.ChainConfig, param *types.CreateTx) (*types.Transaction, error) {
 	return CreateRawAssetTransferTxExt(cfg.GetChainID(), cfg.GetMinTxFeeRate(), param)
 }
 
@@ -306,7 +306,7 @@ func CreateRawAssetTransferTxExt(chainID int32, minFee int64, param *types.Creat
 }
 
 // CreateRawMinerTx create miner tx
-func CreateRawMinerTx(cfg *types.Chain33Config, value *ParacrossMinerAction) (*types.Transaction, error) {
+func CreateRawMinerTx(cfg *types.ChainConfig, value *ParacrossMinerAction) (*types.Transaction, error) {
 
 	action := &ParacrossAction{
 		Ty:    ParacrossActionMiner,
@@ -355,7 +355,7 @@ func (p ParacrossType) CreateRawTransferTx(action string, param json.RawMessage)
 }
 
 //GetDappForkHeight get paracross dapp fork height
-func GetDappForkHeight(cfg *types.Chain33Config, forkKey string) int64 {
+func GetDappForkHeight(cfg *types.ChainConfig, forkKey string) int64 {
 	var forkHeight int64
 	if cfg.IsPara() {
 		key := forkKey
@@ -390,6 +390,6 @@ func GetDappForkHeight(cfg *types.Chain33Config, forkKey string) int64 {
 }
 
 // IsParaForkHeight check height more than fork height
-func IsParaForkHeight(cfg *types.Chain33Config, height int64, forkKey string) bool {
+func IsParaForkHeight(cfg *types.ChainConfig, height int64, forkKey string) bool {
 	return height >= GetDappForkHeight(cfg, forkKey)
 }

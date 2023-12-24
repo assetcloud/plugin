@@ -6,11 +6,11 @@ import (
 	"math/big"
 	"strings"
 
-	bep20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/bep20/generated"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
-	erc20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
-	tetherUSDT "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/usdt/generated"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
+	bep20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/bep20/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
+	erc20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/erc20/generated"
+	tetherUSDT "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/usdt/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/utils"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -302,7 +302,7 @@ func AddToken2LockListTx(cmd *cobra.Command, _ []string) {
 func CreateBridgeTokenTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create_bridge_token",
-		Short: "create new token as chain33 asset on Ethereum, and it's should be done by operator",
+		Short: "create new token as chain asset on Ethereum, and it's should be done by operator",
 		Run:   CreateBridgeTokenTx,
 	}
 	CreateBridgeTokenTxFlags(cmd)

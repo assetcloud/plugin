@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	bep20 "github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/bep20/generated"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
-	"github.com/33cn/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
+	bep20 "github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/bep20/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/contracts/contracts4eth/generated"
+	"github.com/assetcloud/plugin/plugin/dapp/cross2eth/ebrelayer/relayer/ethereum/ethinterface"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -56,7 +56,7 @@ func IsActiveValidator(validator common.Address, valset *generated.Valset) (bool
 }
 
 //IsProphecyPending ...
-func IsProphecyPending(claimID [32]byte, validator common.Address, chain33Bridge *generated.Chain33Bridge) (bool, error) {
+func IsProphecyPending(claimID [32]byte, validator common.Address, chainBridge *generated.ChainBridge) (bool, error) {
 	opts := &bind.CallOpts{
 		Pending: true,
 		From:    validator,
@@ -64,9 +64,9 @@ func IsProphecyPending(claimID [32]byte, validator common.Address, chain33Bridge
 	}
 
 	// Initialize BridgeRegistry instance
-	active, err := chain33Bridge.IsProphecyClaimActive(opts, claimID)
+	active, err := chainBridge.IsProphecyClaimActive(opts, claimID)
 	if err != nil {
-		txslog.Error("IsActiveValidatorFromChain33Bridge", "Failed to query IsActiveValidator due to:", err.Error())
+		txslog.Error("IsActiveValidatorFromChainBridge", "Failed to query IsActiveValidator due to:", err.Error())
 		return false, err
 	}
 	return active, nil

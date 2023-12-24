@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/queue"
-	"github.com/33cn/chain33/system/consensus"
-	"github.com/33cn/chain33/types"
-	"github.com/33cn/plugin/plugin/crypto/bls"
-	rtypes "github.com/33cn/plugin/plugin/dapp/rollup/types"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/queue"
+	"github.com/assetcloud/chain/system/consensus"
+	"github.com/assetcloud/chain/types"
+	"github.com/assetcloud/plugin/plugin/crypto/bls"
+	rtypes "github.com/assetcloud/plugin/plugin/dapp/rollup/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,7 +39,7 @@ func Test_SubMsg(t *testing.T) {
 
 func Test_trySubTopic(t *testing.T) {
 
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	q := queue.New("test")
 	q.SetConfig(cfg)
 	api, err := client.New(q.Client(), nil)
@@ -75,7 +75,7 @@ func Test_trySubTopic(t *testing.T) {
 
 func Test_tryPubMsg(t *testing.T) {
 
-	cfg := types.NewChain33Config(types.GetDefaultCfgstring())
+	cfg := types.NewChainConfig(types.GetDefaultCfgstring())
 	q := queue.New("test")
 	q.SetConfig(cfg)
 	api, err := client.New(q.Client(), nil)

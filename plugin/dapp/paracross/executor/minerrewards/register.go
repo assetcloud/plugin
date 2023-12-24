@@ -3,13 +3,13 @@ package minerrewards
 import (
 	"fmt"
 
-	"github.com/33cn/chain33/types"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/types"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 )
 
 type RewardPolicy interface {
-	GetConfigReward(cfg *types.Chain33Config, height int64) (int64, int64, int64)
-	RewardMiners(cfg *types.Chain33Config, coinReward int64, miners []string, height int64) ([]*pt.ParaMinerReward, int64)
+	GetConfigReward(cfg *types.ChainConfig, height int64) (int64, int64, int64)
+	RewardMiners(cfg *types.ChainConfig, coinReward int64, miners []string, height int64) ([]*pt.ParaMinerReward, int64)
 }
 
 var MinerRewards = make(map[string]RewardPolicy)

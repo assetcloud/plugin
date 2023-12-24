@@ -5,18 +5,18 @@
 package executor
 
 import (
-	"github.com/33cn/chain33/account"
-	"github.com/33cn/chain33/client"
-	"github.com/33cn/chain33/common"
-	dbm "github.com/33cn/chain33/common/db"
-	"github.com/33cn/chain33/system/dapp"
-	"github.com/33cn/chain33/types"
-	auty "github.com/33cn/plugin/plugin/dapp/autonomy/types"
+	"github.com/assetcloud/chain/account"
+	"github.com/assetcloud/chain/client"
+	"github.com/assetcloud/chain/common"
+	dbm "github.com/assetcloud/chain/common/db"
+	"github.com/assetcloud/chain/system/dapp"
+	"github.com/assetcloud/chain/types"
+	auty "github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/common/address"
-	ticket "github.com/33cn/plugin/plugin/dapp/ticket/executor"
-	ticketTy "github.com/33cn/plugin/plugin/dapp/ticket/types"
+	"github.com/assetcloud/chain/common/address"
+	ticket "github.com/assetcloud/plugin/plugin/dapp/ticket/executor"
+	ticketTy "github.com/assetcloud/plugin/plugin/dapp/ticket/types"
 )
 
 type AutonomyParam struct {
@@ -52,7 +52,7 @@ type AutonomyParam struct {
 }
 
 // GetAutonomyParam 获取autonomy config params
-func GetAutonomyParam(cfg *types.Chain33Config, height int64) *AutonomyParam {
+func GetAutonomyParam(cfg *types.ChainConfig, height int64) *AutonomyParam {
 	conf := types.Conf(cfg, "mver.autonomy")
 	c := &AutonomyParam{}
 	c.MinBoards = conf.MGInt("minBoards", height)

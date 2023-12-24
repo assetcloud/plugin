@@ -7,12 +7,12 @@ package para
 import (
 	"testing"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/types"
 
-	"github.com/33cn/chain33/common/crypto"
-	_ "github.com/33cn/plugin/plugin/crypto/bls"
-	pt "github.com/33cn/plugin/plugin/dapp/paracross/types"
+	"github.com/assetcloud/chain/common/crypto"
+	_ "github.com/assetcloud/plugin/plugin/crypto/bls"
+	pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/stretchr/testify/assert"
 )
 

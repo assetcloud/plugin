@@ -8,7 +8,7 @@ package types
 
 import (
 	context "context"
-	types "github.com/33cn/chain33/types"
+	types "github.com/assetcloud/chain/types"
 	grpc "google.golang.org/grpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"

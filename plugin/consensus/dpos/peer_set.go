@@ -18,7 +18,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	ttypes "github.com/33cn/plugin/plugin/consensus/dpos/types"
+	ttypes "github.com/assetcloud/plugin/plugin/consensus/dpos/types"
 	"github.com/golang/protobuf/proto"
 	"github.com/pkg/errors"
 )

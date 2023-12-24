@@ -11,9 +11,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/33cn/chain33/common/address"
-	log "github.com/33cn/chain33/common/log/log15"
-	"github.com/33cn/chain33/types"
+	"github.com/assetcloud/chain/common/address"
+	log "github.com/assetcloud/chain/common/log/log15"
+	"github.com/assetcloud/chain/types"
 )
 
 var (
@@ -27,14 +27,14 @@ func init() {
 }
 
 //InitFork ...
-func InitFork(cfg *types.Chain33Config) {
+func InitFork(cfg *types.ChainConfig) {
 	cfg.RegisterDappFork(IssuanceX, "Enable", 0)
 	cfg.RegisterDappFork(IssuanceX, ForkIssuanceTableUpdate, 0)
 	cfg.RegisterDappFork(IssuanceX, ForkIssuancePrecision, 0)
 }
 
 //InitExecutor ...
-func InitExecutor(cfg *types.Chain33Config) {
+func InitExecutor(cfg *types.ChainConfig) {
 	types.RegistorExecutor(IssuanceX, NewType(cfg))
 }
 
@@ -44,7 +44,7 @@ type IssuanceType struct {
 }
 
 // NewType method
-func NewType(cfg *types.Chain33Config) *IssuanceType {
+func NewType(cfg *types.ChainConfig) *IssuanceType {
 	c := &IssuanceType{}
 	c.SetChild(c)
 	c.SetConfig(cfg)
@@ -143,7 +143,7 @@ func (issuance IssuanceType) GetTypeMap() map[string]int32 {
 }
 
 // CreateRawIssuanceCreateTx method
-func CreateRawIssuanceCreateTx(cfg *types.Chain33Config, parm *IssuanceCreateTx) (*types.Transaction, error) {
+func CreateRawIssuanceCreateTx(cfg *types.ChainConfig, parm *IssuanceCreateTx) (*types.Transaction, error) {
 	if parm == nil {
 		llog.Error("CreateRawIssuanceCreateTx", "parm", parm)
 		return nil, types.ErrInvalidParam
@@ -183,7 +183,7 @@ func CreateRawIssuanceCreateTx(cfg *types.Chain33Config, parm *IssuanceCreateTx)
 }
 
 // CreateRawIssuanceDebtTx method
-func CreateRawIssuanceDebtTx(cfg *types.Chain33Config, parm *IssuanceDebtTx) (*types.Transaction, error) {
+func CreateRawIssuanceDebtTx(cfg *types.ChainConfig, parm *IssuanceDebtTx) (*types.Transaction, error) {
 	if parm == nil {
 		llog.Error("CreateRawIssuanceBorrowTx", "parm", parm)
 		return nil, types.ErrInvalidParam
@@ -215,7 +215,7 @@ func CreateRawIssuanceDebtTx(cfg *types.Chain33Config, parm *IssuanceDebtTx) (*t
 }
 
 // CreateRawIssuanceRepayTx method
-func CreateRawIssuanceRepayTx(cfg *types.Chain33Config, parm *IssuanceRepayTx) (*types.Transaction, error) {
+func CreateRawIssuanceRepayTx(cfg *types.ChainConfig, parm *IssuanceRepayTx) (*types.Transaction, error) {
 	if parm == nil {
 		llog.Error("CreateRawIssuanceRepayTx", "parm", parm)
 		return nil, types.ErrInvalidParam
@@ -244,7 +244,7 @@ func CreateRawIssuanceRepayTx(cfg *types.Chain33Config, parm *IssuanceRepayTx) (
 }
 
 // CreateRawIssuanceFeedTx method
-func CreateRawIssuanceFeedTx(cfg *types.Chain33Config, parm *IssuanceFeedTx) (*types.Transaction, error) {
+func CreateRawIssuanceFeedTx(cfg *types.ChainConfig, parm *IssuanceFeedTx) (*types.Transaction, error) {
 	if parm == nil {
 		llog.Error("CreateRawIssuancePriceFeedTx", "parm", parm)
 		return nil, types.ErrInvalidParam
@@ -276,7 +276,7 @@ func CreateRawIssuanceFeedTx(cfg *types.Chain33Config, parm *IssuanceFeedTx) (*t
 }
 
 // CreateRawIssuanceCloseTx method
-func CreateRawIssuanceCloseTx(cfg *types.Chain33Config, parm *IssuanceCloseTx) (*types.Transaction, error) {
+func CreateRawIssuanceCloseTx(cfg *types.ChainConfig, parm *IssuanceCloseTx) (*types.Transaction, error) {
 	if parm == nil {
 		llog.Error("CreateRawIssuanceCloseTx", "parm", parm)
 		return nil, types.ErrInvalidParam
@@ -305,7 +305,7 @@ func CreateRawIssuanceCloseTx(cfg *types.Chain33Config, parm *IssuanceCloseTx) (
 }
 
 // CreateRawIssuanceManageTx method
-func CreateRawIssuanceManageTx(cfg *types.Chain33Config, parm *IssuanceManageTx) (*types.Transaction, error) {
+func CreateRawIssuanceManageTx(cfg *types.ChainConfig, parm *IssuanceManageTx) (*types.Transaction, error) {
 	if parm == nil {
 		llog.Error("CreateRawIssuanceManageTx", "parm", parm)
 		return nil, types.ErrInvalidParam

@@ -7,7 +7,7 @@ package executor
 import (
 	"fmt"
 
-	auty "github.com/33cn/plugin/plugin/dapp/autonomy/types"
+	auty "github.com/assetcloud/plugin/plugin/dapp/autonomy/types"
 )
 
 var (

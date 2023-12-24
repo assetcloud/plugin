@@ -7,12 +7,12 @@ package relayd
 import (
 	"testing"
 
-	"github.com/33cn/chain33/common"
-	"github.com/33cn/chain33/common/address"
-	"github.com/33cn/chain33/common/crypto"
-	"github.com/33cn/chain33/types"
-	typesmocks "github.com/33cn/chain33/types/mocks"
-	types2 "github.com/33cn/plugin/plugin/dapp/relay/types"
+	"github.com/assetcloud/chain/common"
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/common/crypto"
+	"github.com/assetcloud/chain/types"
+	typesmocks "github.com/assetcloud/chain/types/mocks"
+	types2 "github.com/assetcloud/plugin/plugin/dapp/relay/types"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -33,10 +33,10 @@ func TestGeneratePrivateKey(t *testing.T) {
 }
 
 func TestDealOrder(t *testing.T) {
-	grpcClient := &typesmocks.Chain33Client{}
+	grpcClient := &typesmocks.ChainClient{}
 	relayd := &Relayd{}
 	relayd.client33 = &Client33{}
-	relayd.client33.Chain33Client = grpcClient
+	relayd.client33.ChainClient = grpcClient
 	relayd.btcClient = &btcdClient{
 		connConfig:          nil,
 		chainParams:         mainNetParams.Params,

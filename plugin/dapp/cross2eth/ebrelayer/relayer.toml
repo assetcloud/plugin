@@ -5,7 +5,7 @@ dbdriver="leveldb"
 dbPath="datadir"
 dbCache=64
 ProcessWithDraw=false
-DelayedSendTime=0 #180000 # chain33延迟 3分钟后再发送
+DelayedSendTime=0 #180000 # chain延迟 3分钟后再发送
 RemindUrl="http://183.129.226.77:9988/alert/send"
 RemindClientErrorUrl="http://116.63.171.186:9988/alert/send/email"
 RemindEmail=["236200000@126.com","ceshi@163.com"]
@@ -27,15 +27,15 @@ BridgeRegistry=""
 EthMaturityDegree=10
 EthBlockFetchPeriod=5000
 StartListenHeight=0
-#chain33的配置
-[Chain33RelayerCfg]
-ChainID4Chain33=0
+#chain的配置
+[ChainRelayerCfg]
+ChainID4Chain=0
 #链的名称，用来区分主链和平行链,如user.p.xxx.,必须包含最后一个点
 ChainName=""
-BridgeRegistryOnChain33=""
+BridgeRegistryOnChain=""
 
-[Chain33RelayerCfg.SyncTxConfig]
-chain33Host="http://localhost:8801"
+[ChainRelayerCfg.SyncTxConfig]
+chainHost="http://localhost:8801"
 pushHost="http://localhost:20000"
 pushName="x2eth"
 pushBind="0.0.0.0:20000"
@@ -46,7 +46,7 @@ keepAliveDuration=180000 #3分钟之内未收到信息，通过重新订阅，�
 startSyncHeight=0
 startSyncSequence=0
 startSyncHash=""
-chain33RpcUrls=["http://localhost:8801", "http://172.18.0.2:8801"]
+chainRpcUrls=["http://localhost:8801", "http://172.18.0.2:8801"]
 
 [log]
 # 日志级别，支持debug(dbug)/info/warn/error(eror)/crit
