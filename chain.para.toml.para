@@ -2,14 +2,13 @@ Title = "user.p.para."
 TestNet = false
 CoinSymbol = "para"
 EnableParaFork = true
-ChainID = 898
 
 [address]
 #旧的版本或bty缺省是btc格式地址，可以支持eth格式地址，如果对地址格式没要求，采用缺省配置即可
-defaultDriver = "eth"
+defaultDriver = "btc"
 [address.enableHeight]
 btc = 0
-eth = 0
+eth = -1
 
 [crypto]
 
@@ -30,9 +29,9 @@ localTime = true
 # 历史日志文件是否压缩（压缩格式为gz）
 compress = true
 # 是否打印调用源文件和行号
-callerFile = true
+callerFile = false
 # 是否打印调用方法
-callerFunction = true
+callerFunction = false
 
 
 [blockchain]
@@ -48,127 +47,66 @@ singleMode = true
 batchsync = false
 #平行链钱包通过平行链区块seqence索引高度，缺省是true
 isRecordBlockSequence = true
-isParaChain = false
+isParaChain = true
 enableTxQuickIndex = true
 # 升级storedb是否重新执行localdb，bityuan主链升级不需要开启，平行链升级需要开启
 enableReExecLocal = true
 # 使能精简localdb
 enableReduceLocaldb = false
 enablePushSubscribe = false
-disableShard=true
-enableSaveBlockKVs=true
 
 [p2p]
 types = ["dht"]
-#types = ["gossip"]
-enable = true
+enable = false
 driver = "leveldb"
 dbPath = "paradatadir/addrbook"
 dbCache = 4
 grpcLogFile = "grpc33.log"
-waitPid = false
-
-[p2p.sub.gossip]
-port=13801
-# 种子节点，格式为ip:port，多个节点以逗号分隔，如seeds=["10.0.0.1:13802","10.0.0.2:13802","10.0.0.3:13802"]
-seeds=["172.31.0.8:13801","172.31.0.9:13801","172.31.0.10:13801","172.31.0.11:13801"]
-isSeed=true
-innerSeedEnable=false
-useGithub=false
-innerBounds=300
-channel=1898
-serverStart=true
-maxTTL=1
-
+waitPid = true
 
 [p2p.sub.dht]
 DHTDataPath = "paradatadir/p2pstore"
-#seeds=["172.31.0.8:13801","172.31.0.9:13801","172.31.0.10:13801","172.31.0.11:13801"]
-port=13801 # TODO.p2p.port
-
-maxConnectNum=100
-# 禁止通过局域网发现节点
-disableFindLANPeers=false
-# 配置为全节点模式，全节点保存所有分片数据
-isFullNode=true
-# 分片数据默认保存比例，最低可配置为10
-percentage=30
 
 [rpc]
 # 避免与主链配置冲突
-jrpcBindAddr = "0.0.0.0:8901" # TODO.rpc.addr1
-grpcBindAddr = "0.0.0.0:8902" # TODO.rpc.addr2
-whitelist = ["*"]
+jrpcBindAddr = "localhost:8901"
+grpcBindAddr = "localhost:8902"
+whitelist = ["127.0.0.1"]
 jrpcFuncWhitelist = ["*"]
 grpcFuncWhitelist = ["*"]
 
 [rpc.sub.eth]
 enable = false
-httpAddr = "localhost:8545"  # TODO.rpc.addr3
+httpAddr = "localhost:8545"
 httpApi = ["eth", "web3", "personal", "admin", "net"]
 # websocket 绑定地址
-wsAddr = "localhost:8546"  # TODO.rpc.addr4
+wsAddr = "localhost:8546"
 wsApi = ["eth", "web3", "personal", "admin", "net"]
 
 [rpc.parachain]
 #主链节点的grpc服务器ip，当前可以支持多ip负载均衡，如“118.31.177.1:8802,39.97.2.127:8802”
 #mainChainGrpcAddr="jiedian2.bityuan.com,cloud.bityuan.com"
-mainChainGrpcAddr = "172.31.0.12:8902" # TODO.rpc.parachain
+mainChainGrpcAddr = "localhost:8802"
 #配置grpc负载均衡为sync模式
 useGrpcLBSync = false
-forwardExecs = ["paracross"]
-forwardActionNames = ["crossAssetTransfer"]
+forwardExecs = ["all"]
+forwardActionNames = []
 
 [mempool]
-name = "timeline"
+name = "para"
 poolCacheSize = 10240
 #联盟链没有交易费，对应平行链minTxFeeRate需要设为0
-minTxFeeRate = 0 
-maxTxNumPerAccount = 1000000
+minTxFeeRate = 100000
+maxTxNumPerAccount = 10000
 
 [consensus]
-name="qbft"
-minerstart=true
-genesisBlockTime=1703745259
-genesis="0x065dc496c80deaef2053429d725b69f58e3b7e82" # TODO.ADDR.u1
-#minerExecs=["ticket", "autonomy"]
-enableBestBlockCmp=true
-minerExecs=["paracross"]    #配置挖矿合约
-#committer="rollup"
-
-#[consensus.sub.rollup]
-## 配置节点账户私钥 
-#authKey = ""
-## 当authKey未配置时, 支持配置节点账户地址
-## 即从钱包中获取对应的私钥, 节点需要创建钱包并解锁导入对应的私钥
-#authAccount = ""
-
-[consensus.sub.rollup]
-#验证者账户地址, 其私钥用于签名交易及生成验证者bls私钥对, 1CqsBFa8KMGG9yjY4XcCUWaqdscBw6eipn
-#authAccount="0x7d80b7764c5d5efbac47551e737b8bfc26d25945"  
-#blspub=99ae786cac6a6ee65718d3bc036a57f90f92f38b5d14e6f61a7cfe2468ff96eed9e162aa0c8bda1f770b6f78513583eb
-# 配置节点账户私钥
-authKey="" #  TODO.ADDR1.u2
-# 是否全量数据提交, 是则所有交易需采用bls签名类型
-fullDataCommit=false
-# 状态提交间隔
-# 最低60s, 默认5min
-maxCommitInterval = 300 #seconds
-# 设置平行链启动时对应的主链高度
-startHeight=0
-reservedMainHeight=12
-addressID=2
-
-[consensus.sub.dpos]
-delegateNum=1
-blockInterval=10
-continueBlockNum=100
-blockNumToUpdateDelegate=1000
-registTopNHeightLimit=10
-updateTopNHeightLimit=20
+name = "para"
+genesisBlockTime = 1514533390
+genesis = "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt"
+minerExecs = ["paracross"]                     #配置挖矿合约
 
 [mver.consensus]
-fundKeyAddr = "0x5e44c5d6380bde65368181e66c023334098c249d"  # TODO.ADDR.u13
+fundKeyAddr = "1BQXS6TxaYYG5mADaWij4AxhZZUTpw95a5"
 powLimitBits = "0x1f00ffff"
 maxTxNumber = 1600
 
@@ -189,54 +127,6 @@ minerMode = "normal"
 #挖矿减半周期,按高度减半
 halvePeriod = 1000
 
-[consensus.sub.qbft]
-# 创世交易地址
-genesis = "0x8387505d1571ee2b2d7339addb3f5dcf9f32c389" # TODO.ADDR.u11
-# 创世交易地址账户余额
-genesisAmount = 100000000
-# 创世区块时间(UTC时间)
-genesisBlockTime = 1703745259
-# 获取交易间隔时长,以下时长单位均为毫秒
-timeoutTxAvail = 800
-# 等待proposal超时基准时长
-timeoutPropose = 5000
-# 每轮延长等待proposal的时长
-timeoutProposeDelta = 500
-# 等待pre-vote超时基准时长
-timeoutPrevote = 3000
-# 每轮延长等待pre-vote的时长
-timeoutPrevoteDelta = 500
-# 等待pre-commit超时基准时长
-timeoutPrecommit = 3000
-# 每轮延长等待pre-commit的时长
-timeoutPrecommitDelta = 500
-# 收到对一个区块的2/3pre-commits后,等待落后者投票超时时长,超时后将启动新高度流程
-timeoutCommit = 500
-# 是否在收到所有pre-commits,还未达到超时等待时长时,取消等待,如果为true,将启动新高度流程;如果为false,等到超时才启动新高度流程
-skipTimeoutCommit = false
-# 创建空区块的时间间隔,如果等于0则认为不出空块，单位为秒
-emptyBlockInterval = 0
-# 节点公钥文件
-#genesisFile="genesis.json"
-# 节点私钥文件
-#privFile="priv_validator.json"
-# 共识端口号，默认为33001
-port=33001 # TODO.qbft.port
-# 共识节点，格式为ip:port，多个节点以逗号分隔，节点数至少为4个
-validatorNodes=["172.31.0.8:33001","172.31.0.9:33001","172.31.0.10:33001","172.31.0.11:33001"]
-# 是否开启快速同步，推荐打开
-fastSync = true
-# propose阶段是否预执行区块，提高性能推荐关闭
-preExec = false
-# 签名算法,支持"secp256k1","ed25519","sm2","bls",默认为"ed25519"
-signName = "bls"
-# 是否使用聚合签名,签名算法需支持该特性,比如"bls"
-useAggregateSignature = true
-# 连续提议区块的个数，默认为1
-#multiBlocks=10
-# 消息发送间隔，单位为毫秒
-#messageInterval=50
-sameBlocktime = true
 
 [consensus.sub.para]
 #ParaRemoteGrpcClient配置已变更为mainChainGrpcAddr
@@ -258,13 +148,31 @@ mainForkParacrossCommitTx = 2270000
 mainLoopCheckCommitTxDoneForkHeight = 4320000
 #无平行链交易的主链区块间隔，平行链产生一个空块，从高度0开始，格式[blockHeight:interval],比如["0:50","1000:100"],blockHeight为平行链高度
 emptyBlockInterval = ["0:50"]
-# 
-selfConsensEnablePreContract=["0-1000"]
 
 #平行链共识节点聚合签名配置
 [consensus.sub.para.bls]
 #是否开启聚合签名，缺省不开启
 blsSign = false
+
+[consensus.sub.rollup]
+
+# 配置节点账户私钥, 隐秘性不好, 用于测试
+authKey = ""
+# 当authKey未配置时, 支持配置节点账户地址
+# 即从钱包中获取对应的私钥, 节点需要创建钱包并解锁导入对应的私钥
+authAccount = ""
+
+# 全量数据即提交所有交易源数据, 此时交易签名必须为bls类型
+# 默认关闭, 即仅提交区块header数据
+fullDataCommit = false
+# 最大状态提交间隔时长
+# 最低60s, 默认5min
+maxCommitInterval = 300 #seconds
+# 设置平行链启动时对应的主链高度
+startHeight = 0
+# 同步主链区块头, 预留高度, 减少回滚概率
+# 默认12, 最低设为1
+reservedMainHeight = 12
 
 
 [store]
@@ -306,7 +214,7 @@ enableEmptyBlockHandle = false
 enableSaveBlockKVs = true
 
 [wallet]
-minFee = 1
+minFee = 100000
 driver = "leveldb"
 dbPath = "parawallet"
 dbCache = 16
@@ -318,14 +226,15 @@ enableStat = false
 enableMVCC = false
 
 [exec.sub.relay]
-genesis = "0x2cb1656b4cc952975b5cd4efdaead4e3a68003c4" # TODO.ADDR.u12 
+genesis = "12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"
+
 [exec.sub.manage]
-superManager = ["0x58501f33644a74ac9423f0bdca6f726bc872fc55"] # TODO.ADDR.u4
+superManager = ["12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv"]
 #autonomy执行器名字,空则不开启,使用superManager list
 autonomyExec = ""
 [exec.sub.token]
 saveTokenTxList = true
-tokenApprs = [ "0x8311a9b6c6ff9325e6e8c101cbc806cc0ce8a557"]  # TODO.ADDR.u3
+tokenApprs = []
 friendExecer = ["evm"]
 
 [exec.sub.paracross]
@@ -337,18 +246,13 @@ closeSelfConsensus = false
 discardTxs = []
 
 [exec.sub.autonomy]
-total = "0x9082ef87346a41c12e88d160930fe6f8968c8a07" # TODO.ADDR.u7
+total = "16htvcBNSEA7fZhAdLJphDwQRQJaHpyHTp"
 useBalance = false
 
 [exec.sub.evm]
 #平行链evm合约ETH资产映射的合约和资产类型（symbol）
 ethMapFromExecutor = "paracross"
 ethMapFromSymbol = "coins.bty"
-#当前最大为200万
-evmGasLimit=2000000
-#是否开启升级
-nonceUpGrade=false
-addressDriver="eth"
 
 # 预编译合约配置管理员
 [exec.sub.evm.preCompile]
@@ -370,12 +274,16 @@ mixApprs = []
 
 [exec.sub.zksync]
 #管理员列表
-manager = [ "0x57d405e89e81e1e416aa8b8e9b57e4b88558f663", "0x661622fb2e1a17c734eb9c41a21a02f317b9fcdb"]  # TODO.ADDR.u5.u6
+manager = [
+  "14KEKbYtKKQm4wMthSK9J4La4nAiidGozt",
+  "12qyocayNF7Lv6C9qW4avxs2E7U41fKSfv",
+  "0x991fb09dc31a44b3177673f330c582ac2ea168e0",
+]
 #运营方配置收交易费地址,要求16进制
 #可把二层交易费提取到ETH的地址,注意:真实场景需替换
-ethFeeAddr = "0x832367164346888E248bd58b9A5f480299F1e88d" #TODO.ADDR.default
+ethFeeAddr = "0x832367164346888E248bd58b9A5f480299F1e88d"
 #二层的基于zk的chain地址，注意:非基于sep256k1的普通的chain地址，而是基于私钥产生的可用于二层的地址,真实场景需替换
-layer2FeeAddr = "2930ef48b2d018955359a77fe58a68be0c536480c57ee5a84f6c96e3ff4fa7dc" # TODO.ADDR.default
+layer2FeeAddr = "2930ef48b2d018955359a77fe58a68be0c536480c57ee5a84f6c96e3ff4fa7dc"
 
 
 #系统中所有的fork,默认用chain的测试网络的
@@ -383,7 +291,7 @@ layer2FeeAddr = "2930ef48b2d018955359a77fe58a68be0c536480c57ee5a84f6c96e3ff4fa7d
 [fork.system]
 ForkChainParamV1 = 0
 ForkCheckTxDup = 0
-ForkBlockHash = 0
+ForkBlockHash = 1
 ForkMinerTime = 0
 ForkTransferExec = 0
 ForkExecKey = 0
@@ -405,12 +313,11 @@ ForkEnableParaRegExec = 0
 ForkCacheDriver = 0
 ForkTicketFundAddrV1 = -1 #fork6.3
 #主链和平行链都使用同一个fork高度
-ForkRootHash = 0
+ForkRootHash = 7200000
 #地址key格式化, 主要针对eth地址
 ForkFormatAddressKey = 0
 ForkCheckEthTxSort = 0
 ForkProxyExec = 0
-
 [fork.sub.none]
 ForkUseTimeDelay = 0
 
@@ -528,7 +435,7 @@ Enable = 0
 Enable = 0
 
 [fork.sub.rollup]
-Enable = 0
+Enable = -1
 
 [fork.sub.accountmanager]
 Enable = 0
@@ -590,7 +497,7 @@ Enable = 0
 
 
 [pprof]
-listenAddr = "localhost:6061"  # TODO.pprof.port
+listenAddr = "localhost:6061"
 
 [metrics]
 #是否使能发送metrics数据的发送
@@ -610,21 +517,32 @@ namespace = ""
 #exchange合约相关配置
 [mver.exec.sub.exchange]
 #银行帐户列表（现第一个地址用来收取手续费）
-banks = ["0x13a126ee57a0b6992f5f86a35e4f13c39e91690c"]  # TODO.ADDR.u8
+banks = ["1PTGVR7TUm1MJUH7M1UNcKBGMvfJ7nCrnN"]
 #机器人帐户列表
-robots = ["0x2be37d50236d29d5c7942b92847274c81c83fc60"] # TODO.ADDR.u9
+robots = ["1Nq8MDDVqSsS2zQeEZZa7bH53b9vBuUmEW"]
 #币种配置，
 #coin   转入exchange合约的币种名称
 #execer 转入exchange合约的币种执行器名称
 #name   执行器币种的别称
 coins = [
-  { coin = "AS", execer = "coins", name = "AS" },
-  { coin = "ASS", execer = "coins", name = "ASS" },
+  { coin = "bty", execer = "coins", name = "BTY" },
+  { coin = "CCNY", execer = "token", name = "CCNY" },
+
+  { coin = "coins.bty", execer = "paracross", name = "BTY" },
+  { coin = "YCC", execer = "evmxgo", name = "YCC" },
+  { coin = "ETH", execer = "evmxgo", name = "ETH" },
+  { coin = "USDT", execer = "evmxgo", name = "USDT" },
 ]
 #现货交易配置
 #symbol 币种对；priceDigits 价格最小位数；amountDigits 数量最小位数； minFee  最小手续费
+#taker  吃单手续费率,配置时需*1e8(如：收取每笔交易百分之一的手续费，maker=1000000)未配置交易对默认为100000
+#maker  挂单手续费,配置时需*1e8(如：收取每笔交易千分之一的手续费，taker=100000)未配置交易对默认为100000
 exchanges = [
-  { symbol = "AS_ASS", priceDigits = 4, amountDigits = 1, taker = 1000000, maker = 100000, minFee = 0 },
+  { symbol = "BTY_CCNY", priceDigits = 4, amountDigits = 1, taker = 1000000, maker = 100000, minFee = 0 },
+
+  { symbol = "BTY_USDT", priceDigits = 4, amountDigits = 4, taker = 1000000, maker = 100000, minFee = 0 },
+  { symbol = "YCC_USDT", priceDigits = 5, amountDigits = 4, taker = 1000000, maker = 100000, minFee = 0 },
+  { symbol = "ETH_USDT", priceDigits = 4, amountDigits = 4, taker = 1000000, maker = 100000, minFee = 0 },
 ]
 
 [fork.sub.exchange]
@@ -659,9 +577,3 @@ ForkParamV26 = 0
 ForkParamV27 = 0
 ForkParamV28 = 0
 ForkParamV29 = 0
-
-[health]
-listenAddr="localhost:8805"
-checkInterval=1
-unSyncMaxTimes=2
-
