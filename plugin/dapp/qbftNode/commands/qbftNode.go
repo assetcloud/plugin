@@ -13,7 +13,9 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"strings"
 
+  pt "github.com/assetcloud/plugin/plugin/dapp/paracross/types"
 	"github.com/assetcloud/chain/common/address"
 
 	"github.com/assetcloud/chain/common/crypto"
@@ -223,13 +225,15 @@ func addNodeFlags(cmd *cobra.Command) {
 func addNode(cmd *cobra.Command, args []string) {
 	pubkey, _ := cmd.Flags().GetString("pubkey")
 	power, _ := cmd.Flags().GetInt64("power")
+	paraName, _ := cmd.Flags().GetString("paraName")
+	execer := getRealExecName(paraName, vt.QbftNodeX)
 
 	value := &vt.QbftNodeAction_Node{Node: &vt.QbftNode{PubKey: pubkey, Power: power}}
 	action := &vt.QbftNodeAction{Value: value, Ty: vt.QbftNodeActionUpdate}
 	tx := &types.Transaction{
 		Payload: types.Encode(action),
 		Nonce:   rand.Int63(),
-		Execer:  []byte(vt.QbftNodeX),
+		Execer:  []byte(execer),
 	}
 	tx.To = address.ExecAddress(string(tx.Execer))
 
@@ -336,4 +340,11 @@ func createFiles(cmd *cobra.Command, args []string) {
 		return
 	}
 	fmt.Printf("generate genesis file path %v\n", genFile)
+}
+
+func getRealExecName(paraName string, name string) string {
+  if strings.HasPrefix(name, pt.ParaPrefix) {
+    return name
+  }
+  return paraName + name
 }
