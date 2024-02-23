@@ -19,7 +19,7 @@ BUILD_FLAGS := -ldflags '-X "github.com/assetcloud/plugin/version.GitCommit=$(Gi
 MKPATH=$(abspath $(lastword $(MAKEFILE_LIST)))
 MKDIR=$(dir $(MKPATH))
 proj := "build"
-.PHONY: default dep all build release cli linter race test fmt vet bench msan coverage coverhtml docker docker-compose protobuf clean help autotest
+.PHONY: default dep all build release cli linter race test fmt vet bench msan coverage coverhtml docker docker-compose protobuf clean help autotest pkg
 
 default: depends build
 
@@ -37,6 +37,11 @@ build_ci: depends ## Build the binary file for CI
 	@cp chain.toml build/
 	@cp chain.para.toml build/ci/paracross/
 
+pkg:
+	rm assetchain-qbft assetchain-qbft.tgz -rf
+	mkdir assetchain-qbft
+	cp build/chain build/chain-cli chain.para.toml genconfig.sh assetchain-qbft
+	tar zcfv assetchain-qbft.tgz assetchain-qbft
 
 PLATFORM_LIST = \
 	darwin-amd64 \
