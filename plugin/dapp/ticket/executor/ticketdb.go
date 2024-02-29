@@ -210,7 +210,7 @@ func (action *Action) getBind(addr string) string {
 // TicketBind 授权某个地址进行挖矿
 func (action *Action) TicketBind(tbind *ty.TicketBind) (*types.Receipt, error) {
 	//todo: query address is a minered address
-	if action.fromaddr != tbind.ReturnAddress {
+	if action.fromaddr != tbind.ReturnAddress && action.height > 0 {
 		tlog.Error("TicketBind", "from:", action.fromaddr, " tbind.ReturnAddress:", tbind.ReturnAddress)
 		return nil, types.ErrFromAddr
 	}

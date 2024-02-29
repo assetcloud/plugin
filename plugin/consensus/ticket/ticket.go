@@ -10,13 +10,14 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/assetcloud/chain/common/address"
-	"github.com/assetcloud/chain/system/address/eth"
 	"math/big"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/assetcloud/chain/common/address"
+	"github.com/assetcloud/chain/system/address/eth"
 
 	"github.com/assetcloud/chain/common"
 	"github.com/assetcloud/chain/common/crypto"
@@ -120,6 +121,9 @@ func (client *Client) Close() {
 // CreateGenesisTx ticket create genesis tx
 func (client *Client) CreateGenesisTx() (ret []*types.Transaction) {
 	cfg := client.GetAPI().GetConfig()
+
+	tx0 := createGenesisAmount(cfg)
+	ret = append(ret, tx0...)
 	for _, genesis := range client.subcfg.Genesis {
 		tx1 := createTicket(cfg, genesis.MinerAddr, genesis.ReturnAddr, genesis.Count, 0)
 		ret = append(ret, tx1...)
@@ -127,7 +131,25 @@ func (client *Client) CreateGenesisTx() (ret []*types.Transaction) {
 	return ret
 }
 
-//316190000 coins
+// 202005201314
+func createGenesisAmount(cfg *types.ChainConfig) (ret []*types.Transaction) {
+	amount := int64(202005201314) * 1e4
+	tx1 := types.Transaction{}
+	tx1.Execer = []byte(cfg.GetCoinExec())
+	cons := cfg.GetModuleConfig().Consensus
+
+	//给Genesis n 个币
+	tx1.To = cons.Genesis
+	//gen payload
+	g := &cty.CoinsAction_Genesis{}
+	g.Genesis = &types.AssetsGenesis{Amount: amount}
+	tx1.Payload = types.Encode(&cty.CoinsAction{Value: g, Ty: cty.CoinsActionGenesis})
+	ret = append(ret, &tx1)
+
+	return ret
+}
+
+// 316190000 coins
 func createTicket(cfg *types.ChainConfig, minerAddr, returnAddr string, count int32, height int64) (ret []*types.Transaction) {
 	tx1 := types.Transaction{}
 	tx1.Execer = []byte(cfg.GetCoinExec())
@@ -157,6 +179,14 @@ func createTicket(cfg *types.ChainConfig, minerAddr, returnAddr string, count in
 	gticket.Genesis = &ty.TicketGenesis{MinerAddress: minerAddr, ReturnAddress: returnAddr, Count: count}
 	tx3.Payload = types.Encode(&ty.TicketAction{Value: gticket, Ty: ty.TicketActionGenesis})
 	ret = append(ret, &tx3)
+
+	tx4 := types.Transaction{}
+	tx4.Execer = []byte("ticket")
+	tx4.To = driver.ExecAddress("ticket")
+	bind := &ty.TicketAction_Tbind{}
+	bind.Tbind = &ty.TicketBind{MinerAddress: minerAddr, ReturnAddress: returnAddr}
+	tx4.Payload = types.Encode(&ty.TicketAction{Value: bind, Ty: ty.TicketActionBind})
+	ret = append(ret, &tx4)
 	return ret
 }
 
@@ -648,7 +678,7 @@ func (client *Client) Miner(block *types.Block) error {
 	return nil
 }
 
-//gas 直接燃烧
+// gas 直接燃烧
 func calcTotalFee(block *types.Block) (total int64) {
 	return 0
 }
@@ -830,7 +860,7 @@ func getTxHashes(txs []*types.Transaction) (hashes [][]byte) {
 	return hashes
 }
 
-//CmpBestBlock 比较newBlock是不是最优区块，目前ticket主要是比较挖矿交易的难度系数
+// CmpBestBlock 比较newBlock是不是最优区块，目前ticket主要是比较挖矿交易的难度系数
 func (client *Client) CmpBestBlock(newBlock *types.Block, cmpBlock *types.Block) bool {
 	cfg := client.GetAPI().GetConfig()
 
